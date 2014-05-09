@@ -39,7 +39,4 @@ module.exports = (app) ->
   if app.settings.env isnt "test"
     app.use csrf()
 
-  GS.middleware('authentication', app)
-  GS.middleware('health_check', app)
-
-  app.use(app.router)
+  SS.middleware('health_check', app)
