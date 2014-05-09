@@ -16,6 +16,8 @@ EdgecastStreamSchema = new mongoose.Schema
     type: Date
   edgecastId:
     type: Number
+  deletedAt:
+    type: Date
 
 EdgecastStreamSchema.statics.nextAvailable = (callback)->
   query =
