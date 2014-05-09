@@ -6,3 +6,5 @@ newrelic_agent.log
 npm-debug.log
 
 ignored/
+
+streamosaurus.sublime-workspace

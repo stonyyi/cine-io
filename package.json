@@ -7,12 +7,11 @@
   "version": "0.0.1",
   "description": "streamosaur.us web site",
   "scripts": {
-    "test": "NOT IMPLEMENTED"
+    "test": "coffeelint config/ middleware/ server.coffee app.coffee"
   },
   "repository": "https://github.com/givingstage/streamosaurus",
   "dependencies": {
-    "express": "3.4.8",
-    "socket.io": "0.9.16",
+    "express": "4.1.2",
     "cli-color": "0.2.3",
     "coffee-script": "1.7.1",
     "mongoose": "3.8.8",
@@ -20,10 +19,16 @@
     "request": "2.34.0",
     "qs": "0.6.6",
     "underscore.string": "2.3.3",
-    "connect-redis": "1.4.6",
+    "connect-redis": "2.0.0",
     "async": "0.2.10",
     "grunt": "0.4.4",
-    "mongodb": "1.4.3"
+    "mongodb": "1.4.3",
+    "cookie-parser": "^1.0.1",
+    "body-parser": "^1.0.2",
+    "morgan": "^1.0.1",
+    "compression": "^1.0.2",
+    "method-override": "^1.0.0",
+    "csurf": "^1.1.0"
   },
   "devDependencies": {
     "nodemon": "~0.7.6",
