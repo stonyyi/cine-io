@@ -1,2 +1,2 @@
-module.exports = (params, callback)->
+module.exports = (callback)->
   callback(null, {status: 'OK'})
