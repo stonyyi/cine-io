@@ -14,5 +14,6 @@ app.get "/", (req, res) ->
   res.sendfile "#{SS.root}/public/index.html"
 
 app.use express.static "#{SS.root}/public"
+app.use express.static "#{SS.root}/bower_components"
 
 app.use SS.middleware('error_handling')

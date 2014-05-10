@@ -8,7 +8,7 @@ button, .button {
 }
 
 #home-hero {
-  background: black url(../home-hero.jpg) center center fixed no-repeat;
+  background: black url(/images/home-hero.jpg) center center fixed no-repeat;
   background-size: cover;
   min-height: 100%;
   padding-top: 0;
@@ -31,7 +31,7 @@ button, .button {
 
     .brand {
       display: block;
-      background: url(../streamosaurus-logo.png) no-repeat;
+      background: url(/images/streamosaurus-logo.png) no-repeat;
       background-size: contain;
       text-indent: -9999em;
       text-transform: uppercase;
