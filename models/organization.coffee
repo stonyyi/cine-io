@@ -1,12 +1,15 @@
 mongoose = require 'mongoose'
 mongooseUniqueSlugs = require 'mongoose-uniqueslugs'
 mongooseHistoricalSlugs = SS.lib 'mongoose_historical_slugs'
-_ = require('underscore')
+crypto = require('crypto')
 
 OrganizationSchema = new mongoose.Schema
   name:
     type: String
     default: ''
+  apiKey:
+    type: String
+    unique: true
   images:
     profileUrl:
       type: String
@@ -16,6 +19,12 @@ mongooseUniqueSlugs.enhanceSchema(OrganizationSchema, source: 'name')
 OrganizationSchema.plugin(mongooseHistoricalSlugs)
 
 OrganizationSchema.plugin(SS.lib('mongoose_timestamps'))
+
+OrganizationSchema.pre 'save', (next)->
+  return next() if @apiKey
+  crypto.randomBytes 24, (ex, buf)=>
+    @apiKey = buf.toString('hex')
+    next()
 
 OrganizationSchema.options.toJSON ||= {}
 OrganizationSchema.options.toJSON.transform = (doc, ret, options)->
