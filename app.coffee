@@ -10,4 +10,7 @@ app.set 'title', 'Streamosaurus'
 SS.middleware 'middleware', app
 SS.middleware 'routes', app
 
+app.get "/", (req, res) ->
+  res.sendfile "#{SS.root}/public/index.html"
+
 app.use SS.middleware('error_handling')
