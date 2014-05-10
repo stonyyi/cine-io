@@ -11,7 +11,6 @@ User = SS.model('user')
 # finds and returns a user
 # deletes the token
 consumeToken = (token, done) ->
-  console.log('consuming token')
   return done(null, false) unless token
   RememberMeToken.findOne token: token, (err, rmt)->
     return done(err) if err
@@ -25,7 +24,6 @@ consumeToken = (token, done) ->
 # creates a new Token associated with a user
 # returns the token string
 createNewToken = (user, done) ->
-  console.log('creating new token')
   rmt = new RememberMeToken(_user: user._id)
   rmt.save (err)->
     return done(err) if err

@@ -6,7 +6,6 @@ RememberMeToken = SS.model('remember_me_token')
 describe 'local authentication', ->
 
   app.get '/whoami', (req, res)->
-    console.log('who am i')
     res.send(req.currentUser)
 
   beforeEach resetMongo

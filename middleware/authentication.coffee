@@ -1,4 +1,3 @@
-console.log('loaded authentication')
 User = SS.model('user')
 passport = require('passport')
 
@@ -15,7 +14,6 @@ module.exports = (app)->
 
   # This populates the req.currentUser only on non xhr requetss
   app.use (req, res, next)->
-    # console.log('herreeee', req.user, !req.xhr, req.user && !req.xhr)
     if req.user && !req.xhr
       User.findById req.user, (err, user)->
         return next() if err || !user
