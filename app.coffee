@@ -8,7 +8,7 @@ exports.server = http.createServer(app)
 app.set 'title', 'Streamosaurus'
 
 SS.middleware 'middleware', app
-SS.middleware 'routes', app
+SS.middleware 'api_routes', app
 
 app.get "/", (req, res) ->
   res.sendfile "#{SS.root}/public/index.html"
