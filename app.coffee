@@ -9,3 +9,5 @@ app.set 'title', 'Streamosaurus'
 
 SS.middleware 'middleware', app
 SS.middleware 'routes', app
+
+app.use SS.middleware('error_handling')

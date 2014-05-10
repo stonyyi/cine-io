@@ -39,4 +39,5 @@ module.exports = (app) ->
   if app.settings.env isnt "test"
     app.use csrf()
 
+  SS.middleware('authentication', app)
   SS.middleware('health_check', app)

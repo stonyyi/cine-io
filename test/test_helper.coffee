@@ -3,7 +3,7 @@ process.env.TZ = 'UTC' # https://groups.google.com/forum/#!topic/nodejs/s1gCV44K
 require '../config/environment'
 
 chai = require("chai")
-chai.Assertion.includeStack = true
+chai.config.includeStack = true
 global.expect = chai.expect
 global.sinon = require("sinon")
 global.nock = require('nock')
