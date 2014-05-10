@@ -1,0 +1,6 @@
+{
+  "name": "streamosaurus",
+  "dependencies": {
+    "foundation": "zurb/bower-foundation"
+  }
+}

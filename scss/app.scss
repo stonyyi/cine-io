@@ -1,0 +1,77 @@
+@import "settings";
+@import "foundation";
+
+button, .button {
+  text-transform: uppercase;
+  // background: none;
+  // border: 2px solid $primary-color;
+}
+
+#home-hero {
+  background: black url(../home-hero.jpg) center center fixed no-repeat;
+  background-size: cover;
+  min-height: 100%;
+  padding-top: 0;
+  text-align: left;
+  * {
+    color: white;
+  }
+
+  .info {
+    @include grid-row();
+    padding: 1em 1em 0 1em;
+
+    section {
+      @include grid-column(12);
+    }
+
+    h2 {
+      margin-bottom: 1em;
+    }
+
+    .brand {
+      display: block;
+      background: url(../streamosaurus-logo.png) no-repeat;
+      background-size: contain;
+      text-indent: -9999em;
+      text-transform: uppercase;
+      margin-bottom: 0.5em;
+    }
+
+    .pitch {
+      font-size: $h3-font-size;
+      font-family: $distinct-font-family;
+      font-weight: bold;
+      margin-bottom: 1em;
+    }
+
+    .actions {
+      margin-top: 1em;
+    }
+  }
+
+  .scrollhint {
+    position: absolute;
+    bottom: 1em;
+    left: 0;
+    right: 0;
+    text-transform: uppercase;
+    text-align: center;
+  }
+}
+
+@media #{$medium-up} {
+  #home-hero {
+    .info {
+      padding-top: 5em;
+
+      .pitch {
+        font-size: $h1-font-size;
+      }
+
+      h3 {
+        font-size: 3em;
+      }
+    }
+  }
+}
