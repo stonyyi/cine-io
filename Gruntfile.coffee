@@ -44,7 +44,7 @@ module.exports = (grunt) ->
     sh = require("execSync")
     file = file.substr(1, file.length) if file[0] is "/"
     sh.run "clear"
-    command = "mocha test/setup_and_teardown.coffee " + file
+    command = "mocha test/setup_and_teardown.coffee #{file}"
     console.log command
     sh.run command
 
