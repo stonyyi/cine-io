@@ -27,18 +27,18 @@ describe 'api routing', ->
     it 'requires an api key', (done)->
       @agent.get('/api/1/me')
         .expect(401)
-        .end (err, res)=>
+        .end (err, res)->
           done()
 
     it 'requires an valid api key', (done)->
       @agent.get('/api/1/me?apiKey=INVALID')
         .expect(401)
-        .end (err, res)=>
+        .end (err, res)->
           done()
 
     it 'routes to an authenticated route', (done)->
-        @agent.get('/api/1/me?apiKey=abc')
-          .end (err, res)=>
-            expect(err).to.be.null
-            expect(res.body._id).to.equal(@organization._id.toString())
-            done()
+      @agent.get('/api/1/me?apiKey=abc')
+        .end (err, res)=>
+          expect(err).to.be.null
+          expect(res.body._id).to.equal(@organization._id.toString())
+          done()
