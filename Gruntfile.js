@@ -31,4 +31,15 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', ['sass']);
   grunt.registerTask('default', ['build','watch']);
+
+  grunt.registerTask("test", function(fileWithLeadingSlashFromSublime) {
+    var command, file, sh;
+    sh = require('execSync');
+    file = fileWithLeadingSlashFromSublime.substr(1, fileWithLeadingSlashFromSublime.length);
+    sh.run('clear');
+    command = "mocha test/setup_and_teardown.coffee " + file;
+    console.log(command);
+    return sh.run(command);
+  });
+
 }
