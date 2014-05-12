@@ -6,3 +6,5 @@ module.exports = (callback)->
   org.save (err, org)->
     return callback(err, null, status: 400) if err
     callback(null, org.toJSON())
+
+module.exports.user = true

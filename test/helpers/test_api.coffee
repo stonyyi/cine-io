@@ -1,9 +1,22 @@
 generateRoute = Cine.middleware('api_routes')._generateRoute
 testApi = (resource)->
   callRoute = generateRoute(resource)
-  return (params, callback)->
+  return ->
+    params = {}
+    session = {}
+    if arguments.length == 1
+      callback = arguments[0]
+    if arguments.length > 1
+      params = arguments[0]
+    if arguments.length > 2
+      session = arguments[1]
+    callback = arguments[arguments.length - 1]
     req =
       query: params
+    if callback == undefined
+      callback = session
+      session = {}
+    req.user = session.user._id.toString() if session.user
     res =
       send: (responseOrStatus, response)->
         return callback(response, null, status: responseOrStatus) if response
