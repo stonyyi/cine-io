@@ -4,7 +4,6 @@ User = Cine.model('user')
 
 describe 'Organizations#Create', ->
 
-
   it 'requires the user be logged in', (done)->
     Create (err, response, options)->
       expect(err).to.equal('not logged in')
