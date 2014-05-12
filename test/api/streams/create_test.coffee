@@ -1,6 +1,7 @@
 Organization = Cine.model('organization')
 EdgecastStream = Cine.model('edgecast_stream')
 Create = testApi Cine.api('streams/create')
+stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 
 describe 'EdgecastStreams#Create', ->
   testApi.requresApiKey Create
@@ -21,6 +22,8 @@ describe 'EdgecastStreams#Create', ->
     beforeEach (done)->
       @stream = new EdgecastStream(instanceName: 'abcd')
       @stream.save done
+
+    stubEdgecast()
 
     it 'returns an edgecast stream', (done)->
       params = apiKey: @org.apiKey
