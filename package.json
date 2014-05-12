@@ -35,7 +35,8 @@
     "bcrypt": "^0.7.8",
     "passport-remember-me": "0.0.1",
     "errorhandler": "^1.0.1",
-    "moment": "^2.6.0"
+    "moment": "^2.6.0",
+    "newrelic": "^1.5.4"
   },
   "devDependencies": {
     "nodemon": "1.0.17",
