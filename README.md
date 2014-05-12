@@ -1,4 +1,4 @@
-# Streamosaurus
+# Cine.io
 
 Hassle-free live-streaming.
 

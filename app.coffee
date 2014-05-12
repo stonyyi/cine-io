@@ -5,7 +5,7 @@ http = require 'http'
 app = exports.app = express()
 exports.server = http.createServer(app)
 
-app.set 'title', 'Streamosaurus'
+app.set 'title', 'Cine.io'
 
 Cine.middleware 'middleware', app
 Cine.middleware 'api_routes', app
