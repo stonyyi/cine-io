@@ -40,15 +40,9 @@ module.exports = (grunt) ->
   grunt.registerTask "build", ["sass"]
   grunt.registerTask "dev", ["build", "concurrent:dev"]
   grunt.registerTask "default", ["dev"]
-  grunt.registerTask "test", (fileWithLeadingSlashFromSublime) ->
-    command = undefined
-    file = undefined
-    sh = undefined
+  grunt.registerTask "test", (file) ->
     sh = require("execSync")
-    if fileWithLeadingSlashFromSublime[0] is "/"
-      file = fileWithLeadingSlashFromSublime.substr(1, fileWithLeadingSlashFromSublime.length)
-    else
-      file = fileWithLeadingSlashFromSublime
+    file = file.substr(1, file.length) if file[0] is "/"
     sh.run "clear"
     command = "mocha test/setup_and_teardown.coffee " + file
     console.log command
