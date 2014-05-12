@@ -1,40 +1,37 @@
 API_VERSION = 1
 Organization = Cine.model('organization')
 
-sendError = (err, res, options={})->
-  options.status ||= 400
-  res.send(options.status, err)
+class ResourceCaller
+  constructor: (@resource, @req, @res)->
+    @params = req.query
+    @apiKey = @params.apiKey
+  call: ->
+    if @resource.organization
+      @_getOrganization =>
+        @resource.call(this, @callback)
+    else
+      @resource.call(this, @callback)
 
-callResource = (resource, params, res, organization)->
-  responder = (err, response, options={})->
-    return sendError(err, res, options) if err
-    res.send(response)
-  switch resource.length
-    when 1
-      resource responder
-    when 2
-      resource params, responder
-    when 3
-      resource organization, params, responder
+  callback: (err, response, options={})=>
+    return @_sendError(err, options) if err
+    @res.send(response)
 
-notAuthenticatedRoute = (resource)->
-  return (req, res)->
-    params = req.query
-    callResource(resource, params, res)
+  _getOrganization: (callback)->
+    return @_sendError('no api key', status: 401) unless @apiKey
+    _getOrganizationCallback = (err, organization)=>
+      return @_sendError(err || 'invalid api key', status: 401) if err || !organization
+      @organization = organization
+      callback()
+    Organization.findOne apiKey: @apiKey, _getOrganizationCallback
+  _sendError: (err, options={})=>
+    options.status ||= 400
+    @res.send(options.status, err)
 
-authenticatedRoute = (resource)->
-  return (req, res)->
-    params = req.query
-    apiKey = params.apiKey
-    return sendError('no api key', res, status: 401) unless apiKey
-    responder = (err, organization)->
-      return sendError(err || 'invalid api key', res, status: 401) if err || !organization
-      callResource(resource, params, res, organization)
-    Organization.findOne apiKey: apiKey, responder
 
 generateRoute = (resource)->
-  return notAuthenticatedRoute(resource) if resource.length <= 2
-  return authenticatedRoute(resource)
+  return (req, res)->
+    caller = new ResourceCaller resource, req, res
+    caller.call()
 
 createApiRoute = (app, resourceName, action, route)->
   route ||= resourceName
