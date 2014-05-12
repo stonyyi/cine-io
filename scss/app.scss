@@ -7,22 +7,29 @@ button, .button {
   // border: 2px solid $primary-color;
 }
 
-#home-hero {
-  background: black url(/images/home-hero-desktop.jpg) center center fixed no-repeat;
-  background-size: cover;
-  min-height: 100%;
-  padding-top: 0;
-  text-align: left;
+#homepage {
+  height: 100%;
+
   * {
     color: white;
   }
 
-  .info-row {
-    @include grid-row();
-    padding: 1em 1em 0 1em;
+  h3 {
+    font-family: $distinct-font-family;
+    font-weight: bold;
+  }
+
+  #home-hero {
+    background: black url(/images/home-hero-desktop.jpg) center center fixed no-repeat;
+    background-size: cover;
+    min-height: 100%;
+    height: 100%;
+    padding-top: 0;
+    text-align: left;
 
     .info {
       @include grid-column(12);
+      padding-top: 5em;
 
       .brand {
         display: block;
@@ -32,12 +39,7 @@ button, .button {
         margin-bottom: 1em;
       }
 
-
       .pitch {
-        font-size: $h3-font-size;
-        line-height: $header-line-height;
-        font-family: $distinct-font-family;
-        font-weight: bold;
         margin-bottom: 1em;
       }
 
@@ -45,28 +47,108 @@ button, .button {
         margin-top: 1em;
       }
     }
+
+    .scrollhint {
+      position: absolute;
+      bottom: 1em;
+      left: 0;
+      right: 0;
+      text-transform: uppercase;
+      text-align: center;
+    }
   }
 
-  .scrollhint {
-    position: absolute;
-    bottom: 1em;
-    left: 0;
-    right: 0;
-    text-transform: uppercase;
-    text-align: center;
+  #about {
+    background: $primary-color;
+    color: white;
+    padding-bottom: 2em;
+
+    iframe {
+      min-height: 178px;
+      width: 100%;
+    }
+
+    .info {
+      @include grid-column(8, true, true, 2);
+      padding-top: 3em;
+
+      h3, h3 * {
+        color: $primary-color-bright;
+      }
+    }
+  }
+
+  #pricing {
+    background: white;
+    padding-bottom: 2em;
+
+    * {
+      color: black;
+    }
+
+    .info {
+      @include grid-column(8, true, true, 2);
+      padding-top: 3em;
+
+      .price {
+        @include panel();
+        margin-top: 1em;
+        text-align: center;
+
+        .currency {
+          color: #333;
+          font-size: 4em;
+        }
+        .amount {
+          font-size: 4em;
+        }
+        .units {
+          position: relative;
+          top: -1em;
+        }
+      }
+    }
+  }
+
+  footer {
+    background: #4e4e4e;
+
+    .info {
+      @include grid-column(12);
+      margin: 2em 0;
+      text-align: center;
+      color: #ccc;
+    }
   }
 }
 
-@media #{$medium-up} {
-  #home-hero {
-    background: black url(/images/home-hero-tablet.jpg) center center fixed no-repeat;
-    .info-row {
-      padding-top: 5em;
-        .info {
-          @include grid-column(8);
 
-        .pitch {
-          font-size: $h1-font-size;
+@media #{$medium-up} {
+  #homepage {
+    #home-hero {
+      background: black url(/images/home-hero-tablet.jpg) center center fixed no-repeat;
+      .info-row {
+        padding-top: 5em;
+          .info {
+            @include grid-column(8, true);
+
+          .pitch {
+            font-size: $h1-font-size;
+          }
+        }
+      }
+    }
+
+    #about {
+      iframe {
+        min-height: 480px;
+      }
+    }
+
+    #pricing {
+      .info {
+        .price {
+          @include grid-column(4, true, true, 4);
         }
       }
     }
@@ -74,7 +156,9 @@ button, .button {
 }
 
 @media #{$large-up} {
-  #home-hero {
-    background: black url(/images/home-hero-tablet.jpg) center center fixed no-repeat;
+  #homepage {
+    #home-hero {
+      background: black url(/images/home-hero-tablet.jpg) center center fixed no-repeat;
+    }
   }
 }

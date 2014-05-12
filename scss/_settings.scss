@@ -61,6 +61,7 @@ $distinct-font-family: Cardo, Georgia, serif;
 // We use these as default colors throughout
 // $primary-color: #008CBA;
 $primary-color: #128c87;
+$primary-color-bright: scale-color($primary-color, $lightness: 85%);
 // $secondary-color: #e7e7e7;
 // $alert-color: #f04124;
 // $success-color: #43AC6A;
