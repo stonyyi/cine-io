@@ -35,7 +35,10 @@ module.exports = function(grunt) {
   grunt.registerTask("test", function(fileWithLeadingSlashFromSublime) {
     var command, file, sh;
     sh = require('execSync');
-    file = fileWithLeadingSlashFromSublime.substr(1, fileWithLeadingSlashFromSublime.length);
+    if (fileWithLeadingSlashFromSublime[0] === '/')
+      file = fileWithLeadingSlashFromSublime.substr(1, fileWithLeadingSlashFromSublime.length);
+    else
+      file = fileWithLeadingSlashFromSublime
     sh.run('clear');
     command = "mocha test/setup_and_teardown.coffee " + file;
     console.log(command);
