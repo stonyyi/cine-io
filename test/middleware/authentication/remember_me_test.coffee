@@ -1,8 +1,8 @@
-RememberMe = SS.middleware('authentication/remember_me')
+RememberMe = Cine.middleware('authentication/remember_me')
 supertest = require('supertest')
-RememberMeToken = SS.model('remember_me_token')
-User = SS.model('user')
-app = SS.require('app').app
+RememberMeToken = Cine.model('remember_me_token')
+User = Cine.model('user')
+app = Cine.require('app').app
 
 describe 'RememberMe', ->
 

@@ -1,5 +1,5 @@
 API_VERSION = 1
-Organization = SS.model('organization')
+Organization = Cine.model('organization')
 
 sendError = (err, res, options={})->
   options.status ||= 400
@@ -31,7 +31,7 @@ authenticatedRoute = (resource, action)->
     Organization.findOne apiKey: params.apikey, responder
 
 makeApiCall = (resourceName, action)->
-  resource = SS.api("#{resourceName}/#{action}")
+  resource = Cine.api("#{resourceName}/#{action}")
   return notAuthenticatedRoute(resource, action) if resource.length <= 2
   return authenticatedRoute(resource)
 

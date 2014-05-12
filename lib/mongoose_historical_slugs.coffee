@@ -1,4 +1,4 @@
-HistoricalSlug = SS.model('historical_slug')
+HistoricalSlug = Cine.model('historical_slug')
 
 # conflict ways
 # 1: slug on actual models conflict (easy, unique index check)

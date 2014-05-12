@@ -16,7 +16,7 @@ HistoricalSlugSchema.virtual('owner').set (owner)->
   @ownerType = owner.constructor.modelName
   owner
 
-HistoricalSlugSchema.plugin(SS.lib('mongoose_timestamps'))
+HistoricalSlugSchema.plugin(Cine.lib('mongoose_timestamps'))
 
 HistoricalSlug = mongoose.model 'HistoricalSlug', HistoricalSlugSchema
 

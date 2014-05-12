@@ -1,6 +1,6 @@
-User = SS.model('user')
-PasswordChangeRequest = SS.model 'password_change_request'
-createNewToken = SS.middleware('authentication/remember_me').createNewToken
+User = Cine.model('user')
+PasswordChangeRequest = Cine.model 'password_change_request'
+createNewToken = Cine.middleware('authentication/remember_me').createNewToken
 
 module.exports = (app)->
   app.post '/update-password', (req, res)->

@@ -1,5 +1,5 @@
-RememberMeToken = SS.model('remember_me_token')
-modelTimestamps = SS.require('test/helpers/model_timestamps')
+RememberMeToken = Cine.model('remember_me_token')
+modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'RememberMeToken', ->
   modelTimestamps RememberMeToken, {}

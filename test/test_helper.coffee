@@ -12,7 +12,7 @@ nock.enableNetConnect('127.0.0.1')
 # nock.recorder.rec()
 mongoose = require('mongoose')
 
-truncateAllTables = SS.require('test/helpers/truncate_all_tables')
+truncateAllTables = Cine.require('test/helpers/truncate_all_tables')
 
 # usecase: beforeEach resetMongo
 global.resetMongo = (done)->

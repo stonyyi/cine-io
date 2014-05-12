@@ -15,7 +15,7 @@ PasswordChangeRequestSchema.pre 'save', (next)->
     @identifier = buf.toString('hex')
     next()
 
-PasswordChangeRequestSchema.plugin(SS.lib('mongoose_timestamps'))
+PasswordChangeRequestSchema.plugin(Cine.lib('mongoose_timestamps'))
 
 PasswordChangeRequest = mongoose.model 'PasswordChangeRequest', PasswordChangeRequestSchema
 

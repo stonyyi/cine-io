@@ -31,7 +31,7 @@ UserSchema = new Schema
     default: ''
     trim: true
 
-UserSchema.plugin(SS.lib('mongoose_timestamps'))
+UserSchema.plugin(Cine.lib('mongoose_timestamps'))
 
 generateSaltAndHashForPassword = (cleartext_password, callback)->
   bcrypt.genSalt 10, (error, salt)->

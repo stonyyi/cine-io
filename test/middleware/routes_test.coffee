@@ -1,6 +1,6 @@
 supertest = require('supertest')
-app = SS.require('app').app
-Organization = SS.model('organization')
+app = Cine.require('app').app
+Organization = Cine.model('organization')
 
 describe 'api routing', ->
 

@@ -1,5 +1,5 @@
 _ = require('underscore')
-EdgecastStream = SS.model('edgecast_stream')
+EdgecastStream = Cine.model('edgecast_stream')
 
 toJsonProxy = (model)->
   model.toJSON()

@@ -1,5 +1,5 @@
-PasswordChangeRequest = SS.model('password_change_request')
-modelTimestamps = SS.require('test/helpers/model_timestamps')
+PasswordChangeRequest = Cine.model('password_change_request')
+modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'PasswordChangeRequest', ->
   modelTimestamps PasswordChangeRequest, {}

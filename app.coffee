@@ -7,13 +7,13 @@ exports.server = http.createServer(app)
 
 app.set 'title', 'Streamosaurus'
 
-SS.middleware 'middleware', app
-SS.middleware 'api_routes', app
+Cine.middleware 'middleware', app
+Cine.middleware 'api_routes', app
 
 app.get "/", (req, res) ->
-  res.sendfile "#{SS.root}/public/index.html"
+  res.sendfile "#{Cine.root}/public/index.html"
 
-app.use express.static "#{SS.root}/public"
-app.use express.static "#{SS.root}/bower_components"
+app.use express.static "#{Cine.root}/public"
+app.use express.static "#{Cine.root}/bower_components"
 
-app.use SS.middleware('error_handling')
+app.use Cine.middleware('error_handling')

@@ -1,8 +1,8 @@
 supertest = require('supertest')
-User = SS.model('user')
-app = SS.require('app').app
-RememberMeToken = SS.model('remember_me_token')
-PasswordChangeRequest = SS.model 'password_change_request'
+User = Cine.model('user')
+app = Cine.require('app').app
+RememberMeToken = Cine.model('remember_me_token')
+PasswordChangeRequest = Cine.model 'password_change_request'
 
 describe 'update password', ->
 

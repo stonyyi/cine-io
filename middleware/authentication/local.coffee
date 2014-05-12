@@ -1,7 +1,7 @@
 passport = require('passport')
 LocalStrategy = require('passport-local').Strategy
-User = SS.model('user')
-createNewToken = SS.middleware('authentication/remember_me').createNewToken
+User = Cine.model('user')
+createNewToken = Cine.middleware('authentication/remember_me').createNewToken
 
 assignNewPasswordAndSave = (user, cleartext_password, req, callback)->
   user.assignHashedPasswordAndSalt cleartext_password, (err)->
@@ -39,4 +39,4 @@ module.exports = (app) ->
   app.post '/login', passport.authenticate('local'), issueRememberMeToken, (req, res)->
     res.send(req.user.simpleCurrentUserJSON())
 
-  SS.middleware('authentication/local/update_password', app)
+  Cine.middleware('authentication/local/update_password', app)

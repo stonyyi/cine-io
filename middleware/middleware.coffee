@@ -25,7 +25,7 @@ module.exports = (app) ->
 
   # Sessions
   app.use session(
-    store: new RedisStore(SS.config('variables/redis')),
+    store: new RedisStore(Cine.config('variables/redis')),
     secret: ',6Cp8k)B36(7n2jyT6;T6eG4q.[9YcR6rQ{,8R4b{NZ3E)kcki'
   )
 
@@ -39,5 +39,5 @@ module.exports = (app) ->
   if app.settings.env isnt "test"
     app.use csrf()
 
-  SS.middleware('authentication', app)
-  SS.middleware('health_check', app)
+  Cine.middleware('authentication', app)
+  Cine.middleware('health_check', app)

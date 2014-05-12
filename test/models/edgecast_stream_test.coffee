@@ -1,6 +1,6 @@
-EdgecastStream = SS.model('edgecast_stream')
-Organization = SS.model('organization')
-modelTimestamps = SS.require('test/helpers/model_timestamps')
+EdgecastStream = Cine.model('edgecast_stream')
+Organization = Cine.model('organization')
+modelTimestamps = Cine.require('test/helpers/model_timestamps')
 _ = require('underscore')
 
 describe 'EdgecastStream', ->

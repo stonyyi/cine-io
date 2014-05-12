@@ -24,7 +24,7 @@ EdgecastStreamSchema.statics.nextAvailable = (callback)->
     _organization: {$exists: false}
   @findOne(query).sort(createdAt: -1).exec(callback)
 
-EdgecastStreamSchema.plugin(SS.lib('mongoose_timestamps'))
+EdgecastStreamSchema.plugin(Cine.lib('mongoose_timestamps'))
 
 EdgecastStream = mongoose.model 'EdgecastStream', EdgecastStreamSchema
 

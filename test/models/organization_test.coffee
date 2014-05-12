@@ -1,6 +1,6 @@
-Organization = SS.model('organization')
-HistoricalSlug = SS.model('historical_slug')
-modelTimestamps = SS.require('test/helpers/model_timestamps')
+Organization = Cine.model('organization')
+HistoricalSlug = Cine.model('historical_slug')
+modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'Organization', ->
 

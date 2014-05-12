@@ -1,5 +1,5 @@
 supertest = require('supertest')
-app = SS.require('app').app
+app = Cine.require('app').app
 
 describe 'test', ->
   beforeEach ->

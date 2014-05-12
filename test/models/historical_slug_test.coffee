@@ -1,6 +1,6 @@
-HistoricalSlug = SS.model('historical_slug')
-Organization = SS.model('organization')
-modelTimestamps = SS.require('test/helpers/model_timestamps')
+HistoricalSlug = Cine.model('historical_slug')
+Organization = Cine.model('organization')
+modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'HistoricalSlug', ->
   beforeEach resetMongo

@@ -1,7 +1,7 @@
 supertest = require('supertest')
-User = SS.model('user')
-app = SS.require('app').app
-RememberMeToken = SS.model('remember_me_token')
+User = Cine.model('user')
+app = Cine.require('app').app
+RememberMeToken = Cine.model('remember_me_token')
 
 describe 'local authentication', ->
 

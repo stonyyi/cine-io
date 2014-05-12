@@ -15,7 +15,7 @@ RememberMeTokenSchema.pre 'save', (next)->
     @token = buf.toString('hex')
     next()
 
-RememberMeTokenSchema.plugin(SS.lib('mongoose_timestamps'))
+RememberMeTokenSchema.plugin(Cine.lib('mongoose_timestamps'))
 
 RememberMeToken = mongoose.model 'RememberMeToken', RememberMeTokenSchema
 

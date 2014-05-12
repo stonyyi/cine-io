@@ -1,4 +1,4 @@
-User = SS.model('user')
+User = Cine.model('user')
 passport = require('passport')
 
 module.exports = (app)->
@@ -22,8 +22,8 @@ module.exports = (app)->
     else
       next()
 
-  SS.middleware('authentication/remember_me', app)
-  SS.middleware('authentication/local', app)
+  Cine.middleware('authentication/remember_me', app)
+  Cine.middleware('authentication/local', app)
 
   app.get '/logout', (req, res)->
     res.clearCookie('remember_me')

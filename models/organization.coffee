@@ -1,6 +1,6 @@
 mongoose = require 'mongoose'
 mongooseUniqueSlugs = require 'mongoose-uniqueslugs'
-mongooseHistoricalSlugs = SS.lib 'mongoose_historical_slugs'
+mongooseHistoricalSlugs = Cine.lib 'mongoose_historical_slugs'
 crypto = require('crypto')
 
 OrganizationSchema = new mongoose.Schema
@@ -19,7 +19,7 @@ OrganizationSchema = new mongoose.Schema
 mongooseUniqueSlugs.enhanceSchema(OrganizationSchema, source: 'name')
 OrganizationSchema.plugin(mongooseHistoricalSlugs)
 
-OrganizationSchema.plugin(SS.lib('mongoose_timestamps'))
+OrganizationSchema.plugin(Cine.lib('mongoose_timestamps'))
 
 OrganizationSchema.pre 'save', (next)->
   return next() if @apiKey

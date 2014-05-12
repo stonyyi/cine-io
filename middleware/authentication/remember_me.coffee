@@ -1,7 +1,7 @@
 passport = require('passport')
 RememberMeStrategy = require('passport-remember-me').Strategy
-RememberMeToken = SS.model('remember_me_token')
-User = SS.model('user')
+RememberMeToken = Cine.model('remember_me_token')
+User = Cine.model('user')
 
 # TokenModel
 # _user: objectId

@@ -1,6 +1,6 @@
 _ = require('underscore')
-User = SS.model('user')
-modelTimestamps = SS.require('test/helpers/model_timestamps')
+User = Cine.model('user')
+modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'User', ->
 

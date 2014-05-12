@@ -12,12 +12,12 @@ if env in ['development', 'test']
 else
   console.debug = noop
 
-# add global SS requiring object
-SS = require('./streamosaurus_server')
-global.SS = SS
+# add global Cine requiring object
+Cine = require('./streamosaurus_server')
+global.Cine = Cine
 
 # init mongo
-mongo_config = SS.config('variables/mongo')
+mongo_config = Cine.config('variables/mongo')
 mongoose = require('mongoose')
 mongoose.connect mongo_config
 mongoose.connection.on "open", (ref) ->
