@@ -1,11 +1,11 @@
 {
   "author": "Giving Stage Team",
-  "name": "streamosaurus",
+  "name": "cine.io",
   "domains": [
-    "streamosaur.us"
+    "cine.io"
   ],
   "version": "0.0.1",
-  "description": "streamosaur.us web site",
+  "description": "cine.io web site",
   "scripts": {
     "postinstall": "./node_modules/grunt-cli/bin/grunt productionPostInstall",
     "test": "coffeelint config/ middleware/ server.coffee app.coffee && mocha"
