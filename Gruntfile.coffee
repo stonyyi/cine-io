@@ -48,4 +48,6 @@ module.exports = (grunt) ->
     console.log command
     sh.run command
 
-  return
+  grunt.registerTask 'productionPostInstall', ->
+    return unless process.env.NODE_ENV == 'production'
+    grunt.task.run('build')
