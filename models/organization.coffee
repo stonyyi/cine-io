@@ -1,6 +1,4 @@
 mongoose = require 'mongoose'
-mongooseUniqueSlugs = require 'mongoose-uniqueslugs'
-mongooseHistoricalSlugs = Cine.lib 'mongoose_historical_slugs'
 crypto = require('crypto')
 
 OrganizationSchema = new mongoose.Schema
@@ -14,10 +12,6 @@ OrganizationSchema = new mongoose.Schema
   images:
     profileUrl:
       type: String
-  # slug # added by mongooseUniqueSlugs
-
-mongooseUniqueSlugs.enhanceSchema(OrganizationSchema, source: 'name')
-OrganizationSchema.plugin(mongooseHistoricalSlugs)
 
 OrganizationSchema.plugin(Cine.lib('mongoose_timestamps'))
 
@@ -33,7 +27,5 @@ OrganizationSchema.options.toJSON.transform = (doc, ret, options)->
   ret
 
 Organization = mongoose.model 'Organization', OrganizationSchema
-
-mongooseUniqueSlugs.enhanceModel(Organization)
 
 module.exports = Organization
