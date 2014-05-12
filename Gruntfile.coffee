@@ -12,6 +12,13 @@ module.exports = (grunt) ->
         files:
           "public/css/app.css": "scss/app.scss"
 
+    nodemon:
+      dev:
+        script: "server.coffee"
+        options:
+          watch: ["**/*.coffee", "**/*.js"]
+          delay: 1000
+
     watch:
       grunt:
         files: ["Gruntfile.coffee"]
@@ -20,13 +27,19 @@ module.exports = (grunt) ->
         files: "scss/**/*.scss"
         tasks: ["sass"]
 
+    concurrent:
+      dev:
+        options:
+          logConcurrentOutput: true
+        tasks: ["watch", "nodemon:dev"]
+
   grunt.loadNpmTasks "grunt-sass"
+  grunt.loadNpmTasks "grunt-nodemon"
   grunt.loadNpmTasks "grunt-contrib-watch"
+  grunt.loadNpmTasks "grunt-concurrent"
   grunt.registerTask "build", ["sass"]
-  grunt.registerTask "default", [
-    "build"
-    "watch"
-  ]
+  grunt.registerTask "dev", ["build", "concurrent:dev"]
+  grunt.registerTask "default", ["dev"]
   grunt.registerTask "test", (fileWithLeadingSlashFromSublime) ->
     command = undefined
     file = undefined
