@@ -8,6 +8,7 @@ describe 'EdgecastStreams#Create', ->
   beforeEach (done)->
     @org = new Organization(name: 'my org')
     @org.save done
+
   it 'can error with no available edgecast stream', (done)->
     params = apiKey: @org.apiKey
     Create params, (err, response, options)->
@@ -15,6 +16,7 @@ describe 'EdgecastStreams#Create', ->
       expect(response).to.be.null
       expect(options.status).to.equal(400)
       done()
+
   describe 'with available stream', (done)->
     beforeEach (done)->
       @stream = new EdgecastStream(instanceName: 'abcd')
