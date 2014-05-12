@@ -17,35 +17,33 @@ button, .button {
     color: white;
   }
 
-  .info {
+  .info-row {
     @include grid-row();
     padding: 1em 1em 0 1em;
 
-    div {
+    .info {
       @include grid-column(12);
-    }
 
-    h2 {
-      margin-bottom: 1em;
-    }
+      .brand {
+        display: block;
+        background: url(/images/cine-logomark.png) no-repeat;
+        background-size: contain;
+        text-indent: -9999em;
+        margin-bottom: 1em;
+      }
 
-    .brand {
-      display: block;
-      background: url(/images/cine-logomark.png) no-repeat;
-      background-size: contain;
-      text-indent: -9999em;
-      margin-bottom: 0.5em;
-    }
 
-    .pitch {
-      font-size: $h3-font-size;
-      font-family: $distinct-font-family;
-      font-weight: bold;
-      margin-bottom: 1em;
-    }
+      .pitch {
+        font-size: $h3-font-size;
+        line-height: $header-line-height;
+        font-family: $distinct-font-family;
+        font-weight: bold;
+        margin-bottom: 1em;
+      }
 
-    .actions {
-      margin-top: 1em;
+      .actions {
+        margin-top: 1em;
+      }
     }
   }
 
@@ -62,19 +60,14 @@ button, .button {
 @media #{$medium-up} {
   #home-hero {
     background: black url(/images/home-hero-tablet.jpg) center center fixed no-repeat;
-    .info {
+    .info-row {
       padding-top: 5em;
+        .info {
+          @include grid-column(8);
 
-      div {
-        @include grid-column(8);
-      }
-
-      .pitch {
-        font-size: $h1-font-size;
-      }
-
-      h3 {
-        font-size: 3em;
+        .pitch {
+          font-size: $h1-font-size;
+        }
       }
     }
   }
