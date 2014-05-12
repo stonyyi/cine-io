@@ -8,7 +8,7 @@ button, .button {
 }
 
 #home-hero {
-  background: black url(/images/home-hero.jpg) center center fixed no-repeat;
+  background: black url(/images/home-hero-desktop.jpg) center center fixed no-repeat;
   background-size: cover;
   min-height: 100%;
   padding-top: 0;
@@ -21,7 +21,7 @@ button, .button {
     @include grid-row();
     padding: 1em 1em 0 1em;
 
-    section {
+    div {
       @include grid-column(12);
     }
 
@@ -31,10 +31,9 @@ button, .button {
 
     .brand {
       display: block;
-      background: url(/images/streamosaurus-logo.png) no-repeat;
+      background: url(/images/cine-logomark.png) no-repeat;
       background-size: contain;
       text-indent: -9999em;
-      text-transform: uppercase;
       margin-bottom: 0.5em;
     }
 
@@ -62,8 +61,13 @@ button, .button {
 
 @media #{$medium-up} {
   #home-hero {
+    background: black url(/images/home-hero-tablet.jpg) center center fixed no-repeat;
     .info {
       padding-top: 5em;
+
+      div {
+        @include grid-column(8);
+      }
 
       .pitch {
         font-size: $h1-font-size;
@@ -73,5 +77,11 @@ button, .button {
         font-size: 3em;
       }
     }
+  }
+}
+
+@media #{$large-up} {
+  #home-hero {
+    background: black url(/images/home-hero-tablet.jpg) center center fixed no-repeat;
   }
 }
