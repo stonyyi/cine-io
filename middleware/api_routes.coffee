@@ -26,7 +26,7 @@ authenticatedRoute = (resource)->
   return (req, res)->
     params = req.query
     apiKey = params.apiKey
-    return sendError('no api key', null, status: 401) unless apiKey
+    return sendError('no api key', res, status: 401) unless apiKey
     responder = (err, organization)->
       return sendError(err || 'invalid api key', res, status: 401) if err || !organization
       callResource(resource, params, res, organization)
