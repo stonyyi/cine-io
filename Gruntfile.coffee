@@ -14,7 +14,7 @@ module.exports = (grunt) ->
 
     watch:
       grunt:
-        files: ["Gruntfile.js"]
+        files: ["Gruntfile.coffee"]
 
       sass:
         files: "scss/**/*.scss"
