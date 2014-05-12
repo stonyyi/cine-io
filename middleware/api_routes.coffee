@@ -17,12 +17,12 @@ callResource = (resource, params, res, organization)->
     when 3
       resource organization, params, responder
 
-notAuthenticatedRoute = (resource, action)->
+notAuthenticatedRoute = (resource)->
   return (req, res)->
     params = req.query
     callResource(resource, params, res)
 
-authenticatedRoute = (resource, action)->
+authenticatedRoute = (resource)->
   return (req, res)->
     params = req.query
     responder = (err, organization)->
@@ -30,16 +30,19 @@ authenticatedRoute = (resource, action)->
       callResource(resource, params, res, organization)
     Organization.findOne apiKey: params.apikey, responder
 
-makeApiCall = (resourceName, action)->
-  resource = Cine.api("#{resourceName}/#{action}")
-  return notAuthenticatedRoute(resource, action) if resource.length <= 2
+generateRoute = (resource)->
+  return notAuthenticatedRoute(resource) if resource.length <= 2
   return authenticatedRoute(resource)
 
-createApiRoute = (app, resource, action, route)->
-  route ||= resource
-  app.get "/api/#{API_VERSION}/#{route}", makeApiCall(resource, action)
+createApiRoute = (app, resourceName, action, route)->
+  route ||= resourceName
+  resource = Cine.api("#{resourceName}/#{action}")
+  app.get "/api/#{API_VERSION}/#{route}", generateRoute(resource)
 
-module.exports = (app)->
+apiRoutes = (app)->
   createApiRoute(app, 'streams', 'index')
   createApiRoute(app, 'health', 'index')
   createApiRoute(app, 'organizations', 'show', 'me')
+
+module.exports = apiRoutes
+module.exports._generateRoute = generateRoute

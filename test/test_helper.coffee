@@ -20,3 +20,5 @@ global.resetMongo = (done)->
     truncateAllTables done
   mongoose.connection.on "open", (ref) ->
     truncateAllTables done
+
+global.testApi = Cine.require('test/helpers/test_api')
