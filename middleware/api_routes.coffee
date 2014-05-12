@@ -25,10 +25,12 @@ notAuthenticatedRoute = (resource)->
 authenticatedRoute = (resource)->
   return (req, res)->
     params = req.query
+    apiKey = params.apiKey
+    return sendError('no api key', null, status: 401) unless apiKey
     responder = (err, organization)->
       return sendError(err || 'invalid api key', res, status: 401) if err || !organization
       callResource(resource, params, res, organization)
-    Organization.findOne apiKey: params.apikey, responder
+    Organization.findOne apiKey: apiKey, responder
 
 generateRoute = (resource)->
   return notAuthenticatedRoute(resource) if resource.length <= 2

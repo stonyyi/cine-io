@@ -7,7 +7,6 @@ describe 'EdgecastStream', ->
   modelTimestamps EdgecastStream
 
   describe '.nextAvailable', ->
-    beforeEach resetMongo
     beforeEach (done)->
       @stream1 = new EdgecastStream(streamName: 'name1')
       @stream1.save done

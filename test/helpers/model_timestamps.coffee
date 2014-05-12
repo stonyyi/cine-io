@@ -1,6 +1,5 @@
 module.exports = (Model, attributes={})->
   describe 'timestamps', ->
-    beforeEach resetMongo
 
     it 'adds a createdAt and updatedAt', (done)->
       expect(attributes.createdAt).to.be.undefined

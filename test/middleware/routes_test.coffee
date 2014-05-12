@@ -19,7 +19,6 @@ describe 'api routing', ->
               done()
 
   describe 'authenticated', ->
-    beforeEach resetMongo
 
     beforeEach (done)->
       @organization = new Organization(apiKey: 'abc', name: 'me')
@@ -32,13 +31,13 @@ describe 'api routing', ->
           done()
 
     it 'requires an valid api key', (done)->
-      @agent.get('/api/1/me?apikey=INVALID')
+      @agent.get('/api/1/me?apiKey=INVALID')
         .expect(401)
         .end (err, res)=>
           done()
 
     it 'routes to an authenticated route', (done)->
-        @agent.get('/api/1/me?apikey=abc')
+        @agent.get('/api/1/me?apiKey=abc')
           .end (err, res)=>
             expect(err).to.be.null
             expect(res.body._id).to.equal(@organization._id.toString())

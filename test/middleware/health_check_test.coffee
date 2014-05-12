@@ -2,6 +2,7 @@ supertest = require('supertest')
 app = Cine.require('app').app
 
 describe 'test', ->
+
   beforeEach ->
     @agent = supertest.agent(app)
 

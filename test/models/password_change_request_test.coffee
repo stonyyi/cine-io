@@ -3,7 +3,7 @@ modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'PasswordChangeRequest', ->
   modelTimestamps PasswordChangeRequest, {}
-  beforeEach resetMongo
+
   it 'has a unique identifier generated on save', (done)->
     pcr = new PasswordChangeRequest
     pcr.save (err)->

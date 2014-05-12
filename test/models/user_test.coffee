@@ -3,7 +3,6 @@ User = Cine.model('user')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'User', ->
-
   modelTimestamps(User, email: 'hey', name: 'yo')
 
   describe 'password generation', ->
@@ -53,7 +52,6 @@ describe 'User', ->
       expect(u.lastName()).to.equal("full name")
 
   describe 'toInternalApiJSON', ->
-    beforeEach resetMongo
     it 'only includes the does not include the hashed_password nor password_salt', (done)->
       ref = new User
       u = new User(name: 'my name', _referringUser: ref._id, hashed_password: 'hash', password_salt: 'salt', email: 'hello')

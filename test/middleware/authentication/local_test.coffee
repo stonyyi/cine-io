@@ -8,7 +8,6 @@ describe 'local authentication', ->
   app.get '/whoami', (req, res)->
     res.send(req.currentUser)
 
-  beforeEach resetMongo
   beforeEach ->
     @agent = supertest.agent(app)
 

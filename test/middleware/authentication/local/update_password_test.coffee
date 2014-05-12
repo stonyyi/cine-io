@@ -40,7 +40,6 @@ describe 'update password', ->
           done(err)
 
     describe 'with data', ->
-      beforeEach resetMongo
       beforeEach (done)->
         @pcr = new PasswordChangeRequest()
         @pcr.save(done)
@@ -55,8 +54,6 @@ describe 'update password', ->
             done(err)
 
   describe 'success states', ->
-    beforeEach resetMongo
-
     beforeEach (done)->
       @user = new User(email: 'some email')
       @user.assignHashedPasswordAndSalt 'old pass', (err)=>

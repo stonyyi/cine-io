@@ -3,8 +3,6 @@ Organization = Cine.model('organization')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'HistoricalSlug', ->
-  beforeEach resetMongo
-
   modelTimestamps HistoricalSlug, owner: new Organization, _id: 'some-id'
 
   describe 'ownerType and ownerId', ->

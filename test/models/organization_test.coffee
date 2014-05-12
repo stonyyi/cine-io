@@ -3,10 +3,8 @@ HistoricalSlug = Cine.model('historical_slug')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'Organization', ->
-
   modelTimestamps(Organization, name: 'hey')
 
-  beforeEach resetMongo
   describe 'slug', ->
 
     it 'has a unique slug based on name', (done)->

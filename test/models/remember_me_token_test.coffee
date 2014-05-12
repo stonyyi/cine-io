@@ -3,7 +3,7 @@ modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'RememberMeToken', ->
   modelTimestamps RememberMeToken, {}
-  beforeEach resetMongo
+
   it 'has a unique token generated on save', (done)->
     rmt = new RememberMeToken
     rmt.save (err)->

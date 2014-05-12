@@ -11,7 +11,6 @@ describe 'RememberMe', ->
     app.get '/whoami', (req, res)->
       res.send(req.currentUser)
 
-    beforeEach resetMongo
     beforeEach (done)->
       @agent = supertest.agent(app)
       loginUser @agent, (err, remember_me)=>
@@ -48,7 +47,6 @@ describe 'RememberMe', ->
           done(err)
 
   describe 'createNewToken', ->
-    beforeEach resetMongo
     it 'should return a new token for the user id', (done)->
       user = new User
       RememberMe.createNewToken user, (err, token)->
