@@ -3,16 +3,13 @@
 
 button, .button {
   text-transform: uppercase;
+  color: white;
   // background: none;
   // border: 2px solid $primary-color;
 }
 
 #homepage {
   height: 100%;
-
-  * {
-    color: white;
-  }
 
   h3 {
     font-family: $distinct-font-family;
@@ -26,6 +23,10 @@ button, .button {
     height: 100%;
     padding-top: 0;
     text-align: left;
+
+    * {
+      color: white;
+    }
 
     .info {
       @include grid-column(12);
@@ -104,29 +105,15 @@ button, .button {
     background: white;
     padding-bottom: 2em;
 
-    * {
-      color: black;
-    }
-
     .info {
       @include grid-column(8, true, true, 2);
       padding-top: 3em;
 
-      .price {
-        @include panel();
-        margin-top: 1em;
-        text-align: center;
-
-        .currency {
-          color: #333;
-          font-size: 4em;
-        }
-        .amount {
-          font-size: 4em;
-        }
-        .units {
-          position: relative;
-          top: -1em;
+      .prices {
+        @include grid-row();
+        margin-top: 1.5em;
+        .plan {
+          @include grid-column(12);
         }
       }
     }
@@ -160,14 +147,6 @@ button, .button {
         }
       }
     }
-
-    #pricing {
-      .info {
-        .price {
-          @include grid-column(4, true, true, 4);
-        }
-      }
-    }
   }
 }
 
@@ -175,6 +154,16 @@ button, .button {
   #homepage {
     #home-hero {
       background: black url(/images/home-hero-tablet.jpg) center center fixed no-repeat;
+    }
+
+    #pricing {
+      .info {
+        .prices {
+          .plan {
+            @include grid-column(4);
+          }
+        }
+      }
     }
   }
 }
