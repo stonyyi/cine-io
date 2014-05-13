@@ -112,7 +112,15 @@
     <script src="/foundation/js/foundation.min.js"></script>
 
     <script type="text/javascript">
-      $(document).foundation();
+      $(document).foundation()
+
+      // smooth scroll when someone clicks "learn more"
+      $('.scrollhint a').on('click', function(e) {
+        var $anchor = $(this)
+        $('html, body').stop().animate({
+          scrollTop: $($anchor.attr('href')).offset().top
+        }, 500)
+      })
     </script>
 
   </body>
