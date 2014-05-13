@@ -65,6 +65,7 @@ apiRoutes = (app)->
   createPostRoute(app, 'projects', 'create')
 
   createGetRoute(app, 'streams', 'index')
+  createGetRoute(app, 'stream', 'show')
   createPostRoute(app, 'streams', 'create')
 
 module.exports = apiRoutes
