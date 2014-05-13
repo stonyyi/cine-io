@@ -137,15 +137,12 @@ button, .button {
   #homepage {
     #home-hero {
       background: url(/images/home-hero-tablet.jpg) center center no-repeat;
-      .info-row {
+      .info {
+        @include grid-column(8, true);
         padding-top: 5em;
-        .info {
-          @include grid-column(8, true);
-          padding-top: 5em;
 
-          .pitch {
-            font-size: $h1-font-size;
-          }
+        .pitch {
+          font-size: $h1-font-size;
         }
       }
     }
