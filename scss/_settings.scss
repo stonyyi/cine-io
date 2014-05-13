@@ -58,16 +58,6 @@ $distinct-font-family: Cardo, Georgia, serif;
 // $opposite-direction: right;
 // $default-float: left;
 
-// We use these as default colors throughout
-// $primary-color: #008CBA;
-$primary-color: #128c87;
-$primary-color-bright: scale-color($primary-color, $lightness: 85%);
-// $secondary-color: #e7e7e7;
-// $alert-color: #f04124;
-// $success-color: #43AC6A;
-// $warning-color: #f08a24;
-// $info-color: #a0d3e8;
-
 // Color scheme (matches aperture wheel)
 $scheme-color-north: #128c87;
 $scheme-color-northeast: #344f89;
@@ -85,6 +75,15 @@ $scheme-color-south-bright: scale-color($scheme-color-south, $lightness: 25%);
 $scheme-color-southwest-bright: scale-color($scheme-color-southwest, $lightness: 25%);
 $scheme-color-west-bright: scale-color($scheme-color-west, $lightness: 25%);
 $scheme-color-northwest-bright: scale-color($scheme-color-northwest, $lightness: 25%);
+
+// We use these as default colors throughout
+// $primary-color: #008CBA;
+$primary-color: $scheme-color-north;
+// $secondary-color: #e7e7e7;
+// $alert-color: #f04124;
+// $success-color: #43AC6A;
+// $warning-color: #f08a24;
+// $info-color: #a0d3e8;
 
 // We use these to make sure border radius matches unless we want it different.
 // $global-radius: 3px;

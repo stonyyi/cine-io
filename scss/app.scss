@@ -59,7 +59,7 @@ button, .button {
   }
 
   #about {
-    background: $primary-color;
+    background: $scheme-color-north;
     color: white;
     padding-bottom: 2em;
 
@@ -73,7 +73,7 @@ button, .button {
       padding-top: 3em;
 
       h2, h2 * {
-        color: $primary-color-bright;
+        color: $scheme-color-north-bright;
       }
     }
   }
