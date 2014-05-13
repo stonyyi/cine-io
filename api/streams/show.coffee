@@ -1,15 +1,24 @@
 EdgecastStream = Cine.model('edgecast_stream')
+fs = require('fs')
+profileFileName = "#{Cine.root}/api/streams/fmle_profile.xml"
 
 fmleProfile = (stream, callback)->
-  throw new Error('not implemented')
-
+  fs.readFile profileFileName, 'utf8', (err, profileFile)->
+    return callback("cannot read profile", null, status: 500) if err
+    content = profileFile
+      .toString()
+      .replace(/EDGECAST_INSTANCE_NAME/g, stream.instanceName)
+      .replace(/EDGECAST_STREAM_NAME/g, stream.streamName)
+      .replace(/EDGECAST_STREAM_KEY/g, stream.streamKey)
+      .replace(/EDGECAST_EVENT_NAME/g, stream.eventName)
+    callback(null, content: content)
 
 toJSON = (stream, callback)->
   callback(null, stream.toJSON())
 
 Show = (callback)->
   return callback("id required", null, status: 400) unless @params.id
-  EdgecastStream.findOne _id: @params.id, _project: @project.id, (err, stream)=>
+  EdgecastStream.findOne _id: @params.id, _project: @project._id, (err, stream)=>
     return callback(err, null, status: 400) if err
     return callback("stream not found", null, status: 404) unless stream
     return fmleProfile(stream, callback) if @params.fmleProfile == 'true'
