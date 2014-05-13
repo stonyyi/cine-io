@@ -76,6 +76,28 @@ button, .button {
         color: $scheme-color-north-bright;
       }
     }
+
+    .video {
+      position: relative;
+      width: 100%;
+      background: black;
+
+      .aspect-ratio {
+        padding-top: 75%;
+      }
+
+      p {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: white;
+        text-transform: uppercase;
+        padding-top: 30%;
+      }
+    }
   }
 
   #pricing {
@@ -136,12 +158,6 @@ button, .button {
             font-size: $h1-font-size;
           }
         }
-      }
-    }
-
-    #about {
-      iframe {
-        min-height: 480px;
       }
     }
 
