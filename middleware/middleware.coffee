@@ -6,7 +6,6 @@ morgan  = require('morgan')
 bodyParser = require('body-parser')
 RedisStore = require('connect-redis')(session)
 methodOverride = require('method-override')
-csrf = require('csurf')
 
 module.exports = (app) ->
 
@@ -35,10 +34,6 @@ module.exports = (app) ->
 
   # for fake DELETE and PUT requests
   app.use methodOverride()
-
-  # CSRF protection, populates req.csrfToken()
-  if app.settings.env isnt "test"
-    app.use csrf()
 
   Cine.middleware('authentication', app)
   Cine.middleware('health_check', app)
