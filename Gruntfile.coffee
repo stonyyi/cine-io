@@ -1,3 +1,4 @@
+_ = require('underscore')
 module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON("package.json")
@@ -47,6 +48,14 @@ module.exports = (grunt) ->
     command = "mocha test/setup_and_teardown.coffee #{file}"
     console.log command
     sh.run command
+
+  grunt.registerTask 'routes', ->
+    require('./config/environment')
+    app = Cine.require('app').app
+    routes = []
+    _.each app._router.stack, (route)->
+      routes.push(route.route.path) if route.route
+    _.each routes.sort(), (route)-> console.log(route)
 
   grunt.registerTask 'productionPostInstall', ->
     return unless process.env.NODE_ENV == 'production'
