@@ -9,7 +9,7 @@ describe 'Project', ->
       project = new Project(name: 'some name')
       project.save (err)->
         expect(err).to.be.null
-        expect(project.apiKey.length).to.equal(48)
+        expect(project.apiKey.length).to.equal(32)
         done()
 
     it 'will not override the password change request on future saves', (done)->
@@ -17,7 +17,7 @@ describe 'Project', ->
       project.save (err)->
         expect(err).to.be.null
         apiKey = project.apiKey
-        expect(apiKey.length).to.equal(48)
+        expect(apiKey.length).to.equal(32)
         project.save (err)->
           expect(project.apiKey).to.equal(apiKey)
           done(err)

@@ -17,7 +17,7 @@ ProjectSchema.plugin(Cine.lib('mongoose_timestamps'))
 
 ProjectSchema.pre 'save', (next)->
   return next() if @apiKey
-  crypto.randomBytes 24, (ex, buf)=>
+  crypto.randomBytes 16, (ex, buf)=>
     @apiKey = buf.toString('hex')
     next()
 

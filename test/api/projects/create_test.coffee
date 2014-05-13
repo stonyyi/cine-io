@@ -21,7 +21,7 @@ describe 'Projects#Create', ->
       Create params, user: @user, (err, response, options)->
         expect(err).to.be.null
         expect(response.name).to.equal('new project')
-        expect(response.apiKey).to.have.length(48)
+        expect(response.apiKey).to.have.length(32)
         done()
     it 'adds the permission to the user', (done)->
       params = name: 'new project'
