@@ -149,12 +149,8 @@ button, .button {
   }
 }
 
-@media #{$xlarge-up} {
+@media #{$large-up} {
   #homepage {
-    #home-hero {
-      background: url(/images/home-hero-desktop.jpg) center center no-repeat;
-    }
-
     #pricing {
       .info {
         .prices {
@@ -163,6 +159,14 @@ button, .button {
           }
         }
       }
+    }
+  }
+}
+
+@media #{$xlarge-up} {
+  #homepage {
+    #home-hero {
+      background: url(/images/home-hero-desktop.jpg) center center no-repeat;
     }
   }
 }
