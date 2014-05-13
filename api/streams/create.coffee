@@ -1,5 +1,6 @@
 EdgecastStream = Cine.model('edgecast_stream')
 createNewStreamInEdgecast = Cine.lib('create_new_stream_in_edgecast')
+_ = require('underscore')
 noop = ->
 
 module.exports = (callback)->
