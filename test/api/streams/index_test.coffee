@@ -1,4 +1,4 @@
-Organization = Cine.model('organization')
+Project = Cine.model('project')
 EdgecastStream = Cine.model('edgecast_stream')
 Index = testApi Cine.api('streams/index')
 
@@ -6,21 +6,21 @@ describe 'EdgecastStreams#Index', ->
   testApi.requresApiKey Index
 
   beforeEach (done)->
-    @org = new Organization(name: 'my org')
-    @org.save done
+    @project = new Project(name: 'my project')
+    @project.save done
 
   beforeEach (done)->
-    @olderStream = new EdgecastStream(instanceName: 'abcd', _organization: @org._id)
+    @olderStream = new EdgecastStream(instanceName: 'abcd', _project: @project._id)
     @olderStream.save done
 
   beforeEach (done)->
     d = new Date
     d.setHours(d.getHours() - 1)
-    @newerStream = new EdgecastStream(instanceName: 'efgh', _organization: @org._id, createdAt: d)
+    @newerStream = new EdgecastStream(instanceName: 'efgh', _project: @project._id, createdAt: d)
     @newerStream.save done
 
   beforeEach (done)->
-    @deletedStream = new EdgecastStream(instanceName: 'efgh', _organization: @org._id, deletedAt: new Date)
+    @deletedStream = new EdgecastStream(instanceName: 'efgh', _project: @project._id, deletedAt: new Date)
     @deletedStream.save done
 
   beforeEach (done)->
@@ -28,11 +28,11 @@ describe 'EdgecastStreams#Index', ->
     @noOrgStream.save done
 
   beforeEach (done)->
-    @otherOrgStream = new EdgecastStream(instanceName: 'ijkl', _organization: (new Organization)._id)
+    @otherOrgStream = new EdgecastStream(instanceName: 'ijkl', _project: (new Project)._id)
     @otherOrgStream.save done
 
   it 'returns the edgecast streams for the account sorted by newest first', (done)->
-    params = apiKey: @org.apiKey
+    params = apiKey: @project.apiKey
     Index params, (err, response, options)=>
       expect(err).to.be.null
       expect(response).to.have.length(2)

@@ -1,7 +1,7 @@
 mongoose = require 'mongoose'
 crypto = require('crypto')
 
-OrganizationSchema = new mongoose.Schema
+ProjectSchema = new mongoose.Schema
   name:
     type: String
     default: ''
@@ -13,19 +13,19 @@ OrganizationSchema = new mongoose.Schema
     profileUrl:
       type: String
 
-OrganizationSchema.plugin(Cine.lib('mongoose_timestamps'))
+ProjectSchema.plugin(Cine.lib('mongoose_timestamps'))
 
-OrganizationSchema.pre 'save', (next)->
+ProjectSchema.pre 'save', (next)->
   return next() if @apiKey
   crypto.randomBytes 24, (ex, buf)=>
     @apiKey = buf.toString('hex')
     next()
 
-OrganizationSchema.options.toJSON ||= {}
-OrganizationSchema.options.toJSON.transform = (doc, ret, options)->
+ProjectSchema.options.toJSON ||= {}
+ProjectSchema.options.toJSON.transform = (doc, ret, options)->
   ret.createdAt = ret.createdAt.toISOString()
   ret
 
-Organization = mongoose.model 'Organization', OrganizationSchema
+Project = mongoose.model 'Project', ProjectSchema
 
-module.exports = Organization
+module.exports = Project

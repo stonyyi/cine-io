@@ -1,9 +1,9 @@
 mongoose = require 'mongoose'
 
 EdgecastStreamSchema = new mongoose.Schema
-  _organization:
+  _project:
     type: mongoose.Schema.Types.ObjectId
-    ref: 'Organization'
+    ref: 'Project'
   instanceName:
     type: String
   eventName:
@@ -21,7 +21,7 @@ EdgecastStreamSchema = new mongoose.Schema
 
 EdgecastStreamSchema.statics.nextAvailable = (callback)->
   query =
-    _organization: {$exists: false}
+    _project: {$exists: false}
   @findOne(query).sort(createdAt: -1).exec(callback)
 
 EdgecastStreamSchema.plugin(Cine.lib('mongoose_timestamps'))

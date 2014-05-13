@@ -1,5 +1,5 @@
 EdgecastStream = Cine.model('edgecast_stream')
-Organization = Cine.model('organization')
+Project = Cine.model('project')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
 _ = require('underscore')
 
@@ -24,7 +24,7 @@ describe 'EdgecastStream', ->
         done(err)
 
     it 'does not return consumed streams', (done)->
-      @stream1._organization = (new Organization)._id
+      @stream1._project = (new Project)._id
       @stream1.save (err)=>
         expect(err).to.be.null
         EdgecastStream.nextAvailable (err, availableStream)=>

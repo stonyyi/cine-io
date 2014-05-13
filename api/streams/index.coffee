@@ -6,7 +6,7 @@ toJsonProxy = (model)->
 
 module.exports = (callback)->
   scope = EdgecastStream.find()
-    .where('_organization').equals(@organization._id)
+    .where('_project').equals(@project._id)
     .exists('deletedAt', false)
     .sort(createdAt: -1)
   scope.exec (err, streams)->
@@ -14,4 +14,4 @@ module.exports = (callback)->
     response = _.map streams, toJsonProxy
     callback(null, response)
 
-module.exports.organization = true
+module.exports.project = true

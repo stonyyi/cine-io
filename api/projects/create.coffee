@@ -1,13 +1,13 @@
-Organization = Cine.model('organization')
+Project = Cine.model('project')
 
 module.exports = (callback)->
-  org = new Organization
+  project = new Project
     name: @params.name
-  org.save (err, org)=>
+  project.save (err, project)=>
     return callback(err, null, status: 400) if err
-    @user.permissions.push objectId: org._id, objectName: 'Organization'
+    @user.permissions.push objectId: project._id, objectName: 'Project'
     @user.save (err, user)->
       return callback(err, null, status: 400) if err
-      callback(null, org.toJSON())
+      callback(null, project.toJSON())
 
 module.exports.user = true

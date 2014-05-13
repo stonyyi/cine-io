@@ -1,5 +1,5 @@
 API_VERSION = 1
-Organization = Cine.model('organization')
+Project = Cine.model('project')
 User = Cine.model('user')
 
 class ResourceCaller
@@ -8,8 +8,8 @@ class ResourceCaller
     @apiKey = @params.apiKey
     @sessionUserId = @req.user
   call: ->
-    if @resource.organization
-      @_getOrganization =>
+    if @resource.project
+      @_getProject =>
         @resource.call(this, @callback)
     else if @resource.user
       @_getUser =>
@@ -21,14 +21,14 @@ class ResourceCaller
     return @_sendError(err, options) if err
     @res.send(response)
 
-  _getOrganization: (callback)->
+  _getProject: (callback)->
     return @_sendError('no api key', status: 401) unless @apiKey
-    _getOrganizationCallback = (err, organization)=>
+    _getProjectCallback = (err, project)=>
       return @_sendError(err, status: 401) if err
-      return @_sendError('invalid api key', status: 404) if !organization
-      @organization = organization
+      return @_sendError('invalid api key', status: 404) if !project
+      @project = project
       callback()
-    Organization.findOne apiKey: @apiKey, _getOrganizationCallback
+    Project.findOne apiKey: @apiKey, _getProjectCallback
 
   _getUser: (callback)->
     return @_sendError('not logged in', status: 401) unless @sessionUserId
@@ -56,7 +56,7 @@ createApiRoute = (app, resourceName, action, route)->
 apiRoutes = (app)->
   createApiRoute(app, 'streams', 'index')
   createApiRoute(app, 'health', 'index')
-  createApiRoute(app, 'organizations', 'show', 'me')
+  createApiRoute(app, 'projects', 'show', 'me')
 
 module.exports = apiRoutes
 module.exports._generateRoute = generateRoute

@@ -1,6 +1,6 @@
 supertest = require('supertest')
 app = Cine.require('app').app
-Organization = Cine.model('organization')
+Project = Cine.model('project')
 
 describe 'api routing', ->
 
@@ -21,8 +21,8 @@ describe 'api routing', ->
   describe 'authenticated', ->
 
     beforeEach (done)->
-      @organization = new Organization(apiKey: 'abc', name: 'me')
-      @organization.save done
+      @project = new Project(apiKey: 'abc', name: 'me')
+      @project.save done
 
     it 'requires an api key', (done)->
       @agent.get('/api/1/me')
@@ -40,5 +40,5 @@ describe 'api routing', ->
       @agent.get('/api/1/me?apiKey=abc')
         .end (err, res)=>
           expect(err).to.be.null
-          expect(res.body._id).to.equal(@organization._id.toString())
+          expect(res.body._id).to.equal(@project._id.toString())
           done()
