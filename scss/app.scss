@@ -17,7 +17,7 @@ button, .button {
   }
 
   #home-hero {
-    background: black url(/images/home-hero-desktop.jpg) center center fixed no-repeat;
+    background: black url(/images/home-hero-mobile.jpg) center center fixed no-repeat;
     background-size: cover;
     min-height: 100%;
     height: 100%;
@@ -150,10 +150,10 @@ button, .button {
   }
 }
 
-@media #{$large-up} {
+@media #{$xlarge-up} {
   #homepage {
     #home-hero {
-      background: black url(/images/home-hero-tablet.jpg) center center fixed no-repeat;
+      background: black url(/images/home-hero-desktop.jpg) center center fixed no-repeat;
     }
 
     #pricing {
