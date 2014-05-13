@@ -10,7 +10,7 @@ module.exports = (callback)->
     stream._project = @project._id
     stream.save (err, stream)->
       return callback(err, null, status: 400) if err
-      createNewStreamInEdgecast(noop) unless _.include ['test', 'production'], process.env.NODE_ENV
+      createNewStreamInEdgecast(noop) if _.include ['test', 'production'], process.env.NODE_ENV
       callback(null, stream.toJSON())
 
 module.exports.project = true

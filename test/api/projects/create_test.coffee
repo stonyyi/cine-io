@@ -23,6 +23,7 @@ describe 'Projects#Create', ->
         expect(response.name).to.equal('new project')
         expect(response.apiKey).to.have.length(32)
         done()
+
     it 'adds the permission to the user', (done)->
       params = name: 'new project'
       expect(@user.permissions).to.have.length(0)
