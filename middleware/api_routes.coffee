@@ -48,15 +48,24 @@ generateRoute = (resource)->
     caller = new ResourceCaller resource, req, res
     caller.call()
 
-createApiRoute = (app, resourceName, action, route)->
+createGetRoute = (app, resourceName, action, route)->
   route ||= resourceName
   resource = Cine.api("#{resourceName}/#{action}")
   app.get "/api/#{API_VERSION}/#{route}", generateRoute(resource)
 
+createPostRoute = (app, resourceName, action, route)->
+  route ||= resourceName
+  resource = Cine.api("#{resourceName}/#{action}")
+  app.post "/api/#{API_VERSION}/#{route}", generateRoute(resource)
+
 apiRoutes = (app)->
-  createApiRoute(app, 'streams', 'index')
-  createApiRoute(app, 'health', 'index')
-  createApiRoute(app, 'projects', 'show', 'me')
+  createGetRoute(app, 'health', 'index')
+
+  createGetRoute(app, 'projects', 'show', 'me')
+  createPostRoute(app, 'projects', 'create')
+
+  createGetRoute(app, 'streams', 'index')
+  createPostRoute(app, 'streams', 'create')
 
 module.exports = apiRoutes
 module.exports._generateRoute = generateRoute
