@@ -33,7 +33,15 @@
             <h2 class="subtitle">Device-agnostic live-streaming.</h1>
             <h3 class="pitch">Set up for your app in under 5 minutes.</h3>
             <div class="actions">
-              <a href="#" class="button radius">Get API Key</a>
+              <a href="#" class="button radius" data-reveal-id="not-ready-yet">Get API Key</a>
+
+              <div id="not-ready-yet" class="reveal-modal" data-reveal>
+                <h2>We're not ready yet!</h2>
+                <p class="lead">Sorry &mdash; we need a few more weeks until we go live.</p>
+                <p>Sorry for any confusion. You should check back on <strong>2014-Jun-01</strong>. We should be ready by then.</p>
+                <a class="close-reveal-modal" style="font-size: 1.25em"><i class="fa fa-times"></i></a>
+              </div>
+
             </div>
           </div>
         </div>
@@ -97,6 +105,15 @@
       </footer>
 
     </div>
+
+    <!-- scripts -->
+    <script src="/jquery/dist/jquery.min.js"></script>
+    <script src="/fastclick/lib/fastclick.js"></script>
+    <script src="/foundation/js/foundation.min.js"></script>
+
+    <script type="text/javascript">
+      $(document).foundation();
+    </script>
 
   </body>
 </html>
