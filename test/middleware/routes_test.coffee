@@ -40,5 +40,5 @@ describe 'api routing', ->
       @agent.get('/api/1/me?apiKey=abc')
         .end (err, res)=>
           expect(err).to.be.null
-          expect(res.body._id).to.equal(@project._id.toString())
+          expect(res.body.id).to.equal(@project._id.toString())
           done()

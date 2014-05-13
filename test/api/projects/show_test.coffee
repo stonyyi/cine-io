@@ -12,6 +12,6 @@ describe 'Projects#Show', ->
     params = apiKey: @project.apiKey
     Show params, (err, response, options)=>
       expect(err).to.be.null
-      expect(response._id.toString()).to.equal(@project._id.toString())
+      expect(response.id).to.equal(@project._id.toString())
       expect(response.name).to.equal('my project')
       done()

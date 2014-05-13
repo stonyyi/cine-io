@@ -1,6 +1,6 @@
 module.exports = (callback)->
   response =
-    _id: @project._id
+    id: @project._id.toString()
     name: @project.name
   callback(null, response)
 
