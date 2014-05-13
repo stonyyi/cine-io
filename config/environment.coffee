@@ -13,7 +13,7 @@ else
   console.debug = noop
 
 # add global Cine requiring object
-Cine = require('./streamosaurus_server')
+Cine = require('./cine_server')
 global.Cine = Cine
 
 # init mongo
