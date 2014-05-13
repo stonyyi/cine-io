@@ -1,4 +1,15 @@
 generateRoute = Cine.middleware('api_routes')._generateRoute
+qs = require('qs')
+_ = require('underscore')
+convertParams = (params)->
+  newParams = {}
+  _.each params, (value, key)->
+    # http://stackoverflow.com/questions/13850819/can-i-determine-if-a-string-is-a-mongodb-objectid
+    if value.toString().match /^[0-9a-fA-F]{24}$/
+      newParams[key] = value.toString()
+    else
+      newParams[key] = value
+  qs.parse qs.stringify newParams
 testApi = (resource)->
   callRoute = generateRoute(resource)
   return ->
@@ -12,7 +23,7 @@ testApi = (resource)->
       session = arguments[1]
     callback = arguments[arguments.length - 1]
     req =
-      query: params
+      query: convertParams(params)
     if callback == undefined
       callback = session
       session = {}
