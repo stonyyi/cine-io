@@ -52,10 +52,21 @@ module.exports = (grunt) ->
   grunt.registerTask 'routes', ->
     require('./config/environment')
     app = Cine.require('app').app
-    routes = []
+    allRoutes = {
+      get: []
+      post: []
+      put: []
+      delete: []
+    }
     _.each app._router.stack, (route)->
-      routes.push(route.route.path) if route.route
-    _.each routes.sort(), (route)-> console.log(route)
+      return unless route.route
+      route = route.route
+      _.each route.methods, (methodIsUsed, method)->
+        return unless methodIsUsed
+        allRoutes[method].push(route.path)
+    _.each allRoutes, (routes, method)->
+      console.log("\n======= #{method} =======\n") if routes.length > 1
+      _.each routes.sort(), (route)-> console.log(route)
 
   grunt.registerTask 'productionPostInstall', ->
     return unless process.env.NODE_ENV == 'production'
