@@ -36,6 +36,6 @@ describe 'EdgecastStreams#Index', ->
     Index params, (err, response, options)=>
       expect(err).to.be.null
       expect(response).to.have.length(2)
-      expect(response[0]._id.toString()).to.equal(@olderStream._id.toString())
-      expect(response[1]._id.toString()).to.equal(@newerStream._id.toString())
+      expect(response[0].id).to.equal(@olderStream._id.toString())
+      expect(response[1].id).to.equal(@newerStream._id.toString())
       done()

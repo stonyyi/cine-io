@@ -14,7 +14,15 @@ fmleProfile = (stream, callback)->
     callback(null, content: content)
 
 toJSON = (stream, callback)->
-  callback(null, stream.toJSON())
+  streamJSON =
+    id: stream._id.toString()
+    instanceName: stream.instanceName
+    eventName: stream.eventName
+    streamName: stream.streamName
+    streamKey: stream.streamKey
+    expiration: stream.expiration
+
+  callback(null, streamJSON)
 
 Show = (callback)->
   return callback("id required", null, status: 400) unless @params.id

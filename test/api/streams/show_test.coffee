@@ -44,7 +44,8 @@ describe 'EdgecastStreams#Show', ->
     params = apiKey: @project.apiKey, id: @projectStream._id
     Show params, (err, response, options)=>
       expect(err).to.be.null
-      expect(response._id.toString()).to.equal(@projectStream._id.toString())
+      expect(_.keys(response).sort()).to.deep.equal(['eventName', 'expiration', 'id', 'instanceName', 'streamKey', 'streamName'])
+      expect(response.id).to.equal(@projectStream._id.toString())
       expect(response.instanceName).to.equal('cines')
       done()
 
