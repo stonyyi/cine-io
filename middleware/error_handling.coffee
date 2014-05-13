@@ -8,7 +8,7 @@ developmentHandler = (err, req, res, next) ->
   errorHandler(err, req, res, next)
 
 serveStaticErrorPage = (status, res)->
-  errPage = "#{GS.root}/public/error_pages/#{status}.html"
+  errPage = "#{Cine.root}/public/error_pages/#{status}.html"
   fs.exists errPage, (exists)->
     res.status status
     if exists
