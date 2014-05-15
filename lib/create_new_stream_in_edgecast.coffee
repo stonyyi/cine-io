@@ -8,6 +8,7 @@ EdgecastStream = Cine.model('edgecast_stream')
 edgecastConfig = Cine.config('variables/edgecast')
 edgecastToken = edgecastConfig.token
 edgecastAccount = edgecastConfig.account
+# https://my.edgecast.com/uploads/ubers/1/docs/en-US/webhelp/b/RESTAPIHelpCenter/default.htm
 hlsHdsUrl = "https://api.edgecast.com/v2/mcc/customers/#{edgecastAccount}/httpstreaming/livehlshds"
 flashMediaStreamingUrl = "https://api.edgecast.com/v2/mcc/customers/#{edgecastAccount}/fmsliveauth/streamkeys"
 

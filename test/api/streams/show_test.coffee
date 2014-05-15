@@ -56,5 +56,5 @@ describe 'EdgecastStreams#Show', ->
         expect(err).to.be.null
         expect(_.keys(response)).to.deep.equal(['content'])
         expect(response.content).to.contain('<stream>cine1?bass35&amp;adbe-live-event=cine1ENAME</stream>')
-        expect(response.content).to.contain('<url>rtmp://fso.lax.C45E.edgecastcdn.net/20C45E/cines</url>')
+        expect(response.content).to.contain('<url>rtmp://stream.lax.cine.io/20C45E/cines</url>')
         done()
