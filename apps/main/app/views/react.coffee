@@ -1,5 +1,6 @@
 RendrView = Cine.view("base")
-React = require("React")
+React = require("react")
+
 module.exports = RendrView.extend
   getComponent: ->
     throw new Error("You must override getComponent()")

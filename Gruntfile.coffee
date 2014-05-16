@@ -85,7 +85,7 @@ module.exports = (grunt) ->
           aliases: [
             {from: "apps/main/app/", to: 'app/'}
             {from: "compiled/components/", to: 'app/components/'}
-            {from: "bower_components/react/react", to: 'React'}
+            {from: "bower_components/react/react", to: 'react'}
 
             {from: rendrDir + '/client', to: 'rendr/client'},
             {from: rendrDir + '/shared', to: 'rendr/shared'},
