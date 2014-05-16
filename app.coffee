@@ -13,6 +13,9 @@ Cine.middleware 'api_routes', app
 app.get "/", (req, res) ->
   res.sendfile "#{Cine.root}/public/index.html"
 
+app.get "/react", (req, res) ->
+  res.sendfile "#{Cine.root}/views/index.html"
+
 app.use express.static "#{Cine.root}/public"
 app.use express.static "#{Cine.root}/bower_components"
 

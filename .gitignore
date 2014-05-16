@@ -10,3 +10,5 @@ ignored/
 public/css/*
 
 cine.sublime-workspace
+
+views/build/*
