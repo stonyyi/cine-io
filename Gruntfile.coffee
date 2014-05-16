@@ -1,8 +1,4 @@
 _ = require('underscore')
-runAndSay = (command)->
-  sh = require("execSync")
-  console.log command
-  sh.run command
 module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON("package.json")
@@ -49,7 +45,9 @@ module.exports = (grunt) ->
     sh = require("execSync")
     file = file.substr(1, file.length) if file[0] is "/"
     sh.run "clear"
-    runAndSay "mocha test/setup_and_teardown.coffee #{file}"
+    command = "mocha test/setup_and_teardown.coffee #{file}"
+    console.log command
+    sh.run command
 
   grunt.registerTask 'routes', ->
     require('./config/environment')
@@ -72,5 +70,4 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'productionPostInstall', ->
     return unless process.env.NODE_ENV == 'production'
-    runAndSay "./node_modules/.bin/bower install"
     grunt.task.run('build')
