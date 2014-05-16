@@ -1,10 +1,10 @@
 /** @jsx React.DOM */
 var React = require('react');
+Footer = Cine.component('layout/footer');
 
-module.exports = React.createClass({
+var HomeHero = React.createClass({
   render: function() {
     return (
-      <div id='homepage'>
       <section id="home-hero">
         <div className="row">
           <div className="info">
@@ -35,30 +35,42 @@ module.exports = React.createClass({
           </a>
         </div>
       </section>
+    );
+  }
+});
 
-        <section id="about">
-          <div className="row">
-            <div className="info text-center">
-              <h2>
-                The first live-streaming service built
-                <em>by</em>and
-                <em>for</em>developers.
-              </h2>
+var About = React.createClass({
+  render: function() {
+    return (
+      <section id="about">
+        <div className="row">
+          <div className="info text-center">
+            <h2>
+              The first live-streaming service built
+              <em> by </em> and
+              <em> for </em> developers.
+            </h2>
 
-              <p>
-                You do not want to think about configuring a CDN, building a cross-platform viewing experience, or learning a new tool.
-                <strong>You want to write code.</strong>cine.io lets you programatically set up, configure, and provision your streams through a RESTful API. That means less hassle, less wasted time, and happy developers. There are no account minimums, and you can get started today.
-              </p>
+            <p>
+              You do not want to think about configuring a CDN, building a cross-platform viewing experience, or learning a new tool.
+              <strong>You want to write code.</strong>cine.io lets you programatically set up, configure, and provision your streams through a RESTful API. That means less hassle, less wasted time, and happy developers. There are no account minimums, and you can get started today.
+            </p>
 
-              <div className="video">
-                <div className="aspect-ratio"></div>
-                <p>Video Coming Soon</p>
-              </div>
+            <div className="video">
+              <div className="aspect-ratio"></div>
+              <p>Video Coming Soon</p>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
+    );
+  }
+});
 
-        <section id="pricing">
+var Pricing = React.createClass({
+  render: function() {
+    return (
+       <section id="pricing">
           <div className="row">
             <div className="info text-center">
               <i className="fa fa-2x fa-smile-o"></i>
@@ -111,7 +123,8 @@ module.exports = React.createClass({
                     <li className="description">For heavy-lifting apps.</li>
                     <li className="bullet-item">unlimited streams</li>
                     <li className="bullet-item">pay per GB transferred</li>
-                    <li className="cta-button"><a className="button radius" href="#" data-reveal-id="not-ready-yet">Select</a>
+                    <li className="cta-button">
+                      <a className="button radius" href="#" data-reveal-id="not-ready-yet">Select</a>
                     </li>
                   </ul>
                 </div>
@@ -119,13 +132,19 @@ module.exports = React.createClass({
             </div>
           </div>
         </section>
+    );
+  }
+});
 
-        <footer>
-          <div className="row">
-            <div className="info">Copyright &copy; 2014 cine.io. All rights reserved.</div>
-          </div>
-        </footer>
+module.exports = React.createClass({
+  render: function() {
+    return (
+      <div id='homepage'>
+        <HomeHero />
+        <About />
+        <Pricing />
+        <Footer />
       </div>
-      );
+    );
   }
 });
