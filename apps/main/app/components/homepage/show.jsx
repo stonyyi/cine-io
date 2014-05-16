@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react');
 
-var Homepage = React.createClass({
+module.exports = React.createClass({
   render: function() {
     return (
       <div id='homepage'>
@@ -127,7 +127,5 @@ var Homepage = React.createClass({
         </footer>
       </div>
       );
-}
+  }
 });
-
-module.exports = Homepage;
