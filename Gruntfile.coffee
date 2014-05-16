@@ -21,7 +21,7 @@ module.exports = (grunt) ->
       dev:
         script: "server.coffee"
         options:
-          watch: ["api/**/*.coffee", "config/**/*.coffee", "middleware/**/*.coffee", "models/**/*.coffee", "server/**/*.coffee"]
+          watch: ["apps/**/*.coffee", "config/**/*.coffee", "server/**/*.coffee"]
           delay: 1000
 
     watch:
@@ -31,6 +31,7 @@ module.exports = (grunt) ->
       sass:
         files: "assets/stylesheets/**/*.scss"
         tasks: ["sass"]
+
       main:
         files: ["apps/main/app/**/*.jsx", "apps/main/app/**/*.coffee"]
         tasks: ["compile"]
