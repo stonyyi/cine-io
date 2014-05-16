@@ -6,7 +6,9 @@
       "folder_exclude_patterns":
       [
         "node_modules",
-        "bower_components"
+        "bower_components",
+        "public/compiled",
+        "compiled"
       ],
       "file_exclude_patterns":
       [

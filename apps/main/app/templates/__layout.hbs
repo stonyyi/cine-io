@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <!-- meta -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- title -->
+    <title>cine.io</title>
+
+    <!-- fonts -->
+    <link href="http://fonts.googleapis.com/css?family=Cabin:400,500,700,400italic,500italic,700italic&family=Cardo:400,400italic,700" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+
+    <!-- icons -->
+    <link rel="shortcut icon" href="/images/cine-icon.png">
+
+    <!-- styles -->
+    <link rel="stylesheet" href="/compiled/app.css" />
+  </head>
+
+  <body class="">
+
+    <section id="content" class="container">
+      {{{body}}}
+    </section>
+
+    <script src="/compiled/mergedAssets.js"></script>
+    <script>
+    (function() {
+      var App = window.App = new (require('app/app'))({{json appData}});
+      App.bootstrapData({{json bootstrappedData}});
+      App.start();
+    })();
+    </script>
+
+  </body>
+
+</html>

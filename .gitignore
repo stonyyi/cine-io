@@ -3,14 +3,11 @@
 node_modules/*
 
 public/compiled/*
+compiled/*
 
 newrelic_agent.log
 npm-debug.log
 
 ignored/
 
-public/css/*
-
 cine.sublime-workspace
-
-views/compiled/*

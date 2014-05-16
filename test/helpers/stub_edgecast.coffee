@@ -2,7 +2,7 @@ request = require('request')
 moment = require('moment')
 async = require('async')
 edgecastToken = Cine.config('variables/edgecast').token
-EdgecastStream = Cine.model('edgecast_stream')
+EdgecastStream = Cine.server_model('edgecast_stream')
 
 module.exports = ->
   expectAuthorization = (options)->
