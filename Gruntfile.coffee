@@ -112,7 +112,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-concurrent"
   grunt.registerTask "compile", ["react", "handlebars", "rendr_stitch"]
-  grunt.registerTask "build", ["compile"]
+  grunt.registerTask "build", ["compile", "sass"]
   grunt.registerTask "dev", ["build", "concurrent:dev"]
   grunt.registerTask "default", ["dev"]
   grunt.loadNpmTasks 'grunt-react'
