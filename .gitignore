@@ -2,6 +2,8 @@
 
 node_modules/*
 
+public/compiled/*
+
 newrelic_agent.log
 npm-debug.log
 
@@ -11,4 +13,4 @@ public/css/*
 
 cine.sublime-workspace
 
-views/build/*
+views/compiled/*

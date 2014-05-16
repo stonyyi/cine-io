@@ -1,4 +1,5 @@
 _ = require('underscore')
+
 module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON("package.json")
@@ -29,22 +30,23 @@ module.exports = (grunt) ->
         tasks: ["sass"]
 
       jsx:
-        files: "views/src/**/*.coffee"
-        tasks: ["react", "browserify"]
+        files: "views/src/**/*.jsx"
+        tasks: ["compile"]
 
     concurrent:
       dev:
         options:
           logConcurrentOutput: true
         tasks: ["watch", "nodemon:dev"]
+
     react:
       dynamic_mappings:
         files: [
           {
             expand: true,
             cwd: 'views/src',
-            src: ['**/*.coffee'],
-            dest: 'views/build',
+            src: ['**/*.jsx'],
+            dest: 'views/compiled',
             ext: '.js'
           }
         ]
@@ -54,7 +56,7 @@ module.exports = (grunt) ->
         options:
           transform:  [ require('grunt-react').browserify ]
         files:
-          'public/compiled/app.js': ['views/build/**/*.js']
+          'public/compiled/app.js': ['views/compiled/**/*.js']
       # app:
       #   dest:       'public/compiled/app.js'
 
@@ -62,8 +64,8 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-nodemon"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-concurrent"
-  grunt.registerTask "build", ["sass"]
-  grunt.registerTask "wtf", ["react", "browserify"]
+  grunt.registerTask "compile", ["react", "browserify"]
+  grunt.registerTask "build", ["sass", "compile"]
   grunt.registerTask "dev", ["build", "concurrent:dev"]
   grunt.registerTask "default", ["dev"]
   grunt.loadNpmTasks 'grunt-react'
