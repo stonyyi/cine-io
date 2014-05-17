@@ -1,6 +1,15 @@
 BaseApp = require('rendr/shared/app')
 window.Cine = require 'config/cine' if typeof window != 'undefined'
+User = Cine.model('user')
+isServer = typeof window is 'undefined'
+
 module.exports = class App extends BaseApp
+
+  initialize: ->
+    BaseApp.prototype.initialize.call(this)
+    @apiVersion = 1
+    if isServer
+      @currentUser = new User(@req.currentUser, app: this)
 
   start: ->
     @_setupRouterListeners()

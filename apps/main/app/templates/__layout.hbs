@@ -30,6 +30,8 @@
     <script>
     (function() {
       var App = window.App = new (require('app/app'))({{json appData}});
+      var CurrentUser = Cine.model('user');
+      App.currentUser = new CurrentUser({{json req.currentUser}}, {app: App});
       App.bootstrapData({{json bootstrappedData}});
       App.start();
     })();

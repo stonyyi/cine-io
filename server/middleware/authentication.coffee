@@ -17,7 +17,7 @@ module.exports = (app)->
     if req.user && !req.xhr
       User.findById req.user, (err, user)->
         return next() if err || !user
-        req.currentUser = user
+        req.currentUser = user.simpleCurrentUserJSON()
         next(err)
     else
       next()

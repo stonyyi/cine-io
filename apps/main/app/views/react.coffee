@@ -1,15 +1,21 @@
 RendrView = Cine.view("base")
 React = require("react")
+isServer = typeof window isnt 'undefined'
+defaultOptions = {}
+defaultOptions = {jQuery: jQuery} if isServer
+_ = require('underscore')
 
 ReactView = RendrView.extend
   Component: ->
     throw new Error("You must override Component()")
 
   getInnerHtml: ->
-    React.renderComponentToString @Component()
+    props = _.extend(app: @app, defaultOptions)
+    React.renderComponentToString @Component(props)
 
   postRender: ->
-    React.renderComponent @Component(), @el
+    props = _.extend(app: @app, defaultOptions)
+    React.renderComponent @Component(props), @el
 
 
 module.exports = (id)->
