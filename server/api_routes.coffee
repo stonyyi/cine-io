@@ -11,6 +11,7 @@ module.exports = (app)->
 
   get 'health', 'index'
 
+  get 'projects', 'index'
   get 'projects', 'show', 'me'
   post 'projects', 'create'
 

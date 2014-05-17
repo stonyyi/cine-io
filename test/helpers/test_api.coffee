@@ -39,3 +39,11 @@ testApi.requresApiKey = (testApiResource)->
       expect(response).to.be.null
       expect(options.status).to.equal(401)
       done()
+
+testApi.requresLoggedIn = (testApiResource)->
+  it 'requires an api key', (done)->
+    testApiResource {}, (err, response, options)->
+      expect(err).to.equal('not logged in')
+      expect(response).to.be.null
+      expect(options.status).to.equal(401)
+      done()
