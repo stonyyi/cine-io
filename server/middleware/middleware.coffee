@@ -29,13 +29,13 @@ module.exports = (app) ->
   app.use express.methodOverride()
 
   # CSRF protection, populates req.csrfToken()
-  if app.settings.env isnt "test"
-    app.use(express.csrf())
+  # if app.settings.env isnt "test"
+  #   app.use(express.csrf())
 
-    app.use (req, res, next)->
-      return next() if req.xhr
-      req._myCSRF = req.csrfToken()
-      next()
+  #   app.use (req, res, next)->
+  #     return next() if req.xhr
+  #     req._myCSRF = req.csrfToken()
+  #     next()
 
   Cine.middleware('authentication', app)
   Cine.middleware('health_check', app)
