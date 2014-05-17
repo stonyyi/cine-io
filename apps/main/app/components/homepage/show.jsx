@@ -6,21 +6,26 @@ LoggedOut = Cine.component('homepage/_logged_out'),
 LoggedIn = Cine.component('homepage/_logged_in'),
 HomeHero = LoggedOut.HomeHero,
 About = LoggedOut.About,
-Pricing = LoggedOut.Pricing;
+Pricing = LoggedOut.Pricing,
+Projects = Cine.collection('projects');
 
 module.exports = React.createClass({
-  componentWillMount: function() {
-    this.props.app.currentUser.on("change", (function() {
-      this.forceUpdate();
-    }.bind(this)));
-  },
+  mixins: [Cine.lib('backbone_mixin')],
 
+  getInitialState: function(){
+    return{
+      projects: new Projects([], {app: this.props.app})
+    };
+  },
+  getBackboneObjects: function(){
+    return this.props.app.currentUser;
+  },
   render: function() {
     if (this.props.app.currentUser.isLoggedIn()) {
       return (
         <div id='homepage'>
-          <Header app={this.props.app}/>
-          <LoggedIn />
+          <Header app={this.props.app} />
+          <LoggedIn app={this.props.app} jQuery={this.props.jQuery} collection={this.state.projects} />
           <Footer />
         </div>
       );

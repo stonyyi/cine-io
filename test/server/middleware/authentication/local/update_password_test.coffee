@@ -92,7 +92,7 @@ describe 'update password', ->
               .end (err, res)=>
                 response = JSON.parse(res.text)
                 expect(response.email).to.equal('some email')
-                expect(response._id.toString()).to.equal(@user._id.toString())
+                expect(response.id.toString()).to.equal(@user._id.toString())
                 done(err)
 
     it 'creates a remember_me token', (done)->

@@ -91,7 +91,7 @@ describe 'local authentication', ->
         .expect(200)
         .end (err, res)->
           response = JSON.parse(res.text)
-          User.findById response._id, (err, user)->
+          User.findById response.id, (err, user)->
             expect(user.email).to.equal('new email')
             done(err)
 
@@ -103,7 +103,7 @@ describe 'local authentication', ->
         .expect(200)
         .end (err, res)->
           response = JSON.parse(res.text)
-          User.findById response._id, (err, user)->
+          User.findById response.id, (err, user)->
             expect(user.hashed_password).not.to.be.null
             expect(user.password_salt).not.to.be.null
             done(err)
@@ -120,5 +120,5 @@ describe 'local authentication', ->
           token = remember_me.match(/remember_me=([^;]+)/)[1]
           expect(token.length).to.equal(64)
           RememberMeToken.findOne token: token, (err, rmt)->
-            expect(rmt._user.toString()).to.equal(response._id.toString())
+            expect(rmt._user.toString()).to.equal(response.id.toString())
             done(err)

@@ -30,13 +30,17 @@ describe 'User', ->
   describe 'simpleCurrentUserJSON', ->
     it 'is has these keys', ->
       u = new User(name: 'my name', email: 'my email', hashed_password: 'hash', password_salt: 'salt')
-      keys = ['_id', 'createdAt', 'email', 'firstName', 'lastName', 'name', 'permissions']
+      keys = ['createdAt', 'email', 'firstName', 'id', 'lastName', 'name', 'permissions']
       jsonKeys = _.keys(u.simpleCurrentUserJSON()).sort()
       expect(jsonKeys).to.deep.equal(keys)
 
     it 'has a firstName', ->
       u = new User(name: 'my name')
       expect(u.simpleCurrentUserJSON().firstName).to.equal("my")
+
+    it 'has an id', ->
+      u = new User(name: 'my name')
+      expect(u.simpleCurrentUserJSON().id.toString()).to.equal(u._id.toString())
 
     it 'has a lastName', ->
       u = new User(name: 'my name')
