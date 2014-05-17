@@ -40,7 +40,7 @@ describe 'DataAdapter', ->
     it 'includes the user session to the params', (done)->
       matchingRoute = {
         callbacks: [(params, callback)->
-          callback(null, params.session_user_id)
+          callback(null, params.sessionUserId)
         ]
         match: (path)->
           expect(path).to.equal('/api/fake-path')

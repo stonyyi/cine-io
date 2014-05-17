@@ -9,7 +9,7 @@ app.set 'title', 'Cine.io'
 
 Cine.middleware 'middleware', app
 
-Cine.middleware 'api_routes', app
+Cine.server 'api_routes', app
 
 app.use Cine.require('apps/main', app)
 

@@ -54,7 +54,7 @@ class DataAdapter
       options = {}
 
     params = _.extend({}, api.body, api.query)
-    params.session_user_id = req.user
+    params.sessionUserId = req.user
     console.log(clc.blueBright("[API]"), "#{method} #{path}", params)
 
     apiReq = new InternalApiRequest(@app, method, path, params)

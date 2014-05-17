@@ -8,6 +8,9 @@ Cine.require = (pathName, args...)->
   response = response(args...) if args.length > 0
   response
 
+Cine.server = (type, args...) ->
+  Cine.require("/server/#{type}")(args...)
+
 Cine.server_model = (type) ->
   Cine.require("/server/models/#{type}")
 

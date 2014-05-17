@@ -34,7 +34,7 @@ describe 'EdgecastStreams#Index', ->
   it 'returns the edgecast streams for the account sorted by newest first', (done)->
     params = apiKey: @project.apiKey
     Index params, (err, response, options)=>
-      expect(err).to.be.null
+      expect(err).to.be.undefined
       expect(response).to.have.length(2)
       expect(response[0].id).to.equal(@olderStream._id.toString())
       expect(response[1].id).to.equal(@newerStream._id.toString())

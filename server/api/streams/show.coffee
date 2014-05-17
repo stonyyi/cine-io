@@ -1,6 +1,7 @@
 EdgecastStream = Cine.server_model('edgecast_stream')
 fs = require('fs')
 profileFileName = "#{Cine.root}/server/api/streams/fmle_profile.xml"
+getProject = Cine.server_lib('get_project')
 
 fmleProfile = (stream, callback)->
   fs.readFile profileFileName, 'utf8', (err, profileFile)->
@@ -24,14 +25,16 @@ toJSON = (stream, callback)->
 
   callback(null, streamJSON)
 
-Show = (callback)->
-  return callback("id required", null, status: 400) unless @params.id
-  EdgecastStream.findOne _id: @params.id, _project: @project._id, (err, stream)=>
-    return callback(err, null, status: 400) if err
-    return callback("stream not found", null, status: 404) unless stream
-    return fmleProfile(stream, callback) if @params.fmleProfile == 'true'
-    toJSON(stream, callback)
+Show = (params, callback)->
+  getProject params, (err, project, status)->
+    return callback(err, project, status) if err
+    return callback("id required", null, status: 400) unless params.id
+
+    EdgecastStream.findOne _id: params.id, _project: project._id, (err, stream)->
+      return callback(err, null, status: 400) if err
+      return callback("stream not found", null, status: 404) unless stream
+      return fmleProfile(stream, callback) if params.fmleProfile == 'true'
+      toJSON(stream, callback)
 
 module.exports = Show
 module.exports.toJSON = toJSON
-module.exports.project = true
