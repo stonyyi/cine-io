@@ -1,6 +1,5 @@
 /** @jsx React.DOM */
 var React = require('react');
-Footer = Cine.component('layout/footer');
 
 module.exports = React.createClass({
   render: function() {
