@@ -32,10 +32,13 @@ module.exports = (grunt) ->
         files: "assets/stylesheets/**/*.scss"
         tasks: ["sass"]
 
-      main:
-        files: ["apps/main/app/**/*.jsx", "apps/main/app/**/*.coffee"]
+      react:
+        files: ["apps/main/app/**/*.jsx"]
         tasks: ["compile"]
 
+      main:
+        files: ["apps/main/app/**/*.coffee"]
+        tasks: ["rendr_stitch"]
 
     react:
       dynamic_mappings:
@@ -131,20 +134,13 @@ module.exports = (grunt) ->
   grunt.registerTask 'routes', ->
     require('./config/environment')
     app = Cine.require('app').app
-    allRoutes = {
-      get: []
-      post: []
-      put: []
-      delete: []
-    }
-    _.each app._router.stack, (route)->
-      return unless route.route
-      route = route.route
-      _.each route.methods, (methodIsUsed, method)->
-        return unless methodIsUsed
+    allRoutes = {}
+    _.each app.routes, (routes, method)->
+      allRoutes[method] = []
+      _.each routes, (route)->
         allRoutes[method].push(route.path)
     _.each allRoutes, (routes, method)->
-      console.log("\n======= #{method} =======\n") if routes.length > 1
+      console.log("\n======= #{method} =======\n")
       _.each routes.sort(), (route)-> console.log(route)
 
   grunt.registerTask 'productionPostInstall', ->
