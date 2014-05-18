@@ -25,19 +25,19 @@ describe 'api routing', ->
       @project.save done
 
     it 'requires an api key', (done)->
-      @agent.get('/api/1/-/me')
+      @agent.get('/api/1/-/project')
         .expect(401)
         .end (err, res)->
           done()
 
     it 'requires an valid api key', (done)->
-      @agent.get('/api/1/-/me?apiKey=INVALID')
+      @agent.get('/api/1/-/project?apiKey=INVALID')
         .expect(401)
         .end (err, res)->
           done()
 
     it 'routes to an authenticated route', (done)->
-      @agent.get('/api/1/-/me?apiKey=abc')
+      @agent.get('/api/1/-/project?apiKey=abc')
         .end (err, res)=>
           expect(err).to.be.null
           expect(res.body.id).to.equal(@project._id.toString())
