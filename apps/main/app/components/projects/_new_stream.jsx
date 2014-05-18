@@ -1,0 +1,31 @@
+/** @jsx React.DOM */
+var
+  React = require('react'),
+  Project = Cine.model('project'),
+  Stream = Cine.model('stream'),
+  Streams = Cine.collection('streams');
+
+module.exports = React.createClass({
+  mixins: [Cine.lib('requires_app')],
+  propTypes: {
+    project: React.PropTypes.instanceOf(Project).isRequired,
+    streams: React.PropTypes.instanceOf(Streams).isRequired
+  },
+  createStream: function (e) {
+    e.preventDefault();
+    var self = this,
+      p = new Stream({apiKey: this.props.project.get('apiKey')}, {app: this.props.app});
+    p.save(null, {
+      success: function(model, response, options){
+        self.props.streams.add(model);
+      }
+    });
+  },
+  render: function() {
+    return (
+      <form onSubmit={this.createStream}>
+        <button type='submit'> Create Stream </button>
+      </form>
+    );
+  }
+});

@@ -1,5 +1,6 @@
 Base = Cine.model('base')
+isServer = typeof window is 'undefined'
 
 module.exports = class Project extends Base
   @id: 'Project'
-  url: '/project?apiKey=:apiKey'
+  url: if isServer then "/project?apiKey=:apiKey" else "/project"
