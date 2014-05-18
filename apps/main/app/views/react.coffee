@@ -6,11 +6,19 @@ ReactView = RendrView.extend
     throw new Error("You must override Component()")
 
   getInnerHtml: ->
-    React.renderComponentToString @Component(app: @app)
+    React.renderComponentToString @_renderComponent()
 
   postRender: ->
-    React.renderComponent @Component(app: @app), @el
+    React.renderComponent @_renderComponent(), @el
 
+  _renderComponent: ->
+    @Component @_renderOptions()
+
+  _renderOptions: ->
+    options = app: @app
+    options.model = @model if @model
+    options.collection = @collection if @collection
+    options
 
 module.exports = (id)->
   class extends ReactView

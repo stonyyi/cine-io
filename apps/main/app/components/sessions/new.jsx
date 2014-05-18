@@ -3,6 +3,7 @@ var React = require('react');
 Footer = Cine.component('layout/footer');
 authentication = Cine.lib('authentication');
 module.exports = React.createClass({
+  mixins: [Cine.lib('requires_app')],
   onSubmit: function (e){
     e.preventDefault();
     var

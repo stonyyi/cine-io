@@ -6,7 +6,7 @@ var
 module.exports = React.createClass({
   mixins: [Cine.lib('backbone_mixin')],
   propTypes: {
-    model: React.PropTypes.instanceOf(Project)
+    model: React.PropTypes.instanceOf(Project).isRequired
   },
   getInitialState: function() {
     return {showApiKey: false};

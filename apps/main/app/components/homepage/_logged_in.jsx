@@ -8,7 +8,7 @@ var
 module.exports = React.createClass({
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
   propTypes: {
-    collection: React.PropTypes.instanceOf(Projects)
+    collection: React.PropTypes.instanceOf(Projects).isRequired
   },
   componentDidMount: function() {
     this.props.collection.fetch();

@@ -9,5 +9,6 @@ exports.componentWillUnmount = ->
     instance.off "all", @_boundForceUpdate
 
 exports._getBackboneObjects = ->
+  console.error('getBackboneObjects is not defined') unless @getBackboneObjects
   objects = @getBackboneObjects()
   if _.isArray(objects) then objects else [objects]

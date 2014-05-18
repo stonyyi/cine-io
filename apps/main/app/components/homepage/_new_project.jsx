@@ -8,7 +8,7 @@ var
 module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
   propTypes: {
-    projects: React.PropTypes.instanceOf(Projects)
+    projects: React.PropTypes.instanceOf(Projects).isRequired
   },
   getInitialState: function() {
     return {value: ''};
