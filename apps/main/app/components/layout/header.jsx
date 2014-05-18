@@ -3,6 +3,7 @@ var React = require('react');
 authentication = Cine.lib('authentication');
 
 module.exports = React.createClass({
+  mixins: [Cine.lib('backbone_mixin')],
   logout: function(){
     var
       _this = this,
@@ -14,12 +15,19 @@ module.exports = React.createClass({
     authentication.logout(app, options);
 
   },
+  getBackboneObjects: function(){
+    return this.props.app.currentUser;
+  },
+
   render: function() {
+    var name = this.props.app.currentUser.get('name');
     return (
       <header>
-        <div className="row">
-          <div className="info">This is the header.</div>
-          <a className="info" onClick={this.logout}>Logout</a>
+        <div className="panel clearfix">
+          <div className='right'>
+            <span> Hello {name}! </span>
+            <a className="info" onClick={this.logout}>Logout</a>
+          </div>
         </div>
       </header>
     );

@@ -1,23 +1,82 @@
 /** @jsx React.DOM */
-var React = require('react');
-
+var
+  React = require('react'),
+  qs = require('qs'),
+  Project = Cine.model('project');
 module.exports = React.createClass({
   mixins: [Cine.lib('backbone_mixin')],
+  getInitialState: function() {
+    return {value: ''};
+  },
+
   componentDidMount: function() {
     this.props.collection.fetch();
   },
   getBackboneObjects: function(){
     return this.props.collection;
   },
+  createProject: function (e) {
+    e.preventDefault();
+    var self = this,
+      form = jQuery(e.currentTarget),
+      data = qs.parse(form.serialize()),
+      p = new Project(data.project, {app: this.props.app});
+    p.save(null, {
+      success: function(model, response, options){
+        self.props.collection.add(model);
+        self.setState({value: ''});
+      }
+    });
+  },
+  handleChange: function(event) {
+    this.setState({value: event.target.value});
+  },
+
   render: function() {
+
     var listItems = this.props.collection.map(function(model) {
         return (<li key={model.cid}>{model.get('name')}</li>);
       });
-
+    var value = this.state.value;
     return (
-      <ul>
-        {listItems}
-      </ul>
+      <div>
+        <div className="panel" key='my-projects'>
+          <h3> My Projects</h3>
+          <ul>
+            {listItems}
+          </ul>
+        </div>
+        <div className="panel">
+          <form onSubmit={this.createProject}>
+            <h3> New Project </h3>
+            <div className="row">
+              <div className="small-3 columns">
+                <label htmlFor="project-name" className="right inline">Project Name</label>
+              </div>
+              <div className="small-9 columns">
+                <input type="text" id="project-name" name='project[name]' value={value} onChange={this.handleChange} placeholder="My Fun Project (Production)" />
+              </div>
+            </div>
+            <div className="row">
+              <div className="small-3 columns">
+                <label htmlFor="project-plan" className="right inline">Project Plan</label>
+              </div>
+              <div className="small-9 columns">
+                <select name='project-plan'>
+                  <option value="free">Free</option>
+                  <option value="developer">Developer</option>
+                  <option value="enterprise">Enterprise</option>
+                </select>
+              </div>
+            </div>
+            <div className="row">
+              <div className="small-3 columns small-offset-3">
+                <button type='submit'> Create Project </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     );
   }
 });

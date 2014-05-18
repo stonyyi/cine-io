@@ -23,7 +23,7 @@ module.exports = React.createClass({
   render: function() {
     if (this.props.app.currentUser.isLoggedIn()) {
       return (
-        <div id='homepage'>
+        <div id='homepage-logged-in'>
           <Header app={this.props.app} />
           <LoggedIn app={this.props.app} jQuery={this.props.jQuery} collection={this.state.projects} />
           <Footer />
@@ -32,7 +32,7 @@ module.exports = React.createClass({
 
     }else{
       return (
-        <div id='homepage'>
+        <div id='homepage-logged-out'>
           <HomeHero />
           <About />
           <Pricing />

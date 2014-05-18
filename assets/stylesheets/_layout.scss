@@ -1,0 +1,21 @@
+button, .button {
+  text-transform: uppercase;
+  color: white;
+  // background: none;
+  // border: 2px solid $primary-color;
+}
+
+#content{
+  height: 100%;
+}
+
+footer {
+  background: #4e4e4e;
+
+  .info {
+    @include grid-column(12);
+    margin: 2em 0;
+    text-align: center;
+    color: #ccc;
+  }
+}

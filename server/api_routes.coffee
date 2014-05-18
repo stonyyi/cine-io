@@ -13,7 +13,7 @@ module.exports = (app)->
 
   get 'projects', 'index'
   get 'projects', 'show', 'me'
-  post 'projects', 'create'
+  post 'projects', 'create', 'project'
 
   get 'streams', 'index'
   get 'streams', 'show', 'stream'
