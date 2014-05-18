@@ -1,9 +1,9 @@
 /** @jsx React.DOM */
-var React = require('react');
+var React = require('react'),
 authentication = Cine.lib('authentication');
 
 module.exports = React.createClass({
-  mixins: [Cine.lib('backbone_mixin')],
+  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
   logout: function(){
     var
       _this = this,

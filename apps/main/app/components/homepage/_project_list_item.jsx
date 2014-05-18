@@ -31,11 +31,12 @@ module.exports = React.createClass({
       keyStyle = {};
       showKeyStyle = {display: 'none'};
     }
+    var url = "/project/"+model.get('apiKey');
     return (
       <li>
         <div className='row'>
           <div className="small-4 columns">
-            {model.get('name')}
+            <a href={url}>{model.get('name')}</a>
           </div>
           <div className="small-4 columns">
             <div style={showKeyStyle}>

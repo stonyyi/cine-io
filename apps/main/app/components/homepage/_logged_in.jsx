@@ -6,7 +6,7 @@ var
   Projects = Cine.collection('projects');
 
 module.exports = React.createClass({
-  mixins: [Cine.lib('backbone_mixin')],
+  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
   propTypes: {
     collection: React.PropTypes.instanceOf(Projects)
   },

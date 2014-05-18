@@ -8,6 +8,9 @@ else
     require path
 
 # Client
+Cine.arch = (name) ->
+  clientOrServerRequire("app/#{name}", 'main')
+
 Cine.component = (name) ->
   if typeof window == 'undefined'
     Cine.require("compiled/components/#{name}")
