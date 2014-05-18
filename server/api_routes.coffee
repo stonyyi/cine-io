@@ -17,4 +17,4 @@ module.exports = (app)->
 
   get 'streams', 'index'
   get 'streams', 'show', url: 'stream'
-  post 'streams', 'create'
+  post 'streams', 'create', url: 'stream'
