@@ -8,7 +8,7 @@ module.exports = React.createClass({
     var
       _this = this,
       app = this.props.app,
-      form = this.props.jQuery(e.currentTarget),
+      form = jQuery(e.currentTarget),
       options = {success: function(){
         _this.props.app.router.redirectTo('/');
       }};

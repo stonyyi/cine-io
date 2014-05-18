@@ -25,7 +25,7 @@ module.exports = React.createClass({
       return (
         <div id='homepage-logged-in'>
           <Header app={this.props.app} />
-          <LoggedIn app={this.props.app} jQuery={this.props.jQuery} collection={this.state.projects} />
+          <LoggedIn app={this.props.app} collection={this.state.projects} />
           <Footer />
         </div>
       );
