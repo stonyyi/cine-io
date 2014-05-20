@@ -35,3 +35,11 @@ describe 'EdgecastStream', ->
         EdgecastStream.nextAvailable (err, availableStream)=>
           expect(availableStream._id.toString()).to.equal(@stream1._id.toString())
           done(err)
+
+    it 'does not return deleted streams', (done)->
+      @stream2.deletedAt = new Date
+      @stream2.save (err)=>
+        expect(err).to.be.null
+        EdgecastStream.nextAvailable (err, availableStream)=>
+          expect(availableStream._id.toString()).to.equal(@stream1._id.toString())
+          done(err)
