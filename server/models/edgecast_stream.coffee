@@ -22,7 +22,7 @@ EdgecastStreamSchema = new mongoose.Schema
 EdgecastStreamSchema.statics.nextAvailable = (callback)->
   query =
     _project: {$exists: false}
-  @findOne(query).sort(createdAt: -1).exec(callback)
+  @findOne(query).sort(createdAt: 1).exec(callback)
 
 EdgecastStreamSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
