@@ -20,7 +20,7 @@ describe 'EdgecastStreams#Create', ->
 
   describe 'with available stream', (done)->
     beforeEach (done)->
-      @stream = new EdgecastStream(instanceName: 'abcd')
+      @stream = new EdgecastStream(instanceName: 'cines')
       @stream.save done
 
     stubEdgecast()
@@ -29,7 +29,7 @@ describe 'EdgecastStreams#Create', ->
       params = apiKey: @project.apiKey
       Create params, (err, response, options)->
         expect(err).to.be.null
-        expect(response.instanceName).to.equal('abcd')
+        expect(response.instanceName).to.equal('cines')
         expect(options).to.be.undefined
         done()
 
