@@ -4,8 +4,13 @@ stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 
 describe 'createNewStreamInEdgecast', ->
   beforeEach resetMongo
+
   beforeEach (done)->
-    @stream1 = new EdgecastStream(streamName: 'name1')
+    @stream1 = new EdgecastStream(instanceName: 'cines', streamName: 'name1')
+    @stream1.save done
+
+  beforeEach (done)->
+    @stream1 = new EdgecastStream(instanceName: 'bobs', streamName: 'name1')
     @stream1.save done
 
   stubEdgecast()

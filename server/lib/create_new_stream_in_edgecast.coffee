@@ -13,6 +13,7 @@ hlsHdsUrl = "https://api.edgecast.com/v2/mcc/customers/#{edgecastAccount}/httpst
 flashMediaStreamingUrl = "https://api.edgecast.com/v2/mcc/customers/#{edgecastAccount}/fmsliveauth/streamkeys"
 
 prefix = "cine"
+instanceName = "#{prefix}s"
 passwordDictionary = ["go", "world", "earth", "music", "notes", "band", "group", "fans", "rock", "tune", "creative", "piano", "guitar", "drums", "song", "violin", "cello", "harp", "trumpet", "keyboard", "treble", "bass", "cleff", "chord", "encore", "harmony", "major", "minor", "pitch", "prelude", "sharp"]
 
 generatePassword = (callback)->
@@ -30,7 +31,7 @@ expirationDate = (callback)->
 createStream = (response, originalCallback)->
   stageName = "#{prefix}#{response.getEdgecastStreamCount+1}"
   stream = new EdgecastStream
-    instanceName: "#{prefix}s"
+    instanceName: instanceName
     expiration: response.expirationDate
     eventName: stageName
     streamName: stageName
@@ -81,7 +82,7 @@ module.exports = (originalCallback)->
 
   prepareCreateStreamAsyncOptions =
     getEdgecastStreamCount: (callback)->
-      EdgecastStream.count(callback)
+      EdgecastStream.count instanceName: instanceName, callback
     generatePassword: generatePassword
     expirationDate: expirationDate
 
