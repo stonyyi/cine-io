@@ -5,15 +5,13 @@ toJSON = (project, callback)->
     id: project._id.toString()
     apiKey: project.apiKey
     name: project.name
+    plan: project.plan
 
   callback(null, projectJSON)
 
 Show = (params, callback)->
   getProject params, (err, project, status)->
     return callback(err, project, status) if err
-    response =
-      id: project._id.toString()
-      name: project.name
     toJSON(project, callback)
 
 module.exports = Show

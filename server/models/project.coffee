@@ -9,9 +9,8 @@ ProjectSchema = new mongoose.Schema
     type: String
     unique: true
     index: true
-  images:
-    profileUrl:
-      type: String
+  plan:
+    type: String
 
 ProjectSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
@@ -25,6 +24,10 @@ ProjectSchema.options.toJSON ||= {}
 ProjectSchema.options.toJSON.transform = (doc, ret, options)->
   ret.createdAt = ret.createdAt.toISOString()
   ret
+
+ProjectSchema.path('plan').validate ((value)->
+  /free|developer|enterprise/i.test value
+), 'Invalid plan'
 
 Project = mongoose.model 'Project', ProjectSchema
 

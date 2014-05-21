@@ -5,7 +5,7 @@ describe 'Projects#Show', ->
   testApi.requresApiKey Show
 
   beforeEach (done)->
-    @project = new Project(name: 'my project')
+    @project = new Project(name: 'my project', plan: 'free')
     @project.save done
 
   it 'returns an project', (done)->
@@ -14,4 +14,5 @@ describe 'Projects#Show', ->
       expect(err).to.be.null
       expect(response.id).to.equal(@project._id.toString())
       expect(response.name).to.equal('my project')
+      expect(response.plan).to.equal('free')
       done()
