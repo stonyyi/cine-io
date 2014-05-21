@@ -21,7 +21,7 @@ createProjectWithUsers = (users, attributes, callback)->
 module.exports = (users, cb)->
   console.log('creating projects')
   async.parallel [(callback) ->
-    createProjectWithUsers(users, name: 'Giving Stage (Development)', callback)
+    createProjectWithUsers(users, name: 'Giving Stage (Development)', plan: 'free', callback)
   , (callback) ->
-    createProjectWithUsers(users, name: 'Giving Stage (Production)', callback)
+    createProjectWithUsers(users, name: 'Giving Stage (Production)', plan: 'enterprise', callback)
   ], cb

@@ -46,11 +46,15 @@ edgecastStreams = [
   {instanceName: 'stages', eventName: 'stage41', streamName: 'stage41', streamKey: 'cello45', expiration: '4/8/2034'}
 ]
 
-randomProject = (projects)->
-  _.sample projects
 
 module.exports = (projects, callback)->
   console.log('creating edgecast_streams')
+  # can only add free plan once
+  randomProject = ->
+    project = _.sample projects
+    projects = _.without(projects, project) if project.plan == 'free'
+    project
+
   iterator = (stream, callback)->
     stream = new EdgecastStream(stream)
     stream._project = randomProject(projects)._id if Math.random() < 0.3
