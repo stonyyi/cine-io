@@ -27,7 +27,7 @@ ensureEdgecastStream = (streamData, callback)->
     return callback(err) if err
     if edgecastStream
       if edgecastStreamHasAllData(edgecastStream, streamData)
-        console.log('stream good', streamData)
+        console.log('stream good', _.pick(streamData, 'streamName', 'instanceName')
         return callback()
       console.log('new data', streamData)
       edgecastStream.set streamData
