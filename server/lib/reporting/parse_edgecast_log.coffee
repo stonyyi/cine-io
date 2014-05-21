@@ -33,7 +33,6 @@ saveDataOnRecord = (instanceName, streamName, entryData, callback)->
     if err
       console.log(err, entryData)
       return callback(err)
-    esr.totalBandwidth += entryData.bytes
     esr.logEntry.push entryData
     esr.save callback
 
