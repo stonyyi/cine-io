@@ -26,8 +26,8 @@ describe 'Project', ->
           expect(err).not.to.be.null
           done()
 
-  describe 'api_key', ->
-    it 'has a unique api_key generated on save', (done)->
+  describe 'apiKey', ->
+    it 'has a unique apiKey generated on save', (done)->
       project = new Project(name: 'some name', plan: 'free')
       project.save (err)->
         expect(err).to.be.null
@@ -42,6 +42,24 @@ describe 'Project', ->
         expect(apiKey.length).to.equal(32)
         project.save (err)->
           expect(project.apiKey).to.equal(apiKey)
+          done(err)
+
+  describe 'secret', ->
+    it 'has a unique secret generated on save', (done)->
+      project = new Project(name: 'some name', plan: 'free')
+      project.save (err)->
+        expect(err).to.be.null
+        expect(project.secret.length).to.equal(32)
+        done()
+
+    it 'will not override the password change request on future saves', (done)->
+      project = new Project(name: 'some name', plan: 'free')
+      project.save (err)->
+        expect(err).to.be.null
+        secret = project.secret
+        expect(secret.length).to.equal(32)
+        project.save (err)->
+          expect(project.secret).to.equal(secret)
           done(err)
 
   describe '.increment', ->

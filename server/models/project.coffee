@@ -8,6 +8,9 @@ ProjectSchema = new mongoose.Schema
     type: String
     unique: true
     index: true
+  apiSecret:
+    type: String
+    unique: true
   streamsCount:
     type: Number
     default: 0
@@ -25,6 +28,12 @@ ProjectSchema.pre 'save', (next)->
   return next() if @apiKey
   crypto.randomBytes 16, (ex, buf)=>
     @apiKey = buf.toString('hex')
+    next()
+
+ProjectSchema.pre 'save', (next)->
+  return next() if @apiSecret
+  crypto.randomBytes 16, (ex, buf)=>
+    @apiSecret = buf.toString('hex')
     next()
 
 ProjectSchema.statics.increment = (model, field, amount, callback)->
