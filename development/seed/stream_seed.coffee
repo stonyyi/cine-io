@@ -1,4 +1,5 @@
 EdgecastStream = Cine.server_model('edgecast_stream')
+Project = Cine.server_model('project')
 async = require('async')
 _ = require('underscore')
 
@@ -46,17 +47,24 @@ edgecastStreams = [
   {instanceName: 'stages', eventName: 'stage41', streamName: 'stage41', streamKey: 'cello45', expiration: '4/8/2034'}
 ]
 
-
 module.exports = (projects, callback)->
   console.log('creating edgecast_streams')
   # can only add free plan once
-  randomProject = ->
-    project = _.sample projects
-    projects = _.without(projects, project) if project.plan == 'free'
-    project
+  fetchRandomProject = ->
+    randomProject = _.sample projects
+    projects = _.without(projects, randomProject) if randomProject.plan == 'free'
+    randomProject
 
   iterator = (stream, callback)->
     stream = new EdgecastStream(stream)
-    stream._project = randomProject(projects)._id if Math.random() < 0.3
-    stream.save(callback)
+    addProject = Math.random() < 0.3
+    if addProject
+      project = fetchRandomProject(projects)
+      stream._project = project._id
+
+    stream.save (err, stream)->
+      return callback(err, stream) if err
+      return callback(err, stream) unless project
+      Project.increment project, 'streamsCount', 1,  (err, updatedAttributes)->
+        callback(err, stream)
   async.each edgecastStreams, iterator, callback
