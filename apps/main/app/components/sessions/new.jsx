@@ -4,7 +4,7 @@ Footer = Cine.component('layout/footer');
 authentication = Cine.lib('authentication');
 module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
-  onSubmit: function (e){
+  emailLogin: function (e){
     e.preventDefault();
     var
       _this = this,
@@ -16,11 +16,22 @@ module.exports = React.createClass({
 
     authentication.login(app, form, options);
   },
+  githubLogin: function(e){
+    e.preventDefault();
+    var
+      app = this.props.app,
+      button = jQuery(e.currentTarget);
+    authentication.githubLogin(app, button);
+  },
 
   render: function() {
     return (
       <div id='login'>
-        <form onSubmit={this.onSubmit}>
+        <a className='button github-login' href='/auth/github'>
+          <i className="fa fa-github"></i>
+          <span className="btn-social-text">Sign in with Github</span>
+        </a>
+        <form onSubmit={this.emailLogin}>
           <input name='username' type="email" placeholder='Your email' />
           <input name='password' type="password" placeholder='Your password' />
           <button>Log in</button>

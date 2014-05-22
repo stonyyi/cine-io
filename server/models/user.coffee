@@ -16,6 +16,12 @@ UserSchema = new Schema
     lowercase: true
     trim: true
     required: true
+  githubId:
+    type: Number
+    index: true
+  githubAccessToken:
+    type: String
+  githubData: mongoose.Schema.Types.Mixed
   hashed_password: String
   password_salt: String
   # Other Info
