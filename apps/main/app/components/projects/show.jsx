@@ -28,7 +28,9 @@ module.exports = React.createClass({
     var listItems = this.state.streams.map(function(model) {
       return (<ListItem key={model.cid} model={model} />);
     });
-
+    var
+      streamsCount = this.props.model.get('streamsCount'),
+      streamsWord = streamsCount === 1 ? 'stream' : 'streams';
     return (
       <div>
         <Header app={this.props.app}/>
@@ -39,7 +41,8 @@ module.exports = React.createClass({
                 {this.props.model.get('name')}
               </div>
               <div className='right'>
-                {this.props.model.get('plan')} plan
+                <span> {streamsCount} {streamsWord}</span> /
+                <span> {this.props.model.get('plan')} plan</span>
               </div>
             </div>
           </h3>

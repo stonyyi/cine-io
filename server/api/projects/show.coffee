@@ -6,6 +6,7 @@ toJSON = (project, callback)->
     apiKey: project.apiKey
     name: project.name
     plan: project.plan
+    streamsCount: project.streamsCount
 
   callback(null, projectJSON)
 

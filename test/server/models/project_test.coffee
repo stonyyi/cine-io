@@ -57,4 +57,7 @@ describe 'Project', ->
         Project.increment project, 'streamsCount', 3, (err, newProjectAttributes)->
           expect(err).to.be.null
           expect(project.streamsCount).to.equal(15)
+          Project.increment project, 'streamsCount', 2, (err, newProjectAttributes)->
+            expect(err).to.be.null
+            expect(project.streamsCount).to.equal(17)
           done()

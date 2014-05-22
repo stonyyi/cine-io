@@ -18,6 +18,7 @@ module.exports = React.createClass({
     p.save(null, {
       success: function(model, response, options){
         self.props.streams.add(model);
+        self.props.project.set('streamsCount', self.props.project.get('streamsCount') + 1);
       }
     });
   },
