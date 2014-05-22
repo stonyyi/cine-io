@@ -16,4 +16,7 @@ describe 'Projects#Show', ->
       expect(response.name).to.equal('my project')
       expect(response.plan).to.equal('free')
       expect(response.streamsCount).to.equal(1)
+      expect(response.apiKey).to.equal(@project.apiKey)
+      expect(response.apiSecret).not.to.equal(@project.apiSecret)
+      expect(response.apiSecret).to.be.undefined
       done()
