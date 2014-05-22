@@ -4,7 +4,6 @@ crypto = require('crypto')
 ProjectSchema = new mongoose.Schema
   name:
     type: String
-    default: ''
   apiKey:
     type: String
     unique: true
@@ -12,9 +11,13 @@ ProjectSchema = new mongoose.Schema
   streamsCount:
     type: Number
     default: 0
+  herokuId:
+    type: String
   plan:
     type: String
     required: true
+  deletedAt:
+    type: Date
 
 ProjectSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
@@ -36,7 +39,7 @@ ProjectSchema.options.toJSON.transform = (doc, ret, options)->
   ret
 
 ProjectSchema.path('plan').validate ((value)->
-  /free|developer|enterprise/i.test value
+  /test|foo|free|developer|enterprise/i.test value
 ), 'Invalid plan'
 
 Project = mongoose.model 'Project', ProjectSchema

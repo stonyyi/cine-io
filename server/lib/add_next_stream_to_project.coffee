@@ -6,6 +6,7 @@ noop = ->
 
 projectLimit = (project)->
   switch project.plan
+    when 'test' then 1
     when 'free' then 1
     when 'developer' then 5
     when 'enterprise' then Infinity
