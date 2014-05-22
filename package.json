@@ -18,7 +18,6 @@
     "coffee-script": "1.7.1",
     "connect-redis": "1.4.6",
     "csv": "^0.3.7",
-    "envify": "^1.2.1",
     "errorhandler": "^1.0.1",
     "execSync": "^1.0.1-pre",
     "express": "3.4.8",
