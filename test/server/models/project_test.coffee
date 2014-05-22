@@ -37,3 +37,24 @@ describe 'Project', ->
         project.save (err)->
           expect(project.apiKey).to.equal(apiKey)
           done(err)
+
+  describe '.increment', ->
+    beforeEach resetMongo
+    it 'increments the specified field and returns the new attributes', (done)->
+      project = new Project(name: 'a', streamsCount: 12)
+      project.save (err)->
+        expect(err).to.be.null
+        Project.increment project, 'streamsCount', 3, (err, newProjectAttributes)->
+          expect(err).to.be.null
+          expect(newProjectAttributes.name).to.equal('a')
+          expect(newProjectAttributes.streamsCount).to.equal(15)
+          done()
+
+    it 'updates the existing model', (done)->
+      project = new Project(name: 'a', streamsCount: 12)
+      project.save (err)->
+        expect(err).to.be.null
+        Project.increment project, 'streamsCount', 3, (err, newProjectAttributes)->
+          expect(err).to.be.null
+          expect(project.streamsCount).to.equal(15)
+          done()

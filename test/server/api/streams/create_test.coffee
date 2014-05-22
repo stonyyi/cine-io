@@ -3,11 +3,11 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 Create = testApi Cine.api('streams/create')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 
-describe 'EdgecastStreams#Create', ->
+describe 'Streams#Create', ->
   testApi.requresApiKey Create
 
   beforeEach (done)->
-    @project = new Project(name: 'my project')
+    @project = new Project(name: 'my project', plan: 'free')
     @project.save done
 
   it 'can error with no available edgecast stream', (done)->

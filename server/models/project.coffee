@@ -9,6 +9,9 @@ ProjectSchema = new mongoose.Schema
     type: String
     unique: true
     index: true
+  streamsCount:
+    type: Number
+    default: 0
   plan:
     type: String
 
@@ -19,6 +22,12 @@ ProjectSchema.pre 'save', (next)->
   crypto.randomBytes 16, (ex, buf)=>
     @apiKey = buf.toString('hex')
     next()
+
+ProjectSchema.statics.increment = (model, field, amount, callback)->
+  model[field] += amount
+  updateParams = {}
+  updateParams[field] = amount
+  @collection.findAndModify({ _id: model._id }, [], { $inc: updateParams}, {new: true}, callback)
 
 ProjectSchema.options.toJSON ||= {}
 ProjectSchema.options.toJSON.transform = (doc, ret, options)->
