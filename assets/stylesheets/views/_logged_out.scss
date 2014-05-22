@@ -1,4 +1,3 @@
-
 #homepage-logged-out {
   height: 100%;
 
@@ -114,9 +113,10 @@
 
 
 @media #{$medium-up} {
-  #homepage {
+  #homepage-logged-out {
     #home-hero {
-      background: url(/images/home-hero-tablet.jpg) center center no-repeat;
+      background-image: url(/images/home-hero-tablet.jpg);
+      background
       .info {
         @include grid-column(8, true);
         padding-top: 5em;
@@ -146,7 +146,7 @@
 @media #{$xlarge-up} {
   #homepage-logged-out {
     #home-hero {
-      background: url(/images/home-hero-desktop.jpg) center center no-repeat;
+      background-image: url(/images/home-hero-desktop.jpg);
     }
   }
 }
