@@ -15,7 +15,6 @@ updateUserData = (user, profile, accessToken, callback)->
 
 createNewUser = (profile, accessToken, callback)->
   email = profile.emails[0] && profile.emails[0].value
-  console.log('helloooo')
   return callback("email invalid") unless email
   user = new User
     githubId: profile.id
@@ -31,7 +30,7 @@ findGithubUser = (accessToken, refreshToken, profile, callback)->
   # console.log(accessToken, refreshToken, profile)
   User.findOne githubId: profile.id, (err, user)->
     return callback(err) if err
-    return updateUserData(user, profile, accessToken, profile, callback) if user
+    return updateUserData(user, profile, accessToken, callback) if user
     createNewUser(profile, accessToken, callback)
 
 githubStrategy = new GitHubStrategy strategyOptions, findGithubUser
