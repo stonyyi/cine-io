@@ -5,7 +5,7 @@ Project = Cine.server_model('project')
 
 describe 'addNextStreamToProject', ->
   beforeEach (done)->
-    @project = new Project name: 'some project'
+    @project = new Project name: 'some project', plan: 'free'
     @project.save done
 
   beforeEach (done)->

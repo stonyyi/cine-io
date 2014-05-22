@@ -21,7 +21,7 @@ describe 'api routing', ->
   describe 'authenticated', ->
 
     beforeEach (done)->
-      @project = new Project(apiKey: 'abc', name: 'me')
+      @project = new Project(apiKey: 'abc', name: 'me', plan: 'free')
       @project.save done
 
     it 'requires an api key', (done)->

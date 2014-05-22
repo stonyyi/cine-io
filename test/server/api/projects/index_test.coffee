@@ -6,17 +6,17 @@ describe 'Projects#Index', ->
   testApi.requresLoggedIn Index
 
   beforeEach (done)->
-    @project1 = new Project(name: 'my project1', createdAt: new Date)
+    @project1 = new Project(name: 'my project1', createdAt: new Date, plan: 'free')
     @project1.save done
 
   beforeEach (done)->
     twoDaysAgo = new Date
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2)
-    @project2 = new Project(name: 'my project2', createAt: twoDaysAgo)
+    @project2 = new Project(name: 'my project2', createAt: twoDaysAgo, plan: 'free')
     @project2.save done
 
   beforeEach (done)->
-    @notMyProject = new Project(name: 'not my project')
+    @notMyProject = new Project(name: 'not my project', plan: 'free')
     @notMyProject.save done
 
   beforeEach (done)->

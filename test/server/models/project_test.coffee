@@ -2,7 +2,7 @@ Project = Cine.server_model('project')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'Project', ->
-  modelTimestamps(Project, name: 'hey')
+  modelTimestamps(Project, name: 'hey', plan: 'free')
 
   describe 'validations', ->
     describe 'plan', ->
@@ -20,16 +20,22 @@ describe 'Project', ->
           expect(err).not.to.be.null
           done()
 
+      it 'cannot be null', (done)->
+        project = new Project(name: 'some name')
+        project.save (err, member)->
+          expect(err).not.to.be.null
+          done()
+
   describe 'api_key', ->
     it 'has a unique api_key generated on save', (done)->
-      project = new Project(name: 'some name')
+      project = new Project(name: 'some name', plan: 'free')
       project.save (err)->
         expect(err).to.be.null
         expect(project.apiKey.length).to.equal(32)
         done()
 
     it 'will not override the password change request on future saves', (done)->
-      project = new Project(name: 'some name')
+      project = new Project(name: 'some name', plan: 'free')
       project.save (err)->
         expect(err).to.be.null
         apiKey = project.apiKey
@@ -41,7 +47,7 @@ describe 'Project', ->
   describe '.increment', ->
     beforeEach resetMongo
     it 'increments the specified field and returns the new attributes', (done)->
-      project = new Project(name: 'a', streamsCount: 12)
+      project = new Project(name: 'a', streamsCount: 12, plan: 'free')
       project.save (err)->
         expect(err).to.be.null
         Project.increment project, 'streamsCount', 3, (err, newProjectAttributes)->
@@ -51,7 +57,7 @@ describe 'Project', ->
           done()
 
     it 'updates the existing model', (done)->
-      project = new Project(name: 'a', streamsCount: 12)
+      project = new Project(name: 'a', streamsCount: 12, plan: 'free')
       project.save (err)->
         expect(err).to.be.null
         Project.increment project, 'streamsCount', 3, (err, newProjectAttributes)->

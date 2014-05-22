@@ -3,11 +3,11 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 Show = testApi Cine.api('streams/show')
 _ = require('underscore')
 
-describe 'EdgecastStreams#Show', ->
+describe 'Streams#Show', ->
   testApi.requresApiKey Show
 
   beforeEach (done)->
-    @project = new Project(name: 'my project')
+    @project = new Project(name: 'my project', plan: 'free')
     @project.save done
 
   beforeEach (done)->

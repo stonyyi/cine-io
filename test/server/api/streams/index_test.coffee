@@ -2,11 +2,11 @@ Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Index = testApi Cine.api('streams/index')
 
-describe 'EdgecastStreams#Index', ->
+describe 'Streams#Index', ->
   testApi.requresApiKey Index
 
   beforeEach (done)->
-    @project = new Project(name: 'my project')
+    @project = new Project(name: 'my project', plan: 'enterprise')
     @project.save done
 
   beforeEach (done)->
