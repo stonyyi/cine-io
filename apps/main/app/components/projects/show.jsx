@@ -33,7 +33,16 @@ module.exports = React.createClass({
       <div>
         <Header app={this.props.app}/>
         <div className="panel">
-          <h3>{this.props.model.get('name')}</h3>
+          <h3>
+            <div className='clearfix'>
+              <div className='left'>
+                {this.props.model.get('name')}
+              </div>
+              <div className='right'>
+                {this.props.model.get('plan')} plan
+              </div>
+            </div>
+          </h3>
           <ul className="no-bullet">
             {listItems}
           </ul>
