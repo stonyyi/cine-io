@@ -1,3 +1,4 @@
+# kensa run ruby development/heroku_test_provision.rb
 api_values = {
   api_key: ENV['CINE_IO_API_KEY'],
   api_secret: ENV['CINE_IO_API_SECRET']
