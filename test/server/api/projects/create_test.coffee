@@ -11,15 +11,16 @@ describe 'Projects#Create', ->
       @user.save done
 
     it 'creates an project', (done)->
-      params = name: 'new project'
+      params = name: 'new project', plan: 'enterprise'
       Create params, user: @user, (err, response, options)->
         expect(err).to.be.null
         expect(response.name).to.equal('new project')
         expect(response.apiKey).to.have.length(32)
+        expect(response.plan).to.equal('enterprise')
         done()
 
     it 'adds the permission to the user', (done)->
-      params = name: 'new project'
+      params = name: 'new project', plan: 'enterprise'
       expect(@user.permissions).to.have.length(0)
       Create params, user: @user, (err, response, options)=>
         User.findById @user._id, (err, user)->

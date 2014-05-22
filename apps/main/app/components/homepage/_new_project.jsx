@@ -22,16 +22,21 @@ module.exports = React.createClass({
     p.save(null, {
       success: function(model, response, options){
         self.props.projects.add(model);
-        self.setState({value: ''});
+        self.setState({projectName: '', projectPlan: 'free'});
       }
     });
   },
-  handleChange: function(event) {
-    this.setState({value: event.target.value});
+  changeProjectName: function(event) {
+    this.setState({projectName: event.target.projectName});
+  },
+  changeProjectPlan: function(event) {
+    this.setState({projectPlan: event.target.projectPlan});
   },
 
   render: function() {
-    var value = this.state.value;
+    var
+      projectName = this.state.projectName,
+      projectPlan = this.state.projectPlan;
     return (
       <form onSubmit={this.createProject}>
         <h3> New Project </h3>
@@ -40,7 +45,7 @@ module.exports = React.createClass({
             <label htmlFor="project-name" className="right inline">Project Name</label>
           </div>
           <div className="small-9 columns">
-            <input type="text" id="project-name" name='project[name]' value={value} onChange={this.handleChange} placeholder="My Fun Project (Production)" />
+            <input type="text" id="project-name" name='project[name]' value={projectName} onChange={this.changeProjectName} placeholder="My Fun Project (Production)" />
           </div>
         </div>
         <div className="row">
@@ -48,7 +53,7 @@ module.exports = React.createClass({
             <label htmlFor="project-plan" className="right inline">Project Plan</label>
           </div>
           <div className="small-9 columns">
-            <select name='project-plan'>
+            <select value={projectPlan} onChange={this.changeProjectPlan} id='project-plan' name='project[plan]'>
               <option value="free">Free</option>
               <option value="developer">Developer</option>
               <option value="enterprise">Enterprise</option>

@@ -14,6 +14,7 @@ ProjectSchema = new mongoose.Schema
     default: 0
   plan:
     type: String
+    required: true
 
 ProjectSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 

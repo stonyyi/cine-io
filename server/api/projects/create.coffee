@@ -7,6 +7,7 @@ module.exports = (params, callback)->
     return callback(err, user, status) if err
     project = new Project
       name: params.name
+      plan: params.plan
     project.save (err, project)->
       return callback(err, null, status: 400) if err
       user.permissions.push objectId: project._id, objectName: 'Project'
