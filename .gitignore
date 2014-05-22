@@ -1,5 +1,7 @@
 *.DS_Store
 
+addon-manifest.json
+
 node_modules/*
 
 public/compiled/*
