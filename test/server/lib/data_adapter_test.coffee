@@ -34,10 +34,11 @@ describe 'DataAdapter', ->
       da.request req, api, null, (err, options, response)->
         expect(err).to.equal(null)
         expect(options.statusCode).to.equal(200)
+        expect(options.jsonp).to.be.undefined
         expect(response).to.equal 'matching route response'
         done()
 
-    it.only 'returns the proper response wrapped in a callback', (done)->
+    it 'returns the proper response with jsonp', (done)->
       matchingRoute = {
         callbacks: [(params, callback)->
           expect(params.param1).to.equal('value1')
@@ -60,7 +61,8 @@ describe 'DataAdapter', ->
       da.request req, api, null, (err, options, response)->
         expect(err).to.equal(null)
         expect(options.statusCode).to.equal(200)
-        expect(response).to.equal 'fuun({"hey":"buddy"});'
+        expect(options.jsonp).to.equal(true)
+        expect(response).to.deep.equal hey: 'buddy'
         done()
 
     it 'includes the user session to the params', (done)->

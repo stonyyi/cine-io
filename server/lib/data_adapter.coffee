@@ -15,8 +15,9 @@ class FormatResponse
       console.log('sending an err from the data_adapter', err, options.status)
       err = new ApiErr(err, response, options.status)
     options.status ||= 200
-    response = "#{@jsonpCallback}(#{JSON.stringify(response)});" if @jsonpCallback
-    @callbackFromRendr(err, {statusCode: options.status}, response)
+    options = {statusCode: options.status}
+    options.jsonp = true if @jsonpCallback?
+    @callbackFromRendr(err, options, response)
 
 # This class makes a "request" to an action in server/api
 # the callback must respond with (err, status, response).
