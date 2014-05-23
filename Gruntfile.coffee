@@ -40,6 +40,10 @@ module.exports = (grunt) ->
         files: ["apps/main/app/**/*.coffee"]
         tasks: ["rendr_stitch"]
 
+      jssdk:
+        files: ["sdk/javascript/**/*.coffee", "sdk/javascript/**/*.js"]
+        tasks: ["browserify:jssdk"]
+
     react:
       dynamic_mappings:
         files: [
@@ -71,7 +75,7 @@ module.exports = (grunt) ->
           filename = path.basename(filepath);
           return filename.slice(0, 2) isnt '__';
       }
-    },
+    }
 
     rendr_stitch:
       compile:
@@ -111,18 +115,30 @@ module.exports = (grunt) ->
           ]
         }]
 
+    browserify: {
+      jssdk: {
+        files: {
+          'public/compiled/cine.js': ['sdk/javascript/main.coffee'],
+        },
+        options: {
+          transform: ['coffeeify']
+        }
+      }
+    }
+
 
   grunt.loadNpmTasks "grunt-sass"
   grunt.loadNpmTasks "grunt-nodemon"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-concurrent"
-  grunt.registerTask "compile", ["react", "handlebars", "rendr_stitch"]
+  grunt.registerTask "compile", ["react", "handlebars", "rendr_stitch", "browserify"]
   grunt.registerTask "build", ["compile", "sass"]
   grunt.registerTask "dev", ["build", "concurrent:dev"]
   grunt.registerTask "default", ["dev"]
   grunt.loadNpmTasks 'grunt-react'
   grunt.loadNpmTasks('grunt-contrib-handlebars');
   grunt.loadNpmTasks('grunt-rendr-stitch');
+  grunt.loadNpmTasks('grunt-browserify');
 
   grunt.registerTask "test", (file) ->
     sh = require("execSync")

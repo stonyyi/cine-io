@@ -14,8 +14,10 @@
   "dependencies": {
     "async": "0.8.0",
     "bcrypt": "^0.7.8",
+    "browserify": "^4.1.5",
     "cli-color": "0.3.2",
     "coffee-script": "1.7.1",
+    "coffeeify": "^0.6.0",
     "connect-redis": "1.4.6",
     "csv": "^0.3.7",
     "errorhandler": "^1.0.1",
@@ -43,6 +45,7 @@
     "rendr": "git://github.com/givingstage/rendr.git#94bc880356a8b02f2b3941cd7f9697d85878c2cd",
     "rendr-handlebars": "git://github.com/airbnb/rendr-handlebars.git#6e5363074aa8fdfda0cbb2d9f70ed272be8040ea",
     "request": "2.34.0",
+    "type-of": "^2.0.1",
     "underscore": "1.6.0",
     "underscore.string": "2.3.3"
   },
