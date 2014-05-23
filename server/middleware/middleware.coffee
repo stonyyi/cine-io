@@ -37,6 +37,13 @@ module.exports = (app) ->
   #     req._myCSRF = req.csrfToken()
   #     next()
 
+  # generic force https and www
+  app.use Cine.middleware('force_https_and_www') if app.settings.env is "production"
+
+  if app.settings.env is "staging"
+    authCredentials = Cine.config('variables/basic_auth')
+    app.use express.basicAuth(authCredentials.user, authCredentials.password)
+
   Cine.middleware('authentication', app)
   Cine.middleware('health_check', app)
 
