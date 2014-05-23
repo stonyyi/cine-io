@@ -40,7 +40,7 @@
     "passport-remember-me": "0.0.1",
     "qs": "0.6.6",
     "react": "^0.10.0",
-    "rendr": "git://github.com/givingstage/rendr.git#0c8d92af647117b72daa6d4517f71dc7127bd4ed",
+    "rendr": "git://github.com/givingstage/rendr.git#94bc880356a8b02f2b3941cd7f9697d85878c2cd",
     "rendr-handlebars": "git://github.com/airbnb/rendr-handlebars.git#6e5363074aa8fdfda0cbb2d9f70ed272be8040ea",
     "request": "2.34.0",
     "underscore": "1.6.0",
