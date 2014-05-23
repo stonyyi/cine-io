@@ -37,6 +37,32 @@ describe 'DataAdapter', ->
         expect(response).to.equal 'matching route response'
         done()
 
+    it.only 'returns the proper response wrapped in a callback', (done)->
+      matchingRoute = {
+        callbacks: [(params, callback)->
+          expect(params.param1).to.equal('value1')
+          callback(null, hey: 'buddy')
+        ]
+        match: (path)->
+          expect(path).to.equal('/api/fake-path')
+      }
+      notMatchingRoute = {
+        callbacks: [(params, callback)->
+          callback(null, 'notmatching route response')
+        ]
+        match: (path)->
+          path == 'do not match'
+      }
+      app = {routes: {get: [notMatchingRoute, matchingRoute]}}
+      da = new DataAdapter(app)
+      req = {method: 'get'}
+      api = {path: '/fake-path', body: {param1: 'value1', callback: 'fuun'}}
+      da.request req, api, null, (err, options, response)->
+        expect(err).to.equal(null)
+        expect(options.statusCode).to.equal(200)
+        expect(response).to.equal 'fuun({"hey":"buddy"});'
+        done()
+
     it 'includes the user session to the params', (done)->
       matchingRoute = {
         callbacks: [(params, callback)->

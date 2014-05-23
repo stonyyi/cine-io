@@ -8,13 +8,14 @@ class ApiErr
     # this needs to extend the response so it will have all the attributes of the response
     _.extend(this, response) if response
 
-class FormatResponseForRendr
-  constructor: (@callbackFromRendr)->
+class FormatResponse
+  constructor: (@jsonpCallback, @callbackFromRendr)->
   callback: (err, response, options = {})=>
     if err
       console.log('sending an err from the data_adapter', err, options.status)
       err = new ApiErr(err, response, options.status)
     options.status ||= 200
+    response = "#{@jsonpCallback}(#{JSON.stringify(response)});" if @jsonpCallback
     @callbackFromRendr(err, {statusCode: options.status}, response)
 
 # This class makes a "request" to an action in server/api
@@ -58,7 +59,7 @@ class DataAdapter
     console.log(clc.blueBright("[API]"), "#{method} #{path}", params)
 
     apiReq = new InternalApiRequest(@app, method, path, params)
-    rendrResponse = new FormatResponseForRendr(callback)
+    rendrResponse = new FormatResponse(params.callback, callback)
     apiReq.request(rendrResponse.callback)
 
   # Convert 4xx, 5xx responses to be errors.
