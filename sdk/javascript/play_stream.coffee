@@ -1,6 +1,17 @@
 playerReady = false
 loadingPlayer = false
 waitingPlayCalls = []
+BASE_URL = "rtmp://fml.cine.io/20C45E"
+
+defaultOptions =
+  stretching: 'uniform'
+  width: '100%'
+  aspectratio: '16:9'
+  primary: 'flash'
+  autostart: true
+  metaData: true
+  rtmp:
+    subscribe: true
 
 playerIsReady = ->
   playerReady = true
@@ -24,16 +35,17 @@ play = (streamId, domNode, playOptions)->
     jwplayer.key = "TVKg0kVV92Nwd/vHp3yI+9aTDoPQrSyz6BH1Bg=="
     stream = stream
     console.log('streaming', stream)
+    rtmpUrl = "#{BASE_URL}/#{stream.instanceName}/#{stream.streamName}?adbe-live-event=#{stream.eventName}"
     options =
-      stretching: 'uniform'
-      width: '100%'
-      aspectratio: '16:9'
-      primary: 'flash'
-      autostart: true
-      metaData: true
-      file: "rtmp://fml.cine.io/20C45E/#{stream.instanceName}/#{stream.streamName}?adbe-live-event=#{stream.eventName}"
-      rtmp:
-        subscribe: true
+      file: rtmpUrl
+      stretching: playOptions.stretching || defaultOptions.stretching
+      width: playOptions.width || defaultOptions.width
+      aspectratio: playOptions.aspectratio || defaultOptions.aspectratio
+      primary: playOptions.primary || defaultOptions.primary
+      autostart: playOptions.autostart || defaultOptions.autostart
+      metaData: playOptions.metaData || defaultOptions.metaData
+      rtmp: playOptions.rtmp || defaultOptions.rtmp
+
     jwplayer(domNode).setup(options)
 
 module.exports = (streamId, domNode, playOptions)->

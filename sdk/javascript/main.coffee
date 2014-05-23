@@ -7,13 +7,13 @@ CineIO =
     throw new Error("API Key required") unless apiKey
     CineIO.config.apiKey = apiKey
 
-  play: (streamId, domNode, playOptions)->
+  play: (streamId, domNode, playOptions={})->
     requiresInit()
     throw new Error("Stream ID required") unless streamId
     throw new Error("DOM node required") unless domNode
     playStream(streamId, domNode, playOptions)
 
-  publish: (streamId, password, domNode, publishOptions)->
+  publish: (streamId, password, domNode, publishOptions={})->
     requiresInit()
     throw new Error("Stream ID required") unless streamId
     throw new Error("password required") unless password
@@ -21,8 +21,12 @@ CineIO =
     publishStream.new(streamId, password, domNode, publishOptions)
 
   quickPlay: ->
-    CineIO.play "53718cef450ff80200f81856", 'example'
-    # CineIO.publish "53718cef450ff80200f81856", 'bass35', 'example'
+    CineIO.play "53718cef450ff80200f81856", 'player-example'
+
+  quickPublish: ->
+    publisher = CineIO.publish("53718cef450ff80200f81856", 'bass35', 'publisher-example')
+    publisher.start()
+    publisher
 
 window.CineIO = CineIO if typeof window isnt 'undefined'
 

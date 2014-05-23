@@ -70,6 +70,14 @@ exports.Example = React.createClass({
   render: function() {
     return (
       <section id="example">
+        <div className="row">
+          <div className="small-6 columns">
+            <div id="publisher-example"></div>
+          </div>
+          <div className="small-6 columns">
+            <div id="player-example"></div>
+          </div>
+        </div>
       </section>
     );
   }

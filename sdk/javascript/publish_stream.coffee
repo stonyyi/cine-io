@@ -1,13 +1,25 @@
 publisherReady = false
-swfLoaded = false
+loadingSWF = false
+loadedSWF = false
 waitingPublishCalls = []
-# streamId: streamData
+BASE_URL = 'rtmp://publish.west.cine.io/live'
+PUBLISHER_NAME = 'Publisher'
 noop = ->
 
-PUBLISHER_NAME = 'Recorder'
+defaultOptions =
+  serverURL: null
+  streamName: null
+  streamKey: null
+  audioCodec: 'NellyMoser'
+  streamWidth: 720
+  streamHeight: 404
+  streamFPS: 15
+  keyFrameInterval: null
+  intervalSecs: 10 #not passed to publisher
+  bandwidth: 1500
+  videoQuality: 90
 
 loadPublisher = (domNode)->
-  domNode = 'example'
   swfVersionStr = "11.4.0"
   xiSwfUrlStr = "playerProductInstall.swf"
   flashvars = {}
@@ -16,16 +28,15 @@ loadPublisher = (domNode)->
   params.allowscriptaccess = "sameDomain"
   params.allowfullscreen = "true"
   attributes.id = domNode
-  attributes.name = "Recorder"
+  attributes.name = PUBLISHER_NAME
   attributes.align = "middle"
-  swfobject.embedSWF "recorder.swf", domNode, "720", "405", swfVersionStr, xiSwfUrlStr, flashvars, params, attributes, (embedEvent) ->
+  swfobject.embedSWF "publisher.swf", domNode, "100%", "100%", swfVersionStr, xiSwfUrlStr, flashvars, params, attributes, (embedEvent) ->
     if embedEvent.success
       readyCall = ->
-        embedEvent.ref.setOptions(jsLogFunction: "_jsLogFunction", jsStatusFunction: "_publisherStatus")
+        embedEvent.ref.setOptions(jsLogFunction: "_jsLogFunction", jsEmitFunction: "_publisherEmit")
         publisherIsReady()
       # need to wait a bit until initialization finishes
       setTimeout readyCall, 1000
-      _publisherStatus "Configure your stream, then press start."
 
 publisherIsReady = ->
   console.log('publisher is ready!!!')
@@ -38,7 +49,6 @@ enqueuePublisherCallback = (domNode, cb)->
   waitingPublishCalls.push ->
     getPublisher domNode, cb
 
-
 findPublisherInDom = (domNode)->
   node = document.getElementById(domNode)
   return node if node && node.name == PUBLISHER_NAME
@@ -46,7 +56,7 @@ findPublisherInDom = (domNode)->
 
 swfObjectCallbackToLoadPublisher = (domNode)->
   return ->
-    swfLoaded = true
+    loadedSWF = true
     loadPublisher(domNode)
 
 # cb(publisher)
@@ -63,29 +73,63 @@ swfObjectCallbackToLoadPublisher = (domNode)->
 getPublisher = (domNode, cb)->
   publisher = findPublisherInDom(domNode)
   return cb(publisher) if publisher
-  if swfLoaded
-    enqueuePublisherCallback domNode, cb
-    return loadPublisher(domNode)
+  return enqueuePublisherCallback domNode, cb if loadedSWF
+  return enqueuePublisherCallback domNode, cb if loadingSWF
+  loadingSWF = true
   enqueuePublisherCallback domNode, cb
   getScript '//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js', swfObjectCallbackToLoadPublisher(domNode, cb)
+
+generateStreamName = (stream, password)->
+  "#{stream.streamName}?#{password}&adbe-live-event=#{stream.streamName}"
 
 class Publisher
   constructor: (@streamId, @password, @domNode, @publishOptions)->
     @_ensureLoaded()
-  publish: ->
+
+  start: ->
     console.log('loading publisher')
-    @_ensureLoaded (publisher)->
-      console.log('streamingggg!!', publisher)
+    @_ensureLoaded (publisher)=>
+      console.log('fetching stream', publisher)
+      getStreamDetails @streamId, (stream)=>
+        options = @_options(stream)
+        console.log('streamingggg!!', options)
+        publisher.setOptions options
+        publisher.start()
+
+  stop: ->
+    @_ensureLoaded (publisher)=>
+      publisher.stop()
+
+  _options: (stream)->
+    options =
+      serverURL: BASE_URL
+      streamName: generateStreamName(stream, @password)
+      audioCodec: @publishOptions.audioCodec || defaultOptions.audioCodec
+      streamWidth: @publishOptions.streamWidth || defaultOptions.streamWidth
+      streamHeight: @publishOptions.streamHeight || defaultOptions.streamHeight
+      streamFPS: @publishOptions.streamFPS || defaultOptions.streamFPS
+      bandwidth: @publishOptions.bandwidth || defaultOptions.bandwidth * 1024 * 8
+      videoQuality: @publishOptions.videoQuality || defaultOptions.videoQuality
+    intervalSecs = @publishOptions.intervalSecs || defaultOptions.intervalSecs
+    options.keyFrameInterval = options.streamFPS * intervalSecs
+    options
+
   _ensureLoaded: (cb=noop)->
     getPublisher @domNode, cb
 
 exports.new = (streamId, password, domNode, publishOptions)->
   new Publisher(streamId, password, domNode, publishOptions)
 
-window._publisherStatus = (msg)->
-  console.log('_publisherStatus', msg)
+window._publisherEmit = (eventName, stuff...)->
+  switch(eventName)
+    when "connect", "disconnect", "publish", "status", "error"
+      console.log(stuff...)
+    else
+      console.log(stuff...)
+
 
 window._jsLogFunction = (msg)->
   console.log('_jsLogFunction', msg)
 
 getScript = require('./get_script')
+getStreamDetails = require('./get_stream_details')
