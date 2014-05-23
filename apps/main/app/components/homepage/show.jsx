@@ -6,6 +6,7 @@ LoggedOut = Cine.component('homepage/_logged_out'),
 LoggedIn = Cine.component('homepage/_logged_in'),
 HomeHero = LoggedOut.HomeHero,
 About = LoggedOut.About,
+Example = LoggedOut.Example,
 Pricing = LoggedOut.Pricing,
 Projects = Cine.collection('projects');
 
@@ -35,6 +36,7 @@ module.exports = React.createClass({
         <div id='homepage-logged-out'>
           <HomeHero />
           <About />
+          <Example />
           <Pricing />
           <Footer />
         </div>

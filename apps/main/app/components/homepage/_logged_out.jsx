@@ -66,6 +66,15 @@ exports.About = React.createClass({
   }
 });
 
+exports.Example = React.createClass({
+  render: function() {
+    return (
+      <section id="example">
+      </section>
+    );
+  }
+});
+
 exports.Pricing = React.createClass({
   render: function() {
     return (
