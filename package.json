@@ -25,6 +25,7 @@
     "express": "3.4.8",
     "ftp": "^0.3.6",
     "grunt": "0.4.4",
+    "grunt-browserify": "^2.1.0",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-handlebars": "^0.8.0",
     "grunt-react": "^0.8.2",
