@@ -20,11 +20,11 @@ CineIO =
     throw new Error("DOM node required") unless domNode
     publishStream.new(streamId, password, domNode, publishOptions)
 
-  quickPlay: ->
-    CineIO.play "53718cef450ff80200f81856", 'player-example'
+  quickPlay: (playOptions={})->
+    CineIO.play "53718cef450ff80200f81856", 'player-example', playOptions
 
-  quickPublish: ->
-    publisher = CineIO.publish("53718cef450ff80200f81856", 'bass35', 'publisher-example')
+  quickPublish: (publishOptions={})->
+    publisher = CineIO.publish("53718cef450ff80200f81856", 'bass35', 'publisher-example', publishOptions)
     publisher.start()
     publisher
 
