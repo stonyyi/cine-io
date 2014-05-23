@@ -115,16 +115,14 @@ module.exports = (grunt) ->
           ]
         }]
 
-    browserify: {
-      jssdk: {
-        files: {
-          'public/compiled/cine.js': ['sdk/javascript/main.coffee'],
-        },
-        options: {
+    browserify:
+      jssdk:
+        files:
+          'public/compiled/cine.js': ['sdk/javascript/main.coffee']
+        options:
+          browserifyOptions:
+            extensions: ['.coffee', '.js']
           transform: ['coffeeify']
-        }
-      }
-    }
 
 
   grunt.loadNpmTasks "grunt-sass"

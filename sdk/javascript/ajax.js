@@ -1,3 +1,4 @@
+// https://github.com/ForbesLindesay/ajax
 var type
 try {
   type = require('type-of')
