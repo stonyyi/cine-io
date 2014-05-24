@@ -1,4 +1,4 @@
-BASE_URL = "http://cine.io/api/1/-"
+BASE_URL = "https://www.cine.io/api/1/-"
 # BASE_URL = "http://localtest.me:8181/api/1/-"
 
 # {"id":"53718cef450ff80200f81856",
