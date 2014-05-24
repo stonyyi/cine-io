@@ -73,7 +73,7 @@ exports.Example = React.createClass({
   },
   playerExample: function(e){
     e.preventDefault();
-    CineIO.play(this.state.streamId, this.state.playerId);
+    CineIO.play(this.state.streamId, this.state.playerId, {mute: true});
     this.setState({playing: true});
 
   },
@@ -93,12 +93,16 @@ exports.Example = React.createClass({
   render: function() {
     var publishCommand = this.state.publishing ? 'stop' : 'start',
     publishTry = this.state.publishing ? 'Stop' : (this.state.hasPublished ? 'Start' : 'Try'),
-    tryPlayer = '';
+    tryPlayer = '', publishedText = '';
     if (!this.state.playing){
       tryPlayer = (
         <div className='text-center'>
           <button className='button radius' onClick={this.playerExample}>Try Player</button>
         </div>
+        );
+    }else{
+      publishedText = (
+        <small>We default the example to muted, you don{String.fromCharCode(39)}t get horrible microphone feedback from the publisher right away.</small>
         );
     }
     return (
@@ -135,6 +139,7 @@ exports.Example = React.createClass({
                 <div>var streamId = '{this.state.streamId}',</div>
                 <div>&nbsp;&nbsp;domId = '{this.state.playerId}';</div>
                 <div className='top-margin-half'>CineIO.play(streamId, domId);</div>
+                {publishedText}
               </div>
               {tryPlayer}
             </div>
