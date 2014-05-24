@@ -38,6 +38,8 @@ domId is the ID of the dom node you want the player to be injected into.
 *  primary: 'flash'
 *  autostart: true
 *  metaData: true
+*  mute: false
+*  controls: true
 *  rtmp:
    * subscribe: true
 

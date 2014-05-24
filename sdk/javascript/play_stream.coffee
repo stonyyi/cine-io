@@ -10,6 +10,8 @@ defaultOptions =
   primary: 'flash'
   autostart: true
   metaData: true
+  controls: true
+  mute: false
   rtmp:
     subscribe: true
 
@@ -30,6 +32,10 @@ ensurePlayerLoaded = (cb)->
   enqueuePlayerCallback cb
 
 # this assumes JW player is loaded
+
+userOrDefault = (userOptions, key)->
+  if Object.prototype.hasOwnProperty.call(userOptions, key) then userOptions[key] else defaultOptions[key]
+
 play = (streamId, domNode, playOptions)->
   getStreamDetails streamId, (stream)->
     jwplayer.key = "TVKg0kVV92Nwd/vHp3yI+9aTDoPQrSyz6BH1Bg=="
@@ -38,15 +44,35 @@ play = (streamId, domNode, playOptions)->
     rtmpUrl = "#{BASE_URL}/#{stream.instanceName}/#{stream.streamName}?adbe-live-event=#{stream.eventName}"
     options =
       file: rtmpUrl
-      stretching: playOptions.stretching || defaultOptions.stretching
-      width: playOptions.width || defaultOptions.width
-      aspectratio: playOptions.aspectratio || defaultOptions.aspectratio
-      primary: playOptions.primary || defaultOptions.primary
-      autostart: playOptions.autostart || defaultOptions.autostart
-      metaData: playOptions.metaData || defaultOptions.metaData
-      rtmp: playOptions.rtmp || defaultOptions.rtmp
-
+      stretching: userOrDefault(playOptions, 'stretching')
+      width: userOrDefault(playOptions, 'width')
+      aspectratio: userOrDefault(playOptions, 'aspectratio')
+      primary: userOrDefault(playOptions, 'primary')
+      autostart: userOrDefault(playOptions, 'autostart')
+      metaData: userOrDefault(playOptions, 'metaData')
+      mute: userOrDefault(playOptions, 'mute')
+      rtmp: userOrDefault(playOptions, 'rtmp')
+      controlbar: userOrDefault(playOptions, 'controls')
+    console.log('playing', options)
     jwplayer(domNode).setup(options)
+    if !userOrDefault(playOptions, 'controls')
+      jwplayer().setControls(false)
+    jwplayer().onReady switchToNative
+    jwplayer().onSetupError switchToNative
+
+
+    switchToNative = ->
+      return if jwplayer().getRenderingMode() == "flash"
+      videoOptions =
+         width: userOrDefault(playOptions, 'width')
+         height: '100%'
+         autoplay: userOrDefault(playOptions, 'autostart')
+         controls: userOrDefault(playOptions, 'controls')
+         mute: userOrDefault(playOptions, 'mute')
+         src: "http://hls.cine.io/#{stream.instanceName}/#{stream.eventName}/#{stream.streamName}.m3u8"
+      videoElement = "<video src='#{videoOptions.src}' height='#{videoOptions.height}' autoplay='#{videoOptions.autoplay}' controls='#{videoOptions.controls}' #{'muted' if videoOptions.mute}>"
+      document.getElementById(domNode).innerHTML(videoElement)
+
 
 module.exports = (streamId, domNode, playOptions)->
   ensurePlayerLoaded ->
