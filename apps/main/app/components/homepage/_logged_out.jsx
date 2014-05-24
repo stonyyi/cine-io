@@ -125,7 +125,7 @@ exports.Example = React.createClass({
                 <div>var streamId = '{this.state.streamId}',</div>
                 <div>&nbsp;&nbsp;password = '{this.state.streamPassword}',</div>
                 <div>&nbsp;&nbsp;domId = '{this.state.publisherId}';</div>
-                <div className='top-margin-half'>var publisher = CineIO.publish(streamId, password domId);</div>
+                <div className='top-margin-half'>var publisher = CineIO.publish(streamId, password, domId);</div>
                 <div>publisher.{publishCommand}();</div>
               </div>
               <div className='text-center'>
