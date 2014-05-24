@@ -1,0 +1,31 @@
+$expected-font-size: 16px;
+
+.top-margin-2 {
+  margin-top: $expected-font-size * 2;
+}
+.top-margin-1 {
+  margin-top: $expected-font-size;
+}
+.top-margin-half {
+  margin-top: $expected-font-size / 2;
+}
+
+.top-margin-0 {
+  margin-top: 0;
+}
+
+.bottom-margin-2 {
+  margin-bottom: $expected-font-size * 2;
+}
+
+.bottom-margin-1 {
+  margin-bottom: $expected-font-size;
+}
+
+.bottom-margin-half {
+  margin-bottom: $expected-font-size / 2;
+}
+
+.bottom-margin-0 {
+  margin-bottom: 0;
+}
