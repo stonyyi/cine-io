@@ -38,6 +38,18 @@ userOrDefault = (userOptions, key)->
 
 play = (streamId, domNode, playOptions)->
   getStreamDetails streamId, (stream)->
+    switchToNative = ->
+      return if jwplayer().getRenderingMode() == "flash"
+      videoOptions =
+         width: userOrDefault(playOptions, 'width')
+         height: '100%'
+         autoplay: userOrDefault(playOptions, 'autostart')
+         controls: userOrDefault(playOptions, 'controls')
+         mute: userOrDefault(playOptions, 'mute')
+         src: "http://hls.cine.io/#{stream.instanceName}/#{stream.eventName}/#{stream.streamName}.m3u8"
+      videoElement = "<video src='#{videoOptions.src}' height='#{videoOptions.height}' #{'autoplay' if videoOptions.autoplay} #{'controls' if videoOptions.controls} #{'autoplay' if videoOptions.mute}>"
+      document.getElementById(domNode).innerHTML = videoElement
+
     jwplayer.key = "TVKg0kVV92Nwd/vHp3yI+9aTDoPQrSyz6BH1Bg=="
     stream = stream
     console.log('streaming', stream)
@@ -60,18 +72,6 @@ play = (streamId, domNode, playOptions)->
     jwplayer().onReady switchToNative
     jwplayer().onSetupError switchToNative
 
-
-    switchToNative = ->
-      return if jwplayer().getRenderingMode() == "flash"
-      videoOptions =
-         width: userOrDefault(playOptions, 'width')
-         height: '100%'
-         autoplay: userOrDefault(playOptions, 'autostart')
-         controls: userOrDefault(playOptions, 'controls')
-         mute: userOrDefault(playOptions, 'mute')
-         src: "http://hls.cine.io/#{stream.instanceName}/#{stream.eventName}/#{stream.streamName}.m3u8"
-      videoElement = "<video src='#{videoOptions.src}' height='#{videoOptions.height}' #{'autoplay' if videoOptions.autoplay} #{'controls' if videoOptions.controls} #{'autoplay' if videoOptions.mute}>"
-      document.getElementById(domNode).innerHTML(videoElement)
 
 
 module.exports = (streamId, domNode, playOptions)->
