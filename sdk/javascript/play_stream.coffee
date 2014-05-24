@@ -70,7 +70,7 @@ play = (streamId, domNode, playOptions)->
          controls: userOrDefault(playOptions, 'controls')
          mute: userOrDefault(playOptions, 'mute')
          src: "http://hls.cine.io/#{stream.instanceName}/#{stream.eventName}/#{stream.streamName}.m3u8"
-      videoElement = "<video src='#{videoOptions.src}' height='#{videoOptions.height}' autoplay='#{videoOptions.autoplay}' controls='#{videoOptions.controls}' #{'muted' if videoOptions.mute}>"
+      videoElement = "<video src='#{videoOptions.src}' height='#{videoOptions.height}' #{'autoplay' if videoOptions.autoplay} #{'controls' if videoOptions.controls} #{'autoplay' if videoOptions.mute}>"
       document.getElementById(domNode).innerHTML(videoElement)
 
 
