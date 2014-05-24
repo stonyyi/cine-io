@@ -54,11 +54,6 @@ exports.About = React.createClass({
               You do not want to think about configuring a CDN, building a cross-platform viewing experience, or learning a new tool.
               <strong>You want to write code.</strong>cine.io lets you programatically set up, configure, and provision your streams through a RESTful API. That means less hassle, less wasted time, and happy developers. There are no account minimums, and you can get started today.
             </p>
-
-            <div className="video">
-              <div className="aspect-ratio"></div>
-              <p>Video Coming Soon</p>
-            </div>
           </div>
         </div>
       </section>
@@ -108,7 +103,7 @@ exports.Example = React.createClass({
     }
     return (
       <section id="example">
-        <div className="row">
+        <div className="row top-margin-2">
           <div className="small-12 columns">
             <div className="panel text-center">
               <div className='bottom-margin-1'>{String.fromCharCode(60) + 'script src="https://www.cine.io/compiled/cine.js"' + String.fromCharCode(62) + String.fromCharCode(60) + '/script' + String.fromCharCode(62)}</div>
