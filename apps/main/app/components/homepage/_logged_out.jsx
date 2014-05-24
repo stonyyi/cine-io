@@ -67,15 +67,83 @@ exports.About = React.createClass({
 });
 
 exports.Example = React.createClass({
+  getInitialState: function() {
+    return {
+      exampleApiKey: '38b8a26eff0dacbc1d5369eaa568b9df',
+      streamId: '53718cef450ff80200f81856',
+      streamPassword: 'bass35',
+      playerId: 'player-example',
+      publisherId: 'publisher-example'
+    };
+  },
+  playerExample: function(e){
+    e.preventDefault();
+    CineIO.play(this.state.streamId, this.state.playerId);
+    this.setState({playing: true});
+
+  },
+  publisherExample: function(e){
+    e.preventDefault();
+    this.setState({hasPublished: true});
+    if (!this.publisher){
+      this.publisher = CineIO.publish(this.state.streamId, this.state.streamPassword, this.state.publisherId);
+    }
+    if (this.state.publishing){
+      this.publisher.stop();
+    }else{
+      this.publisher.start();
+    }
+    this.setState({publishing: !this.state.publishing});
+  },
   render: function() {
+    var publishCommand = this.state.publishing ? 'stop' : 'start',
+    publishTry = this.state.publishing ? 'Stop' : (this.state.hasPublished ? 'Start' : 'Try'),
+    tryPlayer = '';
+    if (!this.state.playing){
+      tryPlayer = (
+        <div className='text-center'>
+          <button className='button radius' onClick={this.playerExample}>Try Player</button>
+        </div>
+        );
+    }
     return (
       <section id="example">
         <div className="row">
+          <div className="small-12 columns">
+            <div className="panel text-center">
+              <div className='bottom-margin-1'>{String.fromCharCode(60) + 'script src="https://www.cine.io/compiled/cine.js"' + String.fromCharCode(62) + String.fromCharCode(60) + '/script' + String.fromCharCode(62)}</div>
+              <div>
+                <div>CineIO.init('{this.state.exampleApiKey}'); {"\/\/"}your cine.io apiKey</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row">
           <div className="small-6 columns">
-            <div id="publisher-example"></div>
+            <div className="panel">
+              <div className='bottom-margin-1'>
+                <div>var streamId = '{this.state.streamId}',</div>
+                <div>&nbsp;&nbsp;password = '{this.state.streamPassword}',</div>
+                <div>&nbsp;&nbsp;domId = '{this.state.publisherId}';</div>
+                <div className='top-margin-half'>var publisher = CineIO.publish(streamId, password domId);</div>
+                <div>publisher.{publishCommand}();</div>
+              </div>
+              <div className='text-center'>
+                <button className='button radius' onClick={this.publisherExample}>{publishTry} Publisher</button>
+              </div>
+            </div>
+            <div id={this.state.publisherId}></div>
           </div>
           <div className="small-6 columns">
-            <div id="player-example"></div>
+            <div className="panel">
+              <div className='bottom-margin-1'>
+                <div>var streamId = '{this.state.streamId}',</div>
+                <div>&nbsp;&nbsp;domId = '{this.state.playerId}';</div>
+                <div className='top-margin-half'>CineIO.play(streamId, domId);</div>
+              </div>
+              {tryPlayer}
+            </div>
+            <div id={this.state.playerId}></div>
           </div>
         </div>
       </section>
