@@ -30,7 +30,9 @@ loadPublisher = (domNode)->
   attributes.id = domNode
   attributes.name = PUBLISHER_NAME
   attributes.align = "middle"
-  swfobject.embedSWF "publisher.swf", domNode, "100%", "100%", swfVersionStr, xiSwfUrlStr, flashvars, params, attributes, (embedEvent) ->
+  domWidth = document.getElementById(domNode).offsetWidth
+  height = domWidth / (defaultOptions.streamWidth / defaultOptions.streamHeight)
+  swfobject.embedSWF "publisher.swf", domNode, "100%", height, swfVersionStr, xiSwfUrlStr, flashvars, params, attributes, (embedEvent) ->
     if embedEvent.success
       readyCall = ->
         embedEvent.ref.setOptions(jsLogFunction: "_jsLogFunction", jsEmitFunction: "_publisherEmit")
