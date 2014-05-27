@@ -14,7 +14,7 @@ module.exports = React.createClass({
   createStream: function (e) {
     e.preventDefault();
     var self = this,
-      p = new Stream({apiKey: this.props.project.get('apiKey')}, {app: this.props.app});
+      p = new Stream({apiSecret: this.props.project.get('apiSecret')}, {app: this.props.app});
     p.save(null, {
       success: function(model, response, options){
         self.props.streams.add(model);
