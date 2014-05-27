@@ -23,14 +23,19 @@ module.exports = React.createClass({
       <li>
         <div className='row'>
           <div className="small-4 columns">
-            {model.get('streamName')}
+            <dl>
+            <dt>RTMP:</dt>
+            <dd>{model.get('play').rtmp}</dd>
+            <dt>HLS:</dt>
+            <dd>{model.get('play').hls}</dd>
+            </dl>
           </div>
           <div className="small-4 columns">
             <dl>
             <dt>Stream:</dt>
-            <dd>{model.get('streamName')}?{model.get('streamKey')}&amp;adbe-live-event={model.get('eventName')}</dd>
+            <dd>{model.get('publish').stream}</dd>
             <dt>FMS url:</dt>
-            <dd>rtmp://stream.lax.cine.io/20C45E/{model.get('instanceName')}</dd>
+            <dd>{model.get('publish').url}</dd>
             </dl>
           </div>
           <div className="small-1 columns">

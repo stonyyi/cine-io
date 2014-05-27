@@ -12,7 +12,7 @@ toJSON = (project, callback)->
   callback(null, projectJSON)
 
 Show = (params, callback)->
-  getProject params, requires: 'secret', (err, project, status)->
+  getProject params, requires: 'secret', userOverride: true, (err, project, status)->
     return callback(err, project, status) if err
     toJSON(project, callback)
 
