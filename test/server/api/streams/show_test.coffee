@@ -48,8 +48,9 @@ describe 'Streams#Show', ->
         expectedPlayResponse =
           hls: "http://hls.cine.io/cines/cine1ENAME/cine1.m3u8"
           rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
-        expect(_.keys(response).sort()).to.deep.equal(['id', 'play'])
+        expect(_.keys(response).sort()).to.deep.equal(['id', 'name', 'play'])
         expect(response.play).to.deep.equal(expectedPlayResponse)
+        expect(response.name).to.deep.equal('cine1')
         expect(response.id).to.equal(@projectStream._id.toString())
         done()
 
@@ -73,7 +74,8 @@ describe 'Streams#Show', ->
         expectedPublishResponse =
           url: "rtmp://stream.lax.cine.io/20C45E/cines"
           stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
-        expect(_.keys(response).sort()).to.deep.equal(['expiration', 'id', 'play', 'publish'])
+        expect(_.keys(response).sort()).to.deep.equal(['expiration', 'id', 'name', 'play', 'publish'])
+        expect(response.name).to.deep.equal('cine1')
         expect(response.play).to.deep.equal(expectedPlayResponse)
         expect(response.publish).to.deep.equal(expectedPublishResponse)
         expect(response.id).to.equal(@projectStream._id.toString())
