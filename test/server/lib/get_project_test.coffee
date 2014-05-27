@@ -36,7 +36,7 @@ describe 'getProject', ->
 
   describe 'with user', ->
     it 'will not return a project to a user who does not own that project', (done)->
-      getProject {sessionUserId: @user._id.toString(), apiKey: @project.apiKey}, requires: 'secret', userOverride: 'true', (err, project, options)=>
+      getProject {sessionUserId: @user._id.toString(), apiKey: @project.apiKey}, requires: 'secret', userOverride: 'true', (err, project, options)->
         expect(err).to.equal('not permitted')
         expect(project).to.be.null
         expect(options).to.deep.equal(status: 401)
