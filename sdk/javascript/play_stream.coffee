@@ -1,7 +1,6 @@
 playerReady = false
 loadingPlayer = false
 waitingPlayCalls = []
-BASE_URL = "rtmp://fml.cine.io/20C45E"
 
 defaultOptions =
   stretching: 'uniform'
@@ -45,14 +44,14 @@ play = (streamId, domNode, playOptions)->
          autoplay: userOrDefault(playOptions, 'autostart')
          controls: userOrDefault(playOptions, 'controls')
          mute: userOrDefault(playOptions, 'mute')
-         src: "http://hls.cine.io/#{stream.instanceName}/#{stream.eventName}/#{stream.streamName}.m3u8"
+         src: stream.play.hls
       videoElement = "<video src='#{videoOptions.src}' height='#{videoOptions.height}' #{'autoplay' if videoOptions.autoplay} #{'controls' if videoOptions.controls} #{'autoplay' if videoOptions.mute}>"
       document.getElementById(domNode).innerHTML = videoElement
 
     jwplayer.key = "TVKg0kVV92Nwd/vHp3yI+9aTDoPQrSyz6BH1Bg=="
     stream = stream
     console.log('streaming', stream)
-    rtmpUrl = "#{BASE_URL}/#{stream.instanceName}/#{stream.streamName}?adbe-live-event=#{stream.eventName}"
+    rtmpUrl = stream.play.rtmp
     options =
       file: rtmpUrl
       stretching: userOrDefault(playOptions, 'stretching')
