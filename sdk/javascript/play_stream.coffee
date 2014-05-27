@@ -31,11 +31,10 @@ ensurePlayerLoaded = (cb)->
   getScript '//jwpsrv.com/library/sq8RfmIXEeOtdhIxOQfUww.js', playerIsReady
   enqueuePlayerCallback cb
 
-# this assumes JW player is loaded
-
 userOrDefault = (userOptions, key)->
   if Object.prototype.hasOwnProperty.call(userOptions, key) then userOptions[key] else defaultOptions[key]
 
+# this assumes JW player is loaded
 play = (streamId, domNode, playOptions)->
   getStreamDetails streamId, (stream)->
     switchToNative = ->

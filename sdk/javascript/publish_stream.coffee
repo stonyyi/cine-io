@@ -19,7 +19,7 @@ defaultOptions =
   bandwidth: 1500
   videoQuality: 90
 
-loadPublisher = (domNode)->
+loadPublisher = (domNode, publishOptions)->
   swfVersionStr = "11.4.0"
   xiSwfUrlStr = "playerProductInstall.swf"
   flashvars = {}
@@ -31,7 +31,9 @@ loadPublisher = (domNode)->
   attributes.name = PUBLISHER_NAME
   attributes.align = "middle"
   domWidth = document.getElementById(domNode).offsetWidth
-  height = domWidth / (defaultOptions.streamWidth / defaultOptions.streamHeight)
+  streamWidth = publishOptions.streamWidth || defaultOptions.streamWidth
+  streamHeight = publishOptions.streamHeight || defaultOptions.streamHeight
+  height = domWidth / (streamWidth / streamHeight)
   swfobject.embedSWF "publisher.swf", domNode, "100%", height, swfVersionStr, xiSwfUrlStr, flashvars, params, attributes, (embedEvent) ->
     if embedEvent.success
       readyCall = ->
@@ -47,19 +49,19 @@ publisherIsReady = ->
     call.call()
   waitingPublishCalls.length = 0
 
-enqueuePublisherCallback = (domNode, cb)->
+enqueuePublisherCallback = (domNode, publishOptions, cb)->
   waitingPublishCalls.push ->
-    getPublisher domNode, cb
+    getPublisher domNode, publishOptions, cb
 
 findPublisherInDom = (domNode)->
   node = document.getElementById(domNode)
   return node if node && node.name == PUBLISHER_NAME
   return false
 
-swfObjectCallbackToLoadPublisher = (domNode)->
+swfObjectCallbackToLoadPublisher = (domNode, publishOptions)->
   return ->
     loadedSWF = true
-    loadPublisher(domNode)
+    loadPublisher(domNode, publishOptions)
 
 # cb(publisher)
 # Workflow:
@@ -72,14 +74,14 @@ swfObjectCallbackToLoadPublisher = (domNode)->
 #   2. Return publisher to callback
 # Case: SWFObject is loaded and publisher in domNode
 #   1. Return publisher to callback
-getPublisher = (domNode, cb)->
+getPublisher = (domNode, publishOptions, cb)->
   publisher = findPublisherInDom(domNode)
   return cb(publisher) if publisher
-  return enqueuePublisherCallback domNode, cb if loadedSWF
-  return enqueuePublisherCallback domNode, cb if loadingSWF
+  return enqueuePublisherCallback domNode, publishOptions, cb if loadedSWF
+  return enqueuePublisherCallback domNode, publishOptions, cb if loadingSWF
   loadingSWF = true
-  enqueuePublisherCallback domNode, cb
-  getScript '//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js', swfObjectCallbackToLoadPublisher(domNode, cb)
+  enqueuePublisherCallback domNode, publishOptions, cb
+  getScript '//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js', swfObjectCallbackToLoadPublisher(domNode, publishOptions, cb)
 
 generateStreamName = (stream, password)->
   "#{stream.streamName}?#{password}&adbe-live-event=#{stream.streamName}"
@@ -117,7 +119,7 @@ class Publisher
     options
 
   _ensureLoaded: (cb=noop)->
-    getPublisher @domNode, cb
+    getPublisher @domNode, @publishOptions, cb
 
 exports.new = (streamId, password, domNode, publishOptions)->
   new Publisher(streamId, password, domNode, publishOptions)
