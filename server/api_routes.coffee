@@ -1,4 +1,6 @@
 module.exports = (app)->
+  app.get '/api/', Cine.api "root"
+
   newApiRoute = (controller, action, options, method)->
     url = options?.url || controller
     route = "/api/#{url}"
