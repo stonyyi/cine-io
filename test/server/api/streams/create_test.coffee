@@ -2,6 +2,7 @@ Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Create = testApi Cine.api('streams/create')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
+_ = require('underscore')
 
 describe 'Streams#Create', ->
   testApi.requresApiKey Create, 'secret'
@@ -20,16 +21,26 @@ describe 'Streams#Create', ->
 
   describe 'with available stream', (done)->
     beforeEach (done)->
-      @stream = new EdgecastStream(instanceName: 'cines')
+      @stream = new EdgecastStream(instanceName: 'cines', streamName: 'cine1', streamKey: 'bass35', eventName: 'cine1ENAME')
       @stream.save done
 
     stubEdgecast()
 
     it 'returns an edgecast stream', (done)->
       params = apiSecret: @project.apiSecret
-      Create params, (err, response, options)->
+      Create params, (err, response, options)=>
         expect(err).to.be.null
         expect(response.instanceName).to.equal('cines')
+        expectedPlayResponse =
+          hls: "http://hls.cine.io/cines/cine1ENAME/cine1.m3u8"
+          rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
+        expectedPublishResponse =
+          url: "rtmp://stream.lax.cine.io/20C45E/cines"
+          stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
+        expect(_.keys(response).sort()).to.deep.equal(['eventName', 'expiration', 'id', 'instanceName', 'play', 'publish', 'streamKey', 'streamName'])
+        expect(response.play).to.deep.equal(expectedPlayResponse)
+        expect(response.publish).to.deep.equal(expectedPublishResponse)
+        expect(response.id).to.equal(@stream._id.toString())
         expect(options).to.be.undefined
         done()
 

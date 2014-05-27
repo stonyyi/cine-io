@@ -16,15 +16,12 @@ fmleProfile = (stream, callback)->
     callback(null, content: content)
 
 legacyJSON = (stream, callback)->
-  streamJSON =
-    id: stream._id.toString()
-    instanceName: stream.instanceName
-    eventName: stream.eventName
-    streamName: stream.streamName
-    streamKey: stream.streamKey
-    expiration: stream.expiration
-
-  callback(null, streamJSON)
+  fullJSON stream, (err, streamJSON)->
+    streamJSON.instanceName = stream.instanceName
+    streamJSON.eventName = stream.eventName
+    streamJSON.streamName = stream.streamName
+    streamJSON.streamKey = stream.streamKey
+    callback(null, streamJSON)
 
 playJSON = (stream, callback)->
   streamJSON =
