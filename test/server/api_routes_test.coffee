@@ -21,23 +21,23 @@ describe 'api routing', ->
   describe 'authenticated', ->
 
     beforeEach (done)->
-      @project = new Project(apiKey: 'abc', name: 'me', plan: 'free')
+      @project = new Project(apiSecret: 'abc', name: 'me', plan: 'free')
       @project.save done
 
-    it 'requires an api key', (done)->
+    it 'requires an api secret', (done)->
       @agent.get('/api/1/-/project')
         .expect(401)
         .end (err, res)->
           done()
 
-    it 'requires an valid api key', (done)->
-      @agent.get('/api/1/-/project?apiKey=INVALID')
+    it 'requires an valid api secret', (done)->
+      @agent.get('/api/1/-/project?apiSecret=INVALID')
         .expect(401)
         .end (err, res)->
           done()
 
     it 'routes to an authenticated route', (done)->
-      @agent.get('/api/1/-/project?apiKey=abc')
+      @agent.get('/api/1/-/project?apiSecret=abc')
         .end (err, res)=>
           expect(err).to.be.null
           expect(res.body.id).to.equal(@project._id.toString())

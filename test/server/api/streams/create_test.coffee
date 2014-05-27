@@ -4,14 +4,14 @@ Create = testApi Cine.api('streams/create')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 
 describe 'Streams#Create', ->
-  testApi.requresApiKey Create
+  testApi.requresApiKey Create, 'secret'
 
   beforeEach (done)->
     @project = new Project(name: 'my project', plan: 'free')
     @project.save done
 
   it 'can error with no available edgecast stream', (done)->
-    params = apiKey: @project.apiKey
+    params = apiSecret: @project.apiSecret
     Create params, (err, response, options)->
       expect(err).to.equal('Next stream not available, please try again later')
       expect(response).to.be.null
@@ -26,7 +26,7 @@ describe 'Streams#Create', ->
     stubEdgecast()
 
     it 'returns an edgecast stream', (done)->
-      params = apiKey: @project.apiKey
+      params = apiSecret: @project.apiSecret
       Create params, (err, response, options)->
         expect(err).to.be.null
         expect(response.instanceName).to.equal('cines')
@@ -34,7 +34,7 @@ describe 'Streams#Create', ->
         done()
 
     it 'assigns the stream to the project', (done)->
-      params = apiKey: @project.apiKey
+      params = apiSecret: @project.apiSecret
       Create params, (err, response, options)=>
         EdgecastStream.findById @stream._id, (err, stream)=>
           expect(err).to.be.null

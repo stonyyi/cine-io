@@ -4,13 +4,14 @@ Show = Cine.api('streams/show')
 getProject = Cine.server_lib('get_project')
 
 module.exports = (params, callback)->
-  getProject params, (err, project, status)->
-    return callback(err, project, status) if err
+  getProject params, requires: 'either', (err, project, options)->
+    return callback(err, project, options) if err
     scope = EdgecastStream.find()
       .where('_project').equals(project._id)
       .exists('deletedAt', false)
       .sort(createdAt: -1)
     scope.exec (err, streams)->
       return callback(err, null, status: err.status || 400) if err
-      async.map streams, Show.toJSON, (err, response)->
+      jsonFunction = if options.secure then Show.fullJSON else Show.playJSON
+      async.map streams, jsonFunction, (err, response)->
         callback(err, response)

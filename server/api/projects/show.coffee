@@ -4,6 +4,7 @@ toJSON = (project, callback)->
   projectJSON =
     id: project._id.toString()
     apiKey: project.apiKey
+    apiSecret: project.apiSecret
     name: project.name
     plan: project.plan
     streamsCount: project.streamsCount
@@ -11,7 +12,7 @@ toJSON = (project, callback)->
   callback(null, projectJSON)
 
 Show = (params, callback)->
-  getProject params, (err, project, status)->
+  getProject params, requires: 'secret', (err, project, status)->
     return callback(err, project, status) if err
     toJSON(project, callback)
 

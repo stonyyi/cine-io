@@ -3,7 +3,7 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 Index = testApi Cine.api('streams/index')
 
 describe 'Streams#Index', ->
-  testApi.requresApiKey Index
+  testApi.requresApiKey Index, 'either'
 
   beforeEach (done)->
     @project = new Project(name: 'my project', plan: 'enterprise')
@@ -38,4 +38,14 @@ describe 'Streams#Index', ->
       expect(response).to.have.length(2)
       expect(response[0].id).to.equal(@olderStream._id.toString())
       expect(response[1].id).to.equal(@newerStream._id.toString())
+      expect(response[0].publish).to.be.undefined
+      expect(response[1].publish).to.be.undefined
+      done()
+  it 'returns the edgecast streams with publish options when given an api secret', (done)->
+    params = apiSecret: @project.apiSecret
+    Index params, (err, response, options)->
+      expect(err).to.be.undefined
+      expect(response).to.have.length(2)
+      expect(response[0].publish).to.be.instanceOf(Object)
+      expect(response[1].publish).to.be.instanceOf(Object)
       done()

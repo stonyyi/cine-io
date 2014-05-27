@@ -32,10 +32,17 @@ testApi = (controller)->
     controller(params, callback)
 
 module.exports = testApi
-testApi.requresApiKey = (testApiResource)->
+
+requiredMessage = (requires)->
+  switch requires
+    when 'key' then 'api key required'
+    when 'secret' then 'api secret required'
+    when 'either' then 'api key or api secret required'
+
+testApi.requresApiKey = (testApiResource, requires)->
   it 'requires an api key', (done)->
     testApiResource {}, (err, response, options)->
-      expect(err).to.equal('no api key')
+      expect(err).to.equal(requiredMessage(requires))
       expect(response).to.be.null
       expect(options.status).to.equal(401)
       done()

@@ -2,6 +2,7 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 fs = require('fs')
 profileFileName = "#{Cine.root}/server/api/streams/fmle_profile.xml"
 getProject = Cine.server_lib('get_project')
+BASE_URL = "rtmp://fml.cine.io/20C45E"
 
 fmleProfile = (stream, callback)->
   fs.readFile profileFileName, 'utf8', (err, profileFile)->
@@ -14,7 +15,7 @@ fmleProfile = (stream, callback)->
       .replace(/EDGECAST_EVENT_NAME/g, stream.eventName)
     callback(null, content: content)
 
-toJSON = (stream, callback)->
+legacyJSON = (stream, callback)->
   streamJSON =
     id: stream._id.toString()
     instanceName: stream.instanceName
@@ -25,16 +26,36 @@ toJSON = (stream, callback)->
 
   callback(null, streamJSON)
 
+playJSON = (stream, callback)->
+  streamJSON =
+    id: stream._id.toString()
+    play:
+      hls: "http://hls.cine.io/#{stream.instanceName}/#{stream.eventName}/#{stream.streamName}.m3u8"
+      rtmp: "#{BASE_URL}/#{stream.instanceName}/#{stream.streamName}?adbe-live-event=#{stream.eventName}"
+  callback(null, streamJSON)
+
+fullJSON = (stream, callback)->
+  playJSON stream, (err, streamJSON)->
+    streamJSON.publish =
+      url: "rtmp://stream.lax.cine.io/20C45E/#{stream.instanceName}"
+      stream: "#{stream.streamName}?#{stream.streamKey}&amp;adbe-live-event=#{stream.eventName}"
+    callback(null, streamJSON)
+
 Show = (params, callback)->
-  getProject params, (err, project, status)->
-    return callback(err, project, status) if err
+  getProject params, requires: 'either', (err, project, options)->
+    return callback(err, project, options) if err
     return callback("id required", null, status: 400) unless params.id
 
     EdgecastStream.findOne _id: params.id, _project: project._id, (err, stream)->
       return callback(err, null, status: 400) if err
       return callback("stream not found", null, status: 404) unless stream
-      return fmleProfile(stream, callback) if params.fmleProfile == 'true'
-      toJSON(stream, callback)
+      if params.fmleProfile == 'true'
+        return callback("api secret required", null, status: 401) unless options.secure
+        return fmleProfile(stream, callback)
+      return playJSON(stream, callback) unless options.secure
+      fullJSON(stream, callback)
 
 module.exports = Show
-module.exports.toJSON = toJSON
+module.exports.fullJSON = fullJSON
+module.exports.playJSON = playJSON
+module.exports.legacyJSON = legacyJSON
