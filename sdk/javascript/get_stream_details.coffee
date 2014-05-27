@@ -15,6 +15,7 @@ module.exports = (streamId, callback)->
     url: "#{BASE_URL}/stream?apiKey=#{Main.config.apiKey}&id=#{streamId}"
     dataType: 'jsonp'
     success: (data, response, xhr)->
+      cachedStreamData[streamId] = data
       callback(data)
     error: (thing)->
       throw new Error("Could not fetch stream #{streamId}")
