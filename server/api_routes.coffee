@@ -22,3 +22,6 @@ module.exports = (app)->
   post 'streams', 'create', url: 'stream'
 
   get 'static-document', 'show', url: 'static-document'
+
+  post "users", "update_account", url: 'update-account'
+  put 'users', 'update'
