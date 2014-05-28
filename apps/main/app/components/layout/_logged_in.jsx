@@ -15,7 +15,9 @@ module.exports = React.createClass({
         };
     authentication.logout(app, options);
   },
-
+  doNothing: function(e){
+    e.preventDefault();
+  },
   render: function() {
     var name = this.props.app.currentUser.get('name');
 
@@ -23,7 +25,7 @@ module.exports = React.createClass({
       <section className="top-bar-section">
         <ul className="right show-for-large-up">
           <li className="has-dropdown not-click">
-            <a href="#">{name}</a>
+            <a href="" onClick={this.doNothing}>{name}</a>
             <ul className="dropdown">
               <li><a onClick={this.logout}>Sign Out</a></li>
             </ul>

@@ -139,7 +139,7 @@ module.exports = React.createClass({
       return (
         <aside className="left-off-canvas-menu">
           <ul>
-            <li><a href="#">You are logged in.</a></li>
+            <li>You are logged in.</li>
           </ul>
         </aside>
       );
