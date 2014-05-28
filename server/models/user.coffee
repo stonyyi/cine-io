@@ -15,16 +15,19 @@ UserSchema = new Schema
     type: String
     lowercase: true
     trim: true
-    required: true
+    index: true
+    sparse: true
   githubId:
     type: Number
     index: true
+    sparse: true
   githubAccessToken:
     type: String
   githubData: mongoose.Schema.Types.Mixed
   herokuId:
     type: String
     index: true
+    sparse: true
   hashed_password: String
   password_salt: String
   # Other Info
