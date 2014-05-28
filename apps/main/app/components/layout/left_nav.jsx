@@ -61,10 +61,10 @@ var EmailLogin = React.createClass({
   changeMyPassword: function(event) {
     this.setState({myPassword: event.target.value});
   },
-  componentDidUpdate: function(){
+  componentWillReceiveProps: function(nextProps){
     // allow the focus to be hijacked when not showing
-    if (!this.props.showing){
-      this.setState({allowFocusHijack: false});
+    if (!nextProps.showing){
+      this.setState({allowFocusHijack: true});
       return;
     }
     // if we just focused do not allow it to be hijacked
