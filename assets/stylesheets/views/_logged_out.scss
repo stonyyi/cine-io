@@ -1,5 +1,11 @@
 #homepage-logged-out {
+
   height: 100%;
+
+  .gist table{
+    width: 100%;
+    margin-bottom: 0;
+  }
 
   h3 {
     font-family: $distinct-font-family;

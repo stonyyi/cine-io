@@ -71,14 +71,12 @@ exports.Example = React.createClass({
       publisherId: 'publisher-example'
     };
   },
-  playerExample: function(e){
-    e.preventDefault();
-    CineIO.play(this.state.streamId, this.state.playerId, {mute: true});
-    this.setState({playing: true});
-
-  },
   publisherExample: function(e){
     e.preventDefault();
+    if (!this.state.hasPublished){
+      CineIO.play(this.state.streamId, this.state.playerId, {mute: true});
+      this.setState({playing: true});
+    }
     this.setState({hasPublished: true});
     if (!this.publisher){
       this.publisher = CineIO.publish(this.state.streamId, this.state.streamPassword, this.state.publisherId);
@@ -91,61 +89,36 @@ exports.Example = React.createClass({
     this.setState({publishing: !this.state.publishing});
   },
   render: function() {
-    var publishCommand = this.state.publishing ? 'stop' : 'start',
-    publishTry = this.state.publishing ? 'Stop' : (this.state.hasPublished ? 'Start' : 'Try'),
-    tryPlayer = '', publishedText = '';
-    if (!this.state.playing){
-      tryPlayer = (
-        <div className='text-center'>
-          <button className='button radius' onClick={this.playerExample}>Try Player</button>
-        </div>
-        );
-    }else{
-      publishedText = (
-        <small>We default the example to muted, you don{String.fromCharCode(39)}t get horrible microphone feedback from the publisher right away.</small>
-        );
-    }
+    var publishTry = this.state.publishing ? 'Stop publisher' : (this.state.hasPublished ? 'Start publisher' : 'See it in action');
     return (
       <section id="example">
         <div className="row top-margin-2">
           <div className="small-12 columns">
-            <div className="panel text-center">
-              <div className='bottom-margin-1'>{String.fromCharCode(60) + 'script src="https://www.cine.io/compiled/cine.js"' + String.fromCharCode(62) + String.fromCharCode(60) + '/script' + String.fromCharCode(62)}</div>
-              <div>
-                <div>CineIO.init('{this.state.exampleApiKey}'); {"\/\/"}your cine.io publicKey</div>
-              </div>
-            </div>
+            <script src="https://gist.github.com/cine-dev/9a9133c5c4fe494ded22.js"></script>
           </div>
         </div>
         <div className="row">
           <div className="small-6 columns">
-            <div className="panel">
-              <div className='bottom-margin-1'>
-                <div>var streamId = '{this.state.streamId}',</div>
-                <div>&nbsp;&nbsp;password = '{this.state.streamPassword}',</div>
-                <div>&nbsp;&nbsp;domId = '{this.state.publisherId}';</div>
-                <div className='top-margin-half'>var publisher = CineIO.publish(streamId, password, domId);</div>
-                <div>publisher.{publishCommand}();</div>
-              </div>
-              <div className='text-center'>
-                <button className='button radius' onClick={this.publisherExample}>{publishTry} Publisher</button>
-              </div>
+            <div className='bottom-margin-1'>
+              <script src="https://gist.github.com/cine-dev/b7873efd692b54d7f5e5.js"></script>
             </div>
             <div id={this.state.publisherId}></div>
           </div>
           <div className="small-6 columns">
-            <div className="panel">
-              <div className='bottom-margin-1'>
-                <div>var streamId = '{this.state.streamId}',</div>
-                <div>&nbsp;&nbsp;domId = '{this.state.playerId}';</div>
-                <div className='top-margin-half'>CineIO.play(streamId, domId);</div>
-                {publishedText}
-              </div>
-              {tryPlayer}
+            <div className='bottom-margin-1'>
+              <script src="https://gist.github.com/cine-dev/b00457a695d88863056c.js"></script>
             </div>
             <div id={this.state.playerId}></div>
           </div>
         </div>
+        <div className="row top-margin-2">
+          <div className="small-12 columns">
+            <div className='text-center'>
+              <button className='button radius' onClick={this.publisherExample}>{publishTry}</button>
+            </div>
+          </div>
+        </div>
+
       </section>
     );
   }
