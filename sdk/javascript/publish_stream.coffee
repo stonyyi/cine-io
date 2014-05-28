@@ -27,6 +27,7 @@ loadPublisher = (domNode, publishOptions)->
   attributes = {}
   params.allowscriptaccess = "sameDomain"
   params.allowfullscreen = "true"
+  params.wmode = 'transparent'
   attributes.id = domNode
   attributes.name = PUBLISHER_NAME
   attributes.align = "middle"
