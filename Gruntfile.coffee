@@ -84,6 +84,9 @@ module.exports = (grunt) ->
             'assets/vendor/jquery.js'
             'assets/vendor/jquery.easing.js'
             'assets/vendor/jquery.scrollto.js'
+            'bower_components/modernizr/modernizr.js'
+            'bower_components/fastclick/lib/fastclick.js'
+            'bower_components/foundation/js/foundation.js'
           ],
           npmDependencies:
             underscore: '../rendr/node_modules/underscore/underscore.js'
