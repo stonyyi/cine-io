@@ -4,7 +4,7 @@ Show = Cine.api('streams/show')
 getProject = Cine.server_lib('get_project')
 
 module.exports = (params, callback)->
-  getProject params, requires: 'either', userOverride: true, (err, project, options)->
+  getProject params, requires: 'secret', userOverride: true, (err, project, options)->
     return callback(err, project, options) if err
     scope = EdgecastStream.find()
       .where('_project').equals(project._id)
