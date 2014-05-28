@@ -4,11 +4,11 @@ crypto = require('crypto')
 ProjectSchema = new mongoose.Schema
   name:
     type: String
-  apiKey:
+  publicKey:
     type: String
     unique: true
     index: true
-  apiSecret:
+  secretKey:
     type: String
     unique: true
   streamsCount:
@@ -25,15 +25,15 @@ ProjectSchema = new mongoose.Schema
 ProjectSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
 ProjectSchema.pre 'save', (next)->
-  return next() if @apiKey
+  return next() if @publicKey
   crypto.randomBytes 16, (ex, buf)=>
-    @apiKey = buf.toString('hex')
+    @publicKey = buf.toString('hex')
     next()
 
 ProjectSchema.pre 'save', (next)->
-  return next() if @apiSecret
+  return next() if @secretKey
   crypto.randomBytes 16, (ex, buf)=>
-    @apiSecret = buf.toString('hex')
+    @secretKey = buf.toString('hex')
     next()
 
 ProjectSchema.statics.increment = (model, field, amount, callback)->

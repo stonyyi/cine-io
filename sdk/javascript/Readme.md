@@ -10,7 +10,7 @@
 
 #### Init
 
-Start off by initializing Cine.io with your public apiKey.
+Start off by initializing Cine.io with your public publicKey.
 
 ```javascript
 CineIO.init(CINE_IO_API_KEY)

@@ -42,7 +42,7 @@ Show = (params, callback)->
       return callback(err, null, status: 400) if err
       return callback("stream not found", null, status: 404) unless stream
       if params.fmleProfile == 'true'
-        return callback("api secret required", null, status: 401) unless options.secure
+        return callback("secret key required", null, status: 401) unless options.secure
         return fmleProfile(stream, callback)
       return playJSON(stream, callback) unless options.secure
       fullJSON(stream, callback)

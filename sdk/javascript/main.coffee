@@ -1,11 +1,11 @@
 requiresInit = ->
-  throw new Error("CineIO.init(API_KEY) has not been called.") unless CineIO.config.apiKey
+  throw new Error("CineIO.init(CINE_IO_PUBLIC_KEY) has not been called.") unless CineIO.config.publicKey
 
 CineIO =
   config: {}
-  init: (apiKey)->
-    throw new Error("API Key required") unless apiKey
-    CineIO.config.apiKey = apiKey
+  init: (publicKey)->
+    throw new Error("Public Key required") unless publicKey
+    CineIO.config.publicKey = publicKey
 
   play: (streamId, domNode, playOptions={})->
     requiresInit()

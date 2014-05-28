@@ -5,7 +5,7 @@ api_values = {
 }
 
 if api_values.fetch(:api_key) != '' && api_values.fetch(:api_secret) != ''
-  puts "I got cine.io api key and secret: #{api_values.inspect}"
+  puts "I got cine.io public key and secret: #{api_values.inspect}"
 else
-  abort "Failed to get api key #{api_values.inspect}"
+  abort "Failed to get public key #{api_values.inspect}"
 end

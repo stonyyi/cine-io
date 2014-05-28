@@ -31,7 +31,7 @@ module.exports = React.createClass({
       keyStyle = {};
       showKeyStyle = {display: 'none'};
     }
-    var url = "/project/"+model.get('apiKey');
+    var url = "/project/"+model.get('publicKey');
     return (
       <li>
         <div className='row'>
@@ -40,10 +40,10 @@ module.exports = React.createClass({
           </div>
           <div className="small-4 columns">
             <div style={showKeyStyle}>
-              <a href='' onClick={this.toggleApiKey}>Show api key</a>
+              <a href='' onClick={this.toggleApiKey}>Show public key</a>
             </div>
             <div style={keyStyle}>
-              {model.get('apiKey')} <a href='' onClick={this.toggleApiKey}>hide</a>
+              {model.get('publicKey')} <a href='' onClick={this.toggleApiKey}>hide</a>
             </div>
           </div>
           <div className="small-2 columns">

@@ -12,7 +12,7 @@ describe 'Streams#Create', ->
     @project.save done
 
   it 'can error with no available edgecast stream', (done)->
-    params = apiSecret: @project.apiSecret
+    params = secretKey: @project.secretKey
     Create params, (err, response, options)->
       expect(err).to.equal('Next stream not available, please try again later')
       expect(response).to.be.null
@@ -27,7 +27,7 @@ describe 'Streams#Create', ->
     stubEdgecast()
 
     it 'returns an edgecast stream', (done)->
-      params = apiSecret: @project.apiSecret
+      params = secretKey: @project.secretKey
       Create params, (err, response, options)=>
         expect(err).to.be.null
         expectedPlayResponse =
@@ -46,7 +46,7 @@ describe 'Streams#Create', ->
         done()
 
     it 'assigns the stream to the project', (done)->
-      params = apiSecret: @project.apiSecret
+      params = secretKey: @project.secretKey
       Create params, (err, response, options)=>
         EdgecastStream.findById @stream._id, (err, stream)=>
           expect(err).to.be.null

@@ -31,8 +31,8 @@ describe 'Streams#Index', ->
     @otherOrgStream = new EdgecastStream(instanceName: 'ijkl', _project: (new Project)._id)
     @otherOrgStream.save done
 
-  it 'returns the edgecast streams with publish options when given an api secret', (done)->
-    params = apiSecret: @project.apiSecret
+  it 'returns the edgecast streams with publish options when given an secret key', (done)->
+    params = secretKey: @project.secretKey
     Index params, (err, response, options)->
       expect(err).to.be.undefined
       expect(response).to.have.length(2)

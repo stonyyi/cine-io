@@ -9,12 +9,12 @@ describe 'Projects#Show', ->
     @project.save done
 
   it 'returns an project', (done)->
-    params = apiSecret: @project.apiSecret
+    params = secretKey: @project.secretKey
     Show params, (err, response, options)=>
       expect(err).to.be.null
       expect(response.id).to.equal(@project._id.toString())
       expect(response.name).to.equal('my project')
       expect(response.plan).to.equal('free')
       expect(response.streamsCount).to.equal(1)
-      expect(response.apiSecret).to.equal(@project.apiSecret)
+      expect(response.secretKey).to.equal(@project.secretKey)
       done()

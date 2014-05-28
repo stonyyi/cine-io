@@ -4,31 +4,31 @@ PermissionManager = Cine.lib('permission_manager')
 
 requiredMessage = (requires)->
   switch requires
-    when 'key' then 'api key required'
-    when 'secret' then 'api secret required'
-    when 'either' then 'api key or api secret required'
+    when 'key' then 'public key required'
+    when 'secret' then 'secret key required'
+    when 'either' then 'public key or secret key required'
 
 cannotFindMessage = (requires)->
   switch requires
-    when 'key' then 'invalid api key'
-    when 'secret' then 'invalid api secret'
-    when 'either' then 'invalid api key or api secret'
+    when 'key' then 'invalid public key'
+    when 'secret' then 'invalid secret key'
+    when 'either' then 'invalid public key or secret key'
 
 # options are
 # requires: key|secret|either
 #   that the call needs either a key, secret, or either
 # userOverride: true|false
-#   having a logged in user and apiKey can count as an api secret
+#   having a logged in user and publicKey can count as an secretKey
 
 doFind = (queryParams, options, callback)->
   Project.findOne queryParams, (err, project)->
     return callback(err, null, status: 401) if err
     return callback(cannotFindMessage(options.requires), null, status: 404) if !project
-    # return secure: true if we queried based on an apiSecret
-    callback(null, project, secure: queryParams.apiSecret?)
+    # return secure: true if we queried based on an secretKey
+    callback(null, project, secure: queryParams.secretKey?)
 
 userOverrideVersion = (params, options, callback)->
-  doFind {apiKey: params.apiKey}, options, (err, project, returnOptions)->
+  doFind {publicKey: params.publicKey}, options, (err, project, returnOptions)->
     return callback(err, project, returnOptions) if err || !project
     User.findById params.sessionUserId, (err, user)->
       return callback(err, null, status: 400) if err
@@ -37,19 +37,19 @@ userOverrideVersion = (params, options, callback)->
       callback(null, project, secure: true)
 
 module.exports = (params, options, callback)->
-  callbackAllowsUserOverride = options.userOverride && !params.apiSecret && options.requires != 'key'
-  return userOverrideVersion(params, options, callback) if callbackAllowsUserOverride && params.sessionUserId && params.apiKey
+  callbackAllowsUserOverride = options.userOverride && !params.secretKey && options.requires != 'key'
+  return userOverrideVersion(params, options, callback) if callbackAllowsUserOverride && params.sessionUserId && params.publicKey
 
   queryParams = {}
   switch options.requires
     when 'key'
-      return callback(requiredMessage(options.requires), null, status: 401) unless params.apiKey
-      queryParams = apiKey: params.apiKey
+      return callback(requiredMessage(options.requires), null, status: 401) unless params.publicKey
+      queryParams = publicKey: params.publicKey
     when 'secret'
-      return callback(requiredMessage(options.requires), null, status: 401) unless params.apiSecret
-      queryParams = apiSecret: params.apiSecret
+      return callback(requiredMessage(options.requires), null, status: 401) unless params.secretKey
+      queryParams = secretKey: params.secretKey
     when 'either'
-      return callback(requiredMessage(options.requires), null, status: 401) unless params.apiKey || params.apiSecret
-      queryParams.apiKey = params.apiKey if params.apiKey
-      queryParams.apiSecret = params.apiSecret if params.apiSecret
+      return callback(requiredMessage(options.requires), null, status: 401) unless params.publicKey || params.secretKey
+      queryParams.publicKey = params.publicKey if params.publicKey
+      queryParams.secretKey = params.secretKey if params.secretKey
   doFind queryParams, options, callback

@@ -26,40 +26,40 @@ describe 'Project', ->
           expect(err).not.to.be.null
           done()
 
-  describe 'apiKey', ->
-    it 'has a unique apiKey generated on save', (done)->
+  describe 'publicKey', ->
+    it 'has a unique publicKey generated on save', (done)->
       project = new Project(name: 'some name', plan: 'free')
       project.save (err)->
         expect(err).to.be.null
-        expect(project.apiKey.length).to.equal(32)
+        expect(project.publicKey.length).to.equal(32)
         done()
 
     it 'will not override the password change request on future saves', (done)->
       project = new Project(name: 'some name', plan: 'free')
       project.save (err)->
         expect(err).to.be.null
-        apiKey = project.apiKey
-        expect(apiKey.length).to.equal(32)
+        publicKey = project.publicKey
+        expect(publicKey.length).to.equal(32)
         project.save (err)->
-          expect(project.apiKey).to.equal(apiKey)
+          expect(project.publicKey).to.equal(publicKey)
           done(err)
 
-  describe 'apiSecret', ->
-    it 'has a unique apiSecret generated on save', (done)->
+  describe 'secretKey', ->
+    it 'has a unique secretKey generated on save', (done)->
       project = new Project(name: 'some name', plan: 'free')
       project.save (err)->
         expect(err).to.be.null
-        expect(project.apiSecret.length).to.equal(32)
+        expect(project.secretKey.length).to.equal(32)
         done()
 
     it 'will not override the password change request on future saves', (done)->
       project = new Project(name: 'some name', plan: 'free')
       project.save (err)->
         expect(err).to.be.null
-        apiSecret = project.apiSecret
-        expect(apiSecret.length).to.equal(32)
+        secretKey = project.secretKey
+        expect(secretKey.length).to.equal(32)
         project.save (err)->
-          expect(project.apiSecret).to.equal(apiSecret)
+          expect(project.secretKey).to.equal(secretKey)
           done(err)
 
   describe '.increment', ->

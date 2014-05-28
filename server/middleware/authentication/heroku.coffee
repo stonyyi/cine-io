@@ -72,8 +72,8 @@ module.exports = (app)->
         id: project._id
         plan: project.plan
         config:
-          CINE_IO_API_KEY: project.apiKey
-          CINE_IO_API_SECRET: project.apiSecret
+          CINE_IO_PUBLIC_KEY: project.publicKey
+          CINE_IO_SECRET_KEY: project.secretKey
       response.send resource
 
   # User changed plan on heroku

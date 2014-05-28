@@ -25,7 +25,7 @@ describe 'Streams#Show', ->
 
   describe 'failure', ->
     it 'requires an id', (done)->
-      params = apiKey: @project.apiKey
+      params = publicKey: @project.publicKey
       Show params, (err, response, options)->
         expect(err).to.equal('id required')
         expect(response).to.be.null
@@ -33,16 +33,16 @@ describe 'Streams#Show', ->
         done()
 
     it 'will not return a stream not owned by a different project', (done)->
-      params = apiKey: @project.apiKey, id: @notProjectStream._id
+      params = publicKey: @project.publicKey, id: @notProjectStream._id
       Show params, (err, response, options)->
         expect(err).to.equal('stream not found')
         expect(response).to.be.null
         expect(options.status).to.equal(404)
         done()
 
-  describe 'with api key only', ->
+  describe 'with public key only', ->
     it 'will return the play values stream owned by the project', (done)->
-      params = apiKey: @project.apiKey, id: @projectStream._id
+      params = publicKey: @project.publicKey, id: @projectStream._id
       Show params, (err, response, options)=>
         expect(err).to.be.null
         expectedPlayResponse =
@@ -56,16 +56,16 @@ describe 'Streams#Show', ->
 
     describe 'fmleProfile', ->
       it 'will not return the fmleProfile for a stream', (done)->
-        params = apiKey: @project.apiKey, id: @projectStream._id, fmleProfile: true
+        params = publicKey: @project.publicKey, id: @projectStream._id, fmleProfile: true
         Show params, (err, response, options)->
-          expect(err).to.equal('api secret required')
+          expect(err).to.equal('secret key required')
           expect(response).to.be.null
           expect(options.status).to.equal(401)
           done()
 
-  describe 'with api secret', ->
+  describe 'with secret key', ->
     it 'will return the play and publish values stream owned by the project', (done)->
-      params = id: @projectStream._id, apiSecret: @project.apiSecret
+      params = id: @projectStream._id, secretKey: @project.secretKey
       Show params, (err, response, options)=>
         expect(err).to.be.null
         expectedPlayResponse =
@@ -84,7 +84,7 @@ describe 'Streams#Show', ->
 
     describe 'fmleProfile', ->
       it 'will return the fmleProfile for a stream', (done)->
-        params = id: @projectStream._id, fmleProfile: true, apiSecret: @project.apiSecret
+        params = id: @projectStream._id, fmleProfile: true, secretKey: @project.secretKey
         Show params, (err, response, options)->
           expect(err).to.be.null
           expect(_.keys(response)).to.deep.equal(['content'])

@@ -112,7 +112,7 @@ exports.Example = React.createClass({
             <div className="panel text-center">
               <div className='bottom-margin-1'>{String.fromCharCode(60) + 'script src="https://www.cine.io/compiled/cine.js"' + String.fromCharCode(62) + String.fromCharCode(60) + '/script' + String.fromCharCode(62)}</div>
               <div>
-                <div>CineIO.init('{this.state.exampleApiKey}'); {"\/\/"}your cine.io apiKey</div>
+                <div>CineIO.init('{this.state.exampleApiKey}'); {"\/\/"}your cine.io publicKey</div>
               </div>
             </div>
           </div>

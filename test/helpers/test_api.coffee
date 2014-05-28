@@ -35,12 +35,12 @@ module.exports = testApi
 
 requiredMessage = (requires)->
   switch requires
-    when 'key' then 'api key required'
-    when 'secret' then 'api secret required'
-    when 'either' then 'api key or api secret required'
+    when 'key' then 'public key required'
+    when 'secret' then 'secret key required'
+    when 'either' then 'public key or secret key required'
 
 testApi.requresApiKey = (testApiResource, requires)->
-  it 'requires an api key', (done)->
+  it 'requires an public key', (done)->
     testApiResource {}, (err, response, options)->
       expect(err).to.equal(requiredMessage(requires))
       expect(response).to.be.null
@@ -48,7 +48,7 @@ testApi.requresApiKey = (testApiResource, requires)->
       done()
 
 testApi.requresLoggedIn = (testApiResource)->
-  it 'requires an api key', (done)->
+  it 'requires an public key', (done)->
     testApiResource {}, (err, response, options)->
       expect(err).to.equal('not logged in')
       expect(response).to.be.null

@@ -3,8 +3,8 @@ getProject = Cine.server_lib('get_project')
 toJSON = (project, callback)->
   projectJSON =
     id: project._id.toString()
-    apiKey: project.apiKey
-    apiSecret: project.apiSecret
+    publicKey: project.publicKey
+    secretKey: project.secretKey
     name: project.name
     plan: project.plan
     streamsCount: project.streamsCount

@@ -15,7 +15,7 @@ describe 'Projects#Create', ->
       Create params, user: @user, (err, response, options)->
         expect(err).to.be.null
         expect(response.name).to.equal('new project')
-        expect(response.apiKey).to.have.length(32)
+        expect(response.publicKey).to.have.length(32)
         expect(response.plan).to.equal('enterprise')
         done()
 

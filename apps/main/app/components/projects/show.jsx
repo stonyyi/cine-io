@@ -18,7 +18,7 @@ module.exports = React.createClass({
     };
   },
   componentDidMount: function() {
-    this.state.streams.fetch({data: {apiSecret: this.props.model.get('apiSecret')}});
+    this.state.streams.fetch({data: {secretKey: this.props.model.get('secretKey')}});
   },
   getBackboneObjects: function(){
     return [this.state.streams];

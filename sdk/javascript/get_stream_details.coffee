@@ -12,7 +12,7 @@ cachedStreamData = {}
 module.exports = (streamId, callback)->
   return callback(cachedStreamData[streamId]) if cachedStreamData[streamId]
   ajax
-    url: "#{BASE_URL}/stream?apiKey=#{Main.config.apiKey}&id=#{streamId}"
+    url: "#{BASE_URL}/stream?publicKey=#{Main.config.publicKey}&id=#{streamId}"
     dataType: 'jsonp'
     success: (data, response, xhr)->
       cachedStreamData[streamId] = data
