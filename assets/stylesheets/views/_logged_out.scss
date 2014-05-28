@@ -1,6 +1,14 @@
 #homepage-logged-out {
 
   height: 100%;
+  overflow: auto;
+
+  &.move-right{
+    overflow: hidden;
+  }
+  .inner-wrap{
+    height: 100%;
+  }
 
   .gist table{
     width: 100%;
