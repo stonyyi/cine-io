@@ -20,3 +20,5 @@ module.exports = (app)->
   get 'streams', 'index'
   get 'streams', 'show', url: 'stream'
   post 'streams', 'create', url: 'stream'
+
+  get 'static-document', 'show', url: 'static-document'
