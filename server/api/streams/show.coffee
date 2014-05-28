@@ -37,6 +37,7 @@ fullJSON = (stream, callback)->
     streamJSON.publish =
       url: "rtmp://stream.lax.cine.io/20C45E/#{stream.instanceName}"
       stream: "#{stream.streamName}?#{stream.streamKey}&amp;adbe-live-event=#{stream.eventName}"
+    streamJSON.password = stream.streamKey
     streamJSON.expiration = stream.expiration
     callback(null, streamJSON)
 
