@@ -1,12 +1,12 @@
 passport = require('passport')
 GitHubStrategy = require('passport-github').Strategy
-github = Cine.config('variables/github')
+githubConfig = Cine.config('variables/github')
 User = Cine.server_model('user')
-
+request = require('request')
 strategyOptions =
-  clientID: github.clientId,
-  clientSecret: github.clientSecret,
-  callbackURL: github.callbackURL
+  clientID: githubConfig.clientId,
+  clientSecret: githubConfig.clientSecret,
+  callbackURL: githubConfig.callbackURL
 
 updateUserData = (user, profile, accessToken, callback)->
   user.githubData = profile._json
@@ -16,15 +16,29 @@ updateUserData = (user, profile, accessToken, callback)->
 createNewUser = (profile, accessToken, callback)->
   console.log('got github profile', profile)
   email = profile.emails[0] && profile.emails[0].value
-  user = new User
-    githubId: profile.id
-    email: email
-    name: profile.displayName
-    githubData: profile._json
-    githubAccessToken: accessToken
-  console.log("creating github user", user)
-  user.save callback
+  saveUser = ->
+    user = new User
+      githubId: profile.id
+      email: email
+      name: profile.displayName
+      githubData: profile._json
+      githubAccessToken: accessToken
+    console.log("creating github user", user)
+    user.save callback
+  return saveUser() if email
+  console.log('no email')
+  # we didn't get a public email, add a private one
+  options =
+    url: "https://api.github.com/user/emails?access_token=#{accessToken}"
+    headers:
+      'User-Agent': githubConfig.appName
 
+  request options, (err, response)->
+    return saveUser() if err
+    console.log('got response', response.body)
+    body = JSON.parse(response.body)
+    email = body[0].email if body[0]
+    saveUser()
 # refresh token is nullzies
 findGithubUser = (accessToken, refreshToken, profile, callback)->
   # console.log(accessToken, refreshToken, profile)
