@@ -14,15 +14,15 @@ updateUserData = (user, profile, accessToken, callback)->
   user.save callback
 
 createNewUser = (profile, accessToken, callback)->
+  console.log('got github profile', profile)
   email = profile.emails[0] && profile.emails[0].value
-  return callback("email invalid") unless email
   user = new User
     githubId: profile.id
     email: email
     name: profile.displayName
     githubData: profile._json
     githubAccessToken: accessToken
-  console.log("CREAING", user)
+  console.log("creating github user", user)
   user.save callback
 
 # refresh token is nullzies
