@@ -27,10 +27,10 @@ module.exports = React.createClass({
     });
   },
   changeProjectName: function(event) {
-    this.setState({projectName: event.target.projectName});
+    this.setState({projectName: event.target.value});
   },
   changeProjectPlan: function(event) {
-    this.setState({projectPlan: event.target.projectPlan});
+    this.setState({projectPlan: event.target.value});
   },
 
   render: function() {

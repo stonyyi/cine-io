@@ -36,6 +36,24 @@ exports.logout = (app, options={})->
       # button.button('reset')
       options.error()
 
+# usage auth(app, button, success: ->, error: ->)
+exports.updateAccount = (app, form, options={})->
+  _.defaults(options, success: noop, error: noop)
+  # button.button('loading')
+  $.ajax
+    type: "POST",
+    url: "/api/1/-/update-account",
+    data: form.serialize(),
+    success: (data, status, jqXHR)->
+      # button.button('reset')
+      app.currentUser.set(data)
+      options.success()
+    error: (jqXHR, textStatus, errorThrown)->
+      # button.button('reset')
+      # animate.shake(form)
+      response = JSON.parse(jqXHR.responseText)
+      options.error(response.message)
+
 ensureCompleteData = (data, app, options)->
   _.defaults(options, success: noop, complete: noop, relogin: true)
   if data.name && data.email
