@@ -9,13 +9,36 @@ button, .button {
   height: 100%;
 }
 
+header {
+  margin-bottom: 1em;
+}
+
 footer {
   background: #4e4e4e;
+  color: #ccc;
 
   .info {
     @include grid-column(12);
-    margin: 2em 0;
+    margin: 2em 0 0 0;
     text-align: center;
-    color: #ccc;
+  }
+
+  .legal-links {
+    @include grid-column(12);
+    margin: 1em 0 2em 0;
+    text-align: center;
+    font-size: 0.75em;
+
+    li {
+      list-style-type: none;
+      display: inline-block;
+    }
+    li:after {
+      margin: 0 0.5em;
+      content: " \00B7 "; // unicode middle dot
+    }
+    li:last-child:after {
+      content: "";
+    }
   }
 }
