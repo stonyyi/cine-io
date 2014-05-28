@@ -42,3 +42,15 @@ footer {
     }
   }
 }
+
+.brand {
+  display: block;
+  background: url(/images/cine-logomark.png) no-repeat;
+  background-size: contain;
+  text-indent: -9999em;
+  margin-bottom: 1em;
+}
+
+nav h1.brand {
+  width: 120px;
+}

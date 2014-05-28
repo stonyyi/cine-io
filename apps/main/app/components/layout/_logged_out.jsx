@@ -2,6 +2,8 @@
 var React = require('react');
 
 module.exports = React.createClass({
+  mixins: [Cine.lib('requires_app')],
+
   login: function() {
     console.log("logging in ...");
   },

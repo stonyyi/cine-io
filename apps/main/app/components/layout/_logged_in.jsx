@@ -3,6 +3,8 @@ var React = require('react')
   , authentication = Cine.lib('authentication');
 
 module.exports = React.createClass({
+  mixins: [Cine.lib('requires_app')],
+
   logout: function() {
     var _this = this
       , app = this.props.app
