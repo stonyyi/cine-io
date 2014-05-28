@@ -88,25 +88,48 @@ exports.Example = React.createClass({
     }
     this.setState({publishing: !this.state.publishing});
   },
+  loadIntoDiv: function(id, ref){
+    var self = this;
+    // from https://github.com/blairvanderhoof/gist-embed
+    url = 'https://gist.github.com/' + id + '.json';
+    $.ajax({
+      url: url,
+      dataType: 'jsonp',
+      success: function(response) {
+        self.refs[ref].getDOMNode().innerHTML = response.div;
+        linkTag = document.createElement('link');
+        head = document.getElementsByTagName('head')[0];
+
+        linkTag.type = 'text/css';
+        linkTag.rel = 'stylesheet';
+        linkTag.href = response.stylesheet;
+        head.insertBefore(linkTag, head.firstChild);
+      }
+    });
+  },
+  componentDidMount: function(){
+    this.loadIntoDiv('9a9133c5c4fe494ded22', 'headScript');
+    this.loadIntoDiv('b7873efd692b54d7f5e5', 'publishScript');
+    this.loadIntoDiv('b00457a695d88863056c', 'playScript');
+
+  },
   render: function() {
-    var publishTry = this.state.publishing ? 'Stop publisher' : (this.state.hasPublished ? 'Start publisher' : 'See it in action');
+    var publishTry = this.state.publishing ? 'Stop publisher' : (this.state.hasPublished ? 'Start publisher' : 'See it in action'),
+    topGist = '';
     return (
       <section id="example">
         <div className="row top-margin-2">
-          <div className="small-12 columns">
-            <script src="https://gist.github.com/cine-dev/9a9133c5c4fe494ded22.js"></script>
+          <div className="small-12 columns" ref='headScript'>
           </div>
         </div>
         <div className="row">
           <div className="small-6 columns">
-            <div className='bottom-margin-1'>
-              <script src="https://gist.github.com/cine-dev/b7873efd692b54d7f5e5.js"></script>
+            <div className='bottom-margin-1' ref='publishScript'>
             </div>
             <div id={this.state.publisherId}></div>
           </div>
           <div className="small-6 columns">
-            <div className='bottom-margin-1'>
-              <script src="https://gist.github.com/cine-dev/b00457a695d88863056c.js"></script>
+            <div className='bottom-margin-1' ref='playScript'>
             </div>
             <div id={this.state.playerId}></div>
           </div>
@@ -118,7 +141,6 @@ exports.Example = React.createClass({
             </div>
           </div>
         </div>
-
       </section>
     );
   }
