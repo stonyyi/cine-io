@@ -6,6 +6,7 @@ var
   Projects = Cine.collection('projects');
 
 module.exports = React.createClass({
+  displayName: 'NewProject',
   mixins: [Cine.lib('requires_app')],
   propTypes: {
     projects: React.PropTypes.instanceOf(Projects).isRequired

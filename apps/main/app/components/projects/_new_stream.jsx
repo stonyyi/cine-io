@@ -6,6 +6,7 @@ var
   Streams = Cine.collection('streams');
 
 module.exports = React.createClass({
+  displayName: 'NewStream',
   mixins: [Cine.lib('requires_app')],
   propTypes: {
     project: React.PropTypes.instanceOf(Project).isRequired,

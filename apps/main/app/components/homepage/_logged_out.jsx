@@ -2,6 +2,7 @@
 var React = require('react');
 
 exports.HomeHero = React.createClass({
+  displayName: 'HomeHero',
   render: function() {
     return (
       <section id="home-hero">
@@ -39,6 +40,7 @@ exports.HomeHero = React.createClass({
 });
 
 exports.About = React.createClass({
+  displayName: 'About',
   render: function() {
     return (
       <section id="about">
@@ -62,6 +64,7 @@ exports.About = React.createClass({
 });
 
 exports.Example = React.createClass({
+  displayName: 'Example',
   getInitialState: function() {
     return {
       exampleApiKey: '38b8a26eff0dacbc1d5369eaa568b9df',
@@ -147,6 +150,7 @@ exports.Example = React.createClass({
 });
 
 exports.Pricing = React.createClass({
+  displayName: 'Pricing',
   render: function() {
     return (
        <section id="pricing">

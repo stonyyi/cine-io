@@ -4,6 +4,7 @@ var
   Project = Cine.model('project');
 
 module.exports = React.createClass({
+  displayName: 'ProjectListItem',
   mixins: [Cine.lib('backbone_mixin')],
   propTypes: {
     model: React.PropTypes.instanceOf(Project).isRequired

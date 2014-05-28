@@ -4,6 +4,7 @@ var
   Stream = Cine.model('stream');
 
 module.exports = React.createClass({
+  displayName: 'StreamListItem',
   mixins: [Cine.lib('backbone_mixin')],
   propTypes: {
     model: React.PropTypes.instanceOf(Stream).isRequired

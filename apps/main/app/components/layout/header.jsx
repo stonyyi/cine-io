@@ -3,6 +3,7 @@ var React = require('react'),
 authentication = Cine.lib('authentication');
 
 module.exports = React.createClass({
+  displayName: 'Header',
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
   logout: function(){
     var

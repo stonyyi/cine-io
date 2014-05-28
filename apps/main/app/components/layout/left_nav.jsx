@@ -3,6 +3,7 @@ var React = require('react'),
 authentication = Cine.lib('authentication');
 
 var GithubLogin = React.createClass({
+  displayName: 'GithubLogin',
   mixins: [Cine.lib('requires_app')],
   githubLogin: function(e){
     e.preventDefault();
@@ -22,6 +23,7 @@ var GithubLogin = React.createClass({
 });
 
 var EmailLogin = React.createClass({
+  displayName: 'EmailLogin',
   mixins: [Cine.lib('requires_app')],
   propTypes: {
     showing: React.PropTypes.bool.isRequired
@@ -111,6 +113,7 @@ var EmailLogin = React.createClass({
 
 
 LoggedOut = React.createClass({
+  displayName: 'LoggedOut',
   mixins: [Cine.lib('requires_app')],
   propTypes: {
     showing: React.PropTypes.bool.isRequired
@@ -127,6 +130,7 @@ LoggedOut = React.createClass({
 
 
 module.exports = React.createClass({
+  displayName: 'LeftNav',
   mixins: [Cine.lib('requires_app')],
   propTypes: {
     showing: React.PropTypes.bool.isRequired

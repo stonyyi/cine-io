@@ -13,6 +13,7 @@ Projects = Cine.collection('projects'),
 cx = Cine.lib('cx');
 
 module.exports = React.createClass({
+  displayName: 'HomepageShow',
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
 
   getInitialState: function(){

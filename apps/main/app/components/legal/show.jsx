@@ -2,9 +2,10 @@
 var React = require('react'),
 Footer = Cine.component('layout/footer'),
 Header = Cine.component('layout/header'),
-Static = Cine.component('legal/_static')
+Static = Cine.component('legal/_static');
 
 module.exports = React.createClass({
+  displayName: 'LegalShow',
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
 
   getInitialState: function(){
@@ -19,7 +20,7 @@ module.exports = React.createClass({
           "terms-of-service" : ""
         , "privacy-policy" : ""
         , "copyright-claims" : ""
-        }
+        };
     classNames[slug] = "active";
 
     return (

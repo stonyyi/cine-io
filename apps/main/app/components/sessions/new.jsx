@@ -3,6 +3,7 @@ var React = require('react');
 Footer = Cine.component('layout/footer');
 authentication = Cine.lib('authentication');
 module.exports = React.createClass({
+  displayName: 'SessionsNew',
   mixins: [Cine.lib('requires_app')],
   emailLogin: function (e){
     e.preventDefault();

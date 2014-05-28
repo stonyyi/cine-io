@@ -8,6 +8,7 @@ ListItem = Cine.component('projects/_stream_list_item'),
 NewStream = Cine.component('projects/_new_stream');
 
 module.exports = React.createClass({
+  displayName: 'ProjectsShow',
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
   propTypes: {
     model: React.PropTypes.instanceOf(Project).isRequired
