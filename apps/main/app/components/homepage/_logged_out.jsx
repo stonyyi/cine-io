@@ -213,7 +213,7 @@ exports.Pricing = React.createClass({
               <div className="postscript">
                 <div>Or, <a href="#">try for free</a>.</div>
                 <div>
-                  If you expect to tranfer more than 750 GB, <a href="#">talk to us</a>. We can work with you on pricing.
+                  If you expect to tranfer more than 1 TB, <a href="#">talk to us</a>. We can work with you on pricing.
                 </div>
               </div>
 
