@@ -152,43 +152,44 @@ exports.Pricing = React.createClass({
        <section id="pricing">
           <div className="row">
             <div className="info text-center">
-              <i className="fa fa-2x fa-smile-o"></i>
-              <h2>Pricing</h2>
+              <h2>Simple, developer-friendly pricing.</h2>
 
-              <h3 className="subtitle">
-                Simple, developer-friendly pricing.
-              </h3>
+              <i className="fa fa-2x fa-smile-o"></i>
 
               <div className="pitch">
-                It is free to start out. We can work with you on pricing if you expect heavy volume. Get your API key today; you can be up and running in minutes.
+                All plans include streaming <strong>to and from any
+                device</strong> (web, iOS, Android), distribution via our
+                Global CDN (5,000 interconnected networks on 5 continents), no
+                ads of any kind, and email support from our developers.
               </div>
 
               <div className="prices">
                 <div className="plan">
                   <ul className="pricing-table">
-                    <li className="title">Free</li>
-                    <li className="price">
-                      <span className="currency">$</span>
-                      <span className="amount">0 / mo</span>
-                    </li>
-                    <li className="description">Get started for free!</li>
-                    <li className="bullet-item">1 stream</li>
-                    <li className="bullet-item">1GB transferred</li>
-                    <li className="cta-button"><a className="button radius" href="#" data-reveal-id="not-ready-yet">Select</a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="plan">
-                  <ul className="pricing-table">
-                    <li className="title">Developer</li>
+                    <li className="title">Solo</li>
                     <li className="price">
                       <span className="currency">$</span>
                       <span className="amount">20 / mo</span>
                     </li>
                     <li className="description">Great for starting out.</li>
                     <li className="bullet-item">5 streams</li>
-                    <li className="bullet-item">25GB transferred</li>
+                    <li className="bullet-item">30GB transferred</li>
                     <li className="cta-button"><a className="button radius" href="#" data-reveal-id="not-ready-yet">Select</a>
+                    </li>
+                  </ul>
+                </div>
+                <div className="plan">
+                  <ul className="pricing-table">
+                    <li className="title">Startup</li>
+                    <li className="price">
+                      <span className="currency">$</span>
+                      <span className="amount">100 / mo</span>
+                    </li>
+                    <li className="description">Affordable, with few limits.</li>
+                    <li className="bullet-item">unlimited streams</li>
+                    <li className="bullet-item">150 GB transferred</li>
+                    <li className="cta-button">
+                      <a className="button radius" href="#" data-reveal-id="not-ready-yet">Select</a>
                     </li>
                   </ul>
                 </div>
@@ -196,18 +197,26 @@ exports.Pricing = React.createClass({
                   <ul className="pricing-table">
                     <li className="title">Enterprise</li>
                     <li className="price">
-                      <span className="currency"></span>
-                      <span className="amount">contact us</span>
+                      <span className="currency">$</span>
+                      <span className="amount">500 / mo</span>
                     </li>
                     <li className="description">For heavy-lifting apps.</li>
                     <li className="bullet-item">unlimited streams</li>
-                    <li className="bullet-item">pay per GB transferred</li>
+                    <li className="bullet-item">750 GB transferred</li>
                     <li className="cta-button">
                       <a className="button radius" href="#" data-reveal-id="not-ready-yet">Select</a>
                     </li>
                   </ul>
                 </div>
               </div>
+
+              <div className="postscript">
+                <div>Or, <a href="#">try for free</a>.</div>
+                <div>
+                  If you expect to tranfer more than 750 GB, <a href="#">talk to us</a>. We can work with you on pricing.
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
