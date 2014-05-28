@@ -7,4 +7,4 @@ module.exports = (params, callback)->
     return callback(err, project, status) if err
     addNextStreamToProject project, (err, stream)->
       return callback(err, null, status: 400) if err
-      Show.legacyJSON(stream, callback)
+      Show.fullJSON(stream, callback)

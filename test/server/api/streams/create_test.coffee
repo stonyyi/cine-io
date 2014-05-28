@@ -30,14 +30,13 @@ describe 'Streams#Create', ->
       params = apiSecret: @project.apiSecret
       Create params, (err, response, options)=>
         expect(err).to.be.null
-        expect(response.instanceName).to.equal('cines')
         expectedPlayResponse =
           hls: "http://hls.cine.io/cines/cine1ENAME/cine1.m3u8"
           rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
         expectedPublishResponse =
           url: "rtmp://stream.lax.cine.io/20C45E/cines"
           stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
-        expect(_.keys(response).sort()).to.deep.equal(['eventName', 'expiration', 'id', 'instanceName', 'name', 'password', 'play', 'publish', 'streamKey', 'streamName'])
+        expect(_.keys(response).sort()).to.deep.equal(['expiration', 'id', 'name', 'password', 'play', 'publish'])
         expect(response.play).to.deep.equal(expectedPlayResponse)
         expect(response.publish).to.deep.equal(expectedPublishResponse)
         expect(response.id).to.equal(@stream._id.toString())

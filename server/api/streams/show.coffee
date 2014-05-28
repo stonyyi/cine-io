@@ -15,14 +15,6 @@ fmleProfile = (stream, callback)->
       .replace(/EDGECAST_EVENT_NAME/g, stream.eventName)
     callback(null, content: content)
 
-legacyJSON = (stream, callback)->
-  fullJSON stream, (err, streamJSON)->
-    streamJSON.instanceName = stream.instanceName
-    streamJSON.eventName = stream.eventName
-    streamJSON.streamName = stream.streamName
-    streamJSON.streamKey = stream.streamKey
-    callback(null, streamJSON)
-
 playJSON = (stream, callback)->
   streamJSON =
     id: stream._id.toString()
@@ -58,4 +50,3 @@ Show = (params, callback)->
 module.exports = Show
 module.exports.fullJSON = fullJSON
 module.exports.playJSON = playJSON
-module.exports.legacyJSON = legacyJSON
