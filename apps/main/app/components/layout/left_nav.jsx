@@ -31,7 +31,6 @@ var EmailLogin = React.createClass({
   getInitialState: function() {
     return {allowFocusHijack: true, completeSignup: false, myName: '', myPassword: '', myEmail: ''};
   },
-
   submitName: function (e){
     e.preventDefault();
     var

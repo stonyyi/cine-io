@@ -22,6 +22,18 @@ module.exports = React.createClass({
       projects: new Projects([], {app: this.props.app})
     };
   },
+  componentDidMount: function(){
+    this.props.app.currentUser.on('login', this.closeNav, this);
+    this.props.app.currentUser.on('logout', this.closeNav, this);
+  },
+  componentWillUnMount: function(){
+    this.props.app.currentUser.off('login', this.closeNav);
+    this.props.app.currentUser.off('logout', this.closeNav);
+
+  },
+  closeNav: function(){
+    this.setState({showingLeftNav: false});
+  },
   getBackboneObjects: function(){
     return this.props.app.currentUser;
   },
@@ -30,21 +42,24 @@ module.exports = React.createClass({
     this.setState({showingLeftNav: !this.state.showingLeftNav});
   },
   render: function() {
+    var canvasClasses = cx({
+      'off-canvas-wrap': true,
+      'move-right': this.state.showingLeftNav
+    });
+
     if (this.props.app.currentUser.isLoggedIn()) {
       return (
-        <div id='homepage-logged-in'>
-          <Header app={this.props.app} />
-          <LoggedIn app={this.props.app} collection={this.state.projects} />
-          <Footer />
+        <div id='homepage-logged-in' className={canvasClasses}>
+          <div className="inner-wrap">
+            <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
+            <Header app={this.props.app} />
+            <LoggedIn app={this.props.app} collection={this.state.projects} />
+            <Footer />
+          </div>
         </div>
       );
 
     }else{
-      var canvasClasses = cx({
-        'off-canvas-wrap': true,
-        'move-right': this.state.showingLeftNav
-      });
-
       return (
         <div id='homepage-logged-out' className={canvasClasses}>
           <div className="inner-wrap">

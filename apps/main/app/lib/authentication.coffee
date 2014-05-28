@@ -30,7 +30,7 @@ exports.logout = (app, options={})->
     url: '/logout',
     success: (data, status, jqXHR)->
       # button.button('reset')
-      app.currentUser.clear()
+      doLogout(app)
       options.success()
     error: (jqXHR, textStatus, errorThrown)->
       # button.button('reset')
@@ -46,7 +46,7 @@ exports.updateAccount = (app, form, options={})->
     data: form.serialize(),
     success: (data, status, jqXHR)->
       # button.button('reset')
-      app.currentUser.set(data)
+      doLogin(app, data)
       options.success()
     error: (jqXHR, textStatus, errorThrown)->
       # button.button('reset')
@@ -57,8 +57,15 @@ exports.updateAccount = (app, form, options={})->
 ensureCompleteData = (data, app, options)->
   _.defaults(options, success: noop, complete: noop, relogin: true)
   if data.name && data.email
-    app.currentUser.set(data)
+    doLogin(app, data)
     options.success()
   else
     options.completeSignup()
   options.complete()
+
+doLogin = (app, data)->
+  app.currentUser.set(data)
+  app.currentUser.trigger('login')
+doLogout = (app)->
+  app.currentUser.clear()
+  app.currentUser.trigger('logout')
