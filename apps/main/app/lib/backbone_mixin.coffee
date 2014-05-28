@@ -1,6 +1,9 @@
 _ = require('underscore')
 exports.componentDidMount = ->
-  @_boundForceUpdate = @forceUpdate.bind(this, null)
+  # sometimes the component will try to re-render but it has been unmounted
+  # I don't know why. Then we try to render it again. It's a bit confusing
+  @_boundForceUpdate = =>
+    @forceUpdate() if @isMounted()
   _.each @_getBackboneObjects(), (instance)=>
     instance.on "all", @_boundForceUpdate, this
 
