@@ -157,7 +157,7 @@ exports.Pricing = React.createClass({
               <i className="fa fa-2x fa-smile-o"></i>
 
               <div className="pitch">
-                All plans include streaming <strong>to and from any
+                All plans include live-streaming <strong>to and from any
                 device</strong> (web, iOS, Android), distribution via our
                 Global CDN (5,000 interconnected networks on 5 continents), no
                 ads of any kind, and email support from our developers.
@@ -173,7 +173,7 @@ exports.Pricing = React.createClass({
                     </li>
                     <li className="description">Great for starting out.</li>
                     <li className="bullet-item">5 streams</li>
-                    <li className="bullet-item">30GB transferred</li>
+                    <li className="bullet-item">20GB transferred</li>
                     <li className="cta-button"><a className="button radius" href="#" data-reveal-id="not-ready-yet">Select</a>
                     </li>
                   </ul>
@@ -202,7 +202,7 @@ exports.Pricing = React.createClass({
                     </li>
                     <li className="description">For heavy-lifting apps.</li>
                     <li className="bullet-item">unlimited streams</li>
-                    <li className="bullet-item">750 GB transferred</li>
+                    <li className="bullet-item">1 TB transferred</li>
                     <li className="cta-button">
                       <a className="button radius" href="#" data-reveal-id="not-ready-yet">Select</a>
                     </li>
