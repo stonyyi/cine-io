@@ -16,8 +16,8 @@ module.exports = React.createClass({
       return (
         <header>
           <nav className="top-bar" data-topbar>
-            <Brand />
-            <LoggedIn />
+            <Brand app={this.props.app} />
+            <LoggedIn app={this.props.app} />
           </nav>
         </header>
       );
@@ -25,8 +25,8 @@ module.exports = React.createClass({
       return (
         <header>
           <nav className="top-bar" data-topbar>
-            <Brand />
-            <LoggedOut />
+            <Brand app={this.props.app} />
+            <LoggedOut app={this.props.app} />
           </nav>
         </header>
       );

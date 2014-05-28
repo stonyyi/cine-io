@@ -11,7 +11,7 @@ module.exports = React.createClass({
     return (
       <ul className="title-area">
         <li className="name">
-          <h1><a href="#">cine.io</a></h1>
+          <h1><a onClick={this.goHome}>cine.io</a></h1>
         </li>
         <li className="toggle-topbar menu-icon"><a href=""></a></li>
       </ul>
