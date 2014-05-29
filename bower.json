@@ -3,5 +3,8 @@
   "dependencies": {
     "foundation": "zurb/bower-foundation",
     "react": "~0.10.0"
+  },
+  "devDependencies": {
+    "prism": "git@github.com:LeaVerou/prism.git#gh-pages"
   }
 }

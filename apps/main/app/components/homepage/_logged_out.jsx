@@ -3,6 +3,7 @@ var React = require('react')
   , flashDetect = Cine.lib('flash_detect')
   , cx = Cine.lib('cx');
 
+
 exports.HomeHero = React.createClass({
   displayName: 'HomeHero',
   getApiKey: function(e){
@@ -102,31 +103,6 @@ exports.Example = React.createClass({
     }
     this.setState({publishing: !this.state.publishing});
   },
-  loadIntoDiv: function(id, ref){
-    var self = this;
-    // from https://github.com/blairvanderhoof/gist-embed
-    url = 'https://gist.github.com/' + id + '.json';
-    $.ajax({
-      url: url,
-      dataType: 'jsonp',
-      success: function(response) {
-        self.refs[ref].getDOMNode().innerHTML = response.div;
-        linkTag = document.createElement('link');
-        head = document.getElementsByTagName('head')[0];
-
-        linkTag.type = 'text/css';
-        linkTag.rel = 'stylesheet';
-        linkTag.href = response.stylesheet;
-        head.insertBefore(linkTag, head.firstChild);
-      }
-    });
-  },
-  componentDidMount: function(){
-    CineIO.init('18b4c471bdc2bc1d16ad3cb338108a33');
-    this.loadIntoDiv('9a9133c5c4fe494ded22', 'headScript');
-    this.loadIntoDiv('b7873efd692b54d7f5e5', 'publishScript');
-    this.loadIntoDiv('b00457a695d88863056c', 'playScript');
-  },
   componentWillUnmount: function(){
     CineIO.reset();
   },
@@ -134,24 +110,62 @@ exports.Example = React.createClass({
     var publishTry = this.state.publishing ? 'Stop publisher' : (this.state.hasPublished ? 'Start publisher' : 'See it in action')
       , topGist = ''
       , publishClasses = cx({
-        'hide': !flashDetect(),
-        'row': true,
-        'top-margin-2': true
-      });
+          'hide': !flashDetect(),
+          'row': true,
+          'top-margin-2': true
+        })
+      , headCode = [
+          "&lt;script src='https://www.cine.io/compiled/cine.js'&gt;"
+        , "&lt;script&gt;"
+        , "  CineIO.init('38b8a26eff0dacbc1d5369eaa568b9df'); // your cine.io publicKey"
+        , "&lt;/script&gt;"
+        ].join('\n')
+      , publishCode = [
+          "var streamId = '53718cef450ff80200f81856'"
+        , "  , password = 'bass35'"
+        , ", domId = 'publisher-example';"
+        , ""
+        , "var publisher = CineIO.publish("
+        , "  streamId, password, domId"
+        , ");"
+        , ""
+        , "publisher.start();"
+        ].join('\n')
+      , playCode = [
+          "var streamId = '53718cef450ff80200f81856'"
+        , "  , domId = 'player-example';"
+        , ""
+        , "CineIO.play(streamId, domId);"
+        , ""
+        , "// We default the example to muted so that"
+        , "// you don't get horrible microphone"
+        , "// feedback from the publisher while"
+        , "// checking out this example."
+        ].join('\n');
+
     return (
       <section id="example">
         <div className="row top-margin-2">
-          <div className="head-script" ref='headScript'>
+          <div className="head-script">
+            <pre>
+              <code className='language-markup' dangerouslySetInnerHTML={{__html: headCode }} />
+            </pre>
           </div>
         </div>
         <div className="row">
           <div className="publish-script">
-            <div className='bottom-margin-1' ref='publishScript'>
+            <div className='bottom-margin-1'>
+              <pre>
+                <code className='language-javascript' dangerouslySetInnerHTML={{__html: publishCode }} />
+              </pre>
             </div>
             <div id={this.state.publisherId}></div>
           </div>
           <div className="play-script">
-            <div className='bottom-margin-1' ref='playScript'>
+            <div className='bottom-margin-1'>
+              <pre>
+                <code className='language-javascript' dangerouslySetInnerHTML={{__html: playCode }} />
+              </pre>
             </div>
             <div id={this.state.playerId}></div>
           </div>

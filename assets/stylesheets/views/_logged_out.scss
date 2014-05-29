@@ -101,6 +101,11 @@
   }
 
   #example {
+    pre {
+      border: 2px solid white;
+      border-radius: 6px;
+    }
+
     .head-script {
       @include grid-column(12);
     }

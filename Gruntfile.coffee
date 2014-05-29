@@ -6,16 +6,24 @@ rendrModulesDir = rendrDir + '/node_modules';
 module.exports = (grunt) ->
   grunt.initConfig
     pkg: grunt.file.readJSON("package.json")
+
     sass:
       options:
-        includePaths: ["bower_components/foundation/scss"]
+        includePaths: [
+          "bower_components/foundation/scss"
+        ]
 
       dist:
         options:
           outputStyle: "compressed"
 
         files:
-          "public/compiled/app.css": "assets/stylesheets/app.scss"
+          "tmp/cine-compiled-app.css": "assets/stylesheets/app.scss"
+
+    concat:
+      dist:
+        src: ["bower_components/prism/themes/prism-tomorrow.css", "tmp/cine-compiled-app.css"]
+        dest: "public/compiled/app.css"
 
     nodemon:
       dev:
@@ -29,8 +37,8 @@ module.exports = (grunt) ->
         files: ["Gruntfile.coffee"]
 
       sass:
-        files: "assets/stylesheets/**/*.scss"
-        tasks: ["sass"]
+        files: ["assets/stylesheets/**/*.scss"]
+        tasks: ["sass", "concat"]
 
       react:
         files: ["apps/main/app/**/*.jsx"]
@@ -87,6 +95,7 @@ module.exports = (grunt) ->
             'bower_components/modernizr/modernizr.js'
             'bower_components/fastclick/lib/fastclick.js'
             'bower_components/foundation/js/foundation.js'
+            'bower_components/prism/prism.js'
           ],
           npmDependencies:
             underscore: '../rendr/node_modules/underscore/underscore.js'
@@ -128,12 +137,13 @@ module.exports = (grunt) ->
           transform: ['coffeeify']
 
 
+  grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-sass"
   grunt.loadNpmTasks "grunt-nodemon"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-concurrent"
   grunt.registerTask "compile", ["react", "handlebars", "rendr_stitch", "browserify"]
-  grunt.registerTask "build", ["compile", "sass"]
+  grunt.registerTask "build", ["compile", "sass", "concat"]
   grunt.registerTask "dev", ["build", "concurrent:dev"]
   grunt.registerTask "default", ["dev"]
   grunt.loadNpmTasks 'grunt-react'
