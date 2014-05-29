@@ -35,6 +35,7 @@ module.exports = React.createClass({
     return (
       <div>
         <Header app={this.props.app}/>
+        <a href='/'>back</a>
         <div className="panel">
           <h3>
             <div className='clearfix'>
