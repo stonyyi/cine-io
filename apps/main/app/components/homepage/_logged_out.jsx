@@ -5,6 +5,10 @@ var React = require('react')
 
 exports.HomeHero = React.createClass({
   displayName: 'HomeHero',
+  getApiKey: function(e){
+    e.preventDefault();
+    this._owner.openNav();
+  },
   render: function() {
     return (
       <section id="home-hero">
@@ -16,7 +20,7 @@ exports.HomeHero = React.createClass({
             <h2 className="subtitle">Device-agnostic live-streaming.</h2>
             <h3 className="pitch">Set up for your app in under 5 minutes.</h3>
             <div className="actions">
-              <a href="#" className="button radius" data-reveal-id="not-ready-yet">Get API Key</a>
+              <a href="" onClick={this.getApiKey} className="button radius">Get API Key</a>
 
               <div id="not-ready-yet" className="reveal-modal" data-reveal>
                 <h2>We are not ready yet!</h2>
@@ -163,6 +167,11 @@ exports.Example = React.createClass({
 
 exports.Pricing = React.createClass({
   displayName: 'Pricing',
+  getApiKey: function(e){
+    e.preventDefault();
+    this._owner.openNav();
+  },
+
   render: function() {
     return (
        <section id="pricing">
@@ -190,7 +199,7 @@ exports.Pricing = React.createClass({
                     <li className="description">Great for starting out.</li>
                     <li className="bullet-item">5 streams</li>
                     <li className="bullet-item">20GB transferred</li>
-                    <li className="cta-button"><a className="button radius" href="#" data-reveal-id="not-ready-yet">Select</a>
+                    <li className="cta-button"><a className="button radius" href="" onClick={this.getApiKey}>Select</a>
                     </li>
                   </ul>
                 </div>
@@ -205,7 +214,7 @@ exports.Pricing = React.createClass({
                     <li className="bullet-item">unlimited streams</li>
                     <li className="bullet-item">150 GB transferred</li>
                     <li className="cta-button">
-                      <a className="button radius" href="#" data-reveal-id="not-ready-yet">Select</a>
+                      <a className="button radius" href="" onClick={this.getApiKey}>Select</a>
                     </li>
                   </ul>
                 </div>
@@ -220,7 +229,7 @@ exports.Pricing = React.createClass({
                     <li className="bullet-item">unlimited streams</li>
                     <li className="bullet-item">1 TB transferred</li>
                     <li className="cta-button">
-                      <a className="button radius" href="#" data-reveal-id="not-ready-yet">Select</a>
+                      <a className="button radius" href="" onClick={this.getApiKey}>Select</a>
                     </li>
                   </ul>
                 </div>

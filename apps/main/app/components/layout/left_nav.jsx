@@ -117,9 +117,18 @@ LoggedOut = React.createClass({
   propTypes: {
     showing: React.PropTypes.bool.isRequired
   },
+  closeNav: function(e){
+    e.preventDefault();
+    this._owner.closeNav();
+  },
   render: function() {
     return (
       <aside className="left-off-canvas-menu">
+        <div className='clearfix'>
+          <a className='right' href='' onClick={this.closeNav}>
+            <i className="fa fa-times"></i>
+          </a>
+        </div>
         <GithubLogin app={this.props.app}/>
         <EmailLogin app={this.props.app} showing={this.props.showing} />
       </aside>
@@ -133,6 +142,9 @@ module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
   propTypes: {
     showing: React.PropTypes.bool.isRequired
+  },
+  closeNav: function(){
+    this._owner.closeNav()
   },
   render: function() {
     if (this.props.app.currentUser.isLoggedIn()) {

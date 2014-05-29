@@ -34,6 +34,9 @@ module.exports = React.createClass({
   closeNav: function(){
     this.setState({showingLeftNav: false});
   },
+  openNav: function(){
+    this.setState({showingLeftNav: true});
+  },
   getBackboneObjects: function(){
     return this.props.app.currentUser;
   },
