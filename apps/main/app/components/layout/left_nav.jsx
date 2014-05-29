@@ -40,13 +40,16 @@ var EmailLogin = React.createClass({
       options = {completeSignup: this.completeSignup};
     authentication.updateAccount(app, form, options);
   },
+  loginError: function (message){
+    this.props.app.flash(message, 'alert');
+  },
   emailLogin: function (e){
     e.preventDefault();
     var
       _this = this,
       app = this.props.app,
       form = jQuery(e.currentTarget),
-      options = {completeSignup: this.completeSignup};
+      options = {completeSignup: this.completeSignup, error: this.loginError};
 
     authentication.login(app, form, options);
   },

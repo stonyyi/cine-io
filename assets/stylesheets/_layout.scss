@@ -35,9 +35,11 @@ footer, #footer-push {
     position: relative;
     z-index: 1;
     display: inline-block;
-    min-width: 100px;
     // fixed from: 0.875rem 1.5rem 0.875rem 0.875rem
     padding:  0.875rem;
+    .alert-body{
+      margin-right: 10px;
+    }
     .close-alert{
       float: right;
     }

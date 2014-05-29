@@ -31,7 +31,7 @@ module.exports = React.createClass({
         var alertClasses = [message.kind, 'alert-box', 'radius'].join(' ');
         return (
           <div key={i} data-alert className={alertClasses}>
-            {message.message}
+            <span className='alert-body'>{message.message}</span>
             <a href="" className='close-alert' onClick={self.closeAlert.bind(self, i)}>
               <i className="fa fa-times"></i>
             </a>
