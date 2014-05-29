@@ -125,7 +125,7 @@ LoggedOut = React.createClass({
     return (
       <aside className="left-off-canvas-menu">
         <div className='clearfix'>
-          <a className='right' href='' onClick={this.closeNav}>
+          <a className='close-link right' href='' onClick={this.closeNav}>
             <i className="fa fa-times"></i>
           </a>
         </div>
