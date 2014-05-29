@@ -41,7 +41,7 @@ module.exports = React.createClass({
 
       planOptions = _.map(Project.plans, function(plan) {
         var capitalized = plan.charAt(0).toUpperCase() + plan.slice(1);
-        return (<option value={plan}>{capitalized}</option>);
+        return (<option key={plan} value={plan}>{capitalized}</option>);
       });
 
     return (
