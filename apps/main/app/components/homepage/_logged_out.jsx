@@ -78,7 +78,7 @@ exports.Example = React.createClass({
   displayName: 'Example',
   getInitialState: function() {
     return {
-      exampleApiKey: '38b8a26eff0dacbc1d5369eaa568b9df',
+      exampleApiKey: '18b4c471bdc2bc1d16ad3cb338108a33',
       streamId: '53718cef450ff80200f81856',
       streamPassword: 'bass35',
       playerId: 'player-example',
