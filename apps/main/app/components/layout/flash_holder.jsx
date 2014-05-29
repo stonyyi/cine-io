@@ -2,16 +2,28 @@
 var React = require('react')
   , App = Cine.arch('app')
   , _ = require('underscore')
+  , flashTimeout = 5000 // milliseconds
 ;
 module.exports = React.createClass({
   displayName: 'FlashHolder',
   mixins: [Cine.lib('requires_app')],
   getInitialState: function(){
-    return {flashMessages: []};
+    return {flashMessages: [], nextId: 0};
   },
   // data is message, kind
   addFlash: function(data){
-    this.setState({flashMessages: this.state.flashMessages.concat(data)});
+    var
+      self = this
+      , id = this.state.nextId
+    ;
+    data.id = id;
+    setTimeout(function(){
+      message = _.find(self.state.flashMessages, function(flashMessage){
+        return flashMessage.id === id;
+      });
+      self.setState({flashMessages: _.without(self.state.flashMessages, message)});
+    }, flashTimeout);
+    this.setState({nextId: self.state.nextId+1, flashMessages: self.state.flashMessages.concat(data)});
   },
   componentDidMount: function(){
     this.props.app.on(App.flashEvent, this.addFlash, this);
@@ -27,11 +39,11 @@ module.exports = React.createClass({
   render: function() {
     var
       self = this
-      , messageMap = function(message, i) {
-        var alertClasses = [message.kind, 'alert-box', 'radius'].join(' ');
+      , messageMap = function(flashMessage, i) {
+        var alertClasses = [flashMessage.kind, 'alert-box', 'radius'].join(' ');
         return (
-          <div key={i} data-alert className={alertClasses}>
-            <span className='alert-body'>{message.message}</span>
+          <div key={flashMessage.id} data-alert className={alertClasses}>
+            <span className='alert-body'>{flashMessage.message}</span>
             <a href="" className='close-alert' onClick={self.closeAlert.bind(self, i)}>
               <i className="fa fa-times"></i>
             </a>
