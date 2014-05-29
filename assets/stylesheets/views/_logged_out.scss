@@ -108,7 +108,6 @@
 
       .pitch, .postscript {
         margin-top: 1em;
-        @include grid-column(8, true, true, 2);
         div {
           margin-bottom: 2em;
         }
