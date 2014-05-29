@@ -1,4 +1,6 @@
 Project = Cine.server_model('project')
+BackboneProject = Cine.model('project')
+_ = require('underscore')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'Project', ->
@@ -6,12 +8,13 @@ describe 'Project', ->
 
   describe 'validations', ->
     describe 'plan', ->
-      it 'can be free', (done)->
-        project = new Project(name: 'some name', plan: 'free')
-        project.save (err, member)->
-          done(err)
-      it 'can be developer', (done)->
-        project = new Project(name: 'some name', plan: 'developer')
+      _.each BackboneProject.plans, (plan)->
+        it "can be #{plan}", (done)->
+          project = new Project(name: 'some name', plan: plan)
+          project.save (err, member)->
+            done(err)
+      it 'can be test', (done)->
+        project = new Project(name: 'some name', plan: 'test')
         project.save (err, member)->
           done(err)
       it 'cannot be anything else', (done)->

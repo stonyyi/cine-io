@@ -3,8 +3,8 @@ var
   React = require('react'),
   qs = require('qs'),
   Project = Cine.model('project'),
-  Projects = Cine.collection('projects');
-
+  Projects = Cine.collection('projects'),
+  _ = require('underscore');
 module.exports = React.createClass({
   displayName: 'NewProject',
   mixins: [Cine.lib('requires_app')],
@@ -37,7 +37,13 @@ module.exports = React.createClass({
   render: function() {
     var
       projectName = this.state.projectName,
-      projectPlan = this.state.projectPlan;
+      projectPlan = this.state.projectPlan,
+
+      planOptions = _.map(Project.plans, function(plan) {
+        var capitalized = plan.charAt(0).toUpperCase() + plan.slice(1);
+        return (<option value={plan}>{capitalized}</option>);
+      });
+
     return (
       <form onSubmit={this.createProject}>
         <h3> New Project </h3>
@@ -55,9 +61,7 @@ module.exports = React.createClass({
           </div>
           <div className="small-9 columns">
             <select value={projectPlan} onChange={this.changeProjectPlan} id='project-plan' name='project[plan]'>
-              <option value="free">Free</option>
-              <option value="developer">Developer</option>
-              <option value="enterprise">Enterprise</option>
+              {planOptions}
             </select>
           </div>
         </div>

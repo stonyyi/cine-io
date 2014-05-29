@@ -8,8 +8,8 @@ projectLimit = (project)->
   switch project.plan
     when 'test' then 1
     when 'free' then 1
-    when 'developer' then 5
-    when 'enterprise' then Infinity
+    when 'solo' then 5
+    when 'startup', 'enterprise' then Infinity
     else throw new Error("Don't know this plan")
 
 isAtProjectLimit = (project)->

@@ -1,5 +1,6 @@
 mongoose = require 'mongoose'
 crypto = require('crypto')
+BackboneProject = Cine.model('project')
 
 ProjectSchema = new mongoose.Schema
   name:
@@ -47,8 +48,9 @@ ProjectSchema.options.toJSON.transform = (doc, ret, options)->
   ret.createdAt = ret.createdAt.toISOString()
   ret
 
+planRegex = new RegExp BackboneProject.plans.concat('test').join('|')
 ProjectSchema.path('plan').validate ((value)->
-  /test|foo|free|developer|enterprise/i.test value
+  planRegex.test value
 ), 'Invalid plan'
 
 Project = mongoose.model 'Project', ProjectSchema
