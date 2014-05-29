@@ -28,9 +28,9 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div id='login'>
-        <a className='button github-login' href='/auth/github'>
+        <a className='button button-social button-github github-login' href='/auth/github'>
           <i className="fa fa-github"></i>
-          <span className="btn-social-text">Sign in with Github</span>
+          <span className="button-social-text">Sign in with Github</span>
         </a>
         <form onSubmit={this.emailLogin}>
           <input name='username' type="email" placeholder='Your email' />

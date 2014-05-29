@@ -8,6 +8,49 @@ button, .button {
   // border: 2px solid $primary-color;
 }
 
+.button-social {
+  overflow: hidden;
+  color: white;
+  padding: 0.5em 0 0.5em 0;
+
+  > * {
+    padding: 0.3em 0;
+  }
+
+  > i.fa {
+    display: block;
+    float: left;
+    width: 2em;
+    font-size: 1.5em;
+  }
+
+  > .button-social-text {
+    min-width: 13em;
+    display: block;
+    margin-left: 1em;
+    text-align: left;
+    padding-top: 0.6em;
+    white-space: nowrap;
+  }
+
+  &:hover {
+    color: white;
+  }
+}
+
+.button-github {
+  background-color: $github-button-bgcolor;
+  color: black;
+
+
+  &:hover {
+    // taken from how twitter does it's hover states in mixins.less
+    background-color: scale-color($github-button-bgcolor, $lightness: -8%);
+    color: black;
+  }
+}
+
+
 #content{
   height: 100%;
   overflow: scroll;

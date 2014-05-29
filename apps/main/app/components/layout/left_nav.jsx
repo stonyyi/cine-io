@@ -14,9 +14,9 @@ var GithubLogin = React.createClass({
   },
   render: function() {
     return (
-      <a className='button github-login' href='/auth/github'>
+      <a className='button expand radius button-social button-github github-login' href='/auth/github'>
         <i className="fa fa-github"></i>
-        <span className="btn-social-text">Sign in with Github</span>
+        <span className="button-social-text">Sign in with Github</span>
       </a>
     );
   }
@@ -95,7 +95,7 @@ var EmailLogin = React.createClass({
         <form onSubmit={this.submitName}>
           <p>Welcome to cine.io{suffix}.</p>
           <input name='name' type="text" required placeholder='Your Name' ref='nameField' value={this.state.myName} onChange={this.changeMyName}/>
-          <button>Join</button>
+          <button className="button radius expand">Join</button>
         </form>
       );
     } else{
@@ -103,7 +103,7 @@ var EmailLogin = React.createClass({
         <form onSubmit={this.emailLogin}>
           <input name='username' type="email" required placeholder='Your email' ref='emailField' value={this.state.myEmail} onChange={this.changeMyEmail}/>
           <input name='password' type="password" required placeholder='Your password' value={this.state.myPassword} onChange={this.changeMyPassword}/>
-          <button>Log in</button>
+          <button className="button radius expand">Sign up or sign in</button>
         </form>
       );
     }
