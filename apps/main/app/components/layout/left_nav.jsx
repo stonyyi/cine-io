@@ -98,7 +98,7 @@ var EmailLogin = React.createClass({
           <button className="button radius expand">Join</button>
         </form>
       );
-    } else{
+    } else {
       return (
         <form onSubmit={this.emailLogin}>
           <input name='username' type="email" required placeholder='Your email' ref='emailField' value={this.state.myEmail} onChange={this.changeMyEmail}/>
