@@ -4,6 +4,7 @@ Header = Cine.component('layout/header'),
 LeftNav = Cine.component('layout/left_nav'),
 LoggedOut = Cine.component('homepage/_logged_out'),
 LoggedIn = Cine.component('homepage/_logged_in'),
+FlashHolder = Cine.component('layout/flash_holder'),
 HomeHero = LoggedOut.HomeHero,
 About = LoggedOut.About,
 Example = LoggedOut.Example,
@@ -28,7 +29,6 @@ module.exports = React.createClass({
   componentWillUnMount: function(){
     this.props.app.currentUser.off('login', this.closeNav);
     this.props.app.currentUser.off('logout', this.closeNav);
-
   },
   closeNav: function(){
     this.setState({showingLeftNav: false});
@@ -52,6 +52,7 @@ module.exports = React.createClass({
     if (this.props.app.currentUser.isLoggedIn()) {
       return (
         <div id='homepage-logged-in' className={canvasClasses}>
+          <FlashHolder app={this.props.app}/>
           <div className="inner-wrap">
             <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
             <Header app={this.props.app} />
@@ -63,6 +64,7 @@ module.exports = React.createClass({
     }else{
       return (
         <div id='homepage-logged-out' className={canvasClasses}>
+          <FlashHolder app={this.props.app}/>
           <div className="inner-wrap">
             { /*<a onClick={this.toggleLeftNav} href="" >Menu JS</a> */ }
 

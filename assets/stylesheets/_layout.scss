@@ -20,7 +20,29 @@ $negative-height: $footer-height * -1;
 footer, #footer-push {
   height: $footer-height;
 }
+// end sticky footer
 
+//flash
+.flash-holder{
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  .alert-box{
+    text-align: left;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    min-width: 100px;
+    // fixed from: 0.875rem 1.5rem 0.875rem 0.875rem
+    padding:  0.875rem;
+    .close-alert{
+      float: right;
+    }
+  }
+}
 
 button, .button {
   text-transform: uppercase;

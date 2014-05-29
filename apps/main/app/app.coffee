@@ -4,7 +4,8 @@ User = Cine.model('user')
 isServer = typeof window is 'undefined'
 
 module.exports = class App extends BaseApp
-
+  @flashKinds = ['success', 'warning', 'info', 'alert']
+  @flashEvent = 'flash-message'
   initialize: ->
     BaseApp.prototype.initialize.call(this)
     @apiVersion = 1
@@ -27,3 +28,6 @@ module.exports = class App extends BaseApp
       # because it has a current scroll position
       $('body').scrollTo('#content', 200, easing: 'easeOutQuart')
     ), this
+
+  flash: (message, kind)->
+    @trigger(@constructor.flashEvent, message: message, kind: kind)
