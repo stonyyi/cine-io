@@ -6,6 +6,8 @@ CineIO =
   init: (publicKey)->
     throw new Error("Public Key required") unless publicKey
     CineIO.config.publicKey = publicKey
+  reset: ->
+    delete CineIO.config.publicKey
 
   play: (streamId, domNode, playOptions={})->
     requiresInit()

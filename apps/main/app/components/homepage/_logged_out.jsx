@@ -122,10 +122,13 @@ exports.Example = React.createClass({
     });
   },
   componentDidMount: function(){
+    CineIO.init('18b4c471bdc2bc1d16ad3cb338108a33');
     this.loadIntoDiv('9a9133c5c4fe494ded22', 'headScript');
     this.loadIntoDiv('b7873efd692b54d7f5e5', 'publishScript');
     this.loadIntoDiv('b00457a695d88863056c', 'playScript');
-
+  },
+  componentWillUnmount: function(){
+    CineIO.reset();
   },
   render: function() {
     var publishTry = this.state.publishing ? 'Stop publisher' : (this.state.hasPublished ? 'Start publisher' : 'See it in action')
