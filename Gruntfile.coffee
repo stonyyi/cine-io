@@ -22,6 +22,8 @@ module.exports = (grunt) ->
 
     concat:
       dist:
+        # prism-tomorrow seems not to exhibit the chrome 'disappearing
+        # element' but, but prism-twilight does <sigh>
         src: ["bower_components/prism/themes/prism-tomorrow.css", "tmp/cine-compiled-app.css"]
         dest: "public/compiled/app.css"
 
