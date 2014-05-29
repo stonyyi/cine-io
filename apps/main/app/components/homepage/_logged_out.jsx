@@ -1,5 +1,7 @@
 /** @jsx React.DOM */
-var React = require('react');
+var React = require('react')
+  , flashDetect = Cine.lib('flash_detect')
+  , cx = Cine.lib('cx');
 
 exports.HomeHero = React.createClass({
   displayName: 'HomeHero',
@@ -53,8 +55,13 @@ exports.About = React.createClass({
             </h2>
 
             <p>
-              You do not want to think about configuring a CDN, building a cross-platform viewing experience, or learning a new tool.
-              <strong>You want to write code.</strong>cine.io lets you programatically set up, configure, and provision your streams through a RESTful API. That means less hassle, less wasted time, and happy developers. There are no account minimums, and you can get started today.
+              You do not want to think about configuring a CDN, building a
+              cross-platform viewing experience, or learning a new tool.
+              <strong> You want to write code.</strong> cine.io lets you
+              programatically set up, configure, and provision your streams
+              through a RESTful API. That means less hassle, less wasted time,
+              and happy developers. There are no account minimums, and you can
+              get started today.
             </p>
           </div>
         </div>
@@ -117,27 +124,32 @@ exports.Example = React.createClass({
 
   },
   render: function() {
-    var publishTry = this.state.publishing ? 'Stop publisher' : (this.state.hasPublished ? 'Start publisher' : 'See it in action'),
-    topGist = '';
+    var publishTry = this.state.publishing ? 'Stop publisher' : (this.state.hasPublished ? 'Start publisher' : 'See it in action')
+      , topGist = ''
+      , publishClasses = cx({
+        'hide': !flashDetect(),
+        'row': true,
+        'top-margin-2': true
+      });
     return (
       <section id="example">
         <div className="row top-margin-2">
-          <div className="small-12 columns" ref='headScript'>
+          <div className="head-script" ref='headScript'>
           </div>
         </div>
         <div className="row">
-          <div className="small-6 columns">
+          <div className="publish-script">
             <div className='bottom-margin-1' ref='publishScript'>
             </div>
             <div id={this.state.publisherId}></div>
           </div>
-          <div className="small-6 columns">
+          <div className="play-script">
             <div className='bottom-margin-1' ref='playScript'>
             </div>
             <div id={this.state.playerId}></div>
           </div>
         </div>
-        <div className="row top-margin-2">
+        <div className={publishClasses}>
           <div className="small-12 columns">
             <div className='text-center'>
               <button className='button radius' onClick={this.publisherExample}>{publishTry}</button>

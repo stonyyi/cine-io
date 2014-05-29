@@ -67,7 +67,7 @@
     }
 
     .info {
-      @include grid-column(8, true, true, 2);
+      @include grid-column(12);
       padding-top: 3em;
 
       h2, h2 * {
@@ -96,6 +96,21 @@
         padding-top: 30%;
       }
     }
+  }
+
+  #example {
+    .head-script {
+      @include grid-column(12);
+    }
+
+    .publish-script {
+      @include grid-column(12);
+    }
+
+    .play-script {
+      @include grid-column(12);
+    }
+
   }
 
   #pricing {
@@ -136,6 +151,26 @@
         .pitch {
           font-size: $h1-font-size;
         }
+      }
+    }
+
+    #about {
+      .info {
+        @include grid-column(8, true, true, 2);
+      }
+    }
+
+    #example {
+      .head-script {
+        @include grid-column(12);
+      }
+
+      .publish-script {
+        @include grid-column(6);
+      }
+
+      .play-script {
+        @include grid-column(6);
       }
     }
   }
