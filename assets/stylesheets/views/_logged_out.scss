@@ -53,6 +53,8 @@
       right: 0;
       text-transform: uppercase;
       text-align: center;
+      // http://stackoverflow.com/questions/11258877/fixed-element-disappears-in-chrome
+      -webkit-transform: translateZ(0);
     }
   }
 

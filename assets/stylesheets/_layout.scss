@@ -1,6 +1,9 @@
+
 button, .button {
   text-transform: uppercase;
   color: white;
+  // http://stackoverflow.com/questions/11258877/fixed-element-disappears-in-chrome
+  -webkit-transform: translateZ(0);
   // background: none;
   // border: 2px solid $primary-color;
 }
