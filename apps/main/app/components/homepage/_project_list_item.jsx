@@ -20,7 +20,7 @@ module.exports = React.createClass({
     e.preventDefault();
     alert('Not implemented');
   },
-  toggleApiKey: function (e) {
+  toggleSecretKey: function (e) {
     e.preventDefault();
     this.setState({showApiKey: !this.state.showApiKey});
   },
@@ -40,11 +40,12 @@ module.exports = React.createClass({
             <a href={url}>{model.get('name')}</a>
           </div>
           <div className="small-4 columns">
+            {model.get('publicKey')}
             <div style={showKeyStyle}>
-              <a href='' onClick={this.toggleApiKey}>Show public key</a>
+              <a href='' onClick={this.toggleSecretKey}>Show secret key</a>
             </div>
             <div style={keyStyle}>
-              {model.get('publicKey')} <a href='' onClick={this.toggleApiKey}>hide</a>
+              {model.get('secretKey')} <a href='' onClick={this.toggleSecretKey}>hide</a>
             </div>
           </div>
           <div className="small-2 columns">
