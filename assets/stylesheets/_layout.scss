@@ -1,3 +1,26 @@
+// sticky footer
+* {
+  margin: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+$footer-height: 103px;
+$negative-height: $footer-height * -1;
+
+#content {
+  min-height: 100%;
+  height: auto !important;
+  height: 100%;
+  margin: 0 auto $negative-height;
+}
+
+footer, #footer-push {
+  height: $footer-height;
+}
+
 
 button, .button {
   text-transform: uppercase;
@@ -7,6 +30,7 @@ button, .button {
   // background: none;
   // border: 2px solid $primary-color;
 }
+
 .left-off-canvas-menu{
   color: white;
   .close-link{

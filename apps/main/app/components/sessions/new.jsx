@@ -1,6 +1,5 @@
 /** @jsx React.DOM */
 var React = require('react');
-Footer = Cine.component('layout/footer');
 authentication = Cine.lib('authentication');
 module.exports = React.createClass({
   displayName: 'SessionsNew',
@@ -37,7 +36,6 @@ module.exports = React.createClass({
           <input name='password' type="password" placeholder='Your password' />
           <button>Log in</button>
         </form>
-        <Footer/>
       </div>
     );
   }

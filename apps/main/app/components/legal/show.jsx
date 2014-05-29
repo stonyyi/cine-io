@@ -1,6 +1,5 @@
 /** @jsx React.DOM */
 var React = require('react'),
-Footer = Cine.component('layout/footer'),
 Header = Cine.component('layout/header'),
 Static = Cine.component('legal/_static');
 
@@ -34,7 +33,6 @@ module.exports = React.createClass({
           </dl>
           <Static document={this.props.model.get('document')} />
         </div>
-        <Footer />
       </div>
     );
   }

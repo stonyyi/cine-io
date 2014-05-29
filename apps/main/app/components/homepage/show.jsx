@@ -1,6 +1,5 @@
 /** @jsx React.DOM */
 var React = require('react'),
-Footer = Cine.component('layout/footer'),
 Header = Cine.component('layout/header'),
 LeftNav = Cine.component('layout/left_nav'),
 LoggedOut = Cine.component('homepage/_logged_out'),
@@ -57,7 +56,6 @@ module.exports = React.createClass({
             <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
             <Header app={this.props.app} />
             <LoggedIn app={this.props.app} collection={this.state.projects} />
-            <Footer />
           </div>
         </div>
       );
@@ -73,7 +71,6 @@ module.exports = React.createClass({
             <About />
             <Example />
             <Pricing />
-            <Footer />
           </div>
         </div>
       );

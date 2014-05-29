@@ -1,7 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react'),
 Header = Cine.component('layout/header'),
-Footer = Cine.component('layout/footer'),
 Project = Cine.model('project'),
 Streams = Cine.collection('streams'),
 ListItem = Cine.component('projects/_stream_list_item'),
@@ -55,7 +54,6 @@ module.exports = React.createClass({
         <div className="panel">
           <NewStream app={this.props.app} streams={this.state.streams} project={this.props.model}/>
         </div>
-        <Footer />
       </div>
     );
   }
