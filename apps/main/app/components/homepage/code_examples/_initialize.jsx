@@ -15,6 +15,11 @@ module.exports = React.createClass({
     , "  CineIO.init('"+this.props.publicKey+"');"
     , "&lt;/script&gt;"
     ].join('\n');
-    return (<CodeHighlighter code={code} language="markup" />);
+    return (
+      <div>
+        <h4>Code for Initialization</h4>
+        <CodeHighlighter code={code} language="markup" />
+      </div>
+    );
   }
 });

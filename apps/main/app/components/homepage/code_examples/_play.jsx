@@ -20,6 +20,11 @@ module.exports = React.createClass({
     , "// feedback from the publisher while"
     , "// checking out this example."
     ].join('\n');
-    return (<CodeHighlighter code={code} language="javascript" />);
+    return (
+      <div>
+        <h4>Code for Playing</h4>
+        <CodeHighlighter code={code} language="javascript" />
+      </div>
+    );
   }
 });

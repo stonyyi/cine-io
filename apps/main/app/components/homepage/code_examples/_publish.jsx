@@ -21,6 +21,11 @@ module.exports = React.createClass({
     , ""
     , "publisher.start();"
     ].join('\n')
-    return (<CodeHighlighter code={code} language="javascript" />);
+    return (
+      <div>
+        <h4>Code for Publishing</h4>
+        <CodeHighlighter code={code} language="javascript" />
+      </div>
+    );
   }
 });
