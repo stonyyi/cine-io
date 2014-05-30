@@ -103,6 +103,9 @@ exports.Example = React.createClass({
     }
     this.setState({publishing: !this.state.publishing});
   },
+  componentDidMount: function(){
+    CineIO.init(this.state.exampleApiKey);
+  },
   componentWillUnmount: function(){
     CineIO.reset();
   },
