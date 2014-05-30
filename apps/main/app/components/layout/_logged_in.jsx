@@ -19,6 +19,28 @@ module.exports = React.createClass({
   doNothing: function(e){
     e.preventDefault();
   },
+  collectFeedback: function(e) {
+    e.preventDefault();
+    var isServer = (typeof window === 'undefined')
+      , user = this.props.app.currentUser;
+
+    if (!isServer && window.UserVoice) {
+      UserVoice=window.UserVoice||[];
+
+      UserVoice.push(['identify', {
+        email: user.get('email'),
+        name: user.get('name'),
+        created_at: user.get('created_at')
+      }]);
+
+      // (JW) customizing colors doesn't work for some reason
+      // UserVoice.push(['set', {
+      //   accent_color: '#128c87'
+      // }]);
+
+      UserVoice.push(['autoprompt', {}]);
+    }
+  },
   render: function() {
     var
       name = this.props.app.currentUser.get('name'),
@@ -32,7 +54,9 @@ module.exports = React.createClass({
           </li>
           <li className="has-dropdown not-click">
             <a href="" onClick={this.doNothing}>{name}</a>
-            <ul className="dropdown">
+            <ul id="user-menu" className="dropdown">
+              <li><a href='' onClick={this.collectFeedback} data-uv-trigger="smartvote">Submit an Idea</a></li>
+              <li><a href='' onClick={this.collectFeedback} data-uv-trigger="contact">Contact Us</a></li>
               <li><a href='' onClick={this.logout}>Sign Out</a></li>
             </ul>
           </li>
