@@ -24,7 +24,8 @@ exports.HomeHero = React.createClass({
             <h2 className="subtitle">Device-agnostic live-streaming.</h2>
             <h3 className="pitch">Set up for your app in under 5 minutes.</h3>
             <div className="actions">
-              <a href="" onClick={this.getApiKey} className="button radius">Get API Key</a>
+              <a href="" onClick={this.getApiKey} className="button radius">Get API Key</a><br/>
+              <a href="" onClick={this.getApiKey}>Already a customer? Sign in.</a>
 
               <div id="not-ready-yet" className="reveal-modal" data-reveal>
                 <h2>We are not ready yet!</h2>

@@ -38,6 +38,11 @@
       color: white;
     }
 
+    a:hover {
+      text-decoration: underline;
+    }
+
+
     .info {
       @include grid-column(12);
       padding-top: 2em;
