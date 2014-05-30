@@ -61,6 +61,7 @@ module.exports = (projects, callback)->
     if addProject
       project = fetchRandomProject(projects)
       stream._project = project._id
+      stream.assignedAt = new Date
 
     stream.save (err, stream)->
       return callback(err, stream) if err
