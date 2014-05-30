@@ -5,7 +5,8 @@ var React = require('react')
 module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
 
-  logout: function() {
+  logout: function(e) {
+    e.preventDefault()
     var _this = this
       , app = this.props.app
       , options = {
@@ -27,7 +28,7 @@ module.exports = React.createClass({
           <li className="has-dropdown not-click">
             <a href="" onClick={this.doNothing}>{name}</a>
             <ul className="dropdown">
-              <li><a onClick={this.logout}>Sign Out</a></li>
+              <li><a href='' onClick={this.logout}>Sign Out</a></li>
             </ul>
           </li>
           <li className="menu-icon"><a href="#"></a></li>
