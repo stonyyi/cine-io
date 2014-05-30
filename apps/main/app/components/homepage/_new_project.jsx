@@ -46,7 +46,7 @@ module.exports = React.createClass({
         </div>
         <div className="row">
           <div className="small-3 columns small-offset-3">
-            <button type='submit'> Create Project </button>
+            <button type='submit'> Create </button>
           </div>
         </div>
       </form>
