@@ -15,7 +15,7 @@ module.exports = React.createClass({
     if (this.props.app.currentUser.isLoggedIn()) {
       return (
         <header>
-          <nav className="top-bar" data-topbar>
+          <nav className="top-bar" data-options="is_hover: false" data-topbar>
             <Brand app={this.props.app} />
             <LoggedIn app={this.props.app} />
           </nav>
@@ -24,7 +24,7 @@ module.exports = React.createClass({
     } else {
       return (
         <header>
-          <nav className="top-bar" data-topbar>
+          <nav className="top-bar" data-options="is_hover: false" data-topbar>
             <Brand app={this.props.app} />
             <LoggedOut app={this.props.app} />
           </nav>

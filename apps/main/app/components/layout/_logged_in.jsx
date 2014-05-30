@@ -23,13 +23,14 @@ module.exports = React.createClass({
 
     return (
       <section className="top-bar-section">
-        <ul className="right show-for-large-up">
+        <ul className="right">
           <li className="has-dropdown not-click">
             <a href="" onClick={this.doNothing}>{name}</a>
             <ul className="dropdown">
               <li><a onClick={this.logout}>Sign Out</a></li>
             </ul>
           </li>
+          <li className="menu-icon"><a href="#"></a></li>
         </ul>
       </section>
     );
