@@ -8,6 +8,7 @@ toJSON = (project, callback)->
     name: project.name
     plan: project.plan
     streamsCount: project.streamsCount
+    updatedAt: project.updatedAt
 
   callback(null, projectJSON)
 

@@ -17,4 +17,5 @@ describe 'Projects#Show', ->
       expect(response.plan).to.equal('free')
       expect(response.streamsCount).to.equal(1)
       expect(response.secretKey).to.equal(@project.secretKey)
+      expect(response.updatedAt).to.be.instanceOf(Date)
       done()
