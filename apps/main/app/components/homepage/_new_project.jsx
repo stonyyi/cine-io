@@ -5,6 +5,7 @@ var
   Project = Cine.model('project'),
   Projects = Cine.collection('projects'),
   _ = require('underscore');
+
 module.exports = React.createClass({
   displayName: 'NewProject',
   mixins: [Cine.lib('requires_app')],
@@ -19,7 +20,9 @@ module.exports = React.createClass({
     var self = this,
       form = jQuery(e.currentTarget),
       data = qs.parse(form.serialize()),
-      p = new Project(data.project, {app: this.props.app});
+      projectAttrs = data.project;
+    projectAttrs.createStream = true;
+    var p = new Project(projectAttrs, {app: this.props.app});
     p.save(null, {
       success: function(model, response, options){
         self.props.projects.add(model);

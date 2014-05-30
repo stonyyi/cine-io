@@ -15,7 +15,7 @@ module.exports = (params, callback)->
       user.save (err, user)->
         return callback(err, null, status: 400) if err
         # we can create a stream here automatically if we pass createStream: true
-        return ProjectShow.toJSON project, callback unless params.createStream == 'true'
+        return ProjectShow.toJSON project, callback unless params.createStream in ['true', true]
         addNextStreamToProject project, (err, stream)->
           return callback(err, null, status: 400) if err
           # we create the stream but just return the project
