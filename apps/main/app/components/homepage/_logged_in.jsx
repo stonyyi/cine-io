@@ -74,7 +74,7 @@ module.exports = React.createClass({
       if ((!selectedStreamId || !selectedProject.streams.get(selectedStreamId)) && selectedProject.getStreams().length > 0){
         selectedStreamId = selectedProject.getStreams().models[0].id;
       }
-      var streamDeets = ''
+      var streamDeets = '';
       if (selectedStreamId){
         var selectedStream = selectedProject.getStreams().get(selectedStreamId);
         streamDeets = (
