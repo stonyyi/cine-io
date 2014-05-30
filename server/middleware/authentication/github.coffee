@@ -26,6 +26,8 @@ createNewUser = (profile, accessToken, callback)->
       githubAccessToken: accessToken
     console.log("creating github user", user)
     ProjectCreate.addExampleProjectToUser user, (err, projectJSON, options)->
+      # we still want to allow the user to be created even if there is no stream
+      return callback(null, user) if err == 'Next stream not available, please try again later'
       callback(err, user)
 
   return saveUser() if email

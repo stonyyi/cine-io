@@ -6,7 +6,7 @@ addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 Create = (params, callback)->
   getUser params, (err, user, status)->
     return callback(err, user, status) if err
-    addProjectToUserAndSave(user, params, callback)
+    Create.addProjectToUserAndSave(user, params, callback)
 
 Create.addProjectToUserAndSave = (user, params, callback)->
   project = new Project

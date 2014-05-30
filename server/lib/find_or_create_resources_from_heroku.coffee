@@ -23,6 +23,8 @@ exports.createProject = (herokuId, plan, callback)->
     project.save (err, project)->
       return callback(err) if err
       addNextStreamToProject project, (err, stream)->
+        # we still want to allow the project to be created even if there is no stream
+        return callback(null, project) if err == 'Next stream not available, please try again later'
         callback(err, project)
 
 # callback(err, project)

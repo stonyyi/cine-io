@@ -8,6 +8,8 @@ assignNewPasswordAndAddAProjectAndSave = (user, cleartext_password, req, callbac
   user.assignHashedPasswordAndSalt cleartext_password, (err)->
     return callback(err, false) if err
     ProjectCreate.addExampleProjectToUser user, (err, projectJSON, options)->
+      # we still want to allow the user to be created even if there is no stream
+      return callback(null, user) if err == 'Next stream not available, please try again later'
       callback(err, user)
 
 createNewUser = (email, cleartext_password, req, callback)->

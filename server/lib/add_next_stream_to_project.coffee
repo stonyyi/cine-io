@@ -28,7 +28,7 @@ returnExistingStream = (project, callback)->
 allocateNewStreamToProject = (project, callback)->
   EdgecastStream.nextAvailable (err, stream)->
     return callback(err) if err
-    return callback('Next stream not available, please try again later', null, status: 400) if !stream
+    return callback('Next stream not available, please try again later') if !stream
     stream._project = project._id
     stream.assignedAt = new Date
 
