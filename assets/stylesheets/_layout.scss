@@ -5,27 +5,13 @@
 
 html, body {
   height: 100%;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
 }
-
-$footer-height: 103px;
-$negative-height: $footer-height * -1;
 
 #content {
-  min-height: 100%;
-  height: auto !important;
-  margin: 0 auto $negative-height;
+  height: 100%;
 }
-
-footer, #footer-push {
-  height: $footer-height;
-}
-// end sticky footer
-
-footer {
-  position: relative;
-  z-index: 1;
-}
-
 
 //flash
 .flash-holder{
@@ -110,12 +96,6 @@ button, .button {
   }
 }
 
-
-#content{
-  height: 100%;
-  overflow: scroll;
-  -webkit-overflow-scrolling: touch;
-}
 
 header {
   margin-bottom: 1em;

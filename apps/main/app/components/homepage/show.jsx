@@ -5,6 +5,7 @@ LeftNav = Cine.component('layout/left_nav'),
 LoggedOut = Cine.component('homepage/_logged_out'),
 LoggedIn = Cine.component('homepage/_logged_in'),
 FlashHolder = Cine.component('layout/flash_holder'),
+Footer = Cine.component('layout/footer'),
 HomeHero = LoggedOut.HomeHero,
 About = LoggedOut.About,
 Example = LoggedOut.Example,
@@ -58,6 +59,7 @@ module.exports = React.createClass({
             <Header app={this.props.app} />
             <LoggedIn app={this.props.app} collection={this.state.projects} />
           </div>
+          <Footer />
         </div>
       );
 
@@ -73,6 +75,7 @@ module.exports = React.createClass({
             <About />
             <Example />
             <Pricing />
+            <Footer />
           </div>
         </div>
       );
