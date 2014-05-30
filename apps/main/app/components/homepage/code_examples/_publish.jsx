@@ -13,7 +13,7 @@ module.exports = React.createClass({
     var code = [
       "var streamId = '"+this.props.streamId+"'"
     , "  , password = '"+this.props.password+"'"
-    , ", domId = 'publisher-example';"
+    , "  , domId = 'publisher-example';"
     , ""
     , "var publisher = CineIO.publish("
     , "  streamId, password, domId"
