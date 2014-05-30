@@ -13,7 +13,6 @@ $negative-height: $footer-height * -1;
 #content {
   min-height: 100%;
   height: auto !important;
-  height: 100%;
   margin: 0 auto $negative-height;
 }
 
