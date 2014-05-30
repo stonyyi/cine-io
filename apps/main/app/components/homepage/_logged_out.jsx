@@ -1,7 +1,10 @@
 /** @jsx React.DOM */
-var React = require('react')
-  , flashDetect = Cine.lib('flash_detect')
-  , cx = Cine.lib('cx');
+var React = require('react'),
+  flashDetect = Cine.lib('flash_detect'),
+  cx = Cine.lib('cx'),
+  InitializeCodeExample = Cine.component('homepage/code_examples/_initialize'),
+  PlayCodeExample = Cine.component('homepage/code_examples/_play'),
+  PublishCodeExample = Cine.component('homepage/code_examples/_publish');
 
 
 exports.HomeHero = React.createClass({
@@ -79,7 +82,7 @@ exports.Example = React.createClass({
   displayName: 'Example',
   getInitialState: function() {
     return {
-      exampleApiKey: '18b4c471bdc2bc1d16ad3cb338108a33',
+      examplePublicKey: '18b4c471bdc2bc1d16ad3cb338108a33',
       streamId: '53718cef450ff80200f81856',
       streamPassword: 'bass35',
       playerId: 'player-example',
@@ -104,7 +107,7 @@ exports.Example = React.createClass({
     this.setState({publishing: !this.state.publishing});
   },
   componentDidMount: function(){
-    CineIO.init(this.state.exampleApiKey);
+    CineIO.init(this.state.examplePublicKey);
   },
   componentWillUnmount: function(){
     CineIO.reset();
@@ -117,58 +120,24 @@ exports.Example = React.createClass({
           'row': true,
           'top-margin-2': true
         })
-      , headCode = [
-          "&lt;script src='https://www.cine.io/compiled/cine.js'&gt;"
-        , "&lt;script&gt;"
-        , "  CineIO.init('38b8a26eff0dacbc1d5369eaa568b9df'); // your cine.io publicKey"
-        , "&lt;/script&gt;"
-        ].join('\n')
-      , publishCode = [
-          "var streamId = '53718cef450ff80200f81856'"
-        , "  , password = 'bass35'"
-        , ", domId = 'publisher-example';"
-        , ""
-        , "var publisher = CineIO.publish("
-        , "  streamId, password, domId"
-        , ");"
-        , ""
-        , "publisher.start();"
-        ].join('\n')
-      , playCode = [
-          "var streamId = '53718cef450ff80200f81856'"
-        , "  , domId = 'player-example';"
-        , ""
-        , "CineIO.play(streamId, domId);"
-        , ""
-        , "// We default the example to muted so that"
-        , "// you don't get horrible microphone"
-        , "// feedback from the publisher while"
-        , "// checking out this example."
-        ].join('\n');
 
     return (
       <section id="example">
         <div className="row top-margin-2">
           <div className="head-script">
-            <pre>
-              <code className='language-markup' dangerouslySetInnerHTML={{__html: headCode }} />
-            </pre>
+            <InitializeCodeExample publicKey={this.state.examplePublicKey} />
           </div>
         </div>
         <div className="row">
           <div className="publish-script">
             <div className='bottom-margin-1'>
-              <pre>
-                <code className='language-javascript' dangerouslySetInnerHTML={{__html: publishCode }} />
-              </pre>
+              <PublishCodeExample streamId={this.state.streamId} password={this.state.streamPassword}/>
             </div>
             <div id={this.state.publisherId}></div>
           </div>
           <div className="play-script">
             <div className='bottom-margin-1'>
-              <pre>
-                <code className='language-javascript' dangerouslySetInnerHTML={{__html: playCode }} />
-              </pre>
+              <PlayCodeExample streamId={this.state.streamId}/>
             </div>
             <div id={this.state.playerId}></div>
           </div>

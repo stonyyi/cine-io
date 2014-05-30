@@ -5,8 +5,8 @@ var
   StreamDeets = Cine.component('homepage/_stream_deets'),
   Streams = Cine.collection('streams'),
   Project = Cine.model('project'),
-  IntalizeCodeExample = Cine.component('homepage/code_examples/_initialize');
-  PlayCodeExample = Cine.component('homepage/code_examples/_play');
+  InitializeCodeExample = Cine.component('homepage/code_examples/_initialize'),
+  PlayCodeExample = Cine.component('homepage/code_examples/_play'),
   PublishCodeExample = Cine.component('homepage/code_examples/_publish');
 
 module.exports = React.createClass({
@@ -67,7 +67,7 @@ module.exports = React.createClass({
           </div>
         </div>
         <div className='medium-6 columns'>
-          <IntalizeCodeExample publicKey={this.props.model.get('publicKey')}/>
+          <InitializeCodeExample publicKey={this.props.model.get('publicKey')}/>
           {publishAndPlay}
         </div>
       </div>

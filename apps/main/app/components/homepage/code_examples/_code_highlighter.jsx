@@ -3,7 +3,7 @@ var
   React = require('react');
 
 module.exports = React.createClass({
-  displayName: 'InitializeCodeBlock',
+  displayName: 'CodeHighlighter',
   propTypes: {
     code: React.PropTypes.string.isRequired,
     language: React.PropTypes.string.isRequired
