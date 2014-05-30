@@ -13,7 +13,8 @@ assignNewPasswordAndAddAProjectAndSave = (user, cleartext_password, req, callbac
       callback(err, user)
 
 createNewUser = (email, cleartext_password, req, callback)->
-  user = new User(email: email)
+  plan = req.body.plan
+  user = new User(email: email, plan: plan)
   user.new = true
   assignNewPasswordAndAddAProjectAndSave(user, cleartext_password, req, callback)
 

@@ -7,7 +7,7 @@ describe 'Streams#Show', ->
   testApi.requresApiKey Show, 'either'
 
   beforeEach (done)->
-    @project = new Project(name: 'my project', plan: 'free')
+    @project = new Project(name: 'my project')
     @project.save done
   now = new Date
   beforeEach (done)->

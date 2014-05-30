@@ -1,21 +1,19 @@
+_ = require('underscore')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
 createNewStreamInEdgecast = Cine.server_lib('create_new_stream_in_edgecast')
-_ = require('underscore')
+User = Cine.server_model('user')
 noop = ->
 
-projectLimit = (project)->
-  switch project.plan
+accountLimit = (user)->
+  switch user.plan
     when 'free', 'test' then 1
     when 'solo' then 5
     when 'startup', 'enterprise' then Infinity
     else throw new Error("Don't know this plan")
 
-isAtProjectLimit = (project)->
-  project.streamsCount >= projectLimit(project)
-
-projectLimitMessage = (project)->
-  "#{project.plan} plans can only have #{projectLimit(project)} available streams"
+infinitePlan = (plan)->
+  plan in ['startup', 'enterprise']
 
 returnExistingStream = (project, callback)->
   # _.random is inclusive, so if there are 5 allocated streams
@@ -24,6 +22,29 @@ returnExistingStream = (project, callback)->
   offset = _.random(project.streamsCount - 1)
   scope = EdgecastStream.findOne(_project: project._id).skip(offset)
   scope.exec callback
+
+allProjectIds = (user)->
+  _.chain(user.permissions).where(objectName: 'Project').pluck('objectId').value()
+
+projectSummer = (accumulator, project)->
+  project.streamsCount + accumulator
+
+checkAllOtherProjects = (user, callback)->
+  ids = allProjectIds(user)
+  Project.find().where('_id').in(ids).exists('deletedAt', false).exec (err, projects)->
+    return callback(err, null) if err
+    streamsSum = _.inject(projects, projectSummer, 0) || 0
+    callback null, streamsSum < accountLimit(user)
+
+ensureUserCanAddAnotherStream = (project, callback)->
+  query = "permissions.objectId": project._id, "permissions.objectName": 'Project'
+  User.findOne query, (err, user)->
+    return callback(err || 'no user for project') if err || !user
+    # if the user has no plan, return an error
+    return callback('user not on a plan') unless user.plan
+    # if the user is on an infinite plan, just return true
+    return callback(null, true) if infinitePlan(user.plan)
+    checkAllOtherProjects(user, callback)
 
 allocateNewStreamToProject = (project, callback)->
   EdgecastStream.nextAvailable (err, stream)->
@@ -39,5 +60,6 @@ allocateNewStreamToProject = (project, callback)->
         callback(err, stream)
 
 module.exports = (project, callback)->
-  return returnExistingStream(project, callback) if isAtProjectLimit(project)
-  allocateNewStreamToProject(project, callback)
+  ensureUserCanAddAnotherStream project, (err, canAddAnotherStream)->
+    return returnExistingStream(project, callback) unless canAddAnotherStream
+    allocateNewStreamToProject(project, callback)

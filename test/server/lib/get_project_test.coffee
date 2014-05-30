@@ -5,11 +5,11 @@ getProject = Cine.server_lib('get_project')
 describe 'getProject', ->
 
   beforeEach (done)->
-    @project = new Project(name: 'my project', plan: 'free')
+    @project = new Project(name: 'my project')
     @project.save done
 
   beforeEach (done)->
-    @user = new User(name: 'the user', email: 'some email')
+    @user = new User(name: 'the user', email: 'some email', plan: 'free')
     @user.save done
 
   describe 'failure', ->

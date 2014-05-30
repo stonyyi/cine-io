@@ -1,33 +1,9 @@
 Project = Cine.server_model('project')
-BackboneProject = Cine.model('project')
 _ = require('underscore')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
 describe 'Project', ->
-  modelTimestamps(Project, name: 'hey', plan: 'free')
-
-  describe 'validations', ->
-    describe 'plan', ->
-      _.each BackboneProject.plans, (plan)->
-        it "can be #{plan}", (done)->
-          project = new Project(name: 'some name', plan: plan)
-          project.save (err, member)->
-            done(err)
-      it 'can be test', (done)->
-        project = new Project(name: 'some name', plan: 'test')
-        project.save (err, member)->
-          done(err)
-      it 'cannot be anything else', (done)->
-        project = new Project(name: 'some name', plan: 'something else')
-        project.save (err, member)->
-          expect(err).not.to.be.null
-          done()
-
-      it 'cannot be null', (done)->
-        project = new Project(name: 'some name')
-        project.save (err, member)->
-          expect(err).not.to.be.null
-          done()
+  modelTimestamps(Project, name: 'hey')
 
   describe 'publicKey', ->
     it 'has a unique publicKey generated on save', (done)->

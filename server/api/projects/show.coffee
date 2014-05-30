@@ -6,7 +6,6 @@ toJSON = (project, callback)->
     publicKey: project.publicKey
     secretKey: project.secretKey
     name: project.name
-    plan: project.plan
     streamsCount: project.streamsCount
     updatedAt: project.updatedAt
 

@@ -7,6 +7,7 @@ strategyOptions =
   clientID: githubConfig.clientId,
   clientSecret: githubConfig.clientSecret,
   callbackURL: githubConfig.callbackURL
+  passReqToCallback: true
 ProjectCreate = Cine.api('projects/create')
 
 updateUserData = (user, profile, accessToken, callback)->
@@ -14,11 +15,12 @@ updateUserData = (user, profile, accessToken, callback)->
   user.githubAccessToken = accessToken
   user.save callback
 
-createNewUser = (profile, accessToken, callback)->
+createNewUser = (profile, plan, accessToken, callback)->
   console.log('got github profile', profile)
   email = profile.emails[0] && profile.emails[0].value
   saveUser = ->
     user = new User
+      plan: plan
       githubId: profile.id
       email: email
       name: profile.displayName
@@ -45,12 +47,13 @@ createNewUser = (profile, accessToken, callback)->
     email = body[0].email if body[0]
     saveUser()
 # refresh token is nullzies
-findGithubUser = (accessToken, refreshToken, profile, callback)->
+findGithubUser = (req, accessToken, refreshToken, profile, callback)->
   # console.log(accessToken, refreshToken, profile)
   User.findOne githubId: profile.id, (err, user)->
     return callback(err) if err
     return updateUserData(user, profile, accessToken, callback) if user
-    createNewUser(profile, accessToken, callback)
+    state = if req.query.state then JSON.parse(req.query.state) else {}
+    createNewUser(profile, state.plan, accessToken, callback)
 
 githubStrategy = new GitHubStrategy strategyOptions, findGithubUser
 
@@ -60,7 +63,9 @@ success = (req, res)->
 module.exports = (app)->
   passport.use(githubStrategy)
 
-  app.get '/auth/github', passport.authenticate('github', scope: "user:email")
+  app.get '/auth/github', (req, res)->
+    plan = req.query.plan
+    passport.authenticate('github', scope: "user:email", state: JSON.stringify(plan: plan))(req, res)
 
-  authWithFailure = passport.authenticate('github', failureRedirect: '/login')
+  authWithFailure = passport.authenticate('github', failureRedirect: '/')
   app.get '/auth/github/callback', authWithFailure, success

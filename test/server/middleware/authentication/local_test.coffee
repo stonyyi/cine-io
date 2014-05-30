@@ -13,7 +13,7 @@ describe 'local authentication', ->
 
   describe 'existing user', ->
     beforeEach (done)->
-      @user = new User(email: 'the email')
+      @user = new User(email: 'the email', plan: 'enterprise')
       @user.assignHashedPasswordAndSalt 'the pass', (err)=>
         @user.save(done)
 
@@ -28,6 +28,18 @@ describe 'local authentication', ->
           expect(response.email).to.equal('the email')
           done(err)
 
+    it 'does not override the plan', (done)->
+      @agent
+        .post('/login')
+        .set('X-Requested-With', 'XMLHttpRequest')
+        .send(username: 'the email', password: 'the pass', plan: 'startup')
+        .expect(200)
+        .end (err, res)->
+          response = JSON.parse(res.text)
+          expect(response.plan).to.equal('enterprise')
+          User.findById response.id, (err, user)->
+            expect(user.plan).to.equal('enterprise')
+            done(err)
 
     it 'logs in the user', (done)->
       @agent
@@ -76,7 +88,7 @@ describe 'local authentication', ->
       @agent
         .post('/login')
         .set('X-Requested-With', 'XMLHttpRequest')
-        .send(username: 'new email', password: 'new pass')
+        .send(username: 'new email', password: 'new pass', plan: 'solo')
         .expect(200)
         .end (err, res)->
           response = JSON.parse(res.text)
@@ -87,7 +99,7 @@ describe 'local authentication', ->
       @agent
         .post('/login')
         .set('X-Requested-With', 'XMLHttpRequest')
-        .send(username: 'new email', password: 'new pass')
+        .send(username: 'new email', password: 'new pass', plan: 'free')
         .expect(200)
         .end (err, res)->
           response = JSON.parse(res.text)
@@ -99,7 +111,7 @@ describe 'local authentication', ->
       @agent
         .post('/login')
         .set('X-Requested-With', 'XMLHttpRequest')
-        .send(username: 'new email', password: 'new pass')
+        .send(username: 'new email', password: 'new pass', plan: 'free')
         .expect(200)
         .end (err, res)->
           response = JSON.parse(res.text)
@@ -108,11 +120,24 @@ describe 'local authentication', ->
             expect(user.password_salt).not.to.be.null
             done(err)
 
+    it 'gives that user a plan', (done)->
+      @agent
+        .post('/login')
+        .set('X-Requested-With', 'XMLHttpRequest')
+        .send(username: 'new email', password: 'new pass', plan: 'startup')
+        .expect(200)
+        .end (err, res)->
+          response = JSON.parse(res.text)
+          expect(response.plan).to.equal('startup')
+          User.findById response.id, (err, user)->
+            expect(user.plan).to.equal('startup')
+            done(err)
+
     it 'issues a remember me token', (done)->
       @agent
         .post('/login')
         .set('X-Requested-With', 'XMLHttpRequest')
-        .send(username: 'new email', password: 'new pass')
+        .send(username: 'new email', password: 'new pass', plan: 'free')
         .expect(200)
         .end (err, res)->
           response = JSON.parse(res.text)

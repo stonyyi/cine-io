@@ -1,6 +1,5 @@
 mongoose = require 'mongoose'
 crypto = require('crypto')
-BackboneProject = Cine.model('project')
 
 ProjectSchema = new mongoose.Schema
   name:
@@ -17,9 +16,6 @@ ProjectSchema = new mongoose.Schema
     default: 0
   herokuId:
     type: String
-  plan:
-    type: String
-    required: true
   deletedAt:
     type: Date
 
@@ -48,10 +44,6 @@ ProjectSchema.options.toJSON.transform = (doc, ret, options)->
   ret.createdAt = ret.createdAt.toISOString()
   ret
 
-planRegex = new RegExp BackboneProject.plans.concat('test', 'foo').join('|')
-ProjectSchema.path('plan').validate ((value)->
-  planRegex.test value
-), 'Invalid plan'
 
 Project = mongoose.model 'Project', ProjectSchema
 

@@ -2,11 +2,21 @@ addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 EdgecastStream = Cine.server_model('edgecast_stream')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 Project = Cine.server_model('project')
+User = Cine.server_model('user')
 
 describe 'addNextStreamToProject', ->
   beforeEach (done)->
-    @project = new Project name: 'some project', plan: 'free'
+    @project = new Project name: 'some project'
     @project.save done
+
+  beforeEach (done)->
+    @notOwnedByUser = new Project name: 'some project', streamsCount: 123
+    @notOwnedByUser.save done
+
+  beforeEach (done)->
+    @user = new User name: 'some user', email: 'my email', plan: 'free'
+    @user.permissions.push objectId: @project._id, objectName: 'Project'
+    @user.save done
 
   beforeEach (done)->
     @stream = new EdgecastStream(instanceName: 'cines')
@@ -16,8 +26,8 @@ describe 'addNextStreamToProject', ->
 
   describe 'free plan', ->
     beforeEach (done)->
-      @project.plan = 'free'
-      @project.save done
+      @user.plan = 'free'
+      @user.save done
 
     it 'adds a single stream', (done)->
       expect(@stream.assignedAt).to.be.undefined
@@ -52,7 +62,10 @@ describe 'addNextStreamToProject', ->
 
   describe 'enterprise plan', ->
     beforeEach (done)->
-      @project.plan = 'enterprise'
+      @user.plan = 'enterprise'
+      @user.save done
+
+    beforeEach (done)->
       @project.streamsCount = 2929
       @project.save done
 

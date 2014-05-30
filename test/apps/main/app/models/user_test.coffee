@@ -10,3 +10,6 @@ describe 'User', ->
 
     it 'is false for users without an id', ->
       expect((new User).isLoggedIn()).to.be.false
+
+  it 'has plans', ->
+    expect(User.plans).to.deep.equal(['free', 'solo', 'startup', 'enterprise'])

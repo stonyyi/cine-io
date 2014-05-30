@@ -74,7 +74,7 @@ module.exports = React.createClass({
             <HomeHero />
             <About />
             <Example />
-            <Pricing />
+            <Pricing app={this.props.app} />
             <Footer />
           </div>
         </div>

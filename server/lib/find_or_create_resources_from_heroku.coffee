@@ -19,7 +19,7 @@ exports.createProject = (herokuId, plan, callback)->
     callback(err, project) if err
     return setPlanAndEnsureNotDeleted(project, plan, callback) if project
 
-    project = new Project(name: nameFromEmail(herokuId), herokuId: herokuId, plan: plan)
+    project = new Project(name: nameFromEmail(herokuId), herokuId: herokuId)
     project.save (err, project)->
       return callback(err) if err
       addNextStreamToProject project, (err, stream)->

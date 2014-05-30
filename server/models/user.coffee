@@ -3,6 +3,7 @@ bcrypt = require 'bcrypt'
 _ = require 'underscore'
 _.str = require 'underscore.string'
 Schema = mongoose.Schema
+BackboneUser = Cine.model('user')
 
 # special permission has objectName of 'site'
 Permission = new Schema
@@ -42,6 +43,9 @@ UserSchema = new Schema
     type: String
     default: ''
     trim: true
+  plan:
+    type: String
+    required: true
 
 UserSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
@@ -76,15 +80,17 @@ UserSchema.methods.assignHashedPasswordAndSalt = (cleartext_password, callback)-
 
 UserSchema.methods.simpleCurrentUserJSON = ->
   json = @toJSON()
-  result = _.pick(json, 'createdAt', 'name', 'email', 'permissions')
+  result = _.pick(json, 'createdAt', 'name', 'email', 'permissions', 'plan')
   result.id = json._id
   result.firstName = @firstName()
   result.lastName = @lastName()
   result
 
-UserSchema.methods.toInternalApiJSON = ->
-  json = @toJSON()
-  _.omit(json, '__v', 'hashed_password', 'password_salt')
+
+planRegex = new RegExp BackboneUser.plans.concat('test', 'foo').join('|')
+UserSchema.path('plan').validate ((value)->
+  planRegex.test value
+), 'Invalid plan'
 
 User = mongoose.model 'User', UserSchema
 

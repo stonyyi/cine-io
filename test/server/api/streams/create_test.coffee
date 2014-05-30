@@ -1,4 +1,5 @@
 Project = Cine.server_model('project')
+User = Cine.server_model('user')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Create = testApi Cine.api('streams/create')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
@@ -8,8 +9,13 @@ describe 'Streams#Create', ->
   testApi.requresApiKey Create, 'secret'
 
   beforeEach (done)->
-    @project = new Project(name: 'my project', plan: 'free')
+    @project = new Project(name: 'my project')
     @project.save done
+
+  beforeEach (done)->
+    @user = new User name: 'some user', email: 'my email', plan: 'free'
+    @user.permissions.push objectId: @project._id, objectName: 'Project'
+    @user.save done
 
   it 'can error with no available edgecast stream', (done)->
     params = secretKey: @project.secretKey

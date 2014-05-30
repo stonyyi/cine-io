@@ -81,7 +81,6 @@ module.exports = React.createClass({
                 <thead>
                   <tr>
                     <th width='500'> Name </th>
-                    <th width='30'> Plan </th>
                     <th width='60'> Actions </th>
                   </tr>
                 </thead>

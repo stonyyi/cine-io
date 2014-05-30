@@ -6,7 +6,7 @@ describe 'Streams#Index', ->
   testApi.requresApiKey Index, 'secret'
 
   beforeEach (done)->
-    @project = new Project(name: 'my project', plan: 'enterprise')
+    @project = new Project(name: 'my project')
     @project.save done
 
   beforeEach (done)->

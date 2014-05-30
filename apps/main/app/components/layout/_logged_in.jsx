@@ -20,11 +20,16 @@ module.exports = React.createClass({
     e.preventDefault();
   },
   render: function() {
-    var name = this.props.app.currentUser.get('name');
+    var
+      name = this.props.app.currentUser.get('name'),
+      plan = this.props.app.currentUser.get('plan');
 
     return (
       <section className="top-bar-section">
         <ul className="right">
+          <li>
+            {plan}
+          </li>
           <li className="has-dropdown not-click">
             <a href="" onClick={this.doNothing}>{name}</a>
             <ul className="dropdown">

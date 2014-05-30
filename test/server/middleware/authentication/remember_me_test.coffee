@@ -48,7 +48,7 @@ describe 'RememberMe', ->
 
   describe 'createNewToken', ->
     it 'should return a new token for the user id', (done)->
-      user = new User
+      user = new User plan: 'free'
       RememberMe.createNewToken user, (err, token)->
         expect(err).to.be.null
         expect(token.length).to.equal(64)
@@ -70,6 +70,6 @@ loginUser = (agent, done)->
   agent
     .post('/login')
     .set('Accept', 'application/json')
-    .send(username: 'test@dummy.com', password: 'spinach')
+    .send(username: 'test@dummy.com', password: 'spinach', plan: 'solo')
     .expect(200)
     .end(onResponse)

@@ -32,7 +32,6 @@ module.exports = React.createClass({
     return (
       <tr onClick={this.showStreams} className={classes}>
         <td> {model.get('name')} </td>
-        <td> {model.get('plan')} </td>
         <td>
           <a href='' onClick={this.accessSettings}>
             <i className="fa fa-cogs fa-2x"></i>

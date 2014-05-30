@@ -63,14 +63,14 @@ module.exports = (app)->
     console.log "POSTING HEROKU RESOURCES", request.body
     herokuId = request.body.heroku_id
     plan = request.body.plan
-    findOrCreateResourcesFromHeroku.createProject herokuId, plan, (err, project)->
+    findOrCreateResourcesFromHeroku.createProjectAndUser herokuId, plan, (err, user, project)->
       return response.send err, 400 if err
       return response.send 'could not make project', 400 unless project
 
       console.log('created', err, project)
       resource =
         id: project._id
-        plan: project.plan
+        plan: user.plan
         config:
           CINE_IO_PUBLIC_KEY: project.publicKey
           CINE_IO_SECRET_KEY: project.secretKey

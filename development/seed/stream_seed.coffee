@@ -49,11 +49,9 @@ edgecastStreams = [
 
 module.exports = (projects, callback)->
   console.log('creating edgecast_streams')
-  # can only add free plan once
+
   fetchRandomProject = ->
-    randomProject = _.sample projects
-    projects = _.without(projects, randomProject) if randomProject.plan == 'free'
-    randomProject
+    _.sample projects
 
   iterator = (stream, callback)->
     stream = new EdgecastStream(stream)

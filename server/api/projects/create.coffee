@@ -25,6 +25,6 @@ Create.addProjectToUserAndSave = (user, params, callback)->
         ProjectShow.toJSON project, callback
 
 Create.addExampleProjectToUser = (user, callback)->
-  Create.addProjectToUserAndSave user, plan: 'free', name: 'Development', createStream: true, callback
+  Create.addProjectToUserAndSave user, name: 'Development', createStream: true, callback
 
 module.exports = Create

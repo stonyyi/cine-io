@@ -4,11 +4,11 @@ UpdateUser = testApi Cine.api('users/update')
 describe 'UpdateUser', ->
 
   beforeEach (done)->
-    @user = new User name: 'Mah name', email: 'mah email'
+    @user = new User name: 'Mah name', email: 'mah email', plan: 'free'
     @user.save done
 
   beforeEach (done)->
-    @user2 = new User name: 'Second name', email: 'second email'
+    @user2 = new User name: 'Second name', email: 'second email', plan: 'free'
     @user2.save done
 
   it 'requires the user be logged in', (done)->

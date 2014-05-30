@@ -5,6 +5,18 @@ authentication = Cine.lib('authentication');
 var GithubLogin = React.createClass({
   displayName: 'GithubLogin',
   mixins: [Cine.lib('requires_app')],
+  getInitialState: function() {
+    return {plan: 'free'};
+  },
+  componentDidMount: function(){
+    this.props.app.on('set-signup-plan', this.setPlan, this);
+  },
+  componentWillUnmount: function(){
+    this.props.app.off('set-signup-plan', this.setPlan);
+  },
+  setPlan: function(plan){
+    this.setState({plan: plan});
+  },
   githubLogin: function(e){
     e.preventDefault();
     var
@@ -13,8 +25,9 @@ var GithubLogin = React.createClass({
     authentication.githubLogin(app, button);
   },
   render: function() {
+    url = "/auth/github?plan="+this.state.plan;
     return (
-      <a className='button expand radius button-social button-github github-login' href='/auth/github'>
+      <a className='button expand radius button-social button-github github-login' href={url}>
         <i className="fa fa-github"></i>
         <span className="button-social-text">Sign in with Github</span>
       </a>
@@ -29,7 +42,16 @@ var EmailLogin = React.createClass({
     showing: React.PropTypes.bool.isRequired
   },
   getInitialState: function() {
-    return {allowFocusHijack: true, completeSignup: false, myName: '', myPassword: '', myEmail: ''};
+    return {allowFocusHijack: true, completeSignup: false, myName: '', myPassword: '', myEmail: '', plan: 'free'};
+  },
+  componentDidMount: function(){
+    this.props.app.on('set-signup-plan', this.setPlan, this);
+  },
+  componentWillUnmount: function(){
+    this.props.app.off('set-signup-plan', this.setPlan);
+  },
+  setPlan: function(plan){
+    this.setState({plan: plan});
   },
   submitName: function (e){
     e.preventDefault();
@@ -106,6 +128,7 @@ var EmailLogin = React.createClass({
         <form onSubmit={this.emailLogin}>
           <input name='username' type="email" required placeholder='Your email' ref='emailField' value={this.state.myEmail} onChange={this.changeMyEmail}/>
           <input name='password' type="password" required placeholder='Your password' value={this.state.myPassword} onChange={this.changeMyPassword}/>
+          <input name='plan' type="hidden" required value={this.state.plan}/>
           <button className="button radius expand">Sign up or sign in</button>
         </form>
       );

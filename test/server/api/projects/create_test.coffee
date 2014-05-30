@@ -8,21 +8,21 @@ describe 'Projects#Create', ->
   testApi.requresLoggedIn Create
 
   beforeEach (done)->
-    @user = new User(name: 'my name', email: 'my email')
+    @user = new User(name: 'my name', email: 'my email', plan: 'free')
     @user.save done
+
   describe 'success', ->
 
     it 'creates an project', (done)->
-      params = name: 'new project', plan: 'enterprise'
+      params = name: 'new project'
       Create params, user: @user, (err, response, options)->
         expect(err).to.be.null
         expect(response.name).to.equal('new project')
         expect(response.publicKey).to.have.length(32)
-        expect(response.plan).to.equal('enterprise')
         done()
 
     it 'adds the permission to the user', (done)->
-      params = name: 'new project', plan: 'enterprise'
+      params = name: 'new project'
       expect(@user.permissions).to.have.length(0)
       Create params, user: @user, (err, response, options)=>
         User.findById @user._id, (err, user)->
@@ -40,10 +40,9 @@ describe 'Projects#Create', ->
     stubEdgecast()
 
     it 'adds a stream to the new project', (done)->
-      params = name: 'new project', plan: 'enterprise', createStream: 'true'
+      params = name: 'new project', createStream: 'true'
       Create params, user: @user, (err, response, options)->
         expect(err).to.be.null
         expect(response.name).to.equal('new project')
         expect(response.publicKey).to.have.length(32)
-        expect(response.plan).to.equal('enterprise')
         done()

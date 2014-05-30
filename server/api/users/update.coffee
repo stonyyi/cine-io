@@ -18,6 +18,7 @@ updateUser.doUpdate = (params, callback)->
 
     user.name = params.name unless _str.isBlank(params.name)
     user.email = params.email unless _str.isBlank(params.email)
+    user.plan = params.plan unless _str.isBlank(params.plan)
     user.save (err)->
       return callback(TextMongooseErrorMessage(err), null, status: 400) if err
       callback(null, user.simpleCurrentUserJSON())
