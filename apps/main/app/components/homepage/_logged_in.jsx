@@ -35,15 +35,15 @@ module.exports = React.createClass({
       selectedProjectId = this.props.collection.models[0].id;
     }
     var
-      createNewProject = ''
+      createNewProjectButton = ''
       , streamsPanel = ''
       , listItems = this.props.collection.map(function(model) {
         var selected = model.id === selectedProjectId;
         return (<ListItem key={model.cid} model={model} selected={selected}/>);
       });
     if (this.props.collection.length > 0){
-      createNewProject = (
-        <a href='' className='right' onClick={this.showCreateNewProject}>
+      createNewProjectButton = (
+        <a href='' className='right' onClick={this.addNewProject}>
           <span className="fa-stack fa-lg">
             <i className="fa fa-square fa-stack-2x"></i>
             <i className="fa fa-plus fa-stack-1x fa-inverse"></i>
@@ -53,9 +53,6 @@ module.exports = React.createClass({
     }
     if (selectedProjectId){
       var selectedProject = this.props.collection.get(selectedProjectId);
-      if (!selectedProject.streams){
-        this.listenToBackboneChangeEvents(selectedProject.getStreams());
-      }
       streamsPanel = (<ProjectStreamsWrapper app={this.props.app} model={selectedProject} />);
     }
     return (
@@ -65,7 +62,7 @@ module.exports = React.createClass({
             <div className="panels-wrapper panel">
               <div className='panel-heading clearfix'>
                 <h3> Projects </h3>
-                {createNewProject}
+                {createNewProjectButton}
               </div>
               <table className='clickable-row'>
                 <thead>

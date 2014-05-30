@@ -26,7 +26,6 @@ module.exports = React.createClass({
   },
   render: function() {
     var model = this.props.model
-      , url = "/project/"+model.get('publicKey')
       , classes = cx({selected: this.props.selected})
     ;
 

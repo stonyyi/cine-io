@@ -33,8 +33,8 @@ module.exports = React.createClass({
     streamDeets = '',
     publishAndPlay = '',
     streams = this.props.model.getStreams();
-    var streamListItems = streams.map(function(model) {
-      return (<option key={model.cid} value={model.cid}>{model.id}</option>);
+    var streamListItems = streams.map(function(stream) {
+      return (<option key={stream.cid} value={stream.cid}>{stream.id}</option>);
     });
     // the selectedStreamId is null or not in the current list of streams,
     // select the first stream
