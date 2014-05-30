@@ -25,13 +25,8 @@ CineIO =
     throw new Error("DOM node required") unless domNode
     publishStream.new(streamId, password, domNode, publishOptions)
 
-  quickPlay: (playOptions={})->
-    CineIO.play "53718cef450ff80200f81856", 'player-example', playOptions
-
-  quickPublish: (publishOptions={})->
-    publisher = CineIO.publish("53718cef450ff80200f81856", 'bass35', 'publisher-example', publishOptions)
-    publisher.start()
-    publisher
+  getStreamDetails: (streamId, callback)->
+    getStreamDetails(streamId, callback)
 
 window.CineIO = CineIO if typeof window isnt 'undefined'
 
@@ -39,4 +34,5 @@ module.exports = CineIO
 
 playStream = require('./play_stream')
 publishStream = require('./publish_stream')
+getStreamDetails = require('./get_stream_details')
 

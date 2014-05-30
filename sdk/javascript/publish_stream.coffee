@@ -95,7 +95,7 @@ class Publisher
     console.log('loading publisher')
     @_ensureLoaded (publisher)=>
       console.log('fetching stream', publisher)
-      getStreamDetails @streamId, (stream)=>
+      getStreamDetails @streamId, (err, stream)=>
         options = @_options(stream)
         console.log('streamingggg!!', options)
         publisher.setOptions options

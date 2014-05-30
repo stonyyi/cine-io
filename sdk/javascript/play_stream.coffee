@@ -35,7 +35,7 @@ userOrDefault = (userOptions, key)->
 
 # this assumes JW player is loaded
 play = (streamId, domNode, playOptions)->
-  getStreamDetails streamId, (stream)->
+  getStreamDetails streamId, (err, stream)->
     switchToNative = ->
       return if jwplayer().getRenderingMode() == "flash"
       videoOptions =

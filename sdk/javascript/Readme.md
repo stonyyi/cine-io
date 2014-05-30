@@ -78,3 +78,22 @@ domId is the ID of the dom node you want the player to be injected into.
 *  intervalSecs: 10
 *  bandwidth: 1500
 *  videoQuality: 90
+
+### Additional
+
+#### getStreamDetails
+
+```javascript
+CineIO.getStreamDetails(streamId, callback)
+```
+
+**streamId**
+
+streamId is a Cine.io stream id returned when accessing the create stream endpoint.
+
+**callback**
+
+callback is a function which returns the an error or the stream details. It follows the Node.js format of `(err, data)`. An example callback:
+```javascript
+function(err, stream){ console.log('recieved err/stream', err, stream)}
+```
