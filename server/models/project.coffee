@@ -48,7 +48,7 @@ ProjectSchema.options.toJSON.transform = (doc, ret, options)->
   ret.createdAt = ret.createdAt.toISOString()
   ret
 
-planRegex = new RegExp BackboneProject.plans.concat('test').join('|')
+planRegex = new RegExp BackboneProject.plans.concat('test', 'foo').join('|')
 ProjectSchema.path('plan').validate ((value)->
   planRegex.test value
 ), 'Invalid plan'
