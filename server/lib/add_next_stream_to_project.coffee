@@ -23,15 +23,11 @@ returnExistingStream = (project, callback)->
   scope = EdgecastStream.findOne(_project: project._id).skip(offset)
   scope.exec callback
 
-allProjectIds = (user)->
-  _.chain(user.permissions).where(objectName: 'Project').pluck('objectId').value()
-
 projectSummer = (accumulator, project)->
   project.streamsCount + accumulator
 
 checkAllOtherProjects = (user, callback)->
-  ids = allProjectIds(user)
-  Project.find().where('_id').in(ids).exists('deletedAt', false).exec (err, projects)->
+  user.projects (err, projects)->
     return callback(err, null) if err
     streamsSum = _.inject(projects, projectSummer, 0) || 0
     callback null, streamsSum < accountLimit(user)

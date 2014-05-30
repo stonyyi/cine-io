@@ -6,60 +6,56 @@ addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 nameFromEmail = (herokuId)->
   herokuId.split('@')[0]
 # they're creating or updating a plan, it cannot be deleted then
-setPlanAndEnsureNotDeleted = (project, plan, callback)->
-  project.deletedAt = undefined
-  project.plan = plan
-  project.save callback
+getOrAddProjectToExistingUser = (user, herokuId, plan, callback)->
+  user.projects (err, projects)->
+    return callback(null, user, projects[0]) if projects.length > 0
+    project = new Project(name: nameFromEmail(herokuId))
+    project.save (err, project)->
+      return callback(err) if err
+      user.permissions.push objectId: project._id, objectName: 'Project'
+      user.save (err, user)->
+        callback(null, user, project)
 
 # herokuId: 'app6848@kensa.heroku.com'
 # plan: 'free'
-# callback(err, project)
+# callback(err, user, project)
 exports.createProjectAndUser = (herokuId, plan, callback)->
-  Project.findOne herokuId: herokuId, (err, project)->
+  User.findOne herokuId: herokuId, (err, user)->
     callback(err, project) if err
-    return setPlanAndEnsureNotDeleted(project, plan, callback) if project
+    return getOrAddProjectToExistingUser(user, herokuId, plan, callback) if user
 
-    project = new Project(name: nameFromEmail(herokuId), herokuId: herokuId)
+    project = new Project(name: nameFromEmail(herokuId))
     project.save (err, project)->
       return callback(err) if err
-      addNextStreamToProject project, (err, stream)->
-        # we still want to allow the project to be created even if there is no stream
-        return callback(null, project) if err == 'Next stream not available, please try again later'
-        callback(err, project)
-
-# callback(err, project)
-exports.findProject = (projectId, callback)->
-  Project.findById projectId, callback
-
-# callback(err, project)
-exports.updatePlan = (projectId, plan, callback)->
-  exports.findProject projectId, (err, project)->
-    return callback(err) if err
-    return callback('project not found') unless project
-    setPlanAndEnsureNotDeleted(project, plan, callback)
-
-# callback(err, project)
-exports.deleteProject = (projectId, callback)->
-  Project.findById projectId, (err, project)->
-    return callback(err) if err
-    return callback('project not found') unless project
-    project.deletedAt = new Date
-    project.save callback
+      user = new User(email: herokuId, name: nameFromEmail(herokuId), plan: plan)
+      user.permissions.push objectId: project._id, objectName: 'Project'
+      user.save (err, user)->
+        return callback(err) if err
+        addNextStreamToProject project, (err, stream)->
+          # we still want to allow the project to be created even if there is no stream
+          return callback(null, project) if err == 'Next stream not available, please try again later'
+          callback(err, user, project)
 
 # callback(err, user)
-ensureUserOwnsProject = (user, project, callback)->
-  permission = _.find user.permissions, (permission)->
-    project._id.equals(permission.obejctId) && permission.objectName == 'Project'
-  return callback(null, user) if permission
-  user.permissions.push objectId: project._id, objectName: "Project"
+exports.findUser = (userId, callback)->
+  User.findById userId, callback
+
+setPlanAndEnsureNotDeleted = (user, plan, callback)->
+  user.deletedAt = undefined
+  user.plan = plan
   user.save callback
 
 # callback(err, user)
-exports.getProjectUser = (project, email, callback)->
-  console.log('finding user', email)
-  User.findOne email: email, (err, user)->
-    return callback err if err
-    return ensureUserOwnsProject(user, project, callback) if user
-    user = new User email: email, name: nameFromEmail(email)
-    user.permissions.push objectId: project._id, objectName: "Project"
+exports.updatePlan = (userId, plan, callback)->
+  exports.findUser userId, (err, user)->
+    return callback(err) if err
+    return callback('user not found') unless user
+    setPlanAndEnsureNotDeleted(user, plan, callback)
+
+# callback(err, user)
+exports.deleteUser = (userId, callback)->
+  User.findById userId, (err, user)->
+    return callback(err) if err
+    return callback('user not found') unless user
+    user.deletedAt = new Date
     user.save callback

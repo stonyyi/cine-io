@@ -46,6 +46,8 @@ UserSchema = new Schema
   plan:
     type: String
     required: true
+  deletedAt:
+    type: Date
 
 UserSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
@@ -65,6 +67,13 @@ UserSchema.methods.firstName = ->
 UserSchema.methods.lastName = ->
   parts = @name.split(' ')
   parts.slice(1, parts.length).join(' ')
+
+allProjectIds = (user)->
+  _.chain(user.permissions).where(objectName: 'Project').pluck('objectId').value()
+
+UserSchema.methods.projects = (callback)->
+  ids = allProjectIds(this)
+  Project.find().where('_id').in(ids).exists('deletedAt', false).exec(callback)
 
 UserSchema.methods.isCorrectPassword = (cleartext_password, callback)->
   generateHashForPasswordAndSalt cleartext_password, @password_salt, (err, hash, salt)=>
@@ -95,3 +104,4 @@ UserSchema.path('plan').validate ((value)->
 User = mongoose.model 'User', UserSchema
 
 module.exports = User
+Project = Cine.server_model('project')

@@ -14,8 +14,6 @@ ProjectSchema = new mongoose.Schema
   streamsCount:
     type: Number
     default: 0
-  herokuId:
-    type: String
   deletedAt:
     type: Date
 

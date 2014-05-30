@@ -30,16 +30,16 @@ basic_auth = (req, res, next) ->
 
 sso_auth = (req, res, next) ->
   if req.params.length is 0
-    projectId = req.param("id")
+    userId = req.param("id")
   else
-    projectId = req.params.id
+    userId = req.params.id
   console.log("HELLOOOO")
-  console.log projectId
+  console.log userId
   console.log req.params
   console.log req.body
   console.log('email', req.param('email'))
   console.log('nav-data', req.param('nav-data'))
-  pre_token = projectId + ":" + herokuConfig.ssoSalt + ":" + req.param("timestamp")
+  pre_token = userId + ":" + herokuConfig.ssoSalt + ":" + req.param("timestamp")
   shasum = crypto.createHash("sha1")
   shasum.update pre_token
   token = shasum.digest("hex")
@@ -50,11 +50,10 @@ sso_auth = (req, res, next) ->
   return res.send "Timestamp Expired", 403 if parseInt(req.param("timestamp")) < time
 
   res.cookie "heroku-nav-data", req.param("nav-data")
-  findOrCreateResourcesFromHeroku.findProject projectId, (err, project)->
+  findOrCreateResourcesFromHeroku.findUser userId, (err, user)->
     return response.send err, 400 if err
-    return response.send "Not found", 404 unless project
-    findOrCreateResourcesFromHeroku.getProjectUser project, req.param("email"), (err, user)->
-      req.login user, next
+    return response.send "Not found", 404 unless user
+    req.login user, next
 
 module.exports = (app)->
 
@@ -64,12 +63,12 @@ module.exports = (app)->
     herokuId = request.body.heroku_id
     plan = request.body.plan
     findOrCreateResourcesFromHeroku.createProjectAndUser herokuId, plan, (err, user, project)->
+      console.log('created heroku account', err, user, project)
       return response.send err, 400 if err
-      return response.send 'could not make project', 400 unless project
+      return response.send 'could not make user', 400 unless user
 
-      console.log('created', err, project)
       resource =
-        id: project._id
+        id: user._id
         plan: user.plan
         config:
           CINE_IO_PUBLIC_KEY: project.publicKey
@@ -92,7 +91,7 @@ module.exports = (app)->
   app["delete"] "/heroku/resources/:id", basic_auth, (request, response) ->
     console.log request.params
     projectId = request.params.id
-    findOrCreateResourcesFromHeroku.deleteProject projectId, (err, project)->
+    findOrCreateResourcesFromHeroku.deleteUser projectId, (err, project)->
       return response.send err, 400 if err
       return response.send "Not found", 404 unless project
       response.send "ok"
