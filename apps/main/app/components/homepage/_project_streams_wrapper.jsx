@@ -22,8 +22,11 @@ module.exports = React.createClass({
   getBackboneObjects: function(){
     return [this.props.model, this.props.model.getStreams()];
   },
-  changeSelectedStreamId: function(event) {
-    this.setState({selectedStreamId: event.target.value});
+  handleStreamChangeSelect: function(event) {
+    this.changeSelectedStreamId(event.target.value);
+  },
+  changeSelectedStreamId: function(streamId) {
+    this.setState({selectedStreamId: streamId});
   },
   render: function(){
     var selectedStreamId = this.state.selectedStreamId,
@@ -56,7 +59,7 @@ module.exports = React.createClass({
               <h3> {this.props.model.get('streamsCount')} Streams </h3>
               <NewStreamButton app={this.props.app} model={this.props.model} />
             </div>
-            <select value={selectedStreamId} onChange={this.changeSelectedStreamId}>
+            <select value={selectedStreamId} onChange={this.handleStreamChangeSelect}>
               {streamListItems}
             </select>
             {streamDeets}

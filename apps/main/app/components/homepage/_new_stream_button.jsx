@@ -18,6 +18,7 @@ module.exports = React.createClass({
       success: function(model, response, options){
         self.props.model.getStreams().add(model);
         self.props.model.set('streamsCount', self.props.model.get('streamsCount') + 1);
+        self._owner.changeSelectedStreamId(model.id);
       }
     });
   },
