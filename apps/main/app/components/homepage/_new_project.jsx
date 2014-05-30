@@ -40,13 +40,11 @@ module.exports = React.createClass({
           <div className="small-3 columns">
             <label htmlFor="project-name" className="right inline">Project Name</label>
           </div>
-          <div className="small-9 columns">
+          <div className="small-6 columns">
             <input type="text" ref='projectName' id="project-name" name='project[name]' value={projectName} onChange={this.changeProjectName} placeholder="My Fun Project (Production)" />
           </div>
-        </div>
-        <div className="row">
-          <div className="small-3 columns small-offset-3">
-            <button type='submit'> Create </button>
+          <div className="small-3 columns">
+            <button className='button radius tiny' type='submit'> Create </button>
           </div>
         </div>
       </form>
