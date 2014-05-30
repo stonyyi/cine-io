@@ -14,7 +14,7 @@ setPlanAndEnsureNotDeleted = (project, plan, callback)->
 # herokuId: 'app6848@kensa.heroku.com'
 # plan: 'free'
 # callback(err, project)
-exports.createProject = (herokuId, plan, callback)->
+exports.createProjectAndUser = (herokuId, plan, callback)->
   Project.findOne herokuId: herokuId, (err, project)->
     callback(err, project) if err
     return setPlanAndEnsureNotDeleted(project, plan, callback) if project
