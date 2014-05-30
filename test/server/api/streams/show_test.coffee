@@ -9,7 +9,7 @@ describe 'Streams#Show', ->
   beforeEach (done)->
     @project = new Project(name: 'my project', plan: 'free')
     @project.save done
-
+  now = new Date
   beforeEach (done)->
     @projectStream = new EdgecastStream
       instanceName: 'cines'
@@ -17,6 +17,7 @@ describe 'Streams#Show', ->
       streamName: 'cine1'
       streamKey: 'bass35'
       _project: @project._id
+      assignedAt: now
     @projectStream.save done
 
   beforeEach (done)->
@@ -74,12 +75,13 @@ describe 'Streams#Show', ->
         expectedPublishResponse =
           url: "rtmp://stream.lax.cine.io/20C45E/cines"
           stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
-        expect(_.keys(response).sort()).to.deep.equal(['expiration', 'id', 'name', 'password', 'play', 'publish'])
+        expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish'])
         expect(response.name).to.deep.equal('cine1')
         expect(response.password).to.deep.equal('bass35')
         expect(response.play).to.deep.equal(expectedPlayResponse)
         expect(response.publish).to.deep.equal(expectedPublishResponse)
         expect(response.id).to.equal(@projectStream._id.toString())
+        expect(response.assignedAt.toString()).to.equal(now.toString())
         done()
 
     describe 'fmleProfile', ->

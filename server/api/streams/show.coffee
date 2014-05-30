@@ -31,6 +31,7 @@ fullJSON = (stream, callback)->
       stream: "#{stream.streamName}?#{stream.streamKey}&amp;adbe-live-event=#{stream.eventName}"
     streamJSON.password = stream.streamKey
     streamJSON.expiration = stream.expiration
+    streamJSON.assignedAt = stream.assignedAt
     callback(null, streamJSON)
 
 Show = (params, callback)->

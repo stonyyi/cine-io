@@ -20,11 +20,15 @@ describe 'addNextStreamToProject', ->
       @project.save done
 
     it 'adds a single stream', (done)->
+      expect(@stream.assignedAt).to.be.undefined
+      expect(@stream._project).to.be.undefined
       addNextStreamToProject @project, (err, stream)=>
         expect(err).to.be.null
         expect(stream.id).to.equal(@stream._id.toString())
+        expect(stream.assignedAt).to.be.instanceOf(Date)
         EdgecastStream.findById stream.id, (err, streamFromDb)=>
           expect(err).to.be.null
+          expect(streamFromDb.assignedAt).to.be.instanceOf(Date)
           expect(streamFromDb._project.toString()).to.equal(@project._id.toString())
           done()
 

@@ -31,6 +31,7 @@ allocateNewStreamToProject = (project, callback)->
     return callback(err) if err
     return callback('Next stream not available, please try again later', null, status: 400) if !stream
     stream._project = project._id
+    stream.assignedAt = new Date
 
     stream.save (err, stream)->
       return callback(err, stream) if err
