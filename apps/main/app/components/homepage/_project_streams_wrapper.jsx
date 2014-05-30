@@ -28,6 +28,9 @@ module.exports = React.createClass({
   changeSelectedStreamId: function(streamId) {
     this.setState({selectedStreamId: streamId});
   },
+  componentWillReceiveProps: function(nextProps){
+    this.listenToBackboneChangeEvents(nextProps.model.getStreams());
+  },
   render: function(){
     var selectedStreamId = this.state.selectedStreamId,
     streamDeets = '',
