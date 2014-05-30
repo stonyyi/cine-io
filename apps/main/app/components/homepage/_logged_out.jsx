@@ -13,6 +13,11 @@ exports.HomeHero = React.createClass({
     e.preventDefault();
     this._owner.openNav();
   },
+  revealAbout: function(e){
+    e.preventDefault();
+    $.scrollTo('#about', 250);
+    window.history.pushState(null, "#about", "#about");
+  },
   render: function() {
     return (
       <section id="home-hero">
@@ -40,7 +45,7 @@ exports.HomeHero = React.createClass({
         </div>
 
         <div className="scrollhint">
-          <a href="#about">
+          <a href="" onClick={this.revealAbout}>
             Learn More<br/>
             <i className="fa fa-caret-down"></i>
           </a>
