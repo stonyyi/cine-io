@@ -1,3 +1,21 @@
 #homepage-logged-in{
-
+  .panel-heading{
+    h3{
+      display: inline-block;
+    }
+  }
+  .panels-wrapper{
+    overflow-y: scroll;
+  }
+  table.clickable-row{
+    width: 100%;
+    tbody{
+      tr{
+        cursor: pointer;
+      }
+    }
+    tr.selected{
+      background-color: red;
+    }
+  }
 }
