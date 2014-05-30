@@ -48,7 +48,7 @@ play = (streamId, domNode, playOptions)->
       videoElement = "<video src='#{videoOptions.src}' height='#{videoOptions.height}' #{'autoplay' if videoOptions.autoplay} #{'controls' if videoOptions.controls} #{'autoplay' if videoOptions.mute}>"
       document.getElementById(domNode).innerHTML = videoElement
 
-    jwplayer.key = "TVKg0kVV92Nwd/vHp3yI+9aTDoPQrSyz6BH1Bg=="
+    jwplayer.key = CineIO.config.jwPlayerKey
     stream = stream
     console.log('streaming', stream)
     rtmpUrl = stream.play.rtmp

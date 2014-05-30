@@ -3,11 +3,14 @@ requiresInit = ->
 
 CineIO =
   config: {}
-  init: (publicKey)->
+  init: (publicKey, options)->
     throw new Error("Public Key required") unless publicKey
     CineIO.config.publicKey = publicKey
+    for prop, value of options
+      CineIO.config[prop] = value
+
   reset: ->
-    delete CineIO.config.publicKey
+    CineIO.config = {}
 
   play: (streamId, domNode, playOptions={})->
     requiresInit()
