@@ -25,10 +25,6 @@ module.exports = React.createClass({
     e.preventDefault();
     alert('new project not implemented');
   },
-  createNewStream: function(e){
-    e.preventDefault();
-    alert('new stream not implemented');
-  },
   selectProject: function(project){
     this.setState({selectedProjectId: project.id});
   },
@@ -60,7 +56,7 @@ module.exports = React.createClass({
       if (!selectedProject.streams){
         this.listenToBackboneChangeEvents(selectedProject.getStreams());
       }
-      streamsPanel = (<ProjectStreamsWrapper model={selectedProject} />);
+      streamsPanel = (<ProjectStreamsWrapper app={this.props.app} model={selectedProject} />);
     }
     return (
       <div>

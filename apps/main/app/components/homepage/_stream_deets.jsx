@@ -16,7 +16,8 @@ module.exports = React.createClass({
     var model = this.props.model;
     return (
       <div className="panel">
-        {model.id}
+        <div>{model.id}</div>
+        <div>{model.assignedAt().toString()}</div>
         <dl>
           <dt>RTMP:</dt>
           <dd>{model.get('play').rtmp}</dd>

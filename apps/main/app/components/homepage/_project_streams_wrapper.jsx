@@ -3,6 +3,7 @@ var
   React = require('react'),
   StreamListItem = Cine.component('projects/_stream_list_item'),
   StreamDeets = Cine.component('homepage/_stream_deets'),
+  NewStreamButton = Cine.component('homepage/_new_stream_button'),
   Streams = Cine.collection('streams'),
   Project = Cine.model('project'),
   InitializeCodeExample = Cine.component('homepage/code_examples/_initialize'),
@@ -11,9 +12,9 @@ var
 
 module.exports = React.createClass({
   displayName: 'ProjectStreamsWrapper',
-  mixins: [Cine.lib('backbone_mixin')],
+  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
   propTypes: {
-    project: React.PropTypes.instanceOf(Project).isRequired,
+    model: React.PropTypes.instanceOf(Project).isRequired,
   },
   getInitialState: function(){
     return {selectedStreamId: null};
@@ -52,13 +53,8 @@ module.exports = React.createClass({
         <div className='medium-6 columns'>
           <div className="panels-wrapper panel">
             <div className='panel-heading clearfix'>
-              <h3> Streams </h3>
-              <a href='' className='right' onClick={this.createNewStream}>
-                <span className="fa-stack fa-lg">
-                  <i className="fa fa-square fa-stack-2x"></i>
-                  <i className="fa fa-plus fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
+              <h3> {this.props.model.get('streamsCount')} Streams </h3>
+              <NewStreamButton app={this.props.app} model={this.props.model} />
             </div>
             <select value={selectedStreamId} onChange={this.changeSelectedStreamId}>
               {streamListItems}
