@@ -2,19 +2,18 @@ passport = require('passport')
 LocalStrategy = require('passport-local').Strategy
 User = Cine.server_model('user')
 createNewToken = Cine.middleware('authentication/remember_me').createNewToken
+ProjectCreate = Cine.api('projects/create')
 
-assignNewPasswordAndSave = (user, cleartext_password, req, callback)->
+assignNewPasswordAndAddAProjectAndSave = (user, cleartext_password, req, callback)->
   user.assignHashedPasswordAndSalt cleartext_password, (err)->
     return callback(err, false) if err
-    user.save (err)->
-      return callback(err, false) if err
-      callback(null, user)
+    ProjectCreate.addExampleProjectToUser user, (err, projectJSON, options)->
+      callback(err, user)
 
 createNewUser = (email, cleartext_password, req, callback)->
-  timezoneName = req.body.timezoneName
-  user = new User(email: email, timezoneName: timezoneName)
+  user = new User(email: email)
   user.new = true
-  assignNewPasswordAndSave(user, cleartext_password, req, callback)
+  assignNewPasswordAndAddAProjectAndSave(user, cleartext_password, req, callback)
 
 validatePasswordOfExistingUser = (user, cleartext_password, callback)->
   user.isCorrectPassword cleartext_password, (err)->

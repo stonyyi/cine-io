@@ -6,8 +6,7 @@ noop = ->
 
 projectLimit = (project)->
   switch project.plan
-    when 'test' then 1
-    when 'free' then 1
+    when 'free', 'test' then 1
     when 'solo' then 5
     when 'startup', 'enterprise' then Infinity
     else throw new Error("Don't know this plan")

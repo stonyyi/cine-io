@@ -1,6 +1,7 @@
 Project = Cine.server_model('project')
 User = Cine.server_model('user')
 _ = require('underscore')
+addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 
 nameFromEmail = (herokuId)->
   herokuId.split('@')[0]
@@ -19,7 +20,10 @@ exports.createProject = (herokuId, plan, callback)->
     return setPlanAndEnsureNotDeleted(project, plan, callback) if project
 
     project = new Project(name: nameFromEmail(herokuId), herokuId: herokuId, plan: plan)
-    project.save callback
+    project.save (err, project)->
+      return callback(err) if err
+      addNextStreamToProject project, (err, stream)->
+        callback(err, project)
 
 # callback(err, project)
 exports.findProject = (projectId, callback)->

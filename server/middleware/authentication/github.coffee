@@ -7,6 +7,7 @@ strategyOptions =
   clientID: githubConfig.clientId,
   clientSecret: githubConfig.clientSecret,
   callbackURL: githubConfig.callbackURL
+ProjectCreate = Cine.api('projects/create')
 
 updateUserData = (user, profile, accessToken, callback)->
   user.githubData = profile._json
@@ -24,7 +25,9 @@ createNewUser = (profile, accessToken, callback)->
       githubData: profile._json
       githubAccessToken: accessToken
     console.log("creating github user", user)
-    user.save callback
+    ProjectCreate.addExampleProjectToUser user, (err, projectJSON, options)->
+      callback(err, user)
+
   return saveUser() if email
   console.log('no email')
   # we didn't get a public email, add a private one
