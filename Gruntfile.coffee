@@ -132,11 +132,20 @@ module.exports = (grunt) ->
     browserify:
       jssdk:
         files:
-          'public/compiled/cine.js': ['sdk/javascript/main.coffee']
+          'public/compiled/cineio-dev.js': ['sdk/javascript/main.coffee']
         options:
           browserifyOptions:
             extensions: ['.coffee', '.js']
           transform: ['coffeeify']
+
+    uglify:
+      options:
+        report: "min"
+
+      production:
+        files:
+          "public/compiled/cineio.js": ["public/compiled/cineio-dev.js"]
+          "public/compiled/mergedAssets.js": ["public/compiled/mergedAssets.js"]
 
 
   grunt.loadNpmTasks "grunt-contrib-concat"
@@ -146,12 +155,14 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-concurrent"
   grunt.registerTask "compile", ["react", "handlebars", "rendr_stitch", "browserify"]
   grunt.registerTask "build", ["compile", "sass", "concat"]
+  grunt.registerTask "prepareProductionAssets", ["compile", "sass", "concat", "uglify"]
   grunt.registerTask "dev", ["build", "concurrent:dev"]
   grunt.registerTask "default", ["dev"]
   grunt.loadNpmTasks 'grunt-react'
   grunt.loadNpmTasks('grunt-contrib-handlebars');
   grunt.loadNpmTasks('grunt-rendr-stitch');
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
 
   grunt.registerTask "test", (file) ->
     sh = require("execSync")
@@ -185,4 +196,4 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'productionPostInstall', ->
     return unless process.env.NODE_ENV == 'production'
-    grunt.task.run('build')
+    grunt.task.run('prepareProductionAssets')
