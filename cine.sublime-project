@@ -8,7 +8,8 @@
         "node_modules",
         "bower_components",
         "public/compiled",
-        "compiled"
+        "compiled",
+        "tmp"
       ],
       "file_exclude_patterns":
       [
