@@ -4,6 +4,7 @@ loadedSWF = false
 waitingPublishCalls = []
 BASE_URL = 'rtmp://publish.west.cine.io/live'
 PUBLISHER_NAME = 'Publisher'
+PUBLISHER_URL = '//cdn.cine.io/publisher.swf'
 noop = ->
 
 defaultOptions =
@@ -25,7 +26,7 @@ loadPublisher = (domNode, publishOptions)->
   flashvars = {}
   params = {}
   attributes = {}
-  params.allowscriptaccess = "sameDomain"
+  params.allowscriptaccess = "always"
   params.allowfullscreen = "true"
   params.wmode = 'transparent'
   attributes.id = domNode
@@ -35,7 +36,8 @@ loadPublisher = (domNode, publishOptions)->
   streamWidth = publishOptions.streamWidth || defaultOptions.streamWidth
   streamHeight = publishOptions.streamHeight || defaultOptions.streamHeight
   height = domWidth / (streamWidth / streamHeight)
-  swfobject.embedSWF "publisher.swf", domNode, "100%", height, swfVersionStr, xiSwfUrlStr, flashvars, params, attributes, (embedEvent) ->
+  url = "#{window.location.protocol}#{PUBLISHER_URL}"
+  swfobject.embedSWF url, domNode, "100%", height, swfVersionStr, xiSwfUrlStr, flashvars, params, attributes, (embedEvent) ->
     if embedEvent.success
       readyCall = ->
         embedEvent.ref.setOptions(jsLogFunction: "_jsLogFunction", jsEmitFunction: "_publisherEmit")
