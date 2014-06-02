@@ -1,131 +1,69 @@
-<h1>
-<a name="user-content-documentation-for-cineio-api" class="anchor" href="#documentation-for-cineio-api"><span class="octicon octicon-link"></span></a>Documentation for <a href="file:///Users/thomas/work/givingstage/cine/cine.io">cine.io</a> API.</h1>
-
-<h2>
-<a name="user-content-about-cineio" class="anchor" href="#about-cineio"><span class="octicon octicon-link"></span></a>About cine.io</h2>
-
+<h1 id="documentation-for-cine-io-api">Documentation for <a href="https://www.cine.io">cine.io</a> API.</h1>
+<h2 id="about-cine-io">About cine.io</h2>
 <p>Cine.io is an api driven live streaming platform. Developers can quickly setup a live streaming app using our global live streaming cdn. Cine.io was designed for immediate usage, getting you setup in your own app in just a few minutes.</p>
-
-<h2>
-<a name="user-content-getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting started</h2>
-
-<p>Start off by creating an account at <a href="file:///Users/thomas/work/givingstage/cine/cine.io">cine.io</a> or through the heroku addon marketplace. We will automatically create you a project with a default name of "Development". You can change your project names at any time. You can create as many projects as you like. Each project will provide you with a unique "Public key" and a "Secret key". A common usage is to create a different project for your Development and Production environment (perhaps also staging, canary environments, etc.).</p>
-
+<h2 id="getting-started">Getting started</h2>
+<p>Start off by creating an account at <a href="https://www.cine.io">cine.io</a> or through the heroku addon marketplace. We will automatically create you a project with a default name of "Development". You can change your project names at any time. You can create as many projects as you like. Each project will provide you with a unique "Public key" and a "Secret key". A common usage is to create a different project for your Development and Production environment (perhaps also staging, canary environments, etc.).</p>
 <p>Now you have your public and secret keys, let's review a typical life cycle.</p>
-
-<h2>
-<a name="user-content-common-request-life-cycle" class="anchor" href="#common-request-life-cycle"><span class="octicon octicon-link"></span></a>Common request life cycle</h2>
-
-<h3>
-<a name="user-content-1-create-a-live-stream" class="anchor" href="#1-create-a-live-stream"><span class="octicon octicon-link"></span></a>1. Create a live stream</h3>
-
+<h2 id="common-request-life-cycle">Common request life cycle</h2>
+<h3 id="1-create-a-live-stream">1. Create a live stream</h3>
 <p><em>Location: Web Server</em></p>
-
 <p>Every project starts off with 1 live stream. Most likely you'll want to have more than 1 unique live stream.</p>
-
 <p>Requests normally start off by <em>creating a live stream</em>. This live stream is unique to your project. You'll get a response back containing a few fields. The most important fields to save in your database is <em>id</em>, and <em>password</em>. You'll need these fields to play and publish your live stream. You can always fetch the other fields again by issuing a get request to the stream/show endpoint.</p>
-
 <p>End point:</p>
-
 <ul>
 <li>method: POST</li>
 <li>url: /api/1/-/stream</li>
-<li>parameters:
-
-<ul>
+<li>parameters:</li>
 <li>secretKey: CINE_IO_SECRET_KEY</li>
 </ul>
-</li>
-</ul><p>Example: <code>curl --data "secretKey=MY_SECRET_KEY" https://www.cine.io/api/1/-/stream</code></p>
-
-<h3>
-<a name="user-content-2-publish-a-live-stream" class="anchor" href="#2-publish-a-live-stream"><span class="octicon octicon-link"></span></a>2. Publish a live stream</h3>
-
+<p>Example: <code>curl --data "secretKey=MY_SECRET_KEY" https://www.cine.io/api/1/-/stream</code></p>
+<h3 id="2-publish-a-live-stream">2. Publish a live stream</h3>
 <p><em>Location: Web Client</em></p>
-
 <p>Now you've saved your stream <em>id</em> and stream <em>password</em>. Using the JS SDK, you'll need to pass you project's <em>public key</em> to the client. If your specific user has permission in your application to publish to this stream, then you'll need to send along the stream <em>id</em> and stream <em>password</em> to your web client. For example, say your streams are associated with a "classroom" and the current logged in user has a "teacher" role</p>
-
-<h3>
-<a name="user-content-3-play-a-live-stream" class="anchor" href="#3-play-a-live-stream"><span class="octicon octicon-link"></span></a>3. Play a live stream</h3>
-
+<h3 id="3-play-a-live-stream">3. Play a live stream</h3>
 <p><em>Location: Web Client</em></p>
-
 <p>Using the JS SDK, you'll need to pass you project's <em>public key</em> to the client. To play a stream using the JS SDK, you only need to send out the stream <em>id</em>. Only serve the stream <em>id</em> to users who have permission to view a stream. For example, say your streams are associated with a "classroom" and the current logged in user has a "student" role.</p>
-
-<h2>
-<a name="user-content-additional-end-points" class="anchor" href="#additional-end-points"><span class="octicon octicon-link"></span></a>Additional end points</h2>
-
-<h3>
-<a name="user-content-get-a-live-stream" class="anchor" href="#get-a-live-stream"><span class="octicon octicon-link"></span></a>Get a live stream</h3>
-
+<h2 id="additional-end-points">Additional end points</h2>
+<h3 id="get-a-live-stream">Get a live stream</h3>
 <p><em>Location: Web Server</em></p>
-
 <p>After you have created a live stream you can always fetch the information again. This will return the same fields as the create endpoint.</p>
-
 <p>End point:</p>
-
 <ul>
 <li>method: GET</li>
 <li>url: /api/1/-/stream</li>
-<li>parameters:
-
-<ul>
+<li>parameters:</li>
 <li>secretKey: CINE_IO_SECRET_KEY</li>
 <li>id: stream id</li>
 </ul>
-</li>
-</ul><p>Example: <code>curl https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&amp;id=streamId</code></p>
-
-<h3>
-<a name="user-content-get-all-of-your-streams" class="anchor" href="#get-all-of-your-streams"><span class="octicon octicon-link"></span></a>Get all of your streams</h3>
-
+<p>Example: <code>curl https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&amp;id=streamId</code></p>
+<h3 id="get-all-of-your-streams">Get all of your streams</h3>
 <p><em>Location: Web Server</em></p>
-
 <p>You can fetch all of your streams via an api endpoint. Currently pagination is not supported.</p>
-
 <p>End point:</p>
-
 <ul>
 <li>method: GET</li>
 <li>url: /api/1/-/streams</li>
-<li>parameters:
-
-<ul>
+<li>parameters:</li>
 <li>secretKey: CINE_IO_SECRET_KEY</li>
 </ul>
-</li>
-</ul><p>Example: <code>curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY</code></p>
-
-<h3>
-<a name="user-content-get-the-project-details" class="anchor" href="#get-the-project-details"><span class="octicon octicon-link"></span></a>Get the project details</h3>
-
+<p>Example: <code>curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY</code></p>
+<h3 id="get-the-project-details">Get the project details</h3>
 <p><em>Location: Web Server</em></p>
-
 <p>You can fetch your project details via api.</p>
-
 <p>End point:</p>
-
 <ul>
 <li>method: GET</li>
 <li>url: /api/1/-/project</li>
-<li>parameters:
-
-<ul>
+<li>parameters:</li>
 <li>secretKey: CINE_IO_SECRET_KEY</li>
 </ul>
-</li>
-</ul><p>Example: <code>curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY</code></p>
-
-<h3>
-<a name="user-content-health" class="anchor" href="#health"><span class="octicon octicon-link"></span></a>health</h3>
-
+<p>Example: <code>curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY</code></p>
+<h3 id="health">health</h3>
 <p><em>Location: Web Server</em></p>
-
 <p>This is a simple API health check.</p>
-
 <p>End point:</p>
-
 <ul>
 <li>method: GET</li>
 <li>url: /api/1/-/health</li>
-</ul><p>Example: <code>curl https://www.cine.io/api/1/-/health</code></p>
+</ul>
+<p>Example: <code>curl https://www.cine.io/api/1/-/health</code></p>
