@@ -91,7 +91,28 @@ module.exports = React.createClass({
             </div>
           </div>
           <div className='medium-4 columns'>
-            DOCS HERE YO
+            <h4 className='top-margin-1'>Client libraries</h4>
+            <ul className="inline-list">
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/js-sdk'>
+                  <img width='36' height='36' src="/images/javascript-logo.png" alt="The JavaScript SDK" />
+                </a>
+              </li>
+            </ul>
+
+            <h4 className='top-margin-1'>Server side libraries</h4>
+            <ul className="inline-list">
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-ruby'>
+                  <img width='36' height='36' src="/images/ruby-logo.png" alt="The Ruby Gem" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-node'>
+                  <img width='57' height='36' src="/images/nodejs-logo.png" alt="The Node.js Package" />
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
         {streamsPanel}
