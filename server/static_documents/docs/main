@@ -8,7 +8,7 @@
 <h3 id="1-create-a-live-stream">1. Create a live stream</h3>
 <p><em>Location: Web Server</em></p>
 <p>Every project starts off with 1 live stream. Most likely you'll want to have more than 1 unique live stream.</p>
-<p>Requests normally start off by <em>creating a live stream</em>. This live stream is unique to your project. You'll get a response back containing a few fields. The most important fields to save in your database is <em>id</em>, and <em>password</em>. You'll need these fields to play and publish your live stream. You can always fetch the other fields again by issuing a get request to the stream/show endpoint.</p>
+<p>Requests normally start off by <em>creating a live stream</em>. This live stream is unique to your project. You'll get a response back containing a few fields. The most important fields to save in your database is <code>id</code>, and <code>password</code>. You'll need these fields to play and publish your live stream. You can always fetch the other fields again by issuing a get request to the stream/show endpoint.</p>
 <p>End point:</p>
 <ul>
 <li>method: POST</li>
@@ -19,10 +19,31 @@
 <p>Example: <code>curl --data "secretKey=MY_SECRET_KEY" https://www.cine.io/api/1/-/stream</code></p>
 <h3 id="2-publish-a-live-stream">2. Publish a live stream</h3>
 <p><em>Location: Web Client</em></p>
-<p>Now you've saved your stream <em>id</em> and stream <em>password</em>. Using the JS SDK, you'll need to pass you project's <em>public key</em> to the client. If your specific user has permission in your application to publish to this stream, then you'll need to send along the stream <em>id</em> and stream <em>password</em> to your web client. For example, say your streams are associated with a "classroom" and the current logged in user has a "teacher" role</p>
+<p>Now you've saved your stream <code>id</code> and stream <code>password</code>. Using the JS SDK, you'll need to pass you project's <em>public key</em> to the client. If your specific user has permission in your application to publish to this stream, then you'll need to send along the stream <code>id</code> and stream <code>password</code> to your web client. For example, this endpoint would be useful if you are building a "virtual classroom" and the current logged-in user has a "teacher" role.</p>
+<p>Publishing a live-stream requires that the logged-in user have Adobe Flash installed and enabled in her browser. The JS SDK will automatically download the correct SWF file and launch it in the user's browser when <code>start()</code> is called on the publisher.</p>
+<p>Example:</p>
+<pre><code class="javascript">var streamId = '&lt;STREAM_ID&gt;'
+  , password = '&lt;STREAM_PASSWORD'
+  , domId = 'publisher-example';
+
+var publisher = CineIO.publish(
+  streamId, password, domId
+);
+
+publisher.start();
+</code></pre>
+
 <h3 id="3-play-a-live-stream">3. Play a live stream</h3>
 <p><em>Location: Web Client</em></p>
-<p>Using the JS SDK, you'll need to pass you project's <em>public key</em> to the client. To play a stream using the JS SDK, you only need to send out the stream <em>id</em>. Only serve the stream <em>id</em> to users who have permission to view a stream. For example, say your streams are associated with a "classroom" and the current logged in user has a "student" role.</p>
+<p>Using the JS SDK, you'll need to pass you project's <em>public key</em> to the client. To play a stream using the JS SDK, you only need to send out the stream <code>id</code>. Only serve the stream <code>id</code> to users who have permission to view a stream. For example, in our aforementioned "virtual classroom" application, this endpoint would be useful when the current logged-in user has a "student" role.</p>
+<p>Playing a live stream will launch the branded, open-source version of <a href="http://www.jwplayer.com/">JWPlayer</a>. If you have your own JWPlayer license, you can send it as the 3rd argument to the <code>play()</code> function. Mobile devices will use native <code>&lt;video&gt;</code> elements rather than JWPlayer; this happens automatically.</p>
+<p>Example:</p>
+<pre><code class="javascript">var streamId = '&lt;STREAM_ID&gt;'
+  , domId = 'player-example';
+
+CineIO.play(streamId, domId); // optionally pass JWPlayer license key as 3rd param
+</code></pre>
+
 <h2 id="additional-end-points">Additional end points</h2>
 <h3 id="get-a-live-stream">Get a live stream</h3>
 <p><em>Location: Web Server</em></p>
