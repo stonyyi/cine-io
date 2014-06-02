@@ -44,29 +44,6 @@ $ more .env
 > warning
 > Credentials and other sensitive configuration values should not be committed to source-control. In Git exclude the .env file with: `echo .env >> .gitignore`.
 
-## Using with Rails
-
-Ruby on Rails applications may to add the following entry into their `Gemfile` specifying the cine.io client library.
-
-```ruby
-gem 'cine_io'
-```
-
-Update application dependencies with bundler.
-
-```term
-$ bundle install
-```
-
-Initialize the client.
-
-```ruby
-require('cine_io')
-client = CineIo::Client.new(secretKey: 'YOUR_SECRET_KEY')
-```
-
-Additional examples can be found at the repositories homepage: https://github.com/cine-io/cineio-ruby
-
 ## Common request life cycle
 
 ### 1. Create a live stream
