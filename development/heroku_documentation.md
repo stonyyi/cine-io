@@ -1,12 +1,12 @@
-[cine.io](http://addons.heroku.com/cine) is an [add-on](http://addons.heroku.com) for providing live streaming functionality.
+[cine.io](http://addons.heroku.com/cine) is an [add-on](http://addons.heroku.com) that provides live streaming capabilities to any application.
 
-Adding global live streaming functionality to an application provides benefits X, Y and Z. [[Sell the benefits here! Don't skimp - developers have many options these days.]]
+cine.io allows developers to build live-streaming capabilities into their apps with ease. Streaming can happen from any device to any web browser, iOS device, or Android device. All live-streams are backed by a global CDN with 5,000 interconnected networks across 5 continents.
 
-cine.io is accessible via an API and has supported client libraries for [[Java|Ruby|Python|Node.js|Clojure|Scala]]*.
+cine.io is accessible via a simple RESTful API and has supported client libraries for both Node.js and Ruby (with iOS and Android coming soon).
 
 ## Provisioning the add-on
 
-cine.io can be attached to a Heroku application via the  CLI:
+cine.io can be attached to a Heroku application via the CLI:
 
 > callout
 > A list of all plans available can be found [here](http://addons.heroku.com/cine).
@@ -16,7 +16,7 @@ $ heroku addons:add cine
 -----> Adding cine to sharp-mountain-4005... done, v18 (free)
 ```
 
-Once cine.io has been added a `CINE_IO_PUBLIC_KEY` and a `CINE_IO_SECRET_KEY` setting will be available in the app configuration and will contain the public and secret keys necessary to create and play live streams. This can be confirmed using the `heroku config:get` command.
+Once cine.io has been added, the `CINE_IO_PUBLIC_KEY` and `CINE_IO_SECRET_KEY` setting will be available in the app configuration and will contain the public and secret keys necessary to create, publish, and play back live streams. This can be confirmed using the `heroku config:get` command:
 
 ```term
 $ heroku config:get CINE_IO_PUBLIC_KEY
@@ -49,9 +49,9 @@ $ more .env
 ### 1. Create a live stream
 *Location: Web Server*
 
-Every project starts off with 1 live stream. Most likely you'll want to have more than 1 unique live stream.
+Every project starts off with 1 live stream. Most likely, you'll want to have more than 1 unique live stream.
 
-Requests normally start off by *creating a live stream*. This live stream is unique to your project. You'll get a response back containing a few fields. The most important fields to save in your database is *id*, and *password*. You'll need these fields to play and publish your live stream. You can always fetch the other fields again by issuing a get request to the stream/show endpoint.
+Requests normally start off by *creating a live stream*. This live stream is unique to your project. You'll get a response back containing a few fields. The most important fields to persist are `id`, and `password`. You'll need these fields to play and publish your live stream. You can always fetch the other fields again by issuing a get request to the stream/show endpoint.
 
 End point:
 
@@ -65,12 +65,39 @@ Example: `curl --data "secretKey=MY_SECRET_KEY" https://www.cine.io/api/1/-/stre
 ### 2. Publish a live stream
 *Location: Web Client*
 
-Now you've saved your stream *id* and stream *password*. Using the JS SDK, you'll need to pass you project's *public key* to the client. If your specific user has permission in your application to publish to this stream, then you'll need to send along the stream *id* and stream *password* to your web client. For example, say your streams are associated with a "classroom" and the current logged in user has a "teacher" role
+Now you've saved your stream `id` and stream `password`. Using the JS SDK, you'll need to pass you project's *public key* to the client. If your specific user has permission in your application to publish to this stream, then you'll need to send along the stream `id` and stream `password` to your web client. For example, this endpoint would be useful if you are building a "virtual classroom" and the current logged-in user has a "teacher" role.
+
+Publishing a live-stream requires that the logged-in user have Adobe Flash installed and enabled in her browser. The JS SDK will automatically download the correct SWF file and launch it in the user's browser when `start()` is called on the publisher.
+
+Example:
+
+```javascript
+var streamId = '<STREAM_ID>'
+  , password = '<STREAM_PASSWORD'
+  , domId = 'publisher-example';
+
+var publisher = CineIO.publish(
+  streamId, password, domId
+);
+
+publisher.start();
+```
 
 ### 3. Play a live stream
 *Location: Web Client*
 
-Using the JS SDK, you'll need to pass you project's *public key* to the client. To play a stream using the JS SDK, you only need to send out the stream *id*. Only serve the stream *id* to users who have permission to view a stream. For example, say your streams are associated with a "classroom" and the current logged in user has a "student" role.
+Using the JS SDK, you'll need to pass you project's *public key* to the client. To play a stream using the JS SDK, you only need to send out the stream `id`. Only serve the stream `id` to users who have permission to view a stream. For example, in our aforementioned "virtual classroom" application, this endpoint would be useful when the current logged-in user has a "student" role.
+
+Playing a live stream will launch the branded, open-source version of [JWPlayer](http://www.jwplayer.com/). If you have your own JWPlayer license, you can send it as one of the options (key: `jwPlayerKey`) to the `init()` function. Mobile devices will use native `<video>` elements rather than JWPlayer; this happens automatically.
+
+Example:
+
+```javascript
+var streamId = '<STREAM_ID>'
+  , domId = 'player-example';
+
+CineIO.play(streamId, domId);
+```
 
 ## Additional API endpoints
 
