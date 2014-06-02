@@ -7,3 +7,5 @@ module.exports = (match) ->
   # match '/legal(/:id)', 'legal#show'
   match '/legal', 'legal#show'
   match '/legal/:id', 'legal#show'
+
+  match '/docs', 'docs#show'
