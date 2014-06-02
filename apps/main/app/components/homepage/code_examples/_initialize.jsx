@@ -10,7 +10,7 @@ module.exports = React.createClass({
   },
   render: function(){
     var code = [
-      "&lt;script src='https://www.cine.io/compiled/cine.js'&gt;"
+      "&lt;script src='//cdn.cine.io/cineio.js'&gt;"
     , "&lt;script&gt;"
     , "  CineIO.init('"+this.props.publicKey+"');"
     , "&lt;/script&gt;"
