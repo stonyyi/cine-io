@@ -17,5 +17,11 @@
     tr.selected{
       background-color: $table-border-color;
     }
+    td.no-move{
+      padding: 14px 10px;
+    }
+    td.place-top{
+      vertical-align: top;
+    }
   }
 }
