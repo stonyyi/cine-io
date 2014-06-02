@@ -2,21 +2,27 @@
 var React = require('react'),
 Header = Cine.component('layout/header'),
 Footer = Cine.component('layout/footer'),
-Static = Cine.component('legal/_static');
+LeftNav = Cine.component('layout/left_nav'),
+FlashHolder = Cine.component('layout/flash_holder'),
+Static = Cine.component('shared/_static');
 
 module.exports = React.createClass({
   displayName: 'LegalShow',
-  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
+  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin'), Cine.lib('has_nav')],
   getBackboneObjects: function(){
     return this.props.model;
   },
   render: function() {
     return (
-      <div id='legal'>
-        <Header app={this.props.app} />
+      <div id='legal'className={this.canvasClasses()}>
+        <FlashHolder app={this.props.app}/>
+        <div className="inner-wrap">
+          <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
+          <Header app={this.props.app} />
           <div className="container">
             <Static document={this.props.model.get('document')} />
           </div>
+        </div>
         <Footer />
       </div>
     );

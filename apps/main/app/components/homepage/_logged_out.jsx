@@ -9,13 +9,15 @@ var React = require('react'),
 
 exports.HomeHero = React.createClass({
   displayName: 'HomeHero',
+  mixins: [Cine.lib('requires_app')],
+
   getApiKey: function(e){
     e.preventDefault();
-    this._owner.openNav();
+    this.props.app.trigger('show-login');
   },
   showSignIn: function(e){
     e.preventDefault();
-    this._owner.openNav();
+    this.props.app.trigger('show-login');
   },
   revealAbout: function(e){
     e.preventDefault();
@@ -171,7 +173,7 @@ exports.Pricing = React.createClass({
   getApiKey: function(plan, e){
     e.preventDefault();
     this.props.app.trigger('set-signup-plan', plan);
-    this._owner.openNav();
+    this.props.app.trigger('show-login');
   },
 
   render: function() {

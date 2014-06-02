@@ -145,7 +145,7 @@ LoggedOut = React.createClass({
   },
   closeNav: function(e){
     e.preventDefault();
-    this._owner.closeNav();
+    this.props.app.trigger('hide-login');
   },
   render: function() {
     return (
@@ -170,7 +170,7 @@ module.exports = React.createClass({
     showing: React.PropTypes.bool.isRequired
   },
   closeNav: function(){
-    this._owner.closeNav()
+    this.props.app.trigger('hide-login');
   },
   render: function() {
     if (this.props.app.currentUser.isLoggedIn()) {

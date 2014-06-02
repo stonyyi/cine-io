@@ -5,7 +5,7 @@ module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
 
   login: function() {
-    console.log("logging in ...");
+    this.props.app.trigger('show-login');
   },
 
   render: function() {
