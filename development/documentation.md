@@ -54,7 +54,7 @@ publisher.start();
 
 Using the JS SDK, you'll need to pass you project's *public key* to the client. To play a stream using the JS SDK, you only need to send out the stream `id`. Only serve the stream `id` to users who have permission to view a stream. For example, in our aforementioned "virtual classroom" application, this endpoint would be useful when the current logged-in user has a "student" role.
 
-Playing a live stream will launch the branded, open-source version of [JWPlayer](http://www.jwplayer.com/). If you have your own JWPlayer license, you can send it as the 3rd argument to the `play()` function. Mobile devices will use native `<video>` elements rather than JWPlayer; this happens automatically.
+Playing a live stream will launch the branded, open-source version of [JWPlayer](http://www.jwplayer.com/). If you have your own JWPlayer license, you can send it as one of the options (key: `jwPlayerKey`) to the `init()` function. Mobile devices will use native `<video>` elements rather than JWPlayer; this happens automatically.
 
 Example:
 
@@ -62,7 +62,7 @@ Example:
 var streamId = '<STREAM_ID>'
   , domId = 'player-example';
 
-CineIO.play(streamId, domId); // optionally pass JWPlayer license key as 3rd param
+CineIO.play(streamId, domId);
 ```
 
 

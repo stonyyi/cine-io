@@ -36,12 +36,12 @@ publisher.start();
 <h3 id="3-play-a-live-stream">3. Play a live stream</h3>
 <p><em>Location: Web Client</em></p>
 <p>Using the JS SDK, you'll need to pass you project's <em>public key</em> to the client. To play a stream using the JS SDK, you only need to send out the stream <code>id</code>. Only serve the stream <code>id</code> to users who have permission to view a stream. For example, in our aforementioned "virtual classroom" application, this endpoint would be useful when the current logged-in user has a "student" role.</p>
-<p>Playing a live stream will launch the branded, open-source version of <a href="http://www.jwplayer.com/">JWPlayer</a>. If you have your own JWPlayer license, you can send it as the 3rd argument to the <code>play()</code> function. Mobile devices will use native <code>&lt;video&gt;</code> elements rather than JWPlayer; this happens automatically.</p>
+<p>Playing a live stream will launch the branded, open-source version of <a href="http://www.jwplayer.com/">JWPlayer</a>. If you have your own JWPlayer license, you can send it as one of the options (key: <code>jwPlayerKey</code>) to the <code>init()</code> function. Mobile devices will use native <code>&lt;video&gt;</code> elements rather than JWPlayer; this happens automatically.</p>
 <p>Example:</p>
 <pre><code class="javascript">var streamId = '&lt;STREAM_ID&gt;'
   , domId = 'player-example';
 
-CineIO.play(streamId, domId); // optionally pass JWPlayer license key as 3rd param
+CineIO.play(streamId, domId);
 </code></pre>
 
 <h2 id="additional-end-points">Additional end points</h2>
