@@ -15,10 +15,7 @@ module.exports = (params, callback)->
     return callback(err, user, status) if err
     projectIds = _.chain(user.permissions, isProject).pluck('objectId').value()
     return callback(null, []) if _.isEmpty(projectIds)
-    scope = Project.find()
-      .where(_id: {$in: projectIds}, deletedAt: {$exists: false})
-      .sort(createdAt: 1)
-    scope.exec (err, projects)->
+    user.projects (err, projects)->
       return callback(err, null, status: 400) if err
       async.map projects, Show.toJSON, (err, response)->
         callback(err, response)

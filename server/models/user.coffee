@@ -73,7 +73,7 @@ allProjectIds = (user)->
 
 UserSchema.methods.projects = (callback)->
   ids = allProjectIds(this)
-  Project.find().where('_id').in(ids).exists('deletedAt', false).exec(callback)
+  Project.find().where('_id').in(ids).exists('deletedAt', false).sort(createdAt: 1).exec(callback)
 
 UserSchema.methods.isCorrectPassword = (cleartext_password, callback)->
   generateHashForPasswordAndSalt cleartext_password, @password_salt, (err, hash, salt)=>
