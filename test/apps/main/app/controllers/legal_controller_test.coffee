@@ -1,5 +1,5 @@
 LegalController = Cine.controller 'legal'
-ControllerTester = Cine.require('test/helpers/test_localized_controller_action')
+ControllerTester = Cine.require('test/helpers/test_controller_action')
 test = ControllerTester(LegalController)
 
 describe 'LegalController', ->
