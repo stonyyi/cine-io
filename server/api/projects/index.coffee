@@ -16,7 +16,7 @@ module.exports = (params, callback)->
     projectIds = _.chain(user.permissions, isProject).pluck('objectId').value()
     return callback(null, []) if _.isEmpty(projectIds)
     scope = Project.find()
-      .where(_id: {$in: projectIds})
+      .where(_id: {$in: projectIds}, deletedAt: {$exists: false})
       .sort(createdAt: 1)
     scope.exec (err, projects)->
       return callback(err, null, status: 400) if err
