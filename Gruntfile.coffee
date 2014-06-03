@@ -146,7 +146,17 @@ module.exports = (grunt) ->
         files:
           "public/compiled/cineio.js": ["public/compiled/cineio-dev.js"]
           "public/compiled/mergedAssets.js": ["public/compiled/mergedAssets.js"]
-
+    markdown:
+      docs:
+        options:
+          template: 'development/docs/empty_template.jst'
+        files: [
+          {
+            src: 'development/docs/main.md'
+            dest: 'server/static_documents/docs/main'
+            ext: ''
+          }
+        ]
 
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-sass"
@@ -163,6 +173,8 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-rendr-stitch');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-markdown');
+
 
   grunt.registerTask "test", (file) ->
     sh = require("execSync")
