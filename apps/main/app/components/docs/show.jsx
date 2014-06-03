@@ -7,7 +7,7 @@ FlashHolder = Cine.component('layout/flash_holder'),
 Static = Cine.component('shared/_static');
 
 module.exports = React.createClass({
-  displayName: 'LegalShow',
+  displayName: 'DocsShow',
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin'), Cine.lib('has_nav')],
   getBackboneObjects: function(){
     return this.props.model;

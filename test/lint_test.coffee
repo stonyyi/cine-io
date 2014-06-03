@@ -35,6 +35,7 @@ describe 'the test suite', ->
     "apps/main/app/models"
     "apps/main/app/collections"
     "apps/main/app/controllers"
+    "apps/main/app/views"
     # server
     "server/api"
   ]
@@ -45,7 +46,6 @@ describe 'the test suite', ->
   notDoneYet = [
     # main
     "apps/main/app/lib"
-    "apps/main/app/views"
     # server
     "server/lib"
     "server/middleware"
