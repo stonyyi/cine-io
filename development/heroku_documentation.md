@@ -121,7 +121,7 @@ Initialize the client.
 
 ```ruby
 require('cine_io')
-client = CineIo::Client.new(secretKey: 'YOUR_SECRET_KEY')
+client = CineIo::Client.new(secretKey: ENV['CINE_IO_SECRET_KEY'])
 ```
 
 Additional examples can be found at the repositories homepage: https://github.com/cine-io/cineio-ruby
@@ -137,8 +137,8 @@ npm install --save cine-io
 Initialize the client.
 
 ```javascript
-CineIO = require('cine-io');
-client = CineIO.init({secretKey: 'my secret'});
+var CineIO = require('cine-io');
+var client = CineIO.init({secretKey: process.env.CINE_IO_SECRET_KEY});
 ```
 
 Additional examples can be found at the repositories homepage: https://github.com/cine-io/cineio-node
