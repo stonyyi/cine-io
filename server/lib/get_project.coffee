@@ -40,7 +40,7 @@ module.exports = (params, options, callback)->
   callbackAllowsUserOverride = options.userOverride && !params.secretKey && options.requires != 'key'
   return userOverrideVersion(params, options, callback) if callbackAllowsUserOverride && params.sessionUserId && params.publicKey
 
-  queryParams = {}
+  queryParams = {deletedAt: {$exists: false}}
   switch options.requires
     when 'key'
       return callback(requiredMessage(options.requires), null, status: 401) unless params.publicKey

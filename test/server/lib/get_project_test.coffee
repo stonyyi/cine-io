@@ -34,6 +34,18 @@ describe 'getProject', ->
         expect(options).to.deep.equal(status: 401)
         done()
 
+    describe 'deletedAt', ->
+      beforeEach (done)->
+        @project.deletedAt = new Date
+        @project.save done
+
+      it 'will not find deleted at projects', (done)->
+        getProject {publicKey: @project.publicKey}, requires: 'either', (err, project, options)->
+          expect(err).to.equal('invalid public key or secret key')
+          expect(project).to.be.null
+          expect(options).to.deep.equal(status: 404)
+          done()
+
   describe 'with user', ->
     it 'will not return a project to a user who does not own that project', (done)->
       getProject {sessionUserId: @user._id.toString(), publicKey: @project.publicKey}, requires: 'secret', userOverride: 'true', (err, project, options)->
