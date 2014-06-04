@@ -8,4 +8,4 @@ module.exports = (params, callback)->
     project.deletedAt = new Date
     project.save (err, project)->
       return callback(err, null, status: 400) if err
-    ProjectShow.toJSON(project, callback)
+      ProjectShow.toJSON(project, callback)

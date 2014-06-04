@@ -23,6 +23,16 @@ module.exports = React.createClass({
   showStreams: function(e){
     this._owner.selectProject(this.props.model);
   },
+  deleteProject: function(e){
+    e.preventDefault();
+    this.props.model.destroy({
+      data: {
+        secretKey: this.props.model.get('secretKey')
+      },
+      processData: true,
+      wait: true
+    });
+  },
   render: function() {
     var model = this.props.model,
       classes = cx({selected: this.props.selected}),
@@ -39,6 +49,7 @@ module.exports = React.createClass({
             <dt>Streams count</dt>
             <dd>{model.get('streamsCount')}</dd>
           </dl>
+          <button className='button alert tiny' onClick={this.deleteProject}>Delete {model.get('name')}</button>
         </div>
       );
     }

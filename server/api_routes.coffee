@@ -10,12 +10,15 @@ module.exports = (app)->
   get = (controller, action, options)-> newApiRoute(controller, action, options, 'get')
   post = (controller, action, options)-> newApiRoute(controller, action, options, 'post')
   put = (controller, action, options)-> newApiRoute(controller, action, options, 'put')
+  # delete is a reserved keyword
+  destroy = (controller, action, options)-> newApiRoute(controller, action, options, 'delete')
 
   get 'health', 'index'
 
   get 'projects', 'index'
   get 'projects', 'show', url: 'project'
   post 'projects', 'create', url: 'project'
+  destroy 'projects', 'delete', url: 'project'
 
   get 'streams', 'index'
   get 'streams', 'show', url: 'stream'

@@ -36,6 +36,10 @@ module.exports = React.createClass({
   },
   render: function() {
     var selectedProjectId = this.state.selectedProjectId;
+    // if something is selected and but it doesn't exist in the collection, remove it.
+    if (selectedProjectId && !this.props.collection.get(selectedProjectId)){
+      selectedProjectId = null;
+    }
     // if nothing is selected, and we have a project, default select the first item
     if(!selectedProjectId && this.props.collection.length > 0){
       selectedProjectId = this.props.collection.models[0].id;
