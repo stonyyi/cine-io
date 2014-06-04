@@ -1,5 +1,5 @@
-HomepageController = GS.controller('homepage')
-ControllerTester = GS.require('test/helpers/test_controller_action')
+HomepageController = Cine.controller('homepage')
+ControllerTester = Cine.require('test/helpers/test_controller_action')
 test = ControllerTester(HomepageController)
 
 describe 'HomepageController', ->

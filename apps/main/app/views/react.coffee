@@ -1,4 +1,4 @@
-RendrView = Cine.view("base")
+RendrView = require('rendr/shared/base/view')
 React = require("react")
 
 ReactView = RendrView.extend
