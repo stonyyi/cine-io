@@ -13,6 +13,10 @@ nock.enableNetConnect('127.0.0.1')
 # nock.recorder.rec()
 mongoose = require('mongoose')
 
+if process.env.CI
+  sh = require 'execSync'
+  sh.run 'grunt prepareProductionAssets'
+
 App = Cine.require "apps/main/app/app"
 rendrServerOptions = Cine.middleware('rendr_server_options')
 appAttributes = rendrServerOptions.appData(settings: {env: process.env.NODE_ENV})
