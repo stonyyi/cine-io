@@ -14,7 +14,7 @@ module.exports = React.createClass({
   },
   render: function() {
     return (
-      <div id='legal'className={this.canvasClasses()}>
+      <div id='docs' className={this.canvasClasses()}>
         <FlashHolder app={this.props.app}/>
         <div className="inner-wrap">
           <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>

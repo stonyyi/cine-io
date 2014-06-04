@@ -1,0 +1,7 @@
+#docs {
+
+  .container {
+    @include grid-column(8, true, true, 2);
+  }
+
+}
