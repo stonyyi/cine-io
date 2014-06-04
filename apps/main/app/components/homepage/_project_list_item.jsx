@@ -10,7 +10,7 @@ module.exports = React.createClass({
     model: React.PropTypes.instanceOf(Project).isRequired
   },
   getInitialState: function(){
-    return {showingSettings: false};
+    return {showingSettings: false, isDeleting: false, deletingProjectName: ''};
   },
   getBackboneObjects: function(){
     return this.props.model;
@@ -25,6 +25,25 @@ module.exports = React.createClass({
   },
   deleteProject: function(e){
     e.preventDefault();
+    if (this.state.isDeleting && this.state.deletingProjectName == this.props.model.get('name')){
+      this.actuallyDestroyProject();
+    } else {
+      this.setState({isDeleting: true, focusDeleteInput: true});
+    }
+  },
+  cancelDeleting: function(e){
+    this.setState({isDeleting: false});
+  },
+  changeProjectName: function(e){
+    this.setState({deletingProjectName: event.target.value});
+  },
+  componentDidUpdate: function(){
+    var deleteNameInput = this.refs.deleteNameInput;
+    if (deleteNameInput){
+      deleteNameInput.getDOMNode().focus();
+    }
+  },
+  actuallyDestroyProject: function(){
     this.props.model.destroy({
       data: {
         secretKey: this.props.model.get('secretKey')
@@ -36,9 +55,25 @@ module.exports = React.createClass({
   render: function() {
     var model = this.props.model,
       classes = cx({selected: this.props.selected}),
-      settings = '';
+      settings = '', deleteProject, deleteProjectSubmitButton;
 
     if (this.state.showingSettings){
+      if (this.state.isDeleting){
+        if (this.state.deletingProjectName == this.props.model.get('name')){
+          deleteProjectSubmitButton = (<button className='button alert tiny' type='submit'>Delete {this.props.model.get('name')}</button>);
+        }else{
+          deleteProjectSubmitButton = (<button className='button alert tiny' disabled='disabled' type='submit'>Delete {this.props.model.get('name')}</button>);
+        }
+        deleteProject = (
+          <form onSubmit={this.deleteProject}>
+            <label htmlFor='delete-input'>{ "Type " + this.props.model.get('name') + " to delete your project."}</label>
+            <input ref='deleteNameInput' id='delete-input' type="text" value={this.deletingProjectName} onChange={this.changeProjectName} />
+            {deleteProjectSubmitButton}
+          </form>
+        );
+      }else{
+        deleteProject = (<button className='button alert tiny' onClick={this.deleteProject}>Delete {model.get('name')}</button>);
+      }
       settings = (
         <div>
           <dl>
@@ -49,7 +84,7 @@ module.exports = React.createClass({
             <dt>Streams count</dt>
             <dd>{model.get('streamsCount')}</dd>
           </dl>
-          <button className='button alert tiny' onClick={this.deleteProject}>Delete {model.get('name')}</button>
+          {deleteProject}
         </div>
       );
     }
