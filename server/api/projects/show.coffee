@@ -8,6 +8,7 @@ toJSON = (project, callback)->
     name: project.name
     streamsCount: project.streamsCount
     updatedAt: project.updatedAt
+  projectJSON.deletedAt = project.deletedAt if project.deletedAt
 
   callback(null, projectJSON)
 

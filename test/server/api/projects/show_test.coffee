@@ -1,5 +1,6 @@
 Project = Cine.server_model('project')
-Show = testApi Cine.api('projects/show')
+ProjectsShow = Cine.api('projects/show')
+Show = testApi ProjectsShow
 
 describe 'Projects#Show', ->
   testApi.requresApiKey Show, 'secret'
@@ -18,3 +19,14 @@ describe 'Projects#Show', ->
       expect(response.secretKey).to.equal(@project.secretKey)
       expect(response.updatedAt).to.be.instanceOf(Date)
       done()
+
+  describe 'ProjectsShow#toJSON', ->
+    it 'returns deletedAt', (done)->
+      ProjectsShow.toJSON @project, (err, project)=>
+        expect(err).to.be.null
+        expect(project.deletedAt).to.be.undefined
+        @project.deletedAt = new Date
+        ProjectsShow.toJSON @project, (err, project)->
+          expect(err).to.be.null
+          expect(project.deletedAt).to.be.instanceOf(Date)
+          done()
