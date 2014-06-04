@@ -42,12 +42,13 @@ ensureUserCanAddAnotherStream = (project, callback)->
     return callback(null, true) if infinitePlan(user.plan)
     checkAllOtherProjects(user, callback)
 
-allocateNewStreamToProject = (project, callback)->
+allocateNewStreamToProject = (project, options, callback)->
   EdgecastStream.nextAvailable (err, stream)->
     return callback(err) if err
     return callback('Next stream not available, please try again later') if !stream
     stream._project = project._id
     stream.assignedAt = new Date
+    stream.name = options.name if options.name
 
     stream.save (err, stream)->
       return callback(err, stream) if err
@@ -55,7 +56,10 @@ allocateNewStreamToProject = (project, callback)->
       Project.increment project, 'streamsCount', 1,  (err, updatedAttributes)->
         callback(err, stream)
 
-module.exports = (project, callback)->
+module.exports = (project, options, callback)->
+  if typeof options == "function"
+    callback = options
+    options = {}
   ensureUserCanAddAnotherStream project, (err, canAddAnotherStream)->
     return returnExistingStream(project, callback) unless canAddAnotherStream
-    allocateNewStreamToProject(project, callback)
+    allocateNewStreamToProject(project, options, callback)

@@ -19,12 +19,12 @@ Create.addProjectToUserAndSave = (user, params, callback)->
       return callback(err, null, status: 400) if err
       # we can create a stream here automatically if we pass createStream: true
       return ProjectShow.toJSON project, callback unless params.createStream in ['true', true]
-      addNextStreamToProject project, (err, stream)->
+      addNextStreamToProject project, name: params.streamName, (err, stream)->
         return callback(err, null, status: 400) if err
         # we create the stream but just return the project
         ProjectShow.toJSON project, callback
 
 Create.addExampleProjectToUser = (user, callback)->
-  Create.addProjectToUserAndSave user, name: 'Development', createStream: true, callback
+  Create.addProjectToUserAndSave user, name: 'Development', createStream: true, streamName: 'Test', callback
 
 module.exports = Create

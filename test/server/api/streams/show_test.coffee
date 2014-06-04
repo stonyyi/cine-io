@@ -16,6 +16,7 @@ describe 'Streams#Show', ->
       eventName: 'cine1ENAME'
       streamName: 'cine1'
       streamKey: 'bass35'
+      name: 'my fun name'
       _project: @project._id
       assignedAt: now
     @projectStream.save done
@@ -49,9 +50,10 @@ describe 'Streams#Show', ->
         expectedPlayResponse =
           hls: "http://hls.cine.io/cines/cine1ENAME/cine1.m3u8"
           rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
-        expect(_.keys(response).sort()).to.deep.equal(['id', 'name', 'play'])
+        expect(_.keys(response).sort()).to.deep.equal(['id', 'name', 'play', 'streamName'])
         expect(response.play).to.deep.equal(expectedPlayResponse)
-        expect(response.name).to.deep.equal('cine1')
+        expect(response.streamName).to.deep.equal('cine1')
+        expect(response.name).to.deep.equal('my fun name')
         expect(response.id).to.equal(@projectStream._id.toString())
         done()
 
@@ -75,8 +77,9 @@ describe 'Streams#Show', ->
         expectedPublishResponse =
           url: "rtmp://stream.lax.cine.io/20C45E/cines"
           stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
-        expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish'])
-        expect(response.name).to.deep.equal('cine1')
+        expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish', 'streamName'])
+        expect(response.streamName).to.deep.equal('cine1')
+        expect(response.name).to.deep.equal('my fun name')
         expect(response.password).to.deep.equal('bass35')
         expect(response.play).to.deep.equal(expectedPlayResponse)
         expect(response.publish).to.deep.equal(expectedPublishResponse)

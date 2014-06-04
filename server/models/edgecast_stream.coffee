@@ -6,6 +6,8 @@ EdgecastStreamSchema = new mongoose.Schema
     ref: 'Project'
   assignedAt: #the date it is assigned to a project
     type: Date
+  name:
+    type: String
   instanceName:
     type: String
   eventName:

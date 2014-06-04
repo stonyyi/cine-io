@@ -1,5 +1,6 @@
 Project = Cine.server_model('project')
-Create = testApi Cine.api('projects/create')
+ProjectCreate = Cine.api('projects/create')
+Create = testApi ProjectCreate
 User = Cine.server_model('user')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 EdgecastStream = Cine.server_model('edgecast_stream')
@@ -46,3 +47,22 @@ describe 'Projects#Create', ->
         expect(response.name).to.equal('new project')
         expect(response.publicKey).to.have.length(32)
         done()
+
+  describe 'addExampleProjectToUser', ->
+    beforeEach (done)->
+      @stream = new EdgecastStream(instanceName: 'cines', streamName: 'cine1', streamKey: 'bass35', eventName: 'cine1ENAME')
+      @stream.save done
+
+    stubEdgecast()
+
+    it 'adds a stream to the new project', (done)->
+      ProjectCreate.addExampleProjectToUser @user, (err, response, options)=>
+        expect(err).to.be.null
+        expect(response.name).to.equal('Development')
+        expect(response.streamsCount).to.equal(1)
+        expect(response.publicKey).to.have.length(32)
+        EdgecastStream.findById @stream.id, (err, stream)->
+          expect(err).to.be.null
+          expect(stream._project.toString()).to.equal(response.id.toString())
+          expect(stream.name).to.equal('Test')
+          done()

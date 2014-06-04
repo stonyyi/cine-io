@@ -78,6 +78,17 @@ describe 'addNextStreamToProject', ->
           expect(streamFromDb._project.toString()).to.equal(@project._id.toString())
           done()
 
+    it 'adds a name', (done)->
+      addNextStreamToProject @project, name: "my stream", (err, stream)=>
+        expect(err).to.be.null
+        expect(stream.id).to.equal(@stream._id.toString())
+        expect(stream.name).to.equal("my stream")
+        EdgecastStream.findById stream.id, (err, streamFromDb)=>
+          expect(err).to.be.null
+          expect(streamFromDb._project.toString()).to.equal(@project._id.toString())
+          expect(streamFromDb.name).to.equal("my stream")
+          done()
+
     it 'updates the streamsCount', (done)->
       addNextStreamToProject @project, (err, stream)=>
         expect(err).to.be.null

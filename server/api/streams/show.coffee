@@ -18,7 +18,8 @@ fmleProfile = (stream, callback)->
 playJSON = (stream, callback)->
   streamJSON =
     id: stream._id.toString()
-    name: stream.streamName
+    name: stream.name
+    streamName: stream.streamName
     play:
       hls: "http://hls.cine.io/#{stream.instanceName}/#{stream.eventName}/#{stream.streamName}.m3u8"
       rtmp: "#{BASE_URL}/#{stream.instanceName}/#{stream.streamName}?adbe-live-event=#{stream.eventName}"
