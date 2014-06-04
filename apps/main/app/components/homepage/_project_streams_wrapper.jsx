@@ -1,7 +1,6 @@
 /** @jsx React.DOM */
 var
   React = require('react'),
-  StreamListItem = Cine.component('projects/_stream_list_item'),
   StreamDeets = Cine.component('homepage/_stream_deets'),
   NewStreamButton = Cine.component('homepage/_new_stream_button'),
   Streams = Cine.collection('streams'),
