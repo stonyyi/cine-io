@@ -101,6 +101,11 @@ module.exports = React.createClass({
                   <img width='36' height='36' src="/images/javascript-logo.png" alt="The JavaScript SDK" />
                 </a>
               </li>
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-ios'>
+                  <img width='36' height='36' src="/images/ios-logo.png" alt="The iOS SDK" />
+                </a>
+              </li>
             </ul>
 
             <h4 className='top-margin-1'>Server side libraries</h4>
