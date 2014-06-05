@@ -34,6 +34,9 @@ describe 'api routing', ->
       @agent.get('/api/1/-/project?secretKey=INVALID')
         .expect(401)
         .end (err, res)->
+          response = JSON.parse(res.text)
+          expect(response.message).to.equal('invalid secret key')
+          expect(response.status).to.equal(401)
           done()
 
     it 'routes to an authenticated route', (done)->
