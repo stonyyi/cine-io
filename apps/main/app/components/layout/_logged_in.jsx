@@ -6,7 +6,7 @@ module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
 
   logout: function(e) {
-    e.preventDefault()
+    e.preventDefault();
     var _this = this
       , app = this.props.app
       , options = {
