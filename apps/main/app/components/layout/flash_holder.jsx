@@ -43,7 +43,7 @@ module.exports = React.createClass({
         var alertClasses = [flashMessage.kind, 'alert-box', 'radius'].join(' ');
         return (
           <div key={flashMessage.id} data-alert className={alertClasses}>
-            <span className='alert-body'>{flashMessage.message}</span>
+            <span className='alert-body' dangerouslySetInnerHTML={{__html: flashMessage.message}} />
             <a href="" className='close-alert' onClick={self.closeAlert.bind(self, i)}>
               <i className="fa fa-times"></i>
             </a>
