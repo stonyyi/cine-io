@@ -3,11 +3,12 @@ var React = require('react'),
 Header = Cine.component('layout/header'),
 Footer = Cine.component('layout/footer'),
 LeftNav = Cine.component('layout/left_nav'),
+AccountForm = Cine.component('account/_account_form'),
 FlashHolder = Cine.component('layout/flash_holder');
 
 module.exports = React.createClass({
   displayName: 'AccountEdit',
-  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin'), Cine.lib('has_nav')],
+  mixins: [Cine.lib('requires_app'), Cine.lib('has_nav')],
   getBackboneObjects: function(){
     return this.props.model;
   },
@@ -19,6 +20,7 @@ module.exports = React.createClass({
           <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
           <Header app={this.props.app} />
           <div className="container">
+          <AccountForm app={this.props.app}/>
           </div>
         </div>
         <Footer />
