@@ -43,7 +43,7 @@ describe 'getProject', ->
         getProject {publicKey: @project.publicKey}, requires: 'either', (err, project, options)->
           expect(err).to.equal('invalid public key or secret key')
           expect(project).to.be.null
-          expect(options).to.deep.equal(status: 404)
+          expect(options).to.deep.equal(status: 401)
           done()
 
   describe 'with user', ->
