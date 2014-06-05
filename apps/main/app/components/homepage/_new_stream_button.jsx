@@ -16,8 +16,13 @@ module.exports = React.createClass({
       p = new Stream({secretKey: this.props.model.get('secretKey')}, {app: this.props.app});
     p.save(null, {
       success: function(model, response, options){
+        var returnedExistingStream = self.props.model.getStreams().get(model.id);
         self.props.model.getStreams().add(model);
-        self.props.model.set('streamsCount', self.props.model.get('streamsCount') + 1);
+        if (!returnedExistingStream){
+          self.props.model.set('streamsCount', self.props.model.get('streamsCount') + 1);
+        }else{
+          self.props.app.flash("This plan is at its maximum stream limit. Please <a href='/account'>upgrade your account</a>.", 'info');
+        }
         self._owner.changeSelectedStreamId(model.id);
       }
     });
