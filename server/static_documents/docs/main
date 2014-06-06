@@ -13,15 +13,16 @@
 <ul>
 <li>method: POST</li>
 <li>url: /api/1/-/stream</li>
+<li>response format: JSON</li>
 <li>parameters:<ul>
 <li>secretKey: CINE_IO_SECRET_KEY</li>
 </ul>
 </li>
 </ul>
-<p>Example: <code>curl --data &quot;secretKey=MY_SECRET_KEY&quot; https://www.cine.io/api/1/-/stream</code></p>
+<p>Example: <code>curl -X POST --data &quot;secretKey=MY_SECRET_KEY&quot; https://www.cine.io/api/1/-/stream --header &quot;Content-Type:application/json&quot;</code></p>
 <h3 id="2-publish-a-live-stream">2. Publish a live stream</h3>
 <p><em>Location: Web Client</em></p>
-<p>Now you&#39;ve saved your stream <code>id</code> and stream <code>password</code>. Using the JS SDK, you&#39;ll need to pass you project&#39;s <em>public key</em> to the client. If your specific user has permission in your application to publish to this stream, then you&#39;ll need to send along the stream <code>id</code> and stream <code>password</code> to your web client. For example, this endpoint would be useful if you are building a &quot;virtual classroom&quot; and the current logged-in user has a &quot;teacher&quot; role.</p>
+<p>Now you&#39;ve saved your stream <code>id</code> and stream <code>password</code>. Using the <a href="https://github.com/cine-io/js-sdk">JS SDK</a>, you&#39;ll need to pass you project&#39;s <em>public key</em> to the client. If your specific user has permission in your application to publish to this stream, then you&#39;ll need to send along the stream <code>id</code> and stream <code>password</code> to your web client. For example, this endpoint would be useful if you are building a &quot;virtual classroom&quot; and the current logged-in user has a &quot;teacher&quot; role.</p>
 <p>Publishing a live-stream requires that the logged-in user have Adobe Flash installed and enabled in her browser. The JS SDK will automatically download the correct SWF file and launch it in the user&#39;s browser when <code>start()</code> is called on the publisher.</p>
 <p>Example:</p>
 <pre><code class="lang-javascript">var streamId = &#39;&lt;STREAM_ID&gt;&#39;
@@ -35,7 +36,7 @@ var publisher = CineIO.publish(
 publisher.start();</code></pre>
 <h3 id="3-play-a-live-stream">3. Play a live stream</h3>
 <p><em>Location: Web Client</em></p>
-<p>Using the JS SDK, you&#39;ll need to pass you project&#39;s <em>public key</em> to the client. To play a stream using the JS SDK, you only need to send out the stream <code>id</code>. Only serve the stream <code>id</code> to users who have permission to view a stream. For example, in our aforementioned &quot;virtual classroom&quot; application, this endpoint would be useful when the current logged-in user has a &quot;student&quot; role.</p>
+<p>Using the <a href="https://github.com/cine-io/js-sdk">JS SDK</a>, you&#39;ll need to pass you project&#39;s <em>public key</em> to the client. To play a stream using the JS SDK, you only need to send out the stream <code>id</code>. Only serve the stream <code>id</code> to users who have permission to view a stream. For example, in our aforementioned &quot;virtual classroom&quot; application, this endpoint would be useful when the current logged-in user has a &quot;student&quot; role.</p>
 <p>Playing a live stream will launch the branded, open-source version of <a href="http://www.jwplayer.com/">JWPlayer</a>. If you have your own JWPlayer license, you can send it as one of the options (key: <code>jwPlayerKey</code>) to the <code>init()</code> function. Mobile devices will use native <code>&lt;video&gt;</code> elements rather than JWPlayer; this happens automatically.</p>
 <p>Example:</p>
 <pre><code class="lang-javascript">var streamId = &#39;&lt;STREAM_ID&gt;&#39;
@@ -50,13 +51,14 @@ CineIO.play(streamId, domId);</code></pre>
 <ul>
 <li>method: GET</li>
 <li>url: /api/1/-/stream</li>
+<li>response format: JSON</li>
 <li>parameters:<ul>
 <li>secretKey: CINE_IO_SECRET_KEY</li>
 <li>id: stream id</li>
 </ul>
 </li>
 </ul>
-<p>Example: <code>curl https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&amp;id=streamId</code></p>
+<p>Example: <code>curl https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&amp;id=streamId --header &quot;Content-Type:application/json&quot;</code></p>
 <h3 id="get-all-of-your-streams">Get all of your streams</h3>
 <p><em>Location: Web Server</em></p>
 <p>You can fetch all of your streams via an api endpoint. Currently pagination is not supported.</p>
@@ -64,12 +66,13 @@ CineIO.play(streamId, domId);</code></pre>
 <ul>
 <li>method: GET</li>
 <li>url: /api/1/-/streams</li>
+<li>response format: JSON</li>
 <li>parameters:<ul>
 <li>secretKey: CINE_IO_SECRET_KEY</li>
 </ul>
 </li>
 </ul>
-<p>Example: <code>curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY</code></p>
+<p>Example: <code>curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY --header &quot;Content-Type:application/json&quot;</code></p>
 <h3 id="get-the-project-details">Get the project details</h3>
 <p><em>Location: Web Server</em></p>
 <p>You can fetch your project details via api.</p>
@@ -77,18 +80,20 @@ CineIO.play(streamId, domId);</code></pre>
 <ul>
 <li>method: GET</li>
 <li>url: /api/1/-/project</li>
+<li>response format: JSON</li>
 <li>parameters:<ul>
 <li>secretKey: CINE_IO_SECRET_KEY</li>
 </ul>
 </li>
 </ul>
-<p>Example: <code>curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY</code></p>
+<p>Example: <code>curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header &quot;Content-Type:application/json&quot;</code></p>
 <h3 id="health">health</h3>
 <p><em>Location: Web Server</em></p>
 <p>This is a simple API health check.</p>
 <p>End point:</p>
 <ul>
 <li>method: GET</li>
+<li>response format: JSON</li>
 <li>url: /api/1/-/health</li>
 </ul>
-<p>Example: <code>curl https://www.cine.io/api/1/-/health</code></p>
+<p>Example: <code>curl https://www.cine.io/api/1/-/health --header &quot;Content-Type:application/json&quot;</code></p>

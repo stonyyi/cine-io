@@ -23,15 +23,16 @@ End point:
 
 * method: POST
 * url: /api/1/-/stream
+* response format: JSON
 * parameters:
   * secretKey: CINE_IO_SECRET_KEY
 
-Example: `curl --data "secretKey=MY_SECRET_KEY" https://www.cine.io/api/1/-/stream`
+Example: `curl -X POST --data "secretKey=MY_SECRET_KEY" https://www.cine.io/api/1/-/stream --header "Content-Type:application/json"`
 
 ### 2. Publish a live stream
 *Location: Web Client*
 
-Now you've saved your stream `id` and stream `password`. Using the JS SDK, you'll need to pass you project's *public key* to the client. If your specific user has permission in your application to publish to this stream, then you'll need to send along the stream `id` and stream `password` to your web client. For example, this endpoint would be useful if you are building a "virtual classroom" and the current logged-in user has a "teacher" role.
+Now you've saved your stream `id` and stream `password`. Using the [JS SDK](https://github.com/cine-io/js-sdk), you'll need to pass you project's *public key* to the client. If your specific user has permission in your application to publish to this stream, then you'll need to send along the stream `id` and stream `password` to your web client. For example, this endpoint would be useful if you are building a "virtual classroom" and the current logged-in user has a "teacher" role.
 
 Publishing a live-stream requires that the logged-in user have Adobe Flash installed and enabled in her browser. The JS SDK will automatically download the correct SWF file and launch it in the user's browser when `start()` is called on the publisher.
 
@@ -52,7 +53,7 @@ publisher.start();
 ### 3. Play a live stream
 *Location: Web Client*
 
-Using the JS SDK, you'll need to pass you project's *public key* to the client. To play a stream using the JS SDK, you only need to send out the stream `id`. Only serve the stream `id` to users who have permission to view a stream. For example, in our aforementioned "virtual classroom" application, this endpoint would be useful when the current logged-in user has a "student" role.
+Using the [JS SDK](https://github.com/cine-io/js-sdk), you'll need to pass you project's *public key* to the client. To play a stream using the JS SDK, you only need to send out the stream `id`. Only serve the stream `id` to users who have permission to view a stream. For example, in our aforementioned "virtual classroom" application, this endpoint would be useful when the current logged-in user has a "student" role.
 
 Playing a live stream will launch the branded, open-source version of [JWPlayer](http://www.jwplayer.com/). If you have your own JWPlayer license, you can send it as one of the options (key: `jwPlayerKey`) to the `init()` function. Mobile devices will use native `<video>` elements rather than JWPlayer; this happens automatically.
 
@@ -65,7 +66,6 @@ var streamId = '<STREAM_ID>'
 CineIO.play(streamId, domId);
 ```
 
-
 ## Additional end points
 
 ### Get a live stream
@@ -77,11 +77,12 @@ End point:
 
 * method: GET
 * url: /api/1/-/stream
+* response format: JSON
 * parameters:
  * secretKey: CINE_IO_SECRET_KEY
  * id: stream id
 
-Example: `curl https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId`
+Example: `curl https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId --header "Content-Type:application/json"`
 
 ### Get all of your streams
 *Location: Web Server*
@@ -92,10 +93,11 @@ End point:
 
 * method: GET
 * url: /api/1/-/streams
+* response format: JSON
 * parameters:
  * secretKey: CINE_IO_SECRET_KEY
 
-Example: `curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY`
+Example: `curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY --header "Content-Type:application/json"`
 
 ### Get the project details
 *Location: Web Server*
@@ -106,10 +108,11 @@ End point:
 
 * method: GET
 * url: /api/1/-/project
+* response format: JSON
 * parameters:
  * secretKey: CINE_IO_SECRET_KEY
 
-Example: `curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY`
+Example: `curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header "Content-Type:application/json"`
 
 ### health
 *Location: Web Server*
@@ -119,6 +122,7 @@ This is a simple API health check.
 End point:
 
 * method: GET
+* response format: JSON
 * url: /api/1/-/health
 
-Example: `curl https://www.cine.io/api/1/-/health`
+Example: `curl https://www.cine.io/api/1/-/health --header "Content-Type:application/json"`
