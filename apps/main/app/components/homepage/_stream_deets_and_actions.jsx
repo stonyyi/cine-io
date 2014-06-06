@@ -2,6 +2,7 @@
 var
   React = require('react'),
   Stream = Cine.model('stream'),
+  DeleteButtonWithInputConfirmation = Cine.component('shared/_delete_button_with_input_confirmation'),
   Project = Cine.model('project');
 
 module.exports = React.createClass({
@@ -14,7 +15,7 @@ module.exports = React.createClass({
   getBackboneObjects: function(){
     return this.props.model;
   },
-  actuallyDestroyStream: function(){
+  destroyStream: function(){
     var self = this,
       secretKey = this.props.project.get('secretKey');
     this.props.model.attributes.secretKey = secretKey;
@@ -30,7 +31,8 @@ module.exports = React.createClass({
     });
   },
   render: function(){
-    var model = this.props.model;
+    var model = this.props.model,
+      confirmationAttribute = this.props.model.get('name') ? 'name' : 'id';
     return (
       <div className="panel">
         <div>{model.id}</div>
@@ -48,7 +50,7 @@ module.exports = React.createClass({
           <dt>FMS url:</dt>
           <dd>{model.get('publish').url}</dd>
         </dl>
-        <button className='button tiny alert' onClick={this.actuallyDestroyStream}>Delete</button>
+        <DeleteButtonWithInputConfirmation model={this.props.model} confirmationAttribute={confirmationAttribute} deleteCallback={this.destroyStream} />
       </div>
     );
   }
