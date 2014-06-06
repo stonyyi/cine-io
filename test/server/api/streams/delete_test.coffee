@@ -18,7 +18,7 @@ describe 'Streams#Delete', ->
   describe 'failure', ->
     it 'requires an id', (done)->
       params = secretKey: @project.secretKey
-      Delete params, (err, response, options)=>
+      Delete params, (err, response, options)->
         expect(err).to.equal('id required')
         expect(response).to.be.null
         expect(options).to.deep.equal(status: 400)
