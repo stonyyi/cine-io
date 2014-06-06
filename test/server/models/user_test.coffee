@@ -13,10 +13,12 @@ describe 'User', ->
           user = new User(name: 'some name', plan: plan)
           user.save (err, member)->
             done(err)
+
       it 'can be test', (done)->
         user = new User(name: 'some name', plan: 'test')
         user.save (err, member)->
           done(err)
+
       it 'cannot be anything else', (done)->
         user = new User(name: 'some name', plan: 'something else')
         user.save (err, member)->
@@ -28,6 +30,18 @@ describe 'User', ->
         user.save (err, member)->
           expect(err).not.to.be.null
           done()
+
+    describe 'email', ->
+      it 'requires unique emails', (done)->
+        u = new User(email: 'my email', plan: 'solo')
+        u.save (err, user)->
+          expect(err).to.be.null
+          expect(user.email).to.equal('my email')
+          user2 = new User(email: 'my email', plan: 'solo')
+          user2.save (err, user)->
+            expect(err.name).to.equal('MongoError')
+            expect(err.err).to.include('duplicate key error index: cineio-test.users.$email')
+            done()
 
   describe 'password generation', ->
     it 'generates a password and salt', (done)->
