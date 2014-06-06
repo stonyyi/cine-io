@@ -129,7 +129,7 @@ var EmailLogin = React.createClass({
           <input name='username' type="email" required placeholder='Your email' ref='emailField' value={this.state.myEmail} onChange={this.changeMyEmail}/>
           <input name='password' type="password" required placeholder='Your password' value={this.state.myPassword} onChange={this.changeMyPassword}/>
           <input name='plan' type="hidden" required value={this.state.plan}/>
-          <button className="button radius expand">Sign up or sign in</button>
+          <button className="button radius expand bottom-margin-0">Sign up or sign in</button>
         </form>
       );
     }
@@ -157,6 +157,9 @@ LoggedOut = React.createClass({
         </div>
         <GithubLogin app={this.props.app}/>
         <EmailLogin app={this.props.app} showing={this.props.showing} />
+        <div className='legal-waver top-margin-half'>
+          By using this site you are agreeing to our <a href='/legal/terms-of-service'>Terms of Service</a>.
+        </div>
       </aside>
     );
   }
