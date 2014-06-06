@@ -5,7 +5,7 @@ module.exports = (id)->
     ViewClass = Cine.view(id)
     expectedClassName = id.replace('/', '-')
     parts = id.split('/')
-    displayName = [_str.capitalize(parts[0]), _str.capitalize(parts[1])].join('')
+    displayName = [_str.classify(parts[0]), _str.capitalize(parts[1])].join('')
 
     before ->
       @instance = new ViewClass(app: mainApp)
