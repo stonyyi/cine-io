@@ -20,6 +20,8 @@ App = Cine.require "apps/main/app/app"
 rendrServerOptions = Cine.middleware('rendr_server_options')
 appAttributes = rendrServerOptions.appData(settings: {env: process.env.NODE_ENV})
 
+global.requireFixture = (name)->
+  require "./fixtures/#{name}"
 
 global.newApp = (currentUser=null)->
   modelUtils = new ModelUtils("#{Cine.root}/apps/shared/")
