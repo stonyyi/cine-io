@@ -1,4 +1,4 @@
-Show = testApi Cine.api('static-document/show')
+Show = testApi Cine.api('static_documents/show')
 
 describe 'StaticDocument#show', ->
 
