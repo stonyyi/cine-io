@@ -1,4 +1,12 @@
 _ = require('underscore')
+mongoose = require('mongoose')
+truncateAllTables = Cine.require('test/helpers/truncate_all_tables')
+
+resetMongo = (done)->
+  if mongoose.connection._readyState == 1
+    truncateAllTables done
+  mongoose.connection.on "open", (ref) ->
+    truncateAllTables done
 
 beforeEach resetMongo
 

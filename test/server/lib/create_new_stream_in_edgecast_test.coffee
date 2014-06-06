@@ -3,7 +3,6 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 
 describe 'createNewStreamInEdgecast', ->
-  beforeEach resetMongo
 
   beforeEach (done)->
     @stream1 = new EdgecastStream(instanceName: 'cines', streamName: 'name1')
