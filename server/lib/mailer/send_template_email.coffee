@@ -11,8 +11,8 @@ noop = ->
 #   options:
 #     templateName: 'donated_for_ticket'
 #     subject: 'Your ticket to ARTIST LIVE'
-#     fromEmail: 'feedback@givingstage.com'
-#     fromName: 'Giving Stage'
+#     fromEmail: 'support@cine.io'
+#     fromName: 'cine.io'
 #     toEmail: 'johndoe@example.com'
 #     toName: 'John Doe'
 #     userTemplateVars: {
@@ -42,8 +42,8 @@ module.exports.send = (options, callback)->
 # sendBatch
 #   templateName: 'donated_for_ticket'
 #   subject: 'Your ticket to ARTIST LIVE'
-#   fromEmail: 'feedback@givingstage.com'
-#   fromName: 'Giving Stage'
+#   fromEmail: 'support@cine.io'
+#   fromName: 'cine.io'
 #   globalTemplateVars:
 #     event_title: 'Cyclone Phalin Relief Show'
 #     artist: 'Sean Hayes'
@@ -90,7 +90,7 @@ module.exports.sendBatch = (options, callback)->
   return callback('invalid recipients array') if !_.isArray(options.to)
   return callback('invalid merge variables array') if !_.isArray(options.mergeVars)
   return callback('invalid images array') if !_.isArray(options.images)
-  _.defaults(options, fromName: 'Giving Stage', fromEmail: 'feedback@givingstage.com')
+  _.defaults(options, fromName: 'cine.io', fromEmail: 'support@cine.io')
 
   # restructure the template variables into Mandrill-style merge variables
   options.globalMergeVars = _templateVarsToMergeVars(options.globalTemplateVars)
