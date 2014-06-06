@@ -14,4 +14,6 @@ describe 'Projects#Delete', ->
       expect(err).to.be.null
       expect(response.id).to.equal(@project._id.toString())
       expect(response.deletedAt).to.be.instanceOf(Date)
-      done()
+      Project.findById @project._id, (err, project)->
+        expect(project.deletedAt).to.be.instanceOf(Date)
+        done()
