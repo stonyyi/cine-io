@@ -16,6 +16,11 @@ if process.env.CI
   sh = require 'execSync'
   sh.run 'grunt prepareProductionAssets'
 
+jsdom = require('jsdom').jsdom
+document = jsdom('<html><head><script></script></head><body></body></html>')
+window = document.createWindow()
+global.jQuery = require("jquery")(window)
+
 App = Cine.require "apps/main/app/app"
 rendrServerOptions = Cine.middleware('rendr_server_options')
 appAttributes = rendrServerOptions.appData(settings: {env: process.env.NODE_ENV})

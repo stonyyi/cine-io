@@ -1,9 +1,5 @@
 auth = Cine.lib('authentication')
 User = Cine.model('user')
-jsdom = require('jsdom').jsdom
-document = jsdom('<html><head><script></script></head><body></body></html>')
-window = document.createWindow()
-global.jQuery = require("jquery")(window)
 
 describe 'authentication', ->
 
