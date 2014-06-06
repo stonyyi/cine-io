@@ -41,7 +41,7 @@ describe 'Projects#Delete', ->
         EdgecastStream.findById @stream2._id, (err, stream2)=>
           expect(err).to.be.null
           expect(stream2.deletedAt).to.be.instanceOf(Date)
-          EdgecastStream.findById @notProjectStream._id, (err, notProjectStream)=>
+          EdgecastStream.findById @notProjectStream._id, (err, notProjectStream)->
             expect(err).to.be.null
             expect(notProjectStream.deletedAt).to.be.undefined
             done()
