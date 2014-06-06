@@ -1,4 +1,5 @@
 EdgecastStream = Cine.server_model('edgecast_stream')
+Project = Cine.server_model('project')
 getProject = Cine.server_lib('get_project')
 StreamShow = Cine.api('projects/show')
 
@@ -13,7 +14,10 @@ module.exports = (params, callback)->
         $exists: false
 
     EdgecastStream.findOne query, (err, stream)->
+      return callback(err, null, status: 400) if err
       stream.deletedAt = new Date
       stream.save (err, stream)->
         return callback(err, null, status: 400) if err
-        StreamShow.toJSON(stream, callback)
+        Project.decrement project, 'streamsCount', 1,  (err, updatedAttributes)->
+          return callback(err, null, status: 400) if err
+          StreamShow.toJSON(stream, callback)
