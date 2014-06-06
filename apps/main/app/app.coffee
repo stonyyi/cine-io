@@ -1,6 +1,7 @@
 BaseApp = require('rendr/shared/app')
 window.Cine = require 'config/cine' if typeof window != 'undefined'
 User = Cine.model('user')
+handlebarsHelpers = Cine.lib('handlebars_helpers')
 isServer = typeof window is 'undefined'
 
 module.exports = class App extends BaseApp
@@ -9,6 +10,7 @@ module.exports = class App extends BaseApp
   initialize: ->
     BaseApp.prototype.initialize.call(this)
     @apiVersion = 1
+    @templateAdapter.registerHelpers(handlebarsHelpers)
     if isServer
       @currentUser = new User(@req.currentUser, app: this)
 
