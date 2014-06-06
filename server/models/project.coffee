@@ -33,9 +33,16 @@ ProjectSchema.pre 'save', (next)->
 
 ProjectSchema.statics.increment = (model, field, amount, callback)->
   model[field] += amount
-  updateParams = {}
-  updateParams[field] = amount
-  @collection.findAndModify({ _id: model._id }, [], { $inc: updateParams}, {new: true}, callback)
+  incrementParams = {}
+  incrementParams[field] = amount
+  updateParams =
+    $inc: incrementParams
+    $set:
+      updatedAt: new Date
+  @collection.findAndModify({ _id: model._id }, [], updateParams, {new: true}, callback)
+
+ProjectSchema.statics.decrement = (model, field, amount, callback)->
+  Project.increment(model, field, amount*-1, callback)
 
 ProjectSchema.options.toJSON ||= {}
 ProjectSchema.options.toJSON.transform = (doc, ret, options)->

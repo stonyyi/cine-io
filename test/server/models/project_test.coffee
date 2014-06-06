@@ -5,6 +5,13 @@ modelTimestamps = Cine.require('test/helpers/model_timestamps')
 describe 'Project', ->
   modelTimestamps(Project, name: 'hey')
 
+  beforeEach (done)->
+    @project = new Project(name: 'a', streamsCount: 12, plan: 'free')
+    @project.save done
+
+  beforeEach ->
+    @originalUpdatedAt = @project.updatedAt
+
   describe 'publicKey', ->
     it 'has a unique publicKey generated on save', (done)->
       project = new Project(name: 'some name', plan: 'free')
@@ -42,25 +49,52 @@ describe 'Project', ->
           done(err)
 
   describe '.increment', ->
-    beforeEach resetMongo
+
+    beforeEach (done)->
+      @project = new Project(name: 'a', streamsCount: 12, plan: 'free')
+      @project.save done
+
     it 'increments the specified field and returns the new attributes', (done)->
-      project = new Project(name: 'a', streamsCount: 12, plan: 'free')
-      project.save (err)->
+      Project.increment @project, 'streamsCount', 3, (err, newProjectAttributes)->
         expect(err).to.be.null
-        Project.increment project, 'streamsCount', 3, (err, newProjectAttributes)->
-          expect(err).to.be.null
-          expect(newProjectAttributes.name).to.equal('a')
-          expect(newProjectAttributes.streamsCount).to.equal(15)
-          done()
+        expect(newProjectAttributes.name).to.equal('a')
+        expect(newProjectAttributes.streamsCount).to.equal(15)
+        done()
+
+    it 'updates the updatedAt', (done)->
+      Project.decrement @project, 'streamsCount', 3, (err, newProjectAttributes)=>
+        expect(err).to.be.null
+        expect(newProjectAttributes.updatedAt).to.be.greaterThan(@originalUpdatedAt)
+        done()
 
     it 'updates the existing model', (done)->
-      project = new Project(name: 'a', streamsCount: 12, plan: 'free')
-      project.save (err)->
+      Project.increment @project, 'streamsCount', 3, (err, newProjectAttributes)=>
         expect(err).to.be.null
-        Project.increment project, 'streamsCount', 3, (err, newProjectAttributes)->
+        expect(@project.streamsCount).to.equal(15)
+        Project.increment @project, 'streamsCount', 2, (err, newProjectAttributes)=>
           expect(err).to.be.null
-          expect(project.streamsCount).to.equal(15)
-          Project.increment project, 'streamsCount', 2, (err, newProjectAttributes)->
-            expect(err).to.be.null
-            expect(project.streamsCount).to.equal(17)
+          expect(@project.streamsCount).to.equal(17)
+          done()
+
+  describe '.decrement', ->
+    it 'decrements the specified field and returns the new attributes', (done)->
+      Project.decrement @project, 'streamsCount', 3, (err, newProjectAttributes)->
+        expect(err).to.be.null
+        expect(newProjectAttributes.name).to.equal('a')
+        expect(newProjectAttributes.streamsCount).to.equal(9)
+        done()
+
+    it 'updates the updatedAt', (done)->
+      Project.decrement @project, 'streamsCount', 3, (err, newProjectAttributes)=>
+        expect(err).to.be.null
+        expect(newProjectAttributes.updatedAt).to.be.greaterThan(@originalUpdatedAt)
+        done()
+
+    it 'updates the existing model', (done)->
+      Project.decrement @project, 'streamsCount', 3, (err, newProjectAttributes)=>
+        expect(err).to.be.null
+        expect(@project.streamsCount).to.equal(9)
+        Project.decrement @project, 'streamsCount', 2, (err, newProjectAttributes)=>
+          expect(err).to.be.null
+          expect(@project.streamsCount).to.equal(7)
           done()
