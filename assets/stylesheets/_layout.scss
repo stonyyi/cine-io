@@ -104,6 +104,10 @@ button, .button {
 
 header {
   margin-bottom: 1em;
+  .plan-name{
+    line-height: $topbar-height;
+    color: $topbar-dropdown-link-color;
+  }
 }
 
 footer {

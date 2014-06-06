@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
-var React = require('react')
-  , authentication = Cine.lib('authentication');
+var React = require('react'),
+  authentication = Cine.lib('authentication'),
+  capitalize = Cine.lib('capitalize');
 
 module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
@@ -27,8 +28,8 @@ module.exports = React.createClass({
     return (
       <section className="top-bar-section">
         <ul className="right">
-          <li>
-            {plan}
+          <li className='has-form'>
+            <span className='plan-name'>{capitalize(plan)}</span>
           </li>
           <li className="has-dropdown not-click">
             <a href="" onClick={this.doNothing}>{name}</a>

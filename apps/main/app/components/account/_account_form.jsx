@@ -2,6 +2,7 @@
 var React = require('react'),
   User = Cine.model('user'),
   _ = require('underscore'),
+  capitalize = Cine.lib('capitalize'),
   authentication = Cine.lib('authentication');
 
 module.exports = React.createClass({
@@ -27,8 +28,7 @@ module.exports = React.createClass({
   },
   render: function() {
     var planOptions = _.map(User.plans, function(plan) {
-      var capitalized = plan.charAt(0).toUpperCase() + plan.slice(1);
-      return (<option key={plan} value={plan}>{capitalized}</option>);
+      return (<option key={plan} value={plan}>{capitalize(plan)}</option>);
     });
     return (
       <form onSubmit={this.updateAccount}>
@@ -39,23 +39,23 @@ module.exports = React.createClass({
             </label>
           </div>
         </div>
-        <div class="row">
+        <div className="row">
           <div className="large-12 columns">
             <label>Email
               <input type="text" placeholder="Your email" value={this.state.email} onChange={this.changeEmail} name='email'/>
             </label>
           </div>
         </div>
-        <div class="row">
+        <div className="row">
           <div className="large-12 columns">
             <label>Plan
-              <select value={this.state.projectPlan} onChange={this.changeProjectPlan} name='plan'>
+              <select value={this.state.plan} onChange={this.changePlan} name='plan'>
                 {planOptions}
               </select>
             </label>
           </div>
         </div>
-        <div class="row">
+        <div className="row">
           <div className="large-12 columns">
             <button type='submit'>Save</button>
           </div>
