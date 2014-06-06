@@ -2,7 +2,7 @@ request = require('request')
 moment = require('moment')
 async = require('async')
 _ = require('underscore')
-shortId = require('shortId')
+shortId = require('shortid')
 edgecastToken = Cine.config('variables/edgecast').token
 EdgecastStream = Cine.server_model('edgecast_stream')
 
