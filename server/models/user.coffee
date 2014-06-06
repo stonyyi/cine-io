@@ -18,6 +18,7 @@ UserSchema = new Schema
     trim: true
     index: true
     sparse: true
+    unique: true
   githubId:
     type: Number
     index: true
