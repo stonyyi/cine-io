@@ -13,13 +13,13 @@ describe 'createNewStreamInEdgecast', ->
     @stream1 = new EdgecastStream(instanceName: 'bobs', streamName: 'name1')
     @stream1.save done
 
-  stubEdgecast()
+  stubEdgecast(streamName: 'yoooo')
 
   it 'calls to edgecast and creates a new EdgecastStream in the db', (done)->
     createNewStreamInEdgecast (err, stream)->
       expect(err).to.be.null
-      expect(stream.streamName).to.equal('cine2')
-      expect(stream.eventName).to.equal('cine2')
+      expect(stream.streamName).to.equal('yoooo')
+      expect(stream.eventName).to.equal('yoooo')
       expect(stream.instanceName).to.equal('cines')
       d = new Date
       expect(stream.expiration.getDate()).to.equal(d.getDate())

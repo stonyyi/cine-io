@@ -48,6 +48,7 @@
     "rendr": "git://github.com/givingstage/rendr.git#cf9fd550f3f832ef3abd7d4c84ee7015f49d58d8",
     "rendr-handlebars": "git://github.com/airbnb/rendr-handlebars.git#6e5363074aa8fdfda0cbb2d9f70ed272be8040ea",
     "request": "2.34.0",
+    "shortid": "^2.0.0",
     "type-of": "^2.0.1",
     "underscore": "1.6.0",
     "underscore.string": "2.3.3"

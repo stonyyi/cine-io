@@ -1,10 +1,13 @@
 request = require('request')
 moment = require('moment')
 async = require('async')
+_ = require('underscore')
+shortId = require('shortId')
 edgecastToken = Cine.config('variables/edgecast').token
 EdgecastStream = Cine.server_model('edgecast_stream')
 
-module.exports = ->
+module.exports = (createOptions={})->
+  _.defaults(createOptions, streamName: 'rndstream')
   expectAuthorization = (options)->
     expect(options.headers.Authorization).to.equal("TOK:#{edgecastToken}")
 
@@ -14,14 +17,14 @@ module.exports = ->
     expectedOptions =
       KeyFrameInterval: 3
       Expiration: moment(d).format('YYYY-MM-DD')
-      EventName: 'cine2'
+      EventName: createOptions.streamName
       InstanceName: 'cines'
     expect(options.json).to.deep.equal(expectedOptions)
     expectAuthorization(options)
     callback(null, {statusCode: 200}, {Id: 123})
 
   validateFmsOptions = (options, callback)->
-    expect(options.json.Path).to.equal('cines/cine2')
+    expect(options.json.Path).to.equal("cines/#{createOptions.streamName}")
     expect(options.json.Key).to.have.length.above(1)
     expectAuthorization(options)
     callback(null, statusCode: 200)
@@ -36,12 +39,13 @@ module.exports = ->
 
   beforeEach ->
     sinon.stub request, 'post', requestResponseHandler
+    sinon.stub(shortId, 'generate').returns(createOptions.streamName)
 
   afterEach (done)->
     foundAStream = false
     testFunction = -> foundAStream
     checkFunction = (callback)->
-      EdgecastStream.findOne streamName: 'cine2', (err, stream)->
+      EdgecastStream.findOne streamName: createOptions.streamName, (err, stream)->
         foundAStream = stream
         callback()
 
@@ -49,3 +53,4 @@ module.exports = ->
 
   afterEach ->
     request.post.restore()
+    shortId.generate.restore()

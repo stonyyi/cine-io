@@ -2,6 +2,7 @@ request = require('request')
 moment = require('moment')
 async = require('async')
 _ = require('underscore')
+shortId = require('shortId')
 
 EdgecastStream = Cine.server_model('edgecast_stream')
 
@@ -29,7 +30,7 @@ expirationDate = (callback)->
   callback(null, moment(d).format('YYYY-MM-DD'))
 
 createStream = (response, originalCallback)->
-  stageName = "#{prefix}#{response.getEdgecastStreamCount+1}"
+  stageName = shortId.generate()
   stream = new EdgecastStream
     instanceName: instanceName
     expiration: response.expirationDate
@@ -81,8 +82,6 @@ createStream = (response, originalCallback)->
 module.exports = (originalCallback)->
 
   prepareCreateStreamAsyncOptions =
-    getEdgecastStreamCount: (callback)->
-      EdgecastStream.count instanceName: instanceName, callback
     generatePassword: generatePassword
     expirationDate: expirationDate
 
