@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 var
   React = require('react'),
-  StreamDeets = Cine.component('homepage/_stream_deets'),
+  StreamDeetsAndActions = Cine.component('homepage/_stream_deets_and_actions'),
   NewStreamButton = Cine.component('homepage/_new_stream_button'),
   Streams = Cine.collection('streams'),
   Project = Cine.model('project'),
@@ -32,7 +32,7 @@ module.exports = React.createClass({
   },
   render: function(){
     var selectedStreamId = this.state.selectedStreamId,
-    streamDeets = '',
+    streamDeetsAndActions = '',
     publishAndPlay = '',
     streams = this.props.model.getStreams();
     var streamListItems = streams.map(function(stream) {
@@ -45,7 +45,7 @@ module.exports = React.createClass({
     }
     if (selectedStreamId){
       var selectedStream = streams.get(selectedStreamId);
-      streamDeets = (<StreamDeets model={selectedStream} />);
+      streamDeetsAndActions = (<StreamDeetsAndActions model={selectedStream} project={this.props.model}/>);
       publishAndPlay = (
         <div>
           <PublishCodeExample streamId={selectedStream.id} password={selectedStream.get('password')}/>
@@ -64,7 +64,7 @@ module.exports = React.createClass({
             <select value={selectedStreamId} onChange={this.handleStreamChangeSelect}>
               {streamListItems}
             </select>
-            {streamDeets}
+            {streamDeetsAndActions}
           </div>
         </div>
         <div className='medium-6 columns'>
