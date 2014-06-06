@@ -8,7 +8,7 @@ exports.login = (app, form, options={})->
   _.defaults(options, success: noop, completeSignup: noop, error: noop)
   # button.button('loading')
   data = form.serialize()
-  $.ajax
+  jQuery.ajax
     type: "POST",
     url: "/login",
     data: data,
@@ -25,7 +25,7 @@ exports.login = (app, form, options={})->
 exports.logout = (app, options={})->
   _.defaults(options, success: noop, error: noop)
   # button.button('loading')
-  $.ajax
+  jQuery.ajax
     type: 'GET'
     url: '/logout',
     success: (data, status, jqXHR)->
@@ -40,7 +40,7 @@ exports.logout = (app, options={})->
 exports.forgotPassword = (app, form, options={})->
   _.defaults(options, success: noop, error: noop)
   # button.button('loading')
-  $.ajax
+  jQuery.ajax
     type: 'POST'
     url: '/api/1/-/password-change-request'
     data: form.serialize()
@@ -55,7 +55,7 @@ exports.forgotPassword = (app, form, options={})->
 exports.updatePassword = (app, form, options={})->
   _.defaults(options, success: noop, error: noop)
   # button.button('loading')
-  $.ajax
+  jQuery.ajax
     type: 'post'
     url: '/update-password'
     data: form.serialize()
@@ -71,7 +71,7 @@ exports.updatePassword = (app, form, options={})->
 exports.updateAccount = (app, form, options={})->
   _.defaults(options, success: noop, error: noop)
   # button.button('loading')
-  $.ajax
+  jQuery.ajax
     type: "POST",
     url: "/api/1/-/update-account",
     data: form.serialize(),
