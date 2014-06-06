@@ -110,6 +110,26 @@ var EmailLogin = React.createClass({
     }
     this.refs[ref].getDOMNode().focus();
   },
+  showForgotPassword: function(e){
+    e.preventDefault();
+    this.setState({forgotPassword: true, completeSignup: false});
+    this.focusProperInput();
+  },
+  hideForgotPassword: function(e){
+    e.preventDefault();
+    this.setState({forgotPassword: false, completeSignup: false});
+    this.focusProperInput();
+  },
+  sendForgotPassword: function(e){
+    e.preventDefault();
+    var self = this;
+    authentication.forgotPassword(this.props.app, jQuery(e.currentTarget), {
+      success: function(){
+        self.setState({forgotPassword: false, completeSignup: false});
+        self.props.app.flash("A password recovery email was sent to "+self.state.myEmail+".", 'info');
+      }
+    });
+  },
   render: function() {
     var suffix = '';
     if (this.state.myName.length > 0){
@@ -123,13 +143,26 @@ var EmailLogin = React.createClass({
           <button className="button radius expand">Join</button>
         </form>
       );
-    } else {
+    } else if (this.state.forgotPassword){
+      return (
+        <form onSubmit={this.sendForgotPassword}>
+          <input name='email' type="email" required placeholder='Your email' ref='emailField' value={this.state.myEmail} onChange={this.changeMyEmail}/>
+          <button className="button radius expand bottom-margin-0">Recover Password</button>
+          <div className='text-center top-margin-half'>
+            <a href='' onClick={this.hideForgotPassword}>I remember my password.</a>
+          </div>
+        </form>
+      );
+    } else{
       return (
         <form onSubmit={this.emailLogin}>
           <input name='username' type="email" required placeholder='Your email' ref='emailField' value={this.state.myEmail} onChange={this.changeMyEmail}/>
           <input name='password' type="password" required placeholder='Your password' value={this.state.myPassword} onChange={this.changeMyPassword}/>
           <input name='plan' type="hidden" required value={this.state.plan}/>
           <button className="button radius expand bottom-margin-0">Sign up or sign in</button>
+          <div className='text-center top-margin-half'>
+            <a href='' onClick={this.showForgotPassword}>Forgot password?</a>
+          </div>
         </form>
       );
     }

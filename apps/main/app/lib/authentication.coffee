@@ -37,6 +37,37 @@ exports.logout = (app, options={})->
       options.error()
 
 # usage auth(app, button, success: ->, error: ->)
+exports.forgotPassword = (app, form, options={})->
+  _.defaults(options, success: noop, error: noop)
+  # button.button('loading')
+  $.ajax
+    type: 'POST'
+    url: '/api/1/-/password-change-request'
+    data: form.serialize()
+    success: (data, status, jqXHR)->
+      # button.button('reset')
+      options.success()
+    error: (jqXHR, textStatus, errorThrown)->
+      # button.button('reset')
+      options.error()
+
+# usage auth(app, button, success: ->, error: ->)
+exports.updatePassword = (app, form, options={})->
+  _.defaults(options, success: noop, error: noop)
+  # button.button('loading')
+  $.ajax
+    type: 'post'
+    url: '/update-password'
+    data: form.serialize()
+    success: (data, status, jqXHR)->
+      # button.button('reset')
+      options.success()
+      window.location.href = data.redirect
+    error: (jqXHR, textStatus, errorThrown)->
+      # button.button('reset')
+      options.error()
+
+# usage auth(app, button, success: ->, error: ->)
 exports.updateAccount = (app, form, options={})->
   _.defaults(options, success: noop, error: noop)
   # button.button('loading')
