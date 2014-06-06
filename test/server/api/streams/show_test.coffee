@@ -1,6 +1,7 @@
 Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')
-Show = testApi Cine.api('streams/show')
+StreamsShow = Cine.api('streams/show')
+Show = testApi StreamsShow
 _ = require('underscore')
 
 describe 'Streams#Show', ->
@@ -96,3 +97,25 @@ describe 'Streams#Show', ->
           expect(response.content).to.contain('<stream>cine1?bass35&amp;adbe-live-event=cine1ENAME</stream>')
           expect(response.content).to.contain('<url>rtmp://stream.lax.cine.io/20C45E/cines</url>')
           done()
+
+  describe 'deleted streams', ->
+    beforeEach (done)->
+      @projectStream.deletedAt = new Date
+      @projectStream.save done
+    it 'will not return deleted streams', (done)->
+      params = id: @projectStream._id, secretKey: @project.secretKey
+      Show params, (err, response, options)->
+        expect(err).to.equal('stream not found')
+        expect(response).to.be.null
+        expect(options).to.deep.equal(status: 404)
+        done()
+
+    it 'will be returned in the full json when used', (done)->
+      StreamsShow.fullJSON @projectStream, (err, streamJSON)->
+        expect(streamJSON.deletedAt).to.be.instanceOf(Date)
+        done()
+
+    it 'will be not returned in the play json when used', (done)->
+      StreamsShow.playJSON @projectStream, (err, streamJSON)->
+        expect(streamJSON.deletedAt).to.be.undefined
+        done()

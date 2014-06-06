@@ -33,14 +33,20 @@ fullJSON = (stream, callback)->
     streamJSON.password = stream.streamKey
     streamJSON.expiration = stream.expiration
     streamJSON.assignedAt = stream.assignedAt
+    streamJSON.deletedAt = stream.deletedAt if stream.deletedAt
     callback(null, streamJSON)
 
 Show = (params, callback)->
   getProject params, requires: 'either', (err, project, options)->
     return callback(err, project, options) if err
     return callback("id required", null, status: 400) unless params.id
+    query =
+      _id: params.id
+      _project: project._id
+      deletedAt:
+        $exists: false
 
-    EdgecastStream.findOne _id: params.id, _project: project._id, (err, stream)->
+    EdgecastStream.findOne query, (err, stream)->
       return callback(err, null, status: 400) if err
       return callback("stream not found", null, status: 404) unless stream
       if params.fmleProfile == 'true'
