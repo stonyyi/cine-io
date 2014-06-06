@@ -82,7 +82,7 @@ End point:
  * secretKey: CINE_IO_SECRET_KEY
  * id: stream id
 
-Example: `curl https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId --header "Content-Type:application/json"`
+Example: `curl "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId" --header "Content-Type:application/json"`
 
 ### Get all of your streams
 *Location: Web Server*
@@ -99,6 +99,22 @@ End point:
 
 Example: `curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY --header "Content-Type:application/json"`
 
+### Delete a live stream
+*Location: Web Server*
+
+This will delete the stream. Publishing and playing will no longer be available.
+
+End point:
+
+* method: DELETE
+* url: /api/1/-/stream
+* response format: JSON
+* parameters:
+ * secretKey: CINE_IO_SECRET_KEY
+ * id: stream id
+
+Example: `curl -X DELETE "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId" --header "Content-Type:application/json"`
+
 ### Get the project details
 *Location: Web Server*
 
@@ -113,6 +129,21 @@ End point:
  * secretKey: CINE_IO_SECRET_KEY
 
 Example: `curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header "Content-Type:application/json"`
+
+### Delete a live stream
+*Location: Web Server*
+
+This will delete the entire project. Publishing and playing to all associated streams will no longer be available.
+
+End point:
+
+* method: DELETE
+* url: /api/1/-/project
+* response format: JSON
+* parameters:
+ * secretKey: CINE_IO_SECRET_KEY
+
+Example: `curl -X DELETE https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header "Content-Type:application/json"`
 
 ### health
 *Location: Web Server*

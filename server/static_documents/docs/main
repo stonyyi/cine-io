@@ -58,7 +58,7 @@ CineIO.play(streamId, domId);</code></pre>
 </ul>
 </li>
 </ul>
-<p>Example: <code>curl https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&amp;id=streamId --header &quot;Content-Type:application/json&quot;</code></p>
+<p>Example: <code>curl &quot;https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&amp;id=streamId&quot; --header &quot;Content-Type:application/json&quot;</code></p>
 <h3 id="get-all-of-your-streams">Get all of your streams</h3>
 <p><em>Location: Web Server</em></p>
 <p>You can fetch all of your streams via an api endpoint. Currently pagination is not supported.</p>
@@ -73,6 +73,21 @@ CineIO.play(streamId, domId);</code></pre>
 </li>
 </ul>
 <p>Example: <code>curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY --header &quot;Content-Type:application/json&quot;</code></p>
+<h3 id="delete-a-live-stream">Delete a live stream</h3>
+<p><em>Location: Web Server</em></p>
+<p>This will delete the stream. Publishing and playing will no longer be available.</p>
+<p>End point:</p>
+<ul>
+<li>method: DELETE</li>
+<li>url: /api/1/-/stream</li>
+<li>response format: JSON</li>
+<li>parameters:<ul>
+<li>secretKey: CINE_IO_SECRET_KEY</li>
+<li>id: stream id</li>
+</ul>
+</li>
+</ul>
+<p>Example: <code>curl -X DELETE &quot;https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&amp;id=streamId&quot; --header &quot;Content-Type:application/json&quot;</code></p>
 <h3 id="get-the-project-details">Get the project details</h3>
 <p><em>Location: Web Server</em></p>
 <p>You can fetch your project details via api.</p>
@@ -87,6 +102,20 @@ CineIO.play(streamId, domId);</code></pre>
 </li>
 </ul>
 <p>Example: <code>curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header &quot;Content-Type:application/json&quot;</code></p>
+<h3 id="delete-a-live-stream">Delete a live stream</h3>
+<p><em>Location: Web Server</em></p>
+<p>This will delete the entire project. Publishing and playing to all associated streams will no longer be available.</p>
+<p>End point:</p>
+<ul>
+<li>method: DELETE</li>
+<li>url: /api/1/-/project</li>
+<li>response format: JSON</li>
+<li>parameters:<ul>
+<li>secretKey: CINE_IO_SECRET_KEY</li>
+</ul>
+</li>
+</ul>
+<p>Example: <code>curl -X DELETE https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header &quot;Content-Type:application/json&quot;</code></p>
 <h3 id="health">health</h3>
 <p><em>Location: Web Server</em></p>
 <p>This is a simple API health check.</p>
