@@ -130,7 +130,7 @@ End point:
 
 Example: `curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header "Content-Type:application/json"`
 
-### Delete a live stream
+### Delete the project
 *Location: Web Server*
 
 This will delete the entire project. Publishing and playing to all associated streams will no longer be available.

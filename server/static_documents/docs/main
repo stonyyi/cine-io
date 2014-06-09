@@ -102,7 +102,7 @@ CineIO.play(streamId, domId);</code></pre>
 </li>
 </ul>
 <p>Example: <code>curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header &quot;Content-Type:application/json&quot;</code></p>
-<h3 id="delete-a-live-stream">Delete a live stream</h3>
+<h3 id="delete-the-project">Delete the project</h3>
 <p><em>Location: Web Server</em></p>
 <p>This will delete the entire project. Publishing and playing to all associated streams will no longer be available.</p>
 <p>End point:</p>
