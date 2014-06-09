@@ -46,7 +46,4 @@ module.exports = (app) ->
 
   Cine.middleware('authentication', app)
   Cine.middleware('health_check', app)
-
-  # Serve static assets
-  app.use express.static "#{Cine.root}/public"
-  app.use express.static "#{Cine.root}/ignored" if app.settings.env is 'development'
+  Cine.middleware('deploy_info', app)
