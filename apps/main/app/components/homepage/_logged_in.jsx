@@ -120,6 +120,11 @@ module.exports = React.createClass({
                 </a>
               </li>
               <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-python'>
+                  <img width='36' height='36' src="/images/python-logo.png" alt="The Python Egg" />
+                </a>
+              </li>
+              <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-node'>
                   <img width='57' height='36' src="/images/nodejs-logo.png" alt="The Node.js Package" />
                 </a>
