@@ -119,7 +119,7 @@ CineIO.play(streamId, domId);</code></pre>
 </li>
 </ul>
 <p>Example: <code>curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header &quot;Content-Type:application/json&quot;</code></p>
-<h3 id="update-the-project">update the project</h3>
+<h3 id="update-the-project">Update the project</h3>
 <p><em>Location: Web Server</em></p>
 <p>This will update the project details. Currently only <code>name</code> is supported.</p>
 <p>End point:</p>
