@@ -40,7 +40,7 @@ requiredMessage = (requires)->
     when 'either' then 'public key or secret key required'
 
 testApi.requresApiKey = (testApiResource, requires)->
-  it 'requires an public key', (done)->
+  it "requires a #{requires} key", (done)->
     testApiResource {}, (err, response, options)->
       expect(err).to.equal(requiredMessage(requires))
       expect(response).to.be.null
@@ -48,7 +48,7 @@ testApi.requresApiKey = (testApiResource, requires)->
       done()
 
 testApi.requresLoggedIn = (testApiResource)->
-  it 'requires an public key', (done)->
+  it 'requires a logged user', (done)->
     testApiResource {}, (err, response, options)->
       expect(err).to.equal('not logged in')
       expect(response).to.be.null

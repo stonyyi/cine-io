@@ -5,7 +5,6 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 module.exports = (params, callback)->
   getProject params, requires: 'secret', userOverride: true, (err, project, options)->
     return callback(err, project, options) if err
-    # TODO: TJS delete all associated streams
     project.deletedAt = new Date
     project.save (err, project)->
       return callback(err, null, status: 400) if err
