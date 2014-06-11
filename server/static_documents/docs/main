@@ -119,6 +119,21 @@ CineIO.play(streamId, domId);</code></pre>
 </li>
 </ul>
 <p>Example: <code>curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header &quot;Content-Type:application/json&quot;</code></p>
+<h3 id="update-the-project">update the project</h3>
+<p><em>Location: Web Server</em></p>
+<p>This will update the project details. Currently only <code>name</code> is supported.</p>
+<p>End point:</p>
+<ul>
+<li>method: PUT</li>
+<li>url: /api/1/-/project</li>
+<li>response format: JSON</li>
+<li>parameters:<ul>
+<li>secretKey: CINE_IO_SECRET_KEY</li>
+<li>name: a new project name string</li>
+</ul>
+</li>
+</ul>
+<p>Example: <code>curl -X PUT https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY&amp;name=new%20name --header &quot;Content-Type:application/json&quot;</code></p>
 <h3 id="delete-the-project">Delete the project</h3>
 <p><em>Location: Web Server</em></p>
 <p>This will delete the entire project. Publishing and playing to all associated streams will no longer be available.</p>

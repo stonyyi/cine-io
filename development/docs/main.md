@@ -148,6 +148,22 @@ End point:
 
 Example: `curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header "Content-Type:application/json"`
 
+### update the project
+*Location: Web Server*
+
+This will update the project details. Currently only `name` is supported.
+
+End point:
+
+* method: PUT
+* url: /api/1/-/project
+* response format: JSON
+* parameters:
+ * secretKey: CINE_IO_SECRET_KEY
+ * name: a new project name string
+
+Example: `curl -X PUT https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY&name=new%20name --header "Content-Type:application/json"`
+
 ### Delete the project
 *Location: Web Server*
 
