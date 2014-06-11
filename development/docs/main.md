@@ -26,8 +26,9 @@ End point:
 * response format: JSON
 * parameters:
   * secretKey: CINE_IO_SECRET_KEY
+  * name (optional): any text to help you identify your stream
 
-Example: `curl -X POST --data "secretKey=MY_SECRET_KEY" https://www.cine.io/api/1/-/stream --header "Content-Type:application/json"`
+Example: `curl -X POST --data "secretKey=MY_SECRET_KEY&name=first%20stream" https://www.cine.io/api/1/-/stream --header "Content-Type:application/json"`
 
 ### 2. Publish a live stream
 *Location: Web Client*
@@ -98,6 +99,23 @@ End point:
  * secretKey: CINE_IO_SECRET_KEY
 
 Example: `curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY --header "Content-Type:application/json"`
+
+### Update a live stream
+*Location: Web Server*
+
+This will update the stream details. Currently only `name` is supported.
+
+End point:
+
+* method: PUT
+* url: /api/1/-/stream
+* response format: JSON
+* parameters:
+ * secretKey: CINE_IO_SECRET_KEY
+ * id: stream id
+ * name: any text to help you identify your stream
+
+Example: `curl -X PUT "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId&name=new%20name" --header "Content-Type:application/json"`
 
 ### Delete a live stream
 *Location: Web Server*
