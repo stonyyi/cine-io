@@ -124,7 +124,7 @@ require('cine_io')
 client = CineIo::Client.new(secretKey: ENV['CINE_IO_SECRET_KEY'])
 ```
 
-Additional examples can be found at the repositories homepage: https://github.com/cine-io/cineio-ruby
+Additional examples can be found at the [repository's homepage](https://github.com/cine-io/cineio-ruby).
 
 ## Using with Node.js
 
@@ -141,7 +141,7 @@ var CineIO = require('cine-io');
 var client = CineIO.init({secretKey: process.env.CINE_IO_SECRET_KEY});
 ```
 
-Additional examples can be found at the repositories homepage: https://github.com/cine-io/cineio-node
+Additional examples can be found at the [repository's homepage](https://github.com/cine-io/cineio-node).
 
 ## Using with Python
 
@@ -158,7 +158,7 @@ import cine_io
 client = cine_io.Client({"secretKey": "CINE_IO_SECRET_KEY"})
 ```
 
-Additional examples can be found at the repositories homepage: https://github.com/cine-io/cineio-python
+Additional examples can be found at the [repository's homepage](https://github.com/cine-io/cineio-python).
 
 ## Dashboard
 
