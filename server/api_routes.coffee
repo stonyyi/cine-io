@@ -20,9 +20,10 @@ module.exports = (app)->
   post 'projects', 'create', url: 'project'
   destroy 'projects', 'delete', url: 'project'
 
-  get 'streams', 'index'
-  get 'streams', 'show', url: 'stream'
-  post 'streams', 'create', url: 'stream'
+  get     'streams', 'index'
+  get     'streams', 'show',   url: 'stream'
+  post    'streams', 'create', url: 'stream'
+  put     'streams', 'update', url: 'stream'
   destroy 'streams', 'delete', url: 'stream'
 
   get 'static_documents', 'show', url: 'static-document'

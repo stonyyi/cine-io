@@ -12,6 +12,9 @@ module.exports = React.createClass({
     model: React.PropTypes.instanceOf(Stream).isRequired,
     project: React.PropTypes.instanceOf(Project).isRequired
   },
+  getInitialState: function(){
+    return {showingNameForm: false, newStreamName: null};
+  },
   getBackboneObjects: function(){
     return this.props.model;
   },
@@ -30,13 +33,62 @@ module.exports = React.createClass({
       }
     });
   },
+  showNameForm: function(e){
+    e.preventDefault();
+    this.setState({showingNameForm: true, newStreamName: this.props.model.get('name')});
+  },
+  hideNameForm: function(e){
+    e.preventDefault()
+    this.setState({showingNameForm: false, newStreamName: null});
+  },
+  setStreamName: function(event){
+    this.setState({newStreamName: event.target.value});
+  },
+  componentDidUpdate: function(){
+    if (this.state.showingNameForm){
+      this.refs.newNameInput.getDOMNode().focus();
+    }
+  },
+  saveNewStreamName: function(e){
+    e.preventDefault()
+    var self = this,
+      secretKey = this.props.project.get('secretKey');
+    this.props.model.attributes.secretKey = secretKey;
+    this.props.model.set({secretKey: secretKey, name: this.state.newStreamName});
+    this.props.model.save(null, {
+      success: function(model, response){
+        self.setState({showingNameForm: false, newStreamName: null});
+      }
+    });
+  },
   render: function(){
     var model = this.props.model,
-      confirmationAttribute = this.props.model.get('name') ? 'name' : 'id';
+      confirmationAttribute = this.props.model.get('name') ? 'name' : 'id',
+      modelName;
+    if (this.state.showingNameForm){
+      modelName = (
+        <form onSubmit={this.saveNewStreamName} >
+          <input ref='newNameInput' type="text" name='name' value={this.state.newStreamName} onChange={this.setStreamName} placeholder="Add a stream name" />
+          <button type='submit' >Save</button>
+          <a href='' onClick={this.hideNameForm} >cancel</a>
+        </form>
+      );
+    }else if (model.get('name')){
+      modelName = (<div>{model.get('name')} <a href='' onClick={this.showNameForm}>edit</a></div>);
+    }else{
+      modelName = (<div><a href='' onClick={this.showNameForm}>add stream name</a></div>);
+    }
     return (
       <div className="panel">
-        <div>{model.id}</div>
-        <div>{model.assignedAt().toString()}</div>
+        <dl>
+          <dt>id:</dt>
+          <dd>{model.id}</dd>
+          <dt>Name:</dt>
+          <dd>{modelName}</dd>
+          <dt>Assigned at:</dt>
+          <dd>{model.assignedAt().toString()}</dd>
+        </dl>
+        <hr/>
         <dl>
           <dt>RTMP:</dt>
           <dd>{model.get('play').rtmp}</dd>
