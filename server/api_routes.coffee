@@ -15,9 +15,10 @@ module.exports = (app)->
 
   get 'health', 'index'
 
-  get 'projects', 'index'
-  get 'projects', 'show', url: 'project'
-  post 'projects', 'create', url: 'project'
+  get     'projects', 'index'
+  get     'projects', 'show',   url: 'project'
+  post    'projects', 'create', url: 'project'
+  put     'projects', 'update', url: 'project'
   destroy 'projects', 'delete', url: 'project'
 
   get     'streams', 'index'
