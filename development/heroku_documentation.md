@@ -143,6 +143,23 @@ var client = CineIO.init({secretKey: process.env.CINE_IO_SECRET_KEY});
 
 Additional examples can be found at the repositories homepage: https://github.com/cine-io/cineio-node
 
+## Using with Python
+
+The python egg may be installed with the following command.
+
+```term
+pip install cine_io
+```
+
+Initialize the client.
+
+```javascript
+import cine_io
+client = cine_io.Client({"secretKey": "CINE_IO_SECRET_KEY"})
+```
+
+Additional examples can be found at the repositories homepage: https://github.com/cine-io/cineio-python
+
 ## Dashboard
 
 > callout
