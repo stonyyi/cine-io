@@ -18,7 +18,6 @@ assignNewPasswordAndAddAProjectAndSave = (user, cleartext_password, req, callbac
 createNewUser = (email, cleartext_password, req, callback)->
   plan = req.body.plan
   user = new User(email: email, plan: plan)
-  user.new = true
   assignNewPasswordAndAddAProjectAndSave(user, cleartext_password, req, callback)
 
 validatePasswordOfExistingUser = (user, cleartext_password, callback)->

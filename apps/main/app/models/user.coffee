@@ -7,3 +7,13 @@ module.exports = class User extends Base
 
   isLoggedIn: ->
     @id?
+
+  @include Cine.lib('date_value')
+
+  createdAt: ->
+    @_dateValue('createdAt')
+
+  isNew: ->
+    thirtySecondsAgo = new Date
+    thirtySecondsAgo.setSeconds(thirtySecondsAgo.getSeconds() - 30)
+    @createdAt() > thirtySecondsAgo
