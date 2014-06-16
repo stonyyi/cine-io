@@ -5,6 +5,8 @@ tracker.preventTracking = typeof window is 'undefined'
 namespace = if typeof window is 'undefined' then global else window
 
 trackGoogleAnalytics = (eventName)->
+  # ga will change from an array to the actual ga
+  # underneath us, and there's no way of knowing when that happens
   tracker.ga = namespace.ga if tracker.ga != namespace.ga
   console.log('tracking', eventName, data)
   if tracker.ga
