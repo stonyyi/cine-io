@@ -3,6 +3,7 @@ window.Cine = require 'config/cine' if typeof window != 'undefined'
 User = Cine.model('user')
 handlebarsHelpers = Cine.lib('handlebars_helpers')
 isServer = typeof window is 'undefined'
+tracker = Cine.lib('tracker')
 
 module.exports = class App extends BaseApp
   @flashKinds = ['success', 'warning', 'info', 'alert']
@@ -16,10 +17,10 @@ module.exports = class App extends BaseApp
 
   start: ->
     @_setupRouterListeners()
+    @_setupTracker()
     BaseApp.prototype.start.call(this)
 
   _setupRouterListeners: ->
-
     @router.on "action:start", (->
       @set loading: true
     ), this
@@ -30,6 +31,9 @@ module.exports = class App extends BaseApp
       # because it has a current scroll position
       $('body').scrollTo('#content', 200, easing: 'easeOutQuart')
     ), this
+
+  _setupTracker: ->
+    @tracker = tracker
 
   flash: (message, kind)->
     @trigger(@constructor.flashEvent, message: message, kind: kind)
