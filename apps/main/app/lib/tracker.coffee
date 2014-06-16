@@ -8,7 +8,6 @@ trackGoogleAnalytics = (eventName)->
   # ga will change from an array to the actual ga
   # underneath us, and there's no way of knowing when that happens
   tracker.ga = namespace.ga if tracker.ga != namespace.ga
-  console.log('tracking', eventName, data)
   if tracker.ga
     gaOptions =
       hitType: 'event'       # Required.
@@ -18,6 +17,7 @@ trackGoogleAnalytics = (eventName)->
 
 trackEvent = (eventName, data={})->
   throw new Error("cannot track events on server") if tracker.preventTracking
+  console.log('tracking', eventName, data)
   trackGoogleAnalytics(eventName)
 
 tracker.userSignup = ->
