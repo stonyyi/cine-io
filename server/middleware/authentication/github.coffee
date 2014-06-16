@@ -3,6 +3,7 @@ GitHubStrategy = require('passport-github').Strategy
 githubConfig = Cine.config('variables/github')
 User = Cine.server_model('user')
 request = require('request')
+mailer = Cine.server_lib('mailer')
 strategyOptions =
   clientID: githubConfig.clientId,
   clientSecret: githubConfig.clientSecret,
@@ -28,6 +29,7 @@ createNewUser = (profile, plan, accessToken, callback)->
       githubAccessToken: accessToken
     console.log("creating github user", user)
     ProjectCreate.addExampleProjectToUser user, (err, projectJSON, options)->
+      mailer.welcomeEmail(user)
       # we still want to allow the user to be created even if there is no stream
       return callback(null, user) if err == 'Next stream not available, please try again later'
       callback(err, user)
