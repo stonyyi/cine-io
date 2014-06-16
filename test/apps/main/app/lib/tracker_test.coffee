@@ -37,7 +37,7 @@ describe 'tracker', ->
     gaArgs = ->
       global.ga.firstCall.args
 
-    describe '#logIn'->
+    describe '#logIn', ->
       it 'is tested'
 
     describe '#userSignup', ->
