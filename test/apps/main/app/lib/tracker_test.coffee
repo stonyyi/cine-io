@@ -37,6 +37,9 @@ describe 'tracker', ->
     gaArgs = ->
       global.ga.firstCall.args
 
+    describe '#logIn'->
+      it 'is tested'
+
     describe '#userSignup', ->
       it 'sends a ga event', ->
         tracker.userSignup()
