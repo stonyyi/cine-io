@@ -24,7 +24,7 @@ describe 'tracker', ->
       expect(tracker.userSignup).not.to.throw('cannot track events on server')
       tracker.preventTracking = true
 
-  describe '#userSignup', ->
+  describe 'trackingEvents', ->
     beforeEach ->
       global.ga = sinon.stub()
       tracker.preventTracking = false
@@ -34,10 +34,21 @@ describe 'tracker', ->
       tracker.unload()
       tracker.preventTracking = true
       delete global.ga
+    gaArgs = ->
+      global.ga.firstCall.args
 
-    it 'sends a ga event', ->
-      tracker.userSignup()
-      expect(global.ga.calledOnce).to.be.true
-      args = global.ga.firstCall.args
-      expect(args[0]).to.equal('send')
-      expect(args[1]).to.deep.equal(hitType: 'event', eventCategory: 'KPI', eventAction: 'userSignup')
+    describe '#userSignup', ->
+      it 'sends a ga event', ->
+        tracker.userSignup()
+        expect(global.ga.calledOnce).to.be.true
+        args = gaArgs()
+        expect(args[0]).to.equal('send')
+        expect(args[1]).to.deep.equal(hitType: 'event', eventCategory: 'KPI', eventAction: 'userSignup')
+
+    describe '#getApiKey', ->
+      it 'sends a ga event', ->
+        tracker.getApiKey(value: 12)
+        expect(global.ga.calledOnce).to.be.true
+        args = gaArgs()
+        expect(args[0]).to.equal('send')
+        expect(args[1]).to.deep.equal(hitType: 'event', eventCategory: 'KPI', eventAction: 'getApiKey', eventValue: 12)
