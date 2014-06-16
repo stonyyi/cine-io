@@ -75,3 +75,23 @@ describe 'accountMailer', ->
         assertToUser(options, @user)
         assertCorrectMergeVars userMergeVars(options, @user), @passwordChangeRequest.identifier
         assertMailSent.call(this, err, response, done)
+
+  describe 'welcomeEmail', ->
+    assertCorrectMergeVars = (mergeVars)->
+      expectedMergeVars =
+        header_blurb: "Welcome to cine.io."
+        name: "my name"
+      expect(mergeVars.templateVars.content).to.include('<a href="https://github.com/cine-io/js-sdk">JavaScript SDK</a>')
+      expect(mergeVars.templateVars.content).to.include("<a href='https://www.cine.io/docs'>documentation page</a>")
+      # content is huge, don't want to include it here
+      expectedMergeVars.content = mergeVars.templateVars.content
+      expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
+      assertMergeVarsInVars(mergeVars, expectedMergeVars)
+
+    it 'sends the welcome email', (done)->
+      accountMailer.welcomeEmail @user, (err, response)=>
+        options = getMailOptions.call(this)
+        expect(options.subject).to.equal("Welcome to cine.io.")
+        assertToUser(options, @user)
+        assertCorrectMergeVars userMergeVars(options, @user)
+        assertMailSent.call(this, err, response, done)
