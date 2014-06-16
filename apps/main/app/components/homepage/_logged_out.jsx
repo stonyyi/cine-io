@@ -13,6 +13,8 @@ exports.HomeHero = React.createClass({
 
   getApiKey: function(e){
     e.preventDefault();
+
+    this.props.app.tracker.getApiKey({value: 0});
     this.props.app.trigger('show-login');
   },
   showSignIn: function(e){
@@ -170,8 +172,10 @@ exports.Pricing = React.createClass({
   mixins: [Cine.lib('requires_app')],
 
   displayName: 'Pricing',
-  getApiKey: function(plan, e){
+  getApiKey: function(plan, value, e){
     e.preventDefault();
+
+    this.props.app.tracker.getApiKey({value: value});
     this.props.app.trigger('set-signup-plan', plan);
     this.props.app.trigger('show-login');
   },
@@ -203,7 +207,7 @@ exports.Pricing = React.createClass({
                     <li className="description">Great for starting out.</li>
                     <li className="bullet-item">5 streams</li>
                     <li className="bullet-item">20GB transferred</li>
-                    <li className="cta-button"><a className="button radius" href="" onClick={this.getApiKey.bind(this, 'solo')}>Select</a>
+                    <li className="cta-button"><a className="button radius" href="" onClick={this.getApiKey.bind(this, 'solo', 2)}>Select</a>
                     </li>
                   </ul>
                 </div>
@@ -218,7 +222,7 @@ exports.Pricing = React.createClass({
                     <li className="bullet-item">unlimited streams</li>
                     <li className="bullet-item">150 GB transferred</li>
                     <li className="cta-button">
-                      <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'startup')}>Select</a>
+                      <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'startup', 3)}>Select</a>
                     </li>
                   </ul>
                 </div>
@@ -233,14 +237,14 @@ exports.Pricing = React.createClass({
                     <li className="bullet-item">unlimited streams</li>
                     <li className="bullet-item">1 TB transferred</li>
                     <li className="cta-button">
-                      <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'enterprise')}>Select</a>
+                      <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'enterprise', 4)}>Select</a>
                     </li>
                   </ul>
                 </div>
               </div>
 
               <div className="postscript">
-                <div>Or, <a href="" onClick={this.getApiKey.bind(this, 'free')}>try for free</a>.</div>
+                <div>Or, <a href="" onClick={this.getApiKey.bind(this, 'free', 1)}>try for free</a>.</div>
                 <div>
                   If you expect to tranfer more than 1 TB, <a href="#">talk to us</a>. We can work with you on pricing.
                 </div>
