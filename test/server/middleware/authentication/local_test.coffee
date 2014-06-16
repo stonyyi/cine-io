@@ -86,7 +86,7 @@ describe 'local authentication', ->
 
   describe 'new user', ->
     beforeEach ->
-      @emailMock = requireFixture('nock/send_template_email_success')(times: 1)
+      @emailMock = requireFixture('nock/send_template_email_success')(times: 2)
 
     afterEach (done)->
       emailSent = false

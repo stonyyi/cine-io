@@ -3,11 +3,12 @@ _ = require('underscore')
 util = require('util')
 noop = ->
 
-exports.newUser = (user, callback=noop)->
+exports.newUser = (user, context, callback=noop)->
   mailOptions =
     subject: '[KPI] New User'
     content: """
     <p>A new user just signed up!</p>
+    <p>Context: #{context}!</p>
     <p><pre>#{util.inspect(user)}</pre></p>
     """
   sendAdminEmail mailOptions, callback
