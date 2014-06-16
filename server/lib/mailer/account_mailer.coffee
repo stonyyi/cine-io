@@ -1,6 +1,7 @@
 domain = Cine.config('variables/mailer_domain')
 getMailerLogo = Cine.server_lib('mailer/get_mailer_logo')
 sendTemplateEmail = Cine.server_lib('mailer/send_template_email')
+noop = ->
 
 sendMail = (mailOptions, callback)->
   getMailerLogo (err, logoImageData)->
@@ -10,7 +11,7 @@ sendMail = (mailOptions, callback)->
 
     sendTemplateEmail.send mailOptions, callback
 
-exports.forgotPassword = (user, passwordChangeRequest, callback)->
+exports.forgotPassword = (user, passwordChangeRequest, callback=noop)->
   actionUrl = "https://#{domain}/recover-password/#{passwordChangeRequest.identifier}"
   mailOptions =
     templateName: 'simple-user-action-link'
