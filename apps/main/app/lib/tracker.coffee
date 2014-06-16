@@ -23,6 +23,9 @@ trackEvent = (eventName, data={})->
 tracker.userSignup = ->
   trackEvent('userSignup')
 
+tracker.logIn = (currentUser)->
+  tracker.userSignup() if currentUser.isNew()
+
 tracker.load = ->
   tracker.ga = ga if typeof ga isnt 'undefined'
 

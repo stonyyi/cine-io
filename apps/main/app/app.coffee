@@ -33,6 +33,9 @@ module.exports = class App extends BaseApp
     ), this
 
   _setupTracker: ->
+    @currentUser.on 'login', =>
+      tracker.logIn(@currentUser)
+    tracker.logIn(@currentUser) if @currentUser.isLoggedIn()
     @tracker = tracker
 
   flash: (message, kind)->
