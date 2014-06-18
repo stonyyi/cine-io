@@ -15,6 +15,8 @@ module.exports = class App extends BaseApp
     if isServer
       @currentUser = new User(@req.currentUser, app: this)
 
+  tracker: tracker
+
   start: ->
     @_setupRouterListeners()
     @_setupTracker()
@@ -33,7 +35,6 @@ module.exports = class App extends BaseApp
     ), this
 
   _setupTracker: ->
-    @tracker = tracker
     @tracker.load()
     @currentUser.on 'login', =>
       tracker.logIn(@currentUser)
