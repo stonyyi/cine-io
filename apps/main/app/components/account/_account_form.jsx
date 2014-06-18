@@ -10,7 +10,7 @@ module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
   getInitialState: function(){
     var currentUser = this.props.app.currentUser;
-    return {name: currentUser.get('name'), email: currentUser.get('email'), plan: currentUser.get('plan')};
+    return {name: currentUser.get('name'), email: currentUser.get('email'), plan: currentUser.get('plan'), initialPlan: currentUser.get('plan')};
   },
   changeName: function(event) {
     this.setState({name: event.target.value});
@@ -24,7 +24,13 @@ module.exports = React.createClass({
   updateAccount: function(event){
     event.preventDefault();
     var form = jQuery(event.currentTarget);
-    authentication.updateAccount(this.props.app, form);
+    authentication.updateAccount(this.props.app, form, {success: this.updateSuccess});
+  },
+  updateSuccess: function(){
+    if (this.state.plan != this.state.initialPlan){
+      this.props.app.tracker.planChange(this.state.plan);
+      this.setState({initialPlan: this.state.plan});
+    }
   },
   render: function() {
     var planOptions = _.map(User.plans, function(plan) {
