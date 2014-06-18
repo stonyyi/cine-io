@@ -129,6 +129,17 @@
 
   }
 
+  #libraries{
+    $list-margin: 4.375rem;
+    $negative: $list-margin * -1;
+    ul{
+      display: inline-block;
+      margin-left: $negative;
+      li{
+        margin-left: $list-margin;
+      }
+    }
+  }
   #pricing {
     background: white;
     padding-bottom: 2em;

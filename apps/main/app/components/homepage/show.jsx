@@ -9,6 +9,7 @@ Footer = Cine.component('layout/footer'),
 HomeHero = LoggedOut.HomeHero,
 About = LoggedOut.About,
 Example = LoggedOut.Example,
+Libraries = LoggedOut.Libraries,
 Pricing = LoggedOut.Pricing,
 Projects = Cine.collection('projects');
 
@@ -48,6 +49,7 @@ module.exports = React.createClass({
             <HomeHero app={this.props.app} />
             <About />
             <Example />
+            <Libraries />
             <Pricing app={this.props.app} />
             <Footer />
           </div>

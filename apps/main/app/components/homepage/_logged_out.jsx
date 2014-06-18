@@ -168,6 +168,66 @@ exports.Example = React.createClass({
   }
 });
 
+
+exports.Libraries = React.createClass({
+  displayName: 'Libraries',
+  render: function() {
+    var squareSize = 36,
+      nodeWidth = 57;
+      multiplier = 2;
+    squareSize *= multiplier;
+    nodeWidth *= multiplier;
+    return (
+      <section id="libraries">
+        <hr/>
+        <div className="row text-center">
+          <div className="medium-12 columns">
+            <h2 className="bottom-margin-2">
+              Easy integration to your app.
+            </h2>
+            <ul className="inline-list bottom-margin-2">
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/js-sdk'>
+                  <img width={squareSize} height={squareSize} src="/images/javascript-logo.png" alt="The JavaScript SDK" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-ios'>
+                  <img width={squareSize} height={squareSize} src="/images/ios-logo.png" alt="The iOS SDK" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-android'>
+                  <img width={squareSize} height={squareSize} src="/images/android-logo.png" alt="The Android SDK" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-ruby'>
+                  <img width={squareSize} height={squareSize} src="/images/ruby-logo.png" alt="The Ruby Gem" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-python'>
+                  <img width={squareSize} height={squareSize} src="/images/python-logo.png" alt="The Python Egg" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-node'>
+                  <img width={nodeWidth} height={squareSize} src="/images/nodejs-logo.png" alt="The Node.js Package" />
+                </a>
+              </li>
+            </ul>
+            <div>All API calls and common workflows are listed at our <a href="/docs">documentation</a>. </div>
+            <p>Example applications and other resources are available on our <a target="_blank" href="http://git.cine.io">Github page</a>. </p>
+          </div>
+        </div>
+        <hr/>
+      </section>
+    );
+  }
+});
+
+
 exports.Pricing = React.createClass({
   mixins: [Cine.lib('requires_app')],
 
