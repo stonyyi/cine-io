@@ -35,20 +35,38 @@ tracker.getApiKey = (data)->
 tracker.startedDemo = ->
   trackEvent('startedDemo', {}, noGA: true)
 
-tracker.logIn = (currentUser)->
-  tracker.userSignup() if currentUser.isNew()
-  setupMixpanelAlias(currentUser)
+tracker.planChange = (newPlan)->
+  trackEvent('planChange', {plan: newPlan}, noGA: true)
 
-setupMixpanelAlias = (currentUser)->
+tracker.logIn = (currentUser)->
+  tracker.identify(currentUser)
+  if currentUser.isNew()
+    tracker.userSignup()
+    updateMixpanelPerson(currentUser)
+
+updateMixpanelPerson = (currentUser)->
+  data = Plan: currentUser.get('plan'), $email: currentUser.get('email'), $name: currentUser.get('name')
+  console.log('setting mixpanel data', data)
+  mixpanel.people.set(data);
+
+tracker.identify = (currentUser)->
   return unless tracker.mixpanel
   userId = currentUser.id
+  return if alreadyAliased(currentUser)
   if currentUser.isNew()
-    method = 'alias'
-    console.log('aliasing', userId)
-  else
-    console.log('identifying', userId)
     method = 'identify'
-  tracker.mixpanel[method](userId)
+    console.log('identifying', userId)
+    tracker.mixpanel.alias(userId)
+    tracker.mixpanel.identify(userId)
+  else
+    console.log('aliasing', userId)
+    tracker.mixpanel.alias(userId)
+
+alreadyAliased = (currentUser)->
+  tracker.mixpanel.get_property('__alias') == currentUser.id
+
+tracker.logOut = ->
+  tracker.mixpanel.cookie.clear() if tracker.mixpanel
 
 tracker.load = ->
   tracker.mixpanel = mixpanel if typeof mixpanel isnt 'undefined'

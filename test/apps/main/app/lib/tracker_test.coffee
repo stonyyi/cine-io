@@ -60,8 +60,10 @@ describe 'tracker', ->
       expect(args[0]).to.equal(eventName)
       expect(args[1]).to.deep.equal(data)
 
-
     describe '#logIn', ->
+      it 'is tested'
+
+    describe '#logOut', ->
       it 'is tested'
 
     describe '#userSignup', ->
@@ -93,3 +95,13 @@ describe 'tracker', ->
 
       it 'sends a mixpanel event', ->
         assertMixpanel('startedDemo')
+
+    describe '#planChange', ->
+      beforeEach ->
+        tracker.planChange('test')
+
+      it 'does not send a ga event', ->
+        expect(global.ga.called).to.be.false
+
+      it 'sends a mixpanel event', ->
+        assertMixpanel('planChange', plan: 'test')
