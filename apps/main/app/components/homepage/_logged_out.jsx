@@ -217,7 +217,7 @@ exports.Libraries = React.createClass({
                 </a>
               </li>
             </ul>
-            <div>All API calls and common workflows are listed at our <a href="/docs">documentation</a>. </div>
+            <div>All API calls and common workflows are described in our <a href="/docs">documentation</a>. </div>
             <p>Example applications and other resources are available on our <a target="_blank" href="http://git.cine.io">Github page</a>. </p>
           </div>
         </div>
