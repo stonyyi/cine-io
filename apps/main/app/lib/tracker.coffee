@@ -60,7 +60,7 @@ alreadyAliased = (currentUser)->
   tracker.mixpanel.get_property('__alias') == currentUser.id
 
 tracker.logOut = ->
-  tracker.mixpanel.cookie.clear() if tracker.mixpanel
+  tracker.mixpanel.cookie.clear() if tracker.mixpanel && tracker.mixpanel.cookie
 
 tracker.load = ->
   tracker.mixpanel = mixpanel if typeof mixpanel isnt 'undefined'
