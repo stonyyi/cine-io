@@ -35,8 +35,9 @@ describe 'User', ->
       c = new User(createdAt: d.toISOString())
       expect(c.isNew()).to.be.true
 
-    it 'returns true for new users created in the last 30 seconds', ->
+    it 'returns true for new users created in the last two minutes', ->
       d = new Date
+      d.setMinutes(d.getMinutes() + 1)
       d.setSeconds(d.getSeconds() + 27)
       c = new User(createdAt: d.toISOString())
       expect(c.isNew()).to.be.true

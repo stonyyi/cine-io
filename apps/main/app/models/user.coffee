@@ -14,6 +14,6 @@ module.exports = class User extends Base
     @_dateValue('createdAt')
 
   isNew: ->
-    thirtySecondsAgo = new Date
-    thirtySecondsAgo.setSeconds(thirtySecondsAgo.getSeconds() - 30)
-    @createdAt() > thirtySecondsAgo
+    twoMinutesAgo = new Date
+    twoMinutesAgo.setMinutes(twoMinutesAgo.getMinutes() - 2)
+    @createdAt() > twoMinutesAgo
