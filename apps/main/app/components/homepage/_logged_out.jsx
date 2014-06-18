@@ -94,25 +94,27 @@ exports.About = React.createClass({
 
 exports.Example = React.createClass({
   displayName: 'Example',
+  mixins: [Cine.lib('requires_app')],
   getInitialState: function() {
     return {
       examplePublicKey: '18b4c471bdc2bc1d16ad3cb338108a33',
       streamId: '53718cef450ff80200f81856',
       streamPassword: 'bass35',
       playerId: 'player-example',
-      publisherId: 'publisher-example'
+      publisherId: 'publisher-example',
+      hasPublished: false,
+      publishing: false
     };
   },
   publisherExample: function(e){
     e.preventDefault();
+    // very first call, start jwplayer and publisher
     if (!this.state.hasPublished){
       CineIO.play(this.state.streamId, this.state.playerId, {mute: true});
-      this.setState({playing: true});
+      this.publisher = CineIO.publish(this.state.streamId, this.state.streamPassword, this.state.publisherId);
+      this.props.app.tracker.startedDemo()
     }
     this.setState({hasPublished: true});
-    if (!this.publisher){
-      this.publisher = CineIO.publish(this.state.streamId, this.state.streamPassword, this.state.publisherId);
-    }
     if (this.state.publishing){
       this.publisher.stop();
     }else{
@@ -127,7 +129,7 @@ exports.Example = React.createClass({
     CineIO.reset();
   },
   render: function() {
-    var publishTry = this.state.publishing ? 'Stop publisher' : (this.state.hasPublished ? 'Start publisher' : 'See it in action')
+    var publishTry = this.state.publishing ? 'Stop publisher' : (this.state.hasPublished ? 'Start publisher' : 'Watch demo')
       , topGist = ''
       , publishClasses = cx({
           'hide': !flashDetect(),

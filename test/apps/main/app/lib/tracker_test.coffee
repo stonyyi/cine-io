@@ -43,35 +43,53 @@ describe 'tracker', ->
     mixpanelArgs = ->
       global.mixpanel.track.firstCall.args
 
+    assertGA = (eventName, data={})->
+      expect(global.ga.calledOnce).to.be.true
+      args = gaArgs()
+      expect(args[0]).to.equal('send')
+      expectedGAArgs =
+        hitType: 'event'
+        eventCategory: 'KPI'
+        eventAction: eventName
+      expectedGAArgs.eventValue = data.value if data.value
+      expect(args[1]).to.deep.equal(expectedGAArgs)
+
+    assertMixpanel = (eventName, data={})->
+      expect(global.mixpanel.track.calledOnce).to.be.true
+      args = mixpanelArgs()
+      expect(args[0]).to.equal(eventName)
+      expect(args[1]).to.deep.equal(data)
+
+
     describe '#logIn', ->
       it 'is tested'
 
     describe '#userSignup', ->
-      it 'sends a ga event', ->
+      beforeEach ->
         tracker.userSignup()
-        expect(global.ga.calledOnce).to.be.true
-        args = gaArgs()
-        expect(args[0]).to.equal('send')
-        expect(args[1]).to.deep.equal(hitType: 'event', eventCategory: 'KPI', eventAction: 'userSignup')
+
+      it 'sends a ga event', ->
+        assertGA('userSignup')
 
       it 'sends a mixpanel event', ->
-        tracker.userSignup()
-        expect(global.mixpanel.track.calledOnce).to.be.true
-        args = mixpanelArgs()
-        expect(args[0]).to.equal('userSignup')
-        expect(args[1]).to.deep.equal({})
+        assertMixpanel('userSignup')
 
     describe '#getApiKey', ->
-      it 'sends a ga event', ->
+      beforeEach ->
         tracker.getApiKey(value: 12)
-        expect(global.ga.calledOnce).to.be.true
-        args = gaArgs()
-        expect(args[0]).to.equal('send')
-        expect(args[1]).to.deep.equal(hitType: 'event', eventCategory: 'KPI', eventAction: 'getApiKey', eventValue: 12)
+
+      it 'sends a ga event', ->
+        assertGA('getApiKey', value: 12)
 
       it 'sends a mixpanel event', ->
-        tracker.getApiKey(value: 12)
-        expect(global.mixpanel.track.calledOnce).to.be.true
-        args = mixpanelArgs()
-        expect(args[0]).to.equal('getApiKey')
-        expect(args[1]).to.deep.equal(value: 12)
+        assertMixpanel('getApiKey', value: 12)
+
+    describe '#startedDemo', ->
+      beforeEach ->
+        tracker.startedDemo()
+
+      it 'does not send a ga event', ->
+        expect(global.ga.called).to.be.false
+
+      it 'sends a mixpanel event', ->
+        assertMixpanel('startedDemo')

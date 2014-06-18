@@ -20,17 +20,20 @@ trackMixpanel = (eventName, data)->
   return unless tracker.mixpanel
   tracker.mixpanel.track(eventName, data)
 
-trackEvent = (eventName, data={})->
+trackEvent = (eventName, data={}, options={})->
   throw new Error("cannot track events on server") if tracker.preventTracking
   console.log('tracking', eventName, data)
-  trackGoogleAnalytics(eventName, data)
-  trackMixpanel(eventName, data)
+  trackGoogleAnalytics(eventName, data) unless options.noGA
+  trackMixpanel(eventName, data) unless options.noMixpanel
 
 tracker.userSignup = ->
   trackEvent('userSignup')
 
 tracker.getApiKey = (data)->
   trackEvent('getApiKey', data)
+
+tracker.startedDemo = ->
+  trackEvent('startedDemo', {}, noGA: true)
 
 tracker.logIn = (currentUser)->
   tracker.userSignup() if currentUser.isNew()
