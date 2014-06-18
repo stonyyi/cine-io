@@ -101,6 +101,15 @@ var EmailLogin = React.createClass({
     this.setState({allowFocusHijack: false});
     this.focusProperInput();
   },
+  componentDidUpdate: function(){
+    // if we just focused do not allow it to be hijacked
+    if (!this.state.allowFocusHijack){
+      return;
+    }
+    // we're about to focus, prevent an additional hijack from state change.
+    this.setState({allowFocusHijack: false});
+    this.focusProperInput();
+  },
   focusProperInput: function(){
     var ref;
     if (this.state.completeSignup) {
