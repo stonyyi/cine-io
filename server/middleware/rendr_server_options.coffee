@@ -11,5 +11,8 @@ createServerOptions = (app)->
 
 createServerOptions.appData = (app)->
   env: app.settings.env
+  google_analytics: Cine.config('variables/google_analytics')
+  mixpanel:
+    tracking_id: Cine.config('variables/mixpanel').tracking_id
 
 module.exports = createServerOptions
