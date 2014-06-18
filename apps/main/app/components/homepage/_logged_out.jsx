@@ -183,7 +183,7 @@ exports.Libraries = React.createClass({
         <div className="row text-center">
           <div className="medium-12 columns">
             <h2 className="bottom-margin-2">
-              Easy integration to your app.
+              Easy integration with your app.
             </h2>
             <ul className="inline-list bottom-margin-2">
               <li>
