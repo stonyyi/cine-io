@@ -61,7 +61,7 @@ identify = (currentUser)->
     tracker.mixpanel.identify(userId)
 
 alreadyAliased = (currentUser)->
-  tracker.mixpanel.get_property('__alias') == currentUser.id
+  tracker.mixpanel && tracker.mixpanel.get_property && tracker.mixpanel.get_property('__alias') == currentUser.id
 
 tracker.logOut = ->
   tracker.mixpanel.cookie.clear() if tracker.mixpanel && tracker.mixpanel.cookie
