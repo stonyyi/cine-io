@@ -39,28 +39,22 @@ tracker.planChange = (newPlan)->
   trackEvent('planChange', {plan: newPlan}, noGA: true)
 
 tracker.logIn = (currentUser)->
-  tracker.identify(currentUser)
+  identify(currentUser)
+  updateMixpanelPerson(currentUser)
   if currentUser.isNew()
     tracker.userSignup()
-    updateMixpanelPerson(currentUser)
 
 updateMixpanelPerson = (currentUser)->
   data = Plan: currentUser.get('plan'), $email: currentUser.get('email'), $name: currentUser.get('name')
   console.log('setting mixpanel data', data)
   mixpanel.people.set(data)
 
-tracker.identify = (currentUser)->
+identify = (currentUser)->
   return unless tracker.mixpanel
   userId = currentUser.id
   return if alreadyAliased(currentUser)
-  if currentUser.isNew()
-    method = 'identify'
-    console.log('identifying', userId)
-    tracker.mixpanel.alias(userId)
-    tracker.mixpanel.identify(userId)
-  else
-    console.log('aliasing', userId)
-    tracker.mixpanel.alias(userId)
+  tracker.mixpanel.alias(userId)
+  tracker.mixpanel.identify(userId)
 
 alreadyAliased = (currentUser)->
   tracker.mixpanel.get_property('__alias') == currentUser.id
