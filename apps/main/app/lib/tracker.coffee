@@ -47,7 +47,7 @@ tracker.logIn = (currentUser)->
 updateMixpanelPerson = (currentUser)->
   data = Plan: currentUser.get('plan'), $email: currentUser.get('email'), $name: currentUser.get('name')
   console.log('setting mixpanel data', data)
-  mixpanel.people.set(data)
+  tracker.mixpanel.people.set(data)
 
 identify = (currentUser)->
   return unless tracker.mixpanel
