@@ -1,5 +1,7 @@
+async = require('async')
 User = Cine.server_model('user')
 UpdateUser = testApi Cine.api('users/update')
+mailer = Cine.server_lib("mailer")
 
 describe 'UpdateUser', ->
 
@@ -77,3 +79,26 @@ describe 'UpdateUser', ->
             done()
 
         UpdateUser params, session, callback
+
+  describe 'sending the welcome email', ->
+    beforeEach ->
+      @emailMock = requireFixture('nock/send_template_email_success')(times: 2)
+      @mailerSpy = sinon.spy mailer, 'welcomeEmail'
+
+    afterEach (done)->
+      emailSent = false
+      testFunction = -> emailSent
+      checkFunction = (callback)=>
+        emailSent =  @emailMock.isDone()
+        setTimeout callback
+      async.until testFunction, checkFunction, done
+
+    it 'sends a welcome email', (done)->
+      params = {_id: @user._id, name: 'My Name', completedsignup: 'local'}
+      session = {user: @user}
+      callback = (err, response)=>
+        expect(@mailerSpy.calledOnce).to.be.true
+        expect(@mailerSpy.firstCall.args[0].name).to.equal("My Name")
+        done()
+
+      UpdateUser params, session, callback

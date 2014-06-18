@@ -3,7 +3,6 @@ supertest = require('supertest')
 RememberMeToken = Cine.server_model('remember_me_token')
 User = Cine.server_model('user')
 app = Cine.require('app').app
-async = require('async')
 
 describe 'RememberMe', ->
 
@@ -12,23 +11,12 @@ describe 'RememberMe', ->
     app.get '/whoami', (req, res)->
       res.send(req.currentUser)
 
-    beforeEach ->
-      @emailMock = requireFixture('nock/send_template_email_success')(times: 2)
-
     beforeEach (done)->
       @agent = supertest.agent(app)
       loginUser @agent, (err, remember_me)=>
         @remember_me = remember_me
         process.nextTick ->
           done(err)
-
-    afterEach (done)->
-      emailSent = false
-      testFunction = -> emailSent
-      checkFunction = (callback)=>
-        emailSent =  @emailMock.isDone()
-        setTimeout callback
-      async.until testFunction, checkFunction, done
 
     beforeEach ->
       @secondAgent = supertest.agent(app)

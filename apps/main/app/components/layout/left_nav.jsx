@@ -139,6 +139,7 @@ var EmailLogin = React.createClass({
       return (
         <form onSubmit={this.submitName}>
           <p>Welcome to cine.io{suffix}.</p>
+          <input name='completedsignup' type="hidden" value="local" />
           <input name='name' type="text" required placeholder='Your Name' ref='nameField' value={this.state.myName} onChange={this.changeMyName}/>
           <button className="button radius expand">Join</button>
         </form>

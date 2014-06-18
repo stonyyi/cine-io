@@ -2,7 +2,6 @@ supertest = require('supertest')
 User = Cine.server_model('user')
 app = Cine.require('app').app
 RememberMeToken = Cine.server_model('remember_me_token')
-async = require('async')
 
 describe 'local authentication', ->
 
@@ -85,16 +84,6 @@ describe 'local authentication', ->
 
 
   describe 'new user', ->
-    beforeEach ->
-      @emailMock = requireFixture('nock/send_template_email_success')(times: 2)
-
-    afterEach (done)->
-      emailSent = false
-      testFunction = -> emailSent
-      checkFunction = (callback)=>
-        emailSent =  @emailMock.isDone()
-        setTimeout callback
-      async.until testFunction, checkFunction, done
 
     it 'returns the user', (done)->
       @agent

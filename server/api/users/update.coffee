@@ -1,6 +1,7 @@
 User = Cine.server_model('user')
 _str = require 'underscore.string'
 TextMongooseErrorMessage = Cine.server_lib('text_mongoose_error_message')
+mailer = Cine.server_lib('mailer')
 
 updateUser = (params, callback)->
   return callback("not logged in", null, status: 401) unless params.sessionUserId
@@ -21,6 +22,9 @@ updateUser.doUpdate = (params, callback)->
     user.plan = params.plan unless _str.isBlank(params.plan)
     user.save (err)->
       return callback(TextMongooseErrorMessage(err), null, status: 400) if err
+      if params.completedsignup
+        mailer.welcomeEmail(user)
+        mailer.admin.newUser(user, params.completedsignup)
       callback(null, user.simpleCurrentUserJSON())
 
 module.exports = updateUser
