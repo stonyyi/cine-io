@@ -149,13 +149,33 @@ exports.Example = React.createClass({
             <div className='bottom-margin-1'>
               <PublishCodeExample streamId={this.state.streamId} password={this.state.streamPassword}/>
             </div>
-            <div id={this.state.publisherId}></div>
+            <div id={this.state.publisherId}>
+              <div className="aspect-wrapper">
+                <div className="main">
+                  <div className="center-wrapper">
+                    <div className='center-content'>
+                      <p>During the demo, this box will be connected to your webcam.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div className="play-script">
             <div className='bottom-margin-1'>
               <PlayCodeExample streamId={this.state.streamId}/>
             </div>
-            <div id={this.state.playerId}></div>
+            <div id={this.state.playerId}>
+              <div className="aspect-wrapper">
+                <div className="main">
+                  <div className="center-wrapper">
+                    <div className='center-content'>
+                      <p>During the demo, this box will deliver your live-stream from our Global CDN.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div className={publishClasses}>

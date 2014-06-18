@@ -126,7 +126,34 @@
     .play-script {
       @include grid-column(12);
     }
-
+    .aspect-wrapper{
+      display: inline-block;
+      position: relative;
+      width: 100%;
+      &:after {
+        padding-top: 56.25%; // 16:9 ratio
+        display: block;
+        content: '';
+      }
+      .main {
+        position: absolute;
+        top: 0; bottom: 0; right: 0; left: 0; // fill parent
+        background-color: black;
+      }
+      .center-wrapper{
+        display: table;
+        height: 100%;
+        width: 100%
+      }
+      .center-content{
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+      }
+      p{
+        color: white;
+      }
+    }
   }
 
   #libraries{
