@@ -53,8 +53,12 @@ identify = (currentUser)->
   return unless tracker.mixpanel
   userId = currentUser.id
   return if alreadyAliased(currentUser)
-  tracker.mixpanel.alias(userId)
-  tracker.mixpanel.identify(userId)
+  if currentUser.isNew()
+    tracker.mixpanel.alias(userId)
+    tracker.mixpanel.identify(userId)
+  else
+    console.log('identify', userId)
+    tracker.mixpanel.identify(userId)
 
 alreadyAliased = (currentUser)->
   tracker.mixpanel.get_property('__alias') == currentUser.id
