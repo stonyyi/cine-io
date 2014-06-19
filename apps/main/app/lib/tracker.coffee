@@ -1,8 +1,9 @@
 _ = require('underscore')
-tracker = exports
+isServer = typeof window is 'undefined'
+namespace = if isServer then global else window
 
-tracker.preventTracking = typeof window is 'undefined'
-namespace = if typeof window is 'undefined' then global else window
+tracker = exports
+tracker.preventTracking = isServer
 
 trackGoogleAnalytics = (eventName, data)->
   # ga will change from an array to the actual ga
