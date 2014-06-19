@@ -62,10 +62,12 @@ describe 'Project', ->
         done()
 
     it 'updates the updatedAt', (done)->
-      Project.decrement @project, 'streamsCount', 3, (err, newProjectAttributes)=>
-        expect(err).to.be.null
-        expect(newProjectAttributes.updatedAt).to.be.greaterThan(@originalUpdatedAt)
-        done()
+      call = =>
+        Project.decrement @project, 'streamsCount', 3, (err, newProjectAttributes)=>
+          expect(err).to.be.null
+          expect(newProjectAttributes.updatedAt).to.be.greaterThan(@originalUpdatedAt)
+          done()
+      setTimeout call, 1000
 
     it 'updates the existing model', (done)->
       Project.increment @project, 'streamsCount', 3, (err, newProjectAttributes)=>
