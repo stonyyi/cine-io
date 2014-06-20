@@ -34,20 +34,11 @@ exports.HomeHero = React.createClass({
             <a href="/" title="cine.io">
               <h1 className="brand">cine.io</h1>
             </a>
-            <h2 className="subtitle">Device-agnostic live-streaming.</h2>
-            <h3 className="pitch">Set up for your app in under 5 minutes.</h3>
+            <h2 className="subtitle">Device-agnostic live video streaming.</h2>
+            <h3 className="pitch">Get started for free.</h3>
             <div className="actions">
               <a href="" onClick={this.getApiKey} className="button radius">Get API Key</a><br/>
               <a href="" onClick={this.showSignIn}>Already a customer? Sign in.</a>
-
-              <div id="not-ready-yet" className="reveal-modal" data-reveal>
-                <h2>We are not ready yet!</h2>
-                <p className="lead">Sorry &mdash; we need a few more weeks until we go live.</p>
-                <p>Sorry for any confusion. You should check back on
-                  <strong>2014-Jun-01</strong>. We should be ready by then.
-                </p>
-                <a className="close-reveal-modal"><i className="fa fa-times"></i></a>
-              </div>
             </div>
           </div>
         </div>
@@ -287,8 +278,9 @@ exports.Pricing = React.createClass({
                       <span className="amount">20 / mo</span>
                     </li>
                     <li className="description">Great for starting out.</li>
-                    <li className="bullet-item">5 streams</li>
+                    <li className="bullet-item">5 simultaneous streams</li>
                     <li className="bullet-item">20GB transferred</li>
+                    <li className="bullet-item">$0.90 per additional GB</li>
                     <li className="cta-button"><a className="button radius" href="" onClick={this.getApiKey.bind(this, 'solo', 2)}>Select</a>
                     </li>
                   </ul>
@@ -303,6 +295,7 @@ exports.Pricing = React.createClass({
                     <li className="description">Affordable, with few limits.</li>
                     <li className="bullet-item">unlimited streams</li>
                     <li className="bullet-item">150 GB transferred</li>
+                    <li className="bullet-item">$0.60 per additional GB</li>
                     <li className="cta-button">
                       <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'startup', 3)}>Select</a>
                     </li>
@@ -318,17 +311,11 @@ exports.Pricing = React.createClass({
                     <li className="description">For heavy-lifting apps.</li>
                     <li className="bullet-item">unlimited streams</li>
                     <li className="bullet-item">1 TB transferred</li>
+                    <li className="bullet-item">$0.30 per additional GB</li>
                     <li className="cta-button">
                       <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'enterprise', 4)}>Select</a>
                     </li>
                   </ul>
-                </div>
-              </div>
-
-              <div className="postscript">
-                <div>Or, <a href="" onClick={this.getApiKey.bind(this, 'free', 1)}>try for free</a>.</div>
-                <div>
-                  If you expect to tranfer more than 1 TB, <a href="#">talk to us</a>. We can work with you on pricing.
                 </div>
               </div>
 
