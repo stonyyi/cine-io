@@ -2,7 +2,7 @@
 
 ## About cine.io
 
-Cine.io is an api driven live streaming platform. Developers can quickly setup a live streaming app using our global live streaming cdn. Cine.io was designed for immediate usage, getting you setup in your own app in just a few minutes.
+Cine.io is an api driven live video-streaming platform. Developers can quickly setup a live streaming app using our global live streaming cdn. Cine.io was designed for immediate usage, getting you setup in your own app in just a few minutes.
 
 ## Getting started
 

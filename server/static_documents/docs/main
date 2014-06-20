@@ -1,6 +1,6 @@
 <h1 id="documentation-for-cine-io-https-www-cine-io-api-">Documentation for <a href="https://www.cine.io">cine.io</a> API.</h1>
 <h2 id="about-cine-io">About cine.io</h2>
-<p>Cine.io is an api driven live streaming platform. Developers can quickly setup a live streaming app using our global live streaming cdn. Cine.io was designed for immediate usage, getting you setup in your own app in just a few minutes.</p>
+<p>Cine.io is an api driven live video-streaming platform. Developers can quickly setup a live streaming app using our global live streaming cdn. Cine.io was designed for immediate usage, getting you setup in your own app in just a few minutes.</p>
 <h2 id="getting-started">Getting started</h2>
 <p>Start off by creating an account at <a href="https://www.cine.io">cine.io</a> or through the heroku addon marketplace. We will automatically create you a project with a default name of &quot;Development&quot;. You can change your project names at any time. You can create as many projects as you like. Each project will provide you with a unique &quot;Public key&quot; and a &quot;Secret key&quot;. A common usage is to create a different project for your Development and Production environment (perhaps also staging, canary environments, etc.).</p>
 <p>Now you have your public and secret keys, let&#39;s review a typical life cycle.</p>
@@ -158,3 +158,4 @@ CineIO.play(streamId, domId);</code></pre>
 <li>url: /api/1/-/health</li>
 </ul>
 <p>Example: <code>curl https://www.cine.io/api/1/-/health --header &quot;Content-Type:application/json&quot;</code></p>
+
