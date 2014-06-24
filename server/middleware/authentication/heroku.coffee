@@ -5,17 +5,6 @@ resources = []
 herokuConfig = Cine.config('variables/heroku')
 findOrCreateResourcesFromHeroku = Cine.server_lib('find_or_create_resources_from_heroku')
 
-get_resource = (id) ->
-  id = parseInt(id)
-  for i of resources
-    return resources[i]  if resources[i].id is id
-  return
-
-destroy_resource = (id) ->
-  id = parseInt(id)
-  for i of resources
-    delete resources[i]  if resources[i].id is id
-  return
 
 basic_auth = (req, res, next) ->
   if req.headers.authorization and req.headers.authorization.search("Basic ") is 0
@@ -33,7 +22,6 @@ sso_auth = (req, res, next) ->
     userId = req.param("id")
   else
     userId = req.params.id
-  console.log("HELLOOOO")
   console.log userId
   console.log req.params
   console.log req.body

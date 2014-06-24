@@ -1,3 +1,4 @@
+# there is no local equivalent
 module.exports =
   ssoSalt: process.env.HEROKU_SSO_SALT
   username: process.env.HEROKU_USERNAME
