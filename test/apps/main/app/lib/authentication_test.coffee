@@ -124,6 +124,9 @@ describe 'authentication', ->
       @form = jQuery("<form><input name='a' value='b'/></form>")
       global.window = location: {}
 
+    afterEach ->
+      delete global.window
+
     it 'calls to update-password and redirects', ->
       auth.updatePassword(@app, @form)
       ajaxArgs = @ajaxSpy.firstCall.args[0]
