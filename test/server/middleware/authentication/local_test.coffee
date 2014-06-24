@@ -2,6 +2,8 @@ supertest = require('supertest')
 User = Cine.server_model('user')
 app = Cine.require('app').app
 RememberMeToken = Cine.server_model('remember_me_token')
+EdgecastStream = Cine.server_model('edgecast_stream')
+stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 
 describe 'local authentication', ->
 
@@ -85,6 +87,12 @@ describe 'local authentication', ->
 
   describe 'new user', ->
 
+    beforeEach (done)->
+      @stream = new EdgecastStream(instanceName: 'cines')
+      @stream.save done
+
+    stubEdgecast()
+
     it 'returns the user', (done)->
       @agent
         .post('/login')
@@ -133,6 +141,27 @@ describe 'local authentication', ->
           User.findById response.id, (err, user)->
             expect(user.plan).to.equal('startup')
             done(err)
+
+    it 'adds a project and a new stream to that user', (done)->
+      @agent
+        .post('/login')
+        .set('X-Requested-With', 'XMLHttpRequest')
+        .send(username: 'new email', password: 'new pass', plan: 'free')
+        .expect(200)
+        .end (err, res)=>
+          response = JSON.parse(res.text)
+          User.findById response.id, (err, user)=>
+            expect(err).to.be.null
+            user.projects (err, projects)=>
+              expect(err).to.be.null
+              expect(projects).to.have.length(1)
+              project = projects[0]
+              expect(project.name).to.equal('Development')
+              EdgecastStream.find _project: project._id, (err, streams)=>
+                expect(err).to.be.null
+                expect(streams).to.have.length(1)
+                expect(streams[0]._id.toString()).to.equal(@stream.id.toString())
+                done()
 
     it 'issues a remember me token', (done)->
       @agent
