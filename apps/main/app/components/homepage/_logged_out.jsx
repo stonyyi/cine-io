@@ -188,7 +188,6 @@ exports.Libraries = React.createClass({
     var squareSize = 36;
       multiplier = 2;
     squareSize *= multiplier;
-    nodeWidth *= multiplier;
     return (
       <section id="libraries">
         <hr/>
