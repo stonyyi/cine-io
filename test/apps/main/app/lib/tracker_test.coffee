@@ -1,4 +1,5 @@
 tracker = Cine.lib('tracker')
+User = Cine.model('user')
 
 describe 'tracker', ->
   describe '#load', ->
@@ -27,7 +28,7 @@ describe 'tracker', ->
   describe 'trackingEvents', ->
     beforeEach ->
       global.ga = sinon.stub()
-      global.mixpanel = {track: sinon.stub()}
+      global.mixpanel = {track: sinon.stub(), identify: sinon.stub(), alias: sinon.stub(), people: {set: sinon.stub()}}
       tracker.preventTracking = false
       tracker.load()
 
@@ -61,10 +62,44 @@ describe 'tracker', ->
       expect(args[1]).to.deep.equal(data)
 
     describe '#logIn', ->
-      it 'is tested'
+      it 'identifies in mixpanel for old users', ->
+        d = new Date
+        d.setHours(d.getHours() - 1)
+        c = new User(createdAt: d.toISOString(), id: '123')
+        tracker.logIn(c)
+        expect(tracker.mixpanel.identify.calledOnce).to.be.true
+        expect(tracker.mixpanel.alias.called).to.be.false
+        expect(tracker.mixpanel.identify.firstCall.args).to.deep.equal(['123'])
+
+      it 'aliases and identifies in mixpanel for new users', ->
+        c = new User(createdAt: new Date, id: '123')
+        tracker.logIn(c)
+        expect(tracker.mixpanel.alias.calledOnce).to.be.true
+        expect(tracker.mixpanel.identify.calledOnce).to.be.true
+        expect(tracker.mixpanel.alias.firstCall.args).to.deep.equal(['123'])
+        expect(tracker.mixpanel.identify.firstCall.args).to.deep.equal(['123'])
+
+      it 'will trigger a signup on a new user', ->
+        c = new User(createdAt: new Date, id: '123')
+        tracker.logIn(c)
+        assertGA('userSignup')
+        assertMixpanel('userSignup')
+
+
+      it 'updates the mixpanel person', ->
+        c = new User(plan: 'test', email: 'the email', name: 'the name', createdAt: new Date, id: '123')
+        tracker.logIn(c)
+        expect(mixpanel.people.set.calledOnce).to.be.true
+        expect(mixpanel.people.set.firstCall.args).to.deep.equal([{Plan: 'test', $email: 'the email', $name: 'the name'}])
 
     describe '#logOut', ->
-      it 'is tested'
+      it 'clears the mixpanel cookie if there is one', ->
+        expect(tracker.logOut).to.not.throw(Error)
+
+      it 'clears the mixpanel cookie if there is one', ->
+        mixpanel.cookie = clear: sinon.stub()
+        tracker.logOut()
+        expect(tracker.mixpanel.cookie.clear.calledOnce).to.be.true
 
     describe '#userSignup', ->
       beforeEach ->
