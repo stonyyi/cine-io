@@ -146,5 +146,5 @@ describe 'findOrCreateResourcesFromHeroku', ->
         expect(user.deletedAt).to.be.instanceOf(Date)
         User.findById @user._id, (err, userFromDb)->
           expect(err).to.be.null
-          expect(user.deletedAt).to.be.instanceOf(Date)
+          expect(userFromDb.deletedAt).to.be.instanceOf(Date)
           done()
