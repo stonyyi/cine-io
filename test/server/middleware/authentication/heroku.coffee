@@ -158,8 +158,8 @@ describe 'heroku authentication', ->
         expect(@res.headers.location).to.equal('/')
 
       it "sets some the heroku-nav-data header", ->
-          herokuNavData = extractTokenFromCookie(@res.headers['set-cookie'][0])
-          expect(herokuNavData).to.equal('some-nav-data-that-gets-set-to-a-cookie')
+        herokuNavData = extractTokenFromCookie(@res.headers['set-cookie'][0])
+        expect(herokuNavData).to.equal('some-nav-data-that-gets-set-to-a-cookie')
 
       it 'logs the user in', (done)->
         @agent.get('/whoami').expect(200).end (err, res)=>
