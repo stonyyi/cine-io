@@ -31,17 +31,17 @@ describe 'findOrCreateResourcesFromHeroku', ->
             done()
 
       it 'creates a new project when the user does not have a project', (done)->
-          findOrCreateResourcesFromHeroku.createProjectAndUser 'theheroku@heroku.com', 'test', (err, user, project)=>
-            expect(err).to.be.null
-            expect(user._id.toString()).to.equal(@user._id.toString())
-            expect(project.name).to.equal("theheroku")
-            done()
+        findOrCreateResourcesFromHeroku.createProjectAndUser 'theheroku@heroku.com', 'test', (err, user, project)=>
+          expect(err).to.be.null
+          expect(user._id.toString()).to.equal(@user._id.toString())
+          expect(project.name).to.equal("theheroku")
+          done()
       it 'makes sure the user has the new plan', (done)->
         findOrCreateResourcesFromHeroku.createProjectAndUser 'theheroku@heroku.com', 'startup', (err, user, project)=>
-            expect(err).to.be.null
-            expect(user._id.toString()).to.equal(@user._id.toString())
-            expect(user.plan).to.equal("startup")
-            done()
+          expect(err).to.be.null
+          expect(user._id.toString()).to.equal(@user._id.toString())
+          expect(user.plan).to.equal("startup")
+          done()
 
       it 'undeletes a user', (done)->
         @user.deletedAt = new Date
