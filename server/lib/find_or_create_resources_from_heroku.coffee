@@ -2,9 +2,11 @@ Project = Cine.server_model('project')
 User = Cine.server_model('user')
 _ = require('underscore')
 addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
+mailer = Cine.server_lib('mailer')
 
 nameFromEmail = (herokuId)->
   herokuId.split('@')[0]
+
 # they're creating or updating a plan, it cannot be deleted then
 getOrAddProjectToExistingUser = (user, herokuId, plan, callback)->
   user.projects (err, projects)->
@@ -13,7 +15,7 @@ getOrAddProjectToExistingUser = (user, herokuId, plan, callback)->
     project.save (err, project)->
       return callback(err) if err
       user.permissions.push objectId: project._id, objectName: 'Project'
-      user.save (err, user)->
+      setPlanAndEnsureNotDeleted user, plan, (err, user)->
         callback(null, user, project)
 
 # herokuId: 'app6848@kensa.heroku.com'
@@ -33,6 +35,7 @@ exports.createProjectAndUser = (herokuId, plan, callback)->
         return callback(err) if err
         addNextStreamToProject project, (err, stream)->
           # we still want to allow the project to be created even if there is no stream
+          mailer.admin.newUser(user, 'heroku')
           return callback(null, user, project) if err == 'Next stream not available, please try again later'
           callback(err, user, project)
 
