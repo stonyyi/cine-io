@@ -141,7 +141,7 @@ describe 'findOrCreateResourcesFromHeroku', ->
     it "adds deletedAt to a user", (done)->
       expect(@user.deletedAt).to.be.undefined
       findOrCreateResourcesFromHeroku.deleteUser @user._id, (err, user)=>
-        expect(err).to.be.null
+        expect(err).to.be.undefined
         expect(user._id.toString()).to.equal(@user._id.toString())
         expect(user.deletedAt).to.be.instanceOf(Date)
         User.findById @user._id, (err, userFromDb)->

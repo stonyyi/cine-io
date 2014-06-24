@@ -3,6 +3,7 @@ User = Cine.server_model('user')
 _ = require('underscore')
 addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 mailer = Cine.server_lib('mailer')
+deleteUser = Cine.server_lib('delete_user')
 
 nameFromEmail = (herokuId)->
   herokuId.split('@')[0]
@@ -60,5 +61,4 @@ exports.deleteUser = (userId, callback)->
   User.findById userId, (err, user)->
     return callback(err) if err
     return callback('user not found') unless user
-    user.deletedAt = new Date
-    user.save callback
+    deleteUser(user, callback)
