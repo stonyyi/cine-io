@@ -10,6 +10,7 @@ strategyOptions =
   callbackURL: githubConfig.callbackURL
   passReqToCallback: true
 ProjectCreate = Cine.api('projects/create')
+createNewToken = Cine.middleware('authentication/remember_me').createNewToken
 
 updateUserData = (user, profile, accessToken, callback)->
   user.githubData = profile._json
@@ -49,6 +50,7 @@ createNewUser = (profile, plan, accessToken, callback)->
     body = JSON.parse(response.body)
     email = body[0].email if body[0]
     saveUser()
+
 # refresh token is nullzies
 findGithubUser = (req, accessToken, refreshToken, profile, callback)->
   # console.log(accessToken, refreshToken, profile)
@@ -59,6 +61,12 @@ findGithubUser = (req, accessToken, refreshToken, profile, callback)->
     createNewUser(profile, state.plan, accessToken, callback)
 
 githubStrategy = new GitHubStrategy strategyOptions, findGithubUser
+
+issueRememberMeToken = (req, res, next)->
+  createNewToken req.user, (err, token)->
+    return next() if err
+    res.cookie('remember_me', token, maxAge: createNewToken.oneYear, httpOnly: true)
+    next()
 
 success = (req, res)->
   res.redirect('/')
@@ -71,4 +79,4 @@ module.exports = (app)->
     passport.authenticate('github', scope: "user:email", state: JSON.stringify(plan: plan))(req, res)
 
   authWithFailure = passport.authenticate('github', failureRedirect: '/')
-  app.get '/auth/github/callback', authWithFailure, success
+  app.get '/auth/github/callback', authWithFailure, issueRememberMeToken, success

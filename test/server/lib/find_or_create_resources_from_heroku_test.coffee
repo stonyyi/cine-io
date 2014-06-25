@@ -88,6 +88,7 @@ describe 'findOrCreateResourcesFromHeroku', ->
         beforeEach (done)->
           findOrCreateResourcesFromHeroku.createProjectAndUser 'new-heroku-user@heroku.com', 'enterprise', (err, @user, @project)=>
             done(err)
+
         it 'adds a stream to that project', (done)->
           expect(@project.streamsCount).to.equal(1)
           EdgecastStream.find _project: @project._id, (err, streams)=>

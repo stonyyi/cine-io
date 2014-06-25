@@ -5,7 +5,6 @@ resources = []
 herokuConfig = Cine.config('variables/heroku')
 findOrCreateResourcesFromHeroku = Cine.server_lib('find_or_create_resources_from_heroku')
 
-
 basic_auth = (req, res, next) ->
   if req.headers.authorization and req.headers.authorization.search("Basic ") is 0
     passedAuth = new Buffer(req.headers.authorization.split(" ")[1], "base64").toString()

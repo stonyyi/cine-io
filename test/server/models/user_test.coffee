@@ -68,8 +68,8 @@ describe 'User', ->
 
   describe 'simpleCurrentUserJSON', ->
     it 'is has these keys', ->
-      u = new User(name: 'my name', email: 'my email', hashed_password: 'hash', password_salt: 'salt', plan: 'free')
-      keys = ['createdAt', 'email', 'firstName', 'id', 'lastName', 'name', 'permissions', 'plan']
+      u = new User(name: 'my name', email: 'my email', hashed_password: 'hash', password_salt: 'salt', plan: 'free', githubId: 123)
+      keys = ['createdAt', 'email', 'firstName', 'githubId', 'id', 'lastName', 'name', 'permissions', 'plan']
       jsonKeys = _.keys(u.simpleCurrentUserJSON()).sort()
       expect(jsonKeys).to.deep.equal(keys)
 

@@ -1,0 +1,180 @@
+supertest = require('supertest')
+User = Cine.server_model('user')
+app = Cine.require('app').app
+_ = require('underscore')
+assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
+EdgecastStream = Cine.server_model('edgecast_stream')
+stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
+RememberMeToken = Cine.server_model('remember_me_token')
+
+describe 'github auth', ->
+
+  beforeEach ->
+    @agent = supertest.agent(app)
+
+  app.get '/whoami', (req, res)->
+    res.send(req.currentUser)
+
+  describe '/auth/github', ->
+
+    it 'redirects to github', (done)->
+      @agent
+        .get('/auth/github?plan=startup')
+        .expect(302)
+        .end (err, res)->
+          expect(res.headers.location).to.equal("https://github.com/login/oauth/authorize?response_type=code&redirect_uri=&scope=user%3Aemail&state=%7B%22plan%22%3A%22startup%22%7D&client_id=0970d704f4137ab1e8a1")
+          expect(res.text).to.equal("Moved Temporarily. Redirecting to https://github.com/login/oauth/authorize?response_type=code&redirect_uri=&scope=user%253Aemail&state=%257B%2522plan%2522%253A%2522startup%2522%257D&client_id=0970d704f4137ab1e8a1")
+          done(err)
+
+  describe '/auth/github/callback', ->
+    beforeEach ->
+      @oauthResponseNock = requireFixture('nock/github_oauth_response_with_access_token')()
+
+    afterEach ->
+      expect(@oauthResponseNock.isDone()).to.be.true
+      expect(@profileDataNock.isDone()).to.be.true
+
+    describe "with a new user", ->
+
+      assertEmailSent 'welcomeEmail', times: 2
+
+      beforeEach (done)->
+        @stream = new EdgecastStream(streamName: 'name1')
+        @stream.save(done)
+
+      stubEdgecast()
+
+      describe 'with a new user who has a public email in github', ->
+        beforeEach ->
+          @profileDataNock = requireFixture('nock/github_oauth_user_response_with_email')()
+
+        beforeEach (done)->
+          @agent
+            .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"startup"%7D')
+            .expect(302)
+            .end (err, res)=>
+              @agent.saveCookies(res)
+              @res = res
+              process.nextTick ->
+                done(err)
+
+        it 'redirects to the homepage', ->
+          expect(@res.headers.location).to.equal("/")
+          expect(@res.text).to.equal("Moved Temporarily. Redirecting to /")
+
+        it 'creates a new user', (done)->
+          User.findOne githubId: 135461, (err, user)->
+            expect(err).to.be.null
+            expect(user.name).to.equal("Thomas Shafer")
+            expect(user.email).to.equal("thomas@givingstage.com")
+            expect(user.githubAccessToken).to.equal("5b375ac2ddd691be9a8468877ea38ad3ba86f440")
+            done()
+
+        it 'logs the user in', (done)->
+          @agent.get('/whoami').expect(200).end (err, res)->
+            currentUser = JSON.parse(res.text)
+            expect(currentUser.githubId).to.equal(135461)
+            done()
+
+        it 'adds a project and default stream', (done)->
+          User.findOne githubId: 135461, (err, user)=>
+            expect(err).to.be.null
+            user.projects (err, projects)=>
+              expect(err).to.be.null
+              expect(projects).to.have.length(1)
+              project = projects[0]
+              expect(project.name).to.equal('Development')
+              EdgecastStream.find _project: project._id, (err, streams)=>
+                expect(err).to.be.null
+                expect(streams).to.have.length(1)
+                expect(streams[0]._id.toString()).to.equal(@stream.id.toString())
+                done()
+
+        it 'sets a remember me token', (done)->
+          remember_me = @res.headers['set-cookie'][0]
+          token = remember_me.match(/remember_me=([^;]+)/)[1]
+          expect(token.length).to.equal(64)
+          @agent.get('/whoami').expect(200).end (err, res)->
+            currentUser = JSON.parse(res.text)
+            RememberMeToken.findOne token: token, (err, rmt)->
+              expect(rmt._user.toString()).to.equal(currentUser.id.toString())
+              done(err)
+
+      describe 'with a new user who does not have a public email in github', ->
+
+        beforeEach ->
+          @profileDataNock = requireFixture('nock/github_oauth_user_response_without_email')()
+
+        beforeEach (done)->
+          @agent
+            .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"startup"%7D')
+            .expect(302)
+            .end (err, res)=>
+              @agent.saveCookies(res)
+              @res = res
+              process.nextTick ->
+                done(err)
+
+        it 'fetches the private email from github'
+        # it 'fetches the private email from github', (done)->
+        #   User.findOne githubId: 135461, (err, user)->
+        #     expect(err).to.be.null
+        #     expect(user.name).to.equal("Thomas Shafer")
+        #     expect(user.email).to.equal("thomasjshafer@gmail.com")
+        #     expect(user.githubAccessToken).to.equal("5b375ac2ddd691be9a8468877ea38ad3ba86f440")
+        #     done()
+
+    describe "with an existing user", ->
+      beforeEach ->
+        @profileDataNock = requireFixture('nock/github_oauth_user_response_with_email')()
+
+      beforeEach (done)->
+        @user = new User(plan: 'startup', githubId: 135461, email: 'orig email', name: 'my name')
+        @user.save done
+
+      beforeEach (done)->
+        @agent
+          .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"startup"%7D')
+          .expect(302)
+          .end (err, res)=>
+            @agent.saveCookies(res)
+            @res = res
+            process.nextTick ->
+              done(err)
+
+      it 'redirects to the homepage', ->
+        expect(@res.headers.location).to.equal("/")
+        expect(@res.text).to.equal("Moved Temporarily. Redirecting to /")
+
+      it 'only changes the githubData and githubAccessToken', (done)->
+        User.findOne githubId: 135461, (err, user)->
+          expect(err).to.be.null
+          expect(user.name).to.equal("my name")
+          expect(user.email).to.equal("orig email")
+          expect(user.githubAccessToken).to.equal("5b375ac2ddd691be9a8468877ea38ad3ba86f440")
+          done()
+
+      it 'logs the user in', (done)->
+        @agent.get('/whoami').expect(200).end (err, res)=>
+          currentUser = JSON.parse(res.text)
+          expect(currentUser.githubId).to.equal(135461)
+          expect(currentUser.id.toString()).to.equal(@user._id.toString())
+          done()
+
+      it 'does not add a project', (done)->
+        User.findOne githubId: 135461, (err, user)->
+          expect(err).to.be.null
+          user.projects (err, projects)->
+            expect(err).to.be.null
+            expect(projects).to.have.length(0)
+            done()
+
+      it 'sets a remember me token', (done)->
+        remember_me = @res.headers['set-cookie'][0]
+        token = remember_me.match(/remember_me=([^;]+)/)[1]
+        expect(token.length).to.equal(64)
+        @agent.get('/whoami').expect(200).end (err, res)->
+          currentUser = JSON.parse(res.text)
+          RememberMeToken.findOne token: token, (err, rmt)->
+            expect(rmt._user.toString()).to.equal(currentUser.id.toString())
+            done(err)
