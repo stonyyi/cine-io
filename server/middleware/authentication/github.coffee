@@ -1,8 +1,9 @@
 passport = require('passport')
 GitHubStrategy = require('passport-github').Strategy
+request = require('request')
+_ = require('underscore')
 githubConfig = Cine.config('variables/github')
 User = Cine.server_model('user')
-request = require('request')
 mailer = Cine.server_lib('mailer')
 strategyOptions =
   clientID: githubConfig.clientId,
@@ -16,6 +17,17 @@ updateUserData = (user, profile, accessToken, callback)->
   user.githubData = profile._json
   user.githubAccessToken = accessToken
   user.save callback
+
+findBestGithubEmail = (githubEmails)->
+  primaryEmail = _.find githubEmails, (githubEmail)->
+    githubEmail.primary && githubEmail.verified
+  return primaryEmail.email if primaryEmail
+  firstVerifiedEmail = _.find githubEmails, (githubEmail)->
+    githubEmail.verified
+  return firstVerifiedEmail.email if firstVerifiedEmail
+  firstEmail = body[0]
+  return firstEmail.email if firstEmail
+  null
 
 createNewUser = (profile, plan, accessToken, callback)->
   console.log('got github profile', profile)
@@ -38,7 +50,7 @@ createNewUser = (profile, plan, accessToken, callback)->
 
   return saveUser() if email
   console.log('no email')
-  # we didn't get a public email, add a private one
+  # we didn't get a public email, fetch a private one
   options =
     url: "https://api.github.com/user/emails?access_token=#{accessToken}"
     headers:
@@ -48,7 +60,7 @@ createNewUser = (profile, plan, accessToken, callback)->
     return saveUser() if err
     console.log('got response', response.body)
     body = JSON.parse(response.body)
-    email = body[0].email if body[0]
+    email = findBestGithubEmail(body)
     saveUser()
 
 # refresh token is nullzies

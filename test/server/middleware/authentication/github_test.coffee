@@ -104,6 +104,7 @@ describe 'github auth', ->
 
         beforeEach ->
           @profileDataNock = requireFixture('nock/github_oauth_user_response_without_email')()
+          @userEmailsNock = requireFixture('nock/github_user_emails_response')()
 
         beforeEach (done)->
           @agent
@@ -114,15 +115,16 @@ describe 'github auth', ->
               @res = res
               process.nextTick ->
                 done(err)
+        afterEach ->
+          expect(@userEmailsNock.isDone()).to.be.true
 
-        it 'fetches the private email from github'
-        # it 'fetches the private email from github', (done)->
-        #   User.findOne githubId: 135461, (err, user)->
-        #     expect(err).to.be.null
-        #     expect(user.name).to.equal("Thomas Shafer")
-        #     expect(user.email).to.equal("thomasjshafer@gmail.com")
-        #     expect(user.githubAccessToken).to.equal("5b375ac2ddd691be9a8468877ea38ad3ba86f440")
-        #     done()
+        it 'fetches the private email from github', (done)->
+          User.findOne githubId: 135461, (err, user)->
+            expect(err).to.be.null
+            expect(user.name).to.equal("Thomas Shafer")
+            expect(user.email).to.equal("thomasjshafer@gmail.com")
+            expect(user.githubAccessToken).to.equal("5b375ac2ddd691be9a8468877ea38ad3ba86f440")
+            done()
 
     describe "with an existing user", ->
       beforeEach ->
