@@ -109,6 +109,7 @@ module.exports = (grunt) ->
             {from: "apps/main/app/", to: 'app/'}
             {from: "compiled/components/", to: 'app/components/'}
             {from: "bower_components/react/react", to: 'react'}
+            {from: "apps/shared/", to: '/'}
 
             {from: rendrDir + '/client', to: 'rendr/client'},
             {from: rendrDir + '/shared', to: 'rendr/shared'},
@@ -120,6 +121,7 @@ module.exports = (grunt) ->
           src: [
             'bower_components/react/react.js'
             'apps/main/app/**/*.coffee'
+            "apps/shared/**/*.coffee",
             "config/cine.coffee"
             "compiled/components/**/*.js"
             rendrDir + '/client/**/*.js'

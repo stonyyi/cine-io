@@ -12,6 +12,7 @@ Cine.middleware 'middleware', app
 Cine.server 'api_routes', app
 
 app.use Cine.require('apps/main', app)
+app.use '/admin', Cine.require('apps/admin', app)
 
 app.use express.static "#{Cine.root}/public"
 

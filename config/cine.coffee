@@ -9,7 +9,7 @@ else
 
 # Client
 Cine.arch = (name) ->
-  clientOrServerRequire("app/#{name}", 'main')
+  clientOrServerRequire("app/#{name}", 'shared')
 
 Cine.component = (name) ->
   if typeof window == 'undefined'
@@ -18,13 +18,13 @@ Cine.component = (name) ->
     require "app/components/#{name}"
 
 Cine.model = (name) ->
-  clientOrServerRequire("app/models/#{name}", 'main')
+  clientOrServerRequire("app/models/#{name}", 'shared')
 
 Cine.collection = (name) ->
-  clientOrServerRequire("app/collections/#{name}", 'main')
+  clientOrServerRequire("app/collections/#{name}", 'shared')
 
 Cine.lib = (name) ->
-  clientOrServerRequire("app/lib/#{name}", 'main')
+  clientOrServerRequire("app/lib/#{name}", 'shared')
 
 Cine.controller = (name, app='main') ->
   clientOrServerRequire("app/controllers/#{name}_controller", app)

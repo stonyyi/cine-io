@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react')
-  , App = Cine.arch('app')
+  , App = Cine.arch('shared_app')
   , _ = require('underscore')
   , flashTimeout = 5000 // milliseconds
 ;

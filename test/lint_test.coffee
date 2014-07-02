@@ -31,9 +31,10 @@ describe 'the test suite', ->
       assertAllFilesPresent(testsFiles, done)
 
   fullyTestedDirectories = [
+    # shared
+    "apps/shared/app/models"
+    "apps/shared/app/collections"
     # main
-    "apps/main/app/models"
-    "apps/main/app/collections"
     "apps/main/app/controllers"
     "apps/main/app/views"
     # server
