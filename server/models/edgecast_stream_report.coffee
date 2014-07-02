@@ -1,11 +1,12 @@
 mongoose = require 'mongoose'
+_ = require('underscore')
 
 EdgecastStreamReportSchema = new mongoose.Schema
   _edgecastStream:
     type: mongoose.Schema.Types.ObjectId
     ref: 'EdgecastStream'
   # in bytes
-  logEntry: [
+  logEntries: [
     # time and date of bandwidth consumption
     entryDate:
       type: Date
@@ -20,6 +21,22 @@ EdgecastStreamReportSchema = new mongoose.Schema
   ]
 
 EdgecastStreamReportSchema.plugin(Cine.server_lib('mongoose_timestamps'))
+
+isSameDate = (date1, date2)->
+  (date1.getFullYear() == date2.getFullYear()) &&
+  (date1.getMonth() == date2.getMonth()) &&
+  (date1.getDate() == date2.getDate())
+
+# dateToCheck is a full date
+EdgecastStreamReportSchema.methods.bytesForMonth = (dateToCheck)->
+  addBytesIfSameMonth = (accum, entry)->
+    if isSameDate(entry.entryDate, dateToCheck) then accum + entry.bytes else accum
+  _.reduce @logEntries, addBytesIfSameMonth, 0
+
+EdgecastStreamReportSchema.methods.totalBytes = (dateToCheck)->
+  accumEntryBytes = (accum, entry)->
+    accum + entry.bytes
+  _.reduce @logEntries, accumEntryBytes, 0
 
 EdgecastStreamReport = mongoose.model 'EdgecastStreamReport', EdgecastStreamReportSchema
 

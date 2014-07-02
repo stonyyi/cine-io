@@ -33,7 +33,7 @@ saveDataOnRecord = (instanceName, streamName, entryData, callback)->
     if err
       console.log(err, entryData)
       return callback(err)
-    esr.logEntry.push entryData
+    esr.logEntries.push entryData
     esr.save callback
 
 
