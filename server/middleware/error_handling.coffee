@@ -19,7 +19,7 @@ serveStaticErrorPage = (status, res)->
       res.send 400, "An unknown error has occured."
 
 productionHandler = (err, req, res, next) ->
-  console.log('there is an err in production', err, req, res)
+  console.log('there is an err in production', err)
   return res.send(err.status || 400, err) if req.xhr
   return res.send(err.status || 400, err) if API_PATH_REGEX.test(req.originalUrl)
   switch err.status
