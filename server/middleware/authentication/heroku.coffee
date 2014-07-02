@@ -40,7 +40,16 @@ sso_auth = (req, res, next) ->
   findOrCreateResourcesFromHeroku.findUser userId, (err, user)->
     return response.send err, 400 if err
     return response.send "Not found", 404 unless user
-    req.login user, next
+
+    loginUser = ->
+      req.login user, next
+
+    return loginUser() if user.email
+
+    user.email = req.param('email')
+    user.save (err, user)->
+      return response.send err, 400 if err
+      return loginUser()
 
 module.exports = (app)->
 

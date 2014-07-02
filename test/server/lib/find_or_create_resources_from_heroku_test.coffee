@@ -36,6 +36,7 @@ describe 'findOrCreateResourcesFromHeroku', ->
           expect(user._id.toString()).to.equal(@user._id.toString())
           expect(project.name).to.equal("theheroku")
           done()
+
       it 'makes sure the user has the new plan', (done)->
         findOrCreateResourcesFromHeroku.createProjectAndUser 'theheroku@heroku.com', 'startup', (err, user, project)=>
           expect(err).to.be.null
@@ -69,7 +70,7 @@ describe 'findOrCreateResourcesFromHeroku', ->
           findOrCreateResourcesFromHeroku.createProjectAndUser 'new-heroku-user@heroku.com', 'enterprise', (err, @user, @project)=>
             done(err)
         it 'creates a new user with permissions on the project', ->
-          expect(@user.email).to.equal("new-heroku-user@heroku.com")
+          expect(@user.email).be.undefined
           expect(@user.name).to.equal("new-heroku-user")
           expect(@user.permissions).to.have.length(1)
           expect(@user.permissions[0].objectId.toString()).to.equal(@project._id.toString())

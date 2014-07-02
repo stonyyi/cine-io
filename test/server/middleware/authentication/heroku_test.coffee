@@ -5,8 +5,11 @@ herokuConfig = Cine.config('variables/heroku')
 _ = require('underscore')
 assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 crypto = require("crypto")
+mongoose = require('mongoose')
 
 describe 'heroku authentication', ->
+  constantUserId = mongoose.Types.ObjectId()
+
   beforeEach ->
     @oldssoSalt = herokuConfig.ssoSalt
     @oldusername = herokuConfig.username
@@ -27,7 +30,7 @@ describe 'heroku authentication', ->
     @agent = supertest.agent(app)
 
   beforeEach (done)->
-    @user = new User(plan: 'free')
+    @user = new User(plan: 'free', _id: constantUserId)
     @user.save done
 
   # User just added us on heroku
@@ -73,7 +76,7 @@ describe 'heroku authentication', ->
             expect(_.keys(response.config).sort()).to.deep.equal(['CINE_IO_PUBLIC_KEY', 'CINE_IO_SECRET_KEY'])
             User.findById response.id, (err, user)->
               expect(err).to.be.null
-              expect(user.email).to.equal("app123@heroku.com")
+              expect(user.email).to.be.undefined
               user.projects (err, projects)->
                 expect(err).to.be.null
                 expect(projects).to.have.length(1)
@@ -138,49 +141,66 @@ describe 'heroku authentication', ->
       params.id = user._id if method == "post"
       params
 
-    # ??? - maybe SSO login
-    extractTokenFromCookie = (cookie)->
+    extractNavHeaderFromCookie = (cookie)->
       cookie.match(/heroku-nav-data=([^;]+)/)[1]
-
 
     ssoCall = (method, url, done)->
       @agent[method](url)
         .send(generateSSOParams(method, @user))
         .expect(302)
         .end (err, res)=>
+          console.log(err)
+          expect(err).to.be.null
           @agent.saveCookies(res)
           @res = res
           process.nextTick ->
             done(err)
 
-    ssoTests = ->
-      it "redirects to the homepage", ->
-        expect(@res.headers.location).to.equal('/')
-
-      it "sets some the heroku-nav-data header", ->
-        herokuNavData = extractTokenFromCookie(@res.headers['set-cookie'][0])
-        expect(herokuNavData).to.equal('some-nav-data-that-gets-set-to-a-cookie')
-
-      it 'logs the user in', (done)->
-        @agent.get('/whoami').expect(200).end (err, res)=>
-          currentUser = JSON.parse(res.text)
-          expect(currentUser.id.toString()).to.equal(@user._id.toString())
-          done()
-
-    describe "get /heroku/resources/:id", ->
-      requiresSSOToken 'get', '/heroku/resources/123'
+    ssoTests = (method, url)->
+      requiresSSOToken method, url
 
       describe 'success', ->
         beforeEach (done)->
-          ssoCall.call(this, 'get', "/heroku/resources/#{@user._id}", done)
+          ssoCall.call(this, method, url, done)
 
-        ssoTests()
+        it "redirects to the homepage", ->
+          expect(@res.headers.location).to.equal('/')
+
+        it 'adds email to the user', (done)->
+          User.findById @user._id, (err, user)->
+            expect(err).to.be.null
+            expect(user.email).to.equal('some email')
+            done()
+
+        it "sets some the heroku-nav-data header", ->
+          herokuNavData = extractNavHeaderFromCookie(@res.headers['set-cookie'][0])
+          expect(herokuNavData).to.equal('some-nav-data-that-gets-set-to-a-cookie')
+
+        it 'logs the user in', (done)->
+          @agent.get('/whoami').expect(200).end (err, res)=>
+            expect(err).to.be.null
+            currentUser = JSON.parse(res.text)
+            expect(currentUser.id.toString()).to.equal(@user._id.toString())
+            done()
+
+      describe 'verifying personal email', ->
+        beforeEach (done)->
+          @user.email = "original email"
+          @user.save done
+
+        beforeEach (done)->
+          ssoCall.call(this, method, url, done)
+
+        it 'does not overwrite an existing email', (done)->
+          User.findById @user._id, (err, user)->
+            expect(err).to.be.null
+            expect(user.email).to.equal('original email')
+            done()
+
+
+    describe "get /heroku/resources/:id", ->
+      ssoTests('get', "/heroku/resources/#{constantUserId}")
 
     # definitely sso login
     describe "post /heroku/sso", ->
-      requiresSSOToken 'post', '/heroku/sso'
-
-      describe 'success', ->
-        beforeEach (done)->
-          ssoCall.call(this, 'post', '/heroku/sso', done)
-        ssoTests()
+      ssoTests('post', '/heroku/sso')

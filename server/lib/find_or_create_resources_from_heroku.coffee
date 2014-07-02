@@ -30,7 +30,7 @@ exports.createProjectAndUser = (herokuId, plan, callback)->
     project = new Project(name: nameFromEmail(herokuId))
     project.save (err, project)->
       return callback(err) if err
-      user = new User(email: herokuId, name: nameFromEmail(herokuId), plan: plan, herokuId: herokuId)
+      user = new User(name: nameFromEmail(herokuId), plan: plan, herokuId: herokuId)
       user.permissions.push objectId: project._id, objectName: 'Project'
       user.save (err, user)->
         return callback(err) if err
