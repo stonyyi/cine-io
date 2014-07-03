@@ -4,6 +4,54 @@ rendrHandlebarsDir = 'node_modules/rendr-handlebars';
 rendrModulesDir = rendrDir + '/node_modules';
 
 module.exports = (grunt) ->
+  rendrProjects = ['admin', 'main']
+
+  stitchConfig = {}
+  _.each rendrProjects, (rendrProject)->
+    compile:
+      stitchConfig[rendrProject] =
+        options:
+          dependencies: [
+            'assets/vendor/jquery.js'
+            'assets/vendor/jquery.easing.js'
+            'assets/vendor/jquery.scrollto.js'
+            'bower_components/modernizr/modernizr.js'
+            'bower_components/fastclick/lib/fastclick.js'
+            'bower_components/foundation/js/foundation.js'
+            'bower_components/prism/prism.js'
+          ],
+          npmDependencies:
+            underscore: '../rendr/node_modules/underscore/underscore.js'
+            backbone: '../rendr/node_modules/backbone/backbone.js'
+            qs: "../qs/index.js"
+            handlebars: '../rendr-handlebars/node_modules/handlebars/dist/handlebars.runtime.js'
+            async: '../rendr/node_modules/async/lib/async.js'
+          aliases: [
+            from: "apps/#{rendrProject}/app/", to: 'app/'
+            {from: "compiled/#{rendrProject}/components/", to: 'app/components/'}
+            {from: "bower_components/react/react", to: 'react'}
+            {from: "apps/shared/", to: '/'}
+
+            {from: rendrDir + '/client', to: 'rendr/client'},
+            {from: rendrDir + '/shared', to: 'rendr/shared'},
+            {from: rendrHandlebarsDir, to: 'rendr-handlebars'},
+            {from: rendrHandlebarsDir + '/shared', to: 'rendr-handlebars/shared'}
+          ]
+        files: [{
+          dest: "public/compiled/#{rendrProject}/mergedAssets.js"
+          src: [
+            'bower_components/react/react.js'
+            "apps/#{rendrProject}/app/**/*.coffee"
+            "apps/shared/**/*.coffee",
+            "config/cine.coffee"
+            "compiled/#{rendrProject}/components/**/*.js"
+            rendrDir + '/client/**/*.js'
+            rendrDir + '/shared/**/*.js'
+            rendrHandlebarsDir + '/index.js'
+            rendrHandlebarsDir + '/shared/*.js'
+          ]
+        }]
+
   grunt.initConfig
     pkg: grunt.file.readJSON("package.json")
 
@@ -43,11 +91,11 @@ module.exports = (grunt) ->
         tasks: ["sass", "concat"]
 
       react:
-        files: ["apps/main/app/**/*.jsx"]
+        files: ["apps/main/app/**/*.jsx", "apps/admin/app/**/*.jsx"]
         tasks: ["compile"]
 
       main:
-        files: ["apps/main/app/**/*.coffee"]
+        files: ["apps/main/app/**/*.coffee", "apps/admin/app/**/*.coffee"]
         tasks: ["rendr_stitch"]
 
       jssdk:
@@ -61,7 +109,14 @@ module.exports = (grunt) ->
             expand: true,
             cwd: 'apps/main/app/components',
             src: ['**/*.jsx'],
-            dest: 'compiled/components',
+            dest: 'compiled/main/components',
+            ext: '.js'
+          },
+          {
+            expand: true,
+            cwd: 'apps/admin/app/components',
+            src: ['**/*.jsx'],
+            dest: 'compiled/admin/components',
             ext: '.js'
           }
         ]
@@ -71,65 +126,7 @@ module.exports = (grunt) ->
           logConcurrentOutput: true
         tasks: ["watch", "nodemon:dev"]
 
-    handlebars: {
-      compile: {
-        options: {
-          namespace: false,
-          commonjs: true,
-          processName: (filename)->
-            return filename.replace('app/templates/', '').replace('.hbs', '');
-        },
-        src: "app/templates/**/*.hbs",
-        dest: "app/templates/compiledTemplates.js",
-        filter: (filepath)->
-          filename = path.basename(filepath);
-          return filename.slice(0, 2) isnt '__';
-      }
-    }
-
-    rendr_stitch:
-      compile:
-        options:
-          dependencies: [
-            'assets/vendor/jquery.js'
-            'assets/vendor/jquery.easing.js'
-            'assets/vendor/jquery.scrollto.js'
-            'bower_components/modernizr/modernizr.js'
-            'bower_components/fastclick/lib/fastclick.js'
-            'bower_components/foundation/js/foundation.js'
-            'bower_components/prism/prism.js'
-          ],
-          npmDependencies:
-            underscore: '../rendr/node_modules/underscore/underscore.js'
-            backbone: '../rendr/node_modules/backbone/backbone.js'
-            qs: "../qs/index.js"
-            handlebars: '../rendr-handlebars/node_modules/handlebars/dist/handlebars.runtime.js'
-            async: '../rendr/node_modules/async/lib/async.js'
-          aliases: [
-            {from: "apps/main/app/", to: 'app/'}
-            {from: "compiled/components/", to: 'app/components/'}
-            {from: "bower_components/react/react", to: 'react'}
-            {from: "apps/shared/", to: '/'}
-
-            {from: rendrDir + '/client', to: 'rendr/client'},
-            {from: rendrDir + '/shared', to: 'rendr/shared'},
-            {from: rendrHandlebarsDir, to: 'rendr-handlebars'},
-            {from: rendrHandlebarsDir + '/shared', to: 'rendr-handlebars/shared'}
-          ]
-        files: [{
-          dest: 'public/compiled/mergedAssets.js'
-          src: [
-            'bower_components/react/react.js'
-            'apps/main/app/**/*.coffee'
-            "apps/shared/**/*.coffee",
-            "config/cine.coffee"
-            "compiled/components/**/*.js"
-            rendrDir + '/client/**/*.js'
-            rendrDir + '/shared/**/*.js'
-            rendrHandlebarsDir + '/index.js'
-            rendrHandlebarsDir + '/shared/*.js'
-          ]
-        }]
+    rendr_stitch: stitchConfig
 
     browserify:
       jssdk:
@@ -165,13 +162,12 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-nodemon"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-concurrent"
-  grunt.registerTask "compile", ["react", "handlebars", "rendr_stitch", "browserify"]
+  grunt.registerTask "compile", ["react", "rendr_stitch", "browserify"]
   grunt.registerTask "build", ["compile", "sass", "concat"]
   grunt.registerTask "prepareProductionAssets", ["compile", "sass", "concat", "uglify"]
   grunt.registerTask "dev", ["build", "concurrent:dev"]
   grunt.registerTask "default", ["dev"]
   grunt.loadNpmTasks 'grunt-react'
-  grunt.loadNpmTasks('grunt-contrib-handlebars');
   grunt.loadNpmTasks('grunt-rendr-stitch');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-uglify');

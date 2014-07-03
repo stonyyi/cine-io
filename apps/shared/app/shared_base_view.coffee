@@ -20,8 +20,8 @@ ReactView = RendrView.extend
     options.collection = @collection if @collection
     options
 
-module.exports = (id)->
+module.exports = (id, app='main')->
   class extends ReactView
     @id: id
     className: id.replace('/', '-')
-    Component: Cine.component(id)
+    Component: Cine.component(id, app)

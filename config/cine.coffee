@@ -11,9 +11,9 @@ else
 Cine.arch = (name) ->
   clientOrServerRequire("app/#{name}", 'shared')
 
-Cine.component = (name) ->
+Cine.component = (name, app='main') ->
   if typeof window == 'undefined'
-    Cine.require("compiled/components/#{name}")
+    Cine.require("compiled/#{app}/components/#{name}")
   else
     require "app/components/#{name}"
 

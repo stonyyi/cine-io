@@ -3,7 +3,7 @@ async = require 'async'
 _ = require 'underscore'
 
 adminMaker = (name, callback)->
-  user = new User(email: "#{name}@cine.io", plan: 'enterprise', name: name)
+  user = new User(email: "#{name}@cine.io", plan: 'enterprise', name: name, permissions: [{objectName: 'site'}])
   user.assignHashedPasswordAndSalt 'cine', (err)->
     return callback(err) if err
     user.save(callback)
