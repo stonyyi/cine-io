@@ -3,6 +3,7 @@ supertest = require('supertest')
 RememberMeToken = Cine.server_model('remember_me_token')
 User = Cine.server_model('user')
 app = Cine.require('app').app
+login = Cine.require 'test/helpers/login_helper'
 
 describe 'RememberMe', ->
 
@@ -61,15 +62,6 @@ describe 'RememberMe', ->
       expect(RememberMe.createNewToken.oneYear).to.equal(31536000000)
 
 loginUser = (agent, done)->
-  onResponse = (err, res)->
-    expect(res.statusCode).to.equal(200)
-    expect(res.text).to.include('test@dummy.com')
+  login agent, (err, res)->
     remember_me = res.headers['set-cookie'][0]
     return done(null, remember_me)
-
-  agent
-    .post('/login')
-    .set('Accept', 'application/json')
-    .send(username: 'test@dummy.com', password: 'spinach', plan: 'solo')
-    .expect(200)
-    .end(onResponse)

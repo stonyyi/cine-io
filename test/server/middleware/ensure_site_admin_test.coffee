@@ -4,6 +4,7 @@ User = Cine.server_model('user')
 app = Cine.require('app').app
 parseUri = Cine.lib('parse_uri')
 qs = require('qs')
+login = Cine.require 'test/helpers/login_helper'
 
 describe 'EnsureSiteAdmin', ->
 
@@ -18,18 +19,6 @@ describe 'EnsureSiteAdmin', ->
     @user.assignHashedPasswordAndSalt 'old pass', (err)=>
       @user.save(done)
 
-  login = (agent, done)->
-    agent
-      .post('/login')
-      .set('Accept', 'application/json')
-      .set('X-Requested-With', 'XMLHttpRequest')
-      .send(username: 'some email', password: 'old pass')
-      .expect(200)
-      .end (err, res)->
-        agent.saveCookies(res)
-        process.nextTick ->
-          done(err)
-
   it 'returns 401 when not logged in', (done)->
     @agent.get('/admin-test').expect(302).end (err, res)->
       expect(err).to.be.null
@@ -40,7 +29,7 @@ describe 'EnsureSiteAdmin', ->
       done()
 
   it 'returns 401 when the user is not a site admin', (done)->
-    login @agent, =>
+    login @agent, @user, 'old pass', =>
       @agent.get('/admin-test').expect(302).end (err, res)->
         expect(err).to.be.null
         url = parseUri(res.headers.location)
@@ -53,5 +42,5 @@ describe 'EnsureSiteAdmin', ->
     @user.permissions.push objectName: 'site'
     @user.save (err, user)=>
       expect(err).to.be.null
-      login @agent, =>
+      login @agent, @user, 'old pass', =>
         @agent.get('/admin-test').expect(200).end(done)
