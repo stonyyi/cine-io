@@ -1,5 +1,6 @@
 app = Cine.require('app').app
 test = require('supertest')
+
 describe 'homepage', ->
   it 'should render the homepage-show', (done)->
     test(app)
