@@ -28,7 +28,7 @@ End point:
   * secretKey: CINE_IO_SECRET_KEY
   * name (optional): any text to help you identify your stream
 
-Example: `curl -X POST --data "secretKey=MY_SECRET_KEY&name=first%20stream" https://www.cine.io/api/1/-/stream --header "Content-Type:application/json"`
+Example: `curl -X POST --data "secretKey=MY_SECRET_KEY&name=first%20stream" https://www.cine.io/api/1/-/stream`
 
 ### 2. Publish a live stream
 *Location: Web Client*
@@ -83,7 +83,7 @@ End point:
  * secretKey: CINE_IO_SECRET_KEY
  * id: stream id
 
-Example: `curl "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId" --header "Content-Type:application/json"`
+Example: `curl "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId"`
 
 ### Get all of your streams
 *Location: Web Server*
@@ -98,7 +98,7 @@ End point:
 * parameters:
  * secretKey: CINE_IO_SECRET_KEY
 
-Example: `curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY --header "Content-Type:application/json"`
+Example: `curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY`
 
 ### Update a live stream
 *Location: Web Server*
@@ -115,7 +115,7 @@ End point:
  * id: stream id
  * name: any text to help you identify your stream
 
-Example: `curl -X PUT "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId&name=new%20name" --header "Content-Type:application/json"`
+Example: `curl -X PUT "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId&name=new%20name"`
 
 ### Delete a live stream
 *Location: Web Server*
@@ -131,7 +131,7 @@ End point:
  * secretKey: CINE_IO_SECRET_KEY
  * id: stream id
 
-Example: `curl -X DELETE "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId" --header "Content-Type:application/json"`
+Example: `curl -X DELETE "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId"`
 
 ### Get the project details
 *Location: Web Server*
@@ -146,7 +146,7 @@ End point:
 * parameters:
  * secretKey: CINE_IO_SECRET_KEY
 
-Example: `curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header "Content-Type:application/json"`
+Example: `curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY`
 
 ### Update the project
 *Location: Web Server*
@@ -162,7 +162,7 @@ End point:
  * secretKey: CINE_IO_SECRET_KEY
  * name: a new project name string
 
-Example: `curl -X PUT https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY&name=new%20name --header "Content-Type:application/json"`
+Example: `curl -X PUT https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY&name=new%20name`
 
 ### Delete the project
 *Location: Web Server*
@@ -177,7 +177,7 @@ End point:
 * parameters:
  * secretKey: CINE_IO_SECRET_KEY
 
-Example: `curl -X DELETE https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY --header "Content-Type:application/json"`
+Example: `curl -X DELETE https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY`
 
 ### health
 *Location: Web Server*
@@ -190,4 +190,4 @@ End point:
 * response format: JSON
 * url: /api/1/-/health
 
-Example: `curl https://www.cine.io/api/1/-/health --header "Content-Type:application/json"`
+Example: `curl https://www.cine.io/api/1/-/health`
