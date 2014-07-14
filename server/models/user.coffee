@@ -93,7 +93,7 @@ UserSchema.methods.assignHashedPasswordAndSalt = (cleartext_password, callback)-
 
 UserSchema.methods.simpleCurrentUserJSON = ->
   json = @toJSON()
-  result = _.pick(json, 'createdAt', 'name', 'email', 'permissions', 'plan', 'githubId')
+  result = _.pick(json, 'createdAt', 'name', 'email', 'masterKey', 'permissions', 'plan', 'githubId')
   result.id = json._id
   result.firstName = @firstName()
   result.lastName = @lastName()

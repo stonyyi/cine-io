@@ -1,9 +1,10 @@
 environment = require('../config/environment')
-GS = require '../config/giving_stage'
+Cine = require '../config/cine'
 async = require('async')
-User = GS.server_model('user')
+User = Cine.server_model('user')
 
 setMasterKey = (user, callback)->
+  console.log('setting ', user.email)
   crypto.randomBytes 32, (ex, buf)->
     user.masterKey = buf.toString('hex')
     user.save callback

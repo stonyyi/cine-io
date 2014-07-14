@@ -90,11 +90,14 @@ describe 'User', ->
           done()
 
   describe 'simpleCurrentUserJSON', ->
-    it 'is has these keys', ->
+    it 'is has these keys', (done)->
       u = new User(name: 'my name', email: 'my email', hashed_password: 'hash', password_salt: 'salt', plan: 'free', githubId: 123)
-      keys = ['createdAt', 'email', 'firstName', 'githubId', 'id', 'lastName', 'name', 'permissions', 'plan']
-      jsonKeys = _.keys(u.simpleCurrentUserJSON()).sort()
-      expect(jsonKeys).to.deep.equal(keys)
+      u.save (err, user)->
+        expect(err).to.be.null
+        keys = ['createdAt', 'email', 'firstName', 'githubId', 'id', 'lastName', 'masterKey', 'name', 'permissions', 'plan']
+        jsonKeys = _.keys(u.simpleCurrentUserJSON()).sort()
+        expect(jsonKeys).to.deep.equal(keys)
+        done()
 
     it 'has a firstName', ->
       u = new User(name: 'my name')
