@@ -1,4 +1,3 @@
-require('coffee-script')
 environment = require('../config/environment')
 GS = require '../config/giving_stage'
 async = require('async')
