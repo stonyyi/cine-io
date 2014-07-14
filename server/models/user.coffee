@@ -4,6 +4,7 @@ _ = require 'underscore'
 _.str = require 'underscore.string'
 Schema = mongoose.Schema
 BackboneUser = Cine.model('user')
+crypto = require('crypto')
 
 # special permission has objectName of 'site'
 Permission = new Schema
@@ -49,6 +50,9 @@ UserSchema = new Schema
     required: true
   deletedAt:
     type: Date
+  masterToken:
+    type: String
+    unique: true
 
 UserSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
@@ -109,6 +113,13 @@ planRegex = new RegExp BackboneUser.plans.concat(herokuSpecificPlans).join('|')
 UserSchema.path('plan').validate ((value)->
   planRegex.test value
 ), 'Invalid plan'
+
+
+UserSchema.pre 'save', (next)->
+  return next() if @masterToken
+  crypto.randomBytes 32, (ex, buf)=>
+    @masterToken = buf.toString('hex')
+    next()
 
 User = mongoose.model 'User', UserSchema
 
