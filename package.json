@@ -8,7 +8,7 @@
   "description": "cine.io web site",
   "scripts": {
     "postinstall": "./node_modules/grunt-cli/bin/grunt productionPostInstall",
-    "test": "coffeelint apps/ config/ script/ server/ test/ app.coffee server.coffee app.coffee && mocha"
+    "test": "coffeelint apps/ config/ script/ server/ sdk/ test/ app.coffee server.coffee app.coffee && mocha"
   },
   "repository": "https://github.com/givingstage/cine",
   "dependencies": {

@@ -104,7 +104,7 @@ class Publisher
         publisher.start()
 
   stop: ->
-    @_ensureLoaded (publisher)=>
+    @_ensureLoaded (publisher)->
       publisher.stop()
 
   _options: (stream)->
