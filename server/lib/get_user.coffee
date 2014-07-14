@@ -5,8 +5,8 @@ module.exports = (params, callback)->
   query = {}
   if params.sessionUserId
     query._id = params.sessionUserId
-  if params.masterToken
-    query.masterToken = params.masterToken
+  if params.masterKey
+    query.masterKey = params.masterKey
   return callback('not logged in or master token not supplied', null, status: 401) if _.isEmpty(query)
   User.findOne query, (err, user)->
     return callback(err, null, status: 401) if err

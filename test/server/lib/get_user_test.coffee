@@ -8,7 +8,7 @@ describe 'getUser', ->
     @user = new User(plan: 'solo')
     @user.save done
 
-  it 'requires a sessionUserId or a masterToken', (done)->
+  it 'requires a sessionUserId or a masterKey', (done)->
     getUser {}, (err, user, options)=>
       expect(err).to.equal('not logged in or master token not supplied')
       expect(user).to.be.null
@@ -23,7 +23,7 @@ describe 'getUser', ->
       done()
 
   it 'can take a master token', (done)->
-    getUser masterToken: @user.masterToken, (err, user, options)=>
+    getUser masterKey: @user.masterKey, (err, user, options)=>
       expect(err).to.be.null
       expect(options).to.be.undefined
       expect(user._id.toString()).to.equal(@user._id.toString())

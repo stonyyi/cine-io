@@ -50,7 +50,7 @@ UserSchema = new Schema
     required: true
   deletedAt:
     type: Date
-  masterToken:
+  masterKey:
     type: String
     unique: true
 
@@ -116,9 +116,9 @@ UserSchema.path('plan').validate ((value)->
 
 
 UserSchema.pre 'save', (next)->
-  return next() if @masterToken
+  return next() if @masterKey
   crypto.randomBytes 32, (ex, buf)=>
-    @masterToken = buf.toString('hex')
+    @masterKey = buf.toString('hex')
     next()
 
 User = mongoose.model 'User', UserSchema
