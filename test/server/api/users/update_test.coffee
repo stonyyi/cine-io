@@ -2,7 +2,7 @@ User = Cine.server_model('user')
 UpdateUser = testApi Cine.api('users/update')
 assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 
-describe 'UpdateUser', ->
+describe 'Users#update', ->
 
   beforeEach (done)->
     @user = new User name: 'Mah name', email: 'mah email', plan: 'free'

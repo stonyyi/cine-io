@@ -52,7 +52,6 @@ UserSchema = new Schema
     type: Date
   masterKey:
     type: String
-    unique: true
 
 UserSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
