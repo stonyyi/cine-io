@@ -20,7 +20,13 @@ module.exports = React.createClass({
           <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
           <Header app={this.props.app} />
           <div className="container">
-          <AccountForm app={this.props.app}/>
+            <div className="row">
+              <dl className="columns large-12">
+                <dt>Master Key</dt>
+                <dd>{this.props.app.currentUser.get('masterKey')}</dd>
+              </dl>
+            </div>
+            <AccountForm app={this.props.app}/>
           </div>
         </div>
         <Footer />
