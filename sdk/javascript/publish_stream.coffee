@@ -1,7 +1,7 @@
 publisherReady = false
 loadingSWF = false
 loadedSWF = false
-waitingPublishCalls = []
+waitingPublishCalls = {}
 BASE_URL = 'rtmp://publish.west.cine.io/live'
 PUBLISHER_NAME = 'Publisher'
 PUBLISHER_URL = '//cdn.cine.io/publisher.swf'
@@ -20,7 +20,7 @@ defaultOptions =
   bandwidth: 1500
   videoQuality: 90
 
-loadPublisher = (domNode, publishOptions)->
+loadPublisher = (domNode, publishOptions, publishReadyCallback)->
   swfVersionStr = "11.4.0"
   xiSwfUrlStr = "playerProductInstall.swf"
   flashvars = {}
@@ -41,50 +41,67 @@ loadPublisher = (domNode, publishOptions)->
     if embedEvent.success
       readyCall = ->
         embedEvent.ref.setOptions(jsLogFunction: "_jsLogFunction", jsEmitFunction: "_publisherEmit")
-        publisherIsReady()
+        publisherIsReady(domNode)
       # need to wait a bit until initialization finishes
       setTimeout readyCall, 1000
 
-publisherIsReady = ->
+publisherIsReady = (domNode)->
   console.log('publisher is ready!!!')
   publisherReady = true
-  for call in waitingPublishCalls
+  for call in waitingPublishCalls[domNode]
     call.call()
-  waitingPublishCalls.length = 0
+  delete waitingPublishCalls[domNode]
 
 enqueuePublisherCallback = (domNode, publishOptions, cb)->
-  waitingPublishCalls.push ->
+  waitingPublishCalls[domNode] ||= []
+  waitingPublishCalls[domNode].push ->
+    console.log("HERE I AM")
     getPublisher domNode, publishOptions, cb
 
 findPublisherInDom = (domNode)->
   node = document.getElementById(domNode)
-  return node if node && node.name == PUBLISHER_NAME
-  return false
+  return node if node && node.data == (window.location.protocol + PUBLISHER_URL)
+  return null
 
 swfObjectCallbackToLoadPublisher = (domNode, publishOptions)->
   return ->
     loadedSWF = true
     loadPublisher(domNode, publishOptions)
 
+publisherIsLoading = (domNode)->
+  waitingPublishCalls[domNode]?
+
 # cb(publisher)
 # Workflow:
-# Case: SWFObject not loaded
+# Case 1: SWFObject not loaded
 #   1. Fetch swf object
 #   2. load publisher into domNode
 #   3. Return publisher to callback
-# Case: SWFObject is loaded but not in domNode
+# Case 2: SWFObject is loaded but not in domNode
 #   1. load publsiher into domNode
 #   2. Return publisher to callback
-# Case: SWFObject is loaded and publisher in domNode
+# Case 3: SWFObject is loaded and publisher in domNode
 #   1. Return publisher to callback
+# Case 4: Loading has been requested but has not finished
+#   1. enqueue callback
 getPublisher = (domNode, publishOptions, cb)->
   publisher = findPublisherInDom(domNode)
+  # case 3
   return cb(publisher) if publisher
-  return enqueuePublisherCallback domNode, publishOptions, cb if loadedSWF
-  return enqueuePublisherCallback domNode, publishOptions, cb if loadingSWF
-  loadingSWF = true
+  # case 4
+  return enqueuePublisherCallback domNode, publishOptions, cb if publisherIsLoading(domNode)
+  # this publisher has not been requested yet
+  # case 1,2,3
   enqueuePublisherCallback domNode, publishOptions, cb
-  getScript '//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js', swfObjectCallbackToLoadPublisher(domNode, publishOptions, cb)
+
+  # case 2
+  # if swfobject has been loaded, this must be a new publisher, insert the publisher into the dom.
+  if loadedSWF
+    loadPublisher(domNode, publishOptions)
+  # case 1
+  # else load the swf
+  else
+    getScript '//ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js', swfObjectCallbackToLoadPublisher(domNode, publishOptions, cb)
 
 generateStreamName = (stream, password)->
   "#{stream.streamName}?#{password}&adbe-live-event=#{stream.streamName}"
