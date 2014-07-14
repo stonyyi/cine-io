@@ -9,7 +9,7 @@ describe 'getUser', ->
     @user.save done
 
   it 'requires a sessionUserId or a masterKey', (done)->
-    getUser {}, (err, user, options)=>
+    getUser {}, (err, user, options)->
       expect(err).to.equal('not logged in or master token not supplied')
       expect(user).to.be.null
       expect(options).to.deep.equal(status: 401)
@@ -31,7 +31,7 @@ describe 'getUser', ->
 
 
   it 'returns 404 when not found', (done)->
-    getUser sessionUserId: (new User)._id, (err, user, options)=>
+    getUser sessionUserId: (new User)._id, (err, user, options)->
       expect(err).to.equal('user not found')
       expect(user).to.be.null
       expect(options).to.deep.equal(status: 404)
