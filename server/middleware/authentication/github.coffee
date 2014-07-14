@@ -81,14 +81,21 @@ issueRememberMeToken = (req, res, next)->
     next()
 
 success = (req, res)->
-  res.redirect('/')
+  state = JSON.parse(req.query.state)
+  redirectUrl = switch state.client
+    when 'web' then '/'
+    when 'iOS' then "cineioconsole://login?masterKey=#{req.user.masterKey}"
+  console.log("HERE")
+  res.redirect(redirectUrl)
 
 module.exports = (app)->
   passport.use(githubStrategy)
 
   app.get '/auth/github', (req, res)->
-    plan = req.query.plan
-    passport.authenticate('github', scope: "user:email", state: JSON.stringify(plan: plan))(req, res)
+    state =
+      plan: req.query.plan
+      client: req.query.client
+    passport.authenticate('github', scope: "user:email", state: JSON.stringify(state))(req, res)
 
   authWithFailure = passport.authenticate('github', failureRedirect: '/')
   app.get '/auth/github/callback', authWithFailure, issueRememberMeToken, success
