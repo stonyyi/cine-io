@@ -20,6 +20,11 @@ describe 'User', ->
         user.save (err, member)->
           done(err)
 
+      it 'can be starter', (done)->
+        user = new User(name: 'some name', plan: 'starter')
+        user.save (err, member)->
+          done(err)
+
       it 'cannot be anything else', (done)->
         user = new User(name: 'some name', plan: 'something else')
         user.save (err, member)->
@@ -43,6 +48,24 @@ describe 'User', ->
             expect(err.name).to.equal('MongoError')
             expect(err.err).to.include('duplicate key error index: cineio-test.users.$email')
             done()
+
+
+  describe 'streamLimit', ->
+    testPlan = (planName, limit)->
+      u = new User(plan: planName)
+      expect(u.streamLimit()).to.equal(limit)
+
+    it 'is 1 for free and starter', ->
+      testPlan('free', 1)
+      testPlan('starter', 1)
+
+    it 'is 5 for solo', ->
+      testPlan('solo', 5)
+
+    it 'is Infinite for startup, enterprise, test', ->
+      testPlan('startup', Infinity)
+      testPlan('enterprise', Infinity)
+      testPlan('test', Infinity)
 
   describe 'password generation', ->
     it 'generates a password and salt', (done)->

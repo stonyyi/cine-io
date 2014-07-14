@@ -96,8 +96,16 @@ UserSchema.methods.simpleCurrentUserJSON = ->
   result.lastName = @lastName()
   result
 
+UserSchema.methods.streamLimit = ->
+  switch @plan
+    when 'free', 'starter' then 1
+    when 'solo' then 5
+    when 'startup', 'enterprise', 'test' then Infinity
+    else throw new Error("Don't know this plan")
 
-planRegex = new RegExp BackboneUser.plans.concat('test', 'foo').join('|')
+herokuSpecificPlans = ['test', 'starter', 'foo']
+
+planRegex = new RegExp BackboneUser.plans.concat(herokuSpecificPlans).join('|')
 UserSchema.path('plan').validate ((value)->
   planRegex.test value
 ), 'Invalid plan'

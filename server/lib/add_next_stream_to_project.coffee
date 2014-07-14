@@ -5,15 +5,8 @@ createNewStreamInEdgecast = Cine.server_lib('create_new_stream_in_edgecast')
 User = Cine.server_model('user')
 noop = ->
 
-accountLimit = (user)->
-  switch user.plan
-    when 'free', 'test' then 1
-    when 'solo' then 5
-    when 'startup', 'enterprise' then Infinity
-    else throw new Error("Don't know this plan")
-
 infinitePlan = (plan)->
-  plan in ['startup', 'enterprise']
+  plan in ['startup', 'enterprise', 'test']
 
 returnExistingStream = (project, callback)->
   # _.random is inclusive, so if there are 5 allocated streams
@@ -30,7 +23,7 @@ checkAllOtherProjects = (user, callback)->
   user.projects (err, projects)->
     return callback(err, null) if err
     streamsSum = _.inject(projects, projectSummer, 0) || 0
-    callback null, streamsSum < accountLimit(user)
+    callback null, streamsSum < user.streamLimit()
 
 ensureUserCanAddAnotherStream = (project, callback)->
   query = "permissions.objectId": project._id, "permissions.objectName": 'Project'
@@ -39,7 +32,7 @@ ensureUserCanAddAnotherStream = (project, callback)->
     # if the user has no plan, return an error
     return callback('user not on a plan') unless user.plan
     # if the user is on an infinite plan, just return true
-    return callback(null, true) if infinitePlan(user.plan)
+    return callback(null, true) if user.streamLimit() == Infinity
     checkAllOtherProjects(user, callback)
 
 allocateNewStreamToProject = (project, options, callback)->
