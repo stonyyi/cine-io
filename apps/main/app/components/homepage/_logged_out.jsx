@@ -23,7 +23,7 @@ exports.HomeHero = React.createClass({
   },
   revealAbout: function(e){
     e.preventDefault();
-    $.scrollTo('#about', 250);
+    $('#homepage-logged-out').scrollTo('#about', 250);
     window.history.pushState(null, "#about", "#about");
   },
   render: function() {
