@@ -29,6 +29,7 @@ module.exports = (app)->
 
   get 'static_documents', 'show', url: 'static-document'
 
+  get "users", "show", url: 'user'
   post "users", "update_account", url: 'update-account'
   put 'users', 'update'
 
