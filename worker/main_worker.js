@@ -1,6 +1,6 @@
 require('coffee-script/register')
 _ = require('underscore')
-Cine = require('./config/cine')
+Cine = require('./config/cine_server')
 
 parsePayload = Cine.require('worker/lib/payload_parser')
 doWork = Cine.require('worker/lib/do_work')
