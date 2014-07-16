@@ -59,8 +59,9 @@ convertCReferrerToInstanceAndStream = (cReferrer)->
 module.exports = (fileName, done)->
   console.log('parsing', fileName)
 
-  errorFunction = (data)->
-    console.error("ERROR", data)
+  errorFunction = (err)->
+    console.error("ERROR", err)
+    done(err)
 
   closeFunction = (count) ->
     console.log "Number of lines: " + count

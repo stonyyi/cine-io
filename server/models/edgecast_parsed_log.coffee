@@ -7,6 +7,8 @@ EdgecastParsedLogSchema = new mongoose.Schema
     unique: true
   hasStarted:
     type: Boolean
+  parseError:
+    type: String
   isComplete:
     type: Boolean
     default: false

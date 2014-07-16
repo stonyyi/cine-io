@@ -11,8 +11,10 @@ parseLogFile = (logName, outputFile, callback)->
   parsedLog.save (err)->
     return callback(err) if err
     parseEdgecastLog outputFile, (err)->
-      return callback(err) if err
-      parsedLog.isComplete = true
+      if err
+        parsedLog.parseError = err
+      else
+        parsedLog.isComplete = true
       parsedLog.save (err)->
         return callback(err) if err
         callback()
