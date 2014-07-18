@@ -3,8 +3,11 @@ path = require('path')
 
 Cine.root = path.resolve()
 
+Cine.path  = (pathName)->
+  path.join(Cine.root, pathName)
+
 Cine.require = (pathName, args...)->
-  response = require path.join(Cine.root, pathName)
+  response = require Cine.path(pathName)
   response = response(args...) if args.length > 0
   response
 
