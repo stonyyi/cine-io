@@ -1,0 +1,3 @@
+#Fields: x-event	x-category	date	time	x-duration	x-status	c-ip	s-ip	c-proto	cs-uri-stem	cs-uri-query	c-referrer	c-user-agent	cs-bytes	sc-bytes	x-file-size	x-file-length	x-sname	x-file-name	x-file-ext	x-app	sc-stream-bytes	c-client-id	x-sid	x-comment
+stop	stream	2014-05-14	04:17:00	26	408	76.14.69.171	46.22.78.87	rtmp	rtmp://fml.C45E.edgecastcdn.net/20C45E/i-name/	-	https://ssl.p.jwpcdn.com/6/8/jwplayer.flash.swf	MAC 13,0,0,206	3207	3965	-	-	sName	-	flv	20C45E	330	4702151916220662129	1	-\r
+do not log	stream	2014-05-14	04:17:00	26	408	76.14.69.171	46.22.78.87	rtmp	rtmp://fml.C45E.edgecastcdn.net/20C45E/i-name/	-	https://ssl.p.jwpcdn.com/6/8/jwplayer.flash.swf	MAC 13,0,0,206	3207	3965	-	-	sName	-	flv	20C45E	330	4702151916220662129	1	-\r

@@ -56,8 +56,8 @@ convertCReferrerToInstanceAndStream = (cReferrer)->
   {instanceName: instance, streamName: stream}
 
 
-module.exports = (fileName, done)->
-  console.log('parsing', fileName)
+module.exports = (absoluteFileName, done)->
+  console.log('parsing', absoluteFileName)
 
   errorFunction = (err)->
     console.error("ERROR", err)
@@ -91,7 +91,7 @@ module.exports = (fileName, done)->
     # callback()
     saveDataOnRecord(streamData.instanceName, streamData.streamName, entryData, callback)
 
-  switch path.basename(fileName).slice(0,3)
+  switch path.basename(absoluteFileName).slice(0,3)
     when 'fms'
       inOpts =
         delimiter: "\t"
@@ -104,7 +104,7 @@ module.exports = (fileName, done)->
     else
       done("UNKNOWN FILE TYPE")
 
-  csv().from.path(fileName, inOpts)
+  csv().from.path(absoluteFileName, inOpts)
     .to.stream(fs.createWriteStream(outPath))
     .transform(processRecord)
     .once("close", closeFunction)

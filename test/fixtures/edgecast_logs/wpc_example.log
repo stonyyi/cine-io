@@ -1,0 +1,2 @@
+Fields: timestamp time-taken c-ip filesize s-ip s-port sc-status sc-bytes cs-method cs-uri-stem - rs-duration rs-bytes c-referrer c-user-agent customer-id
+1400396107 284 50.184.110.201 2256376 46.22.78.218 80 TCP_EXPIRED_MISS/200 2256659 GET http://hls.cine.io/23C45E/i-name/sName/stage45Num14.ts - 316 2257079 http://hls.cine.io/i-name/sName/sName.m3u8 Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.75.14 (KHTML, like Gecko) Version/7.0.3 Safari/537.75.14 5027
