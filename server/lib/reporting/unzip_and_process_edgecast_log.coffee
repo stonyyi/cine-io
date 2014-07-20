@@ -1,15 +1,19 @@
 spawn = require('child_process').spawn
 parseEdgecastLog = Cine.server_lib('reporting/parse_edgecast_log')
 fs = require('fs')
+async = require('async')
 
-module.exports = (fileName, callback)->
-  console.log('unzipping', fileName)
-  unZipFile = fileName.slice(0, fileName.length-3)
-  ls = spawn 'gunzip', [fileName]
+module.exports = (gzippedFileName, callback)->
+  console.log('unzipping', gzippedFileName)
+  unZipFile = gzippedFileName.slice(0, gzippedFileName.length-3)
+  upzipProcess = spawn 'gunzip', [gzippedFileName]
   removeZippedFile = (err)->
     return callback(err) if err
-    fs.unlink unZipFile, (unlinkErr)->
-      console.error("ERROR unlinking file", unlinkErr) if unlinkErr
-      callback(unlinkErr)
-  ls.on 'close', ->
+    asyncCalls =
+      unlinkLogFile: (cb)->
+        fs.unlink unZipFile, cb
+      unlinkGzipFile: (cb)->
+        fs.unlink gzippedFileName, cb
+    async.parallel asyncCalls, callback
+  upzipProcess.on 'close', ->
     parseEdgecastLog unZipFile, removeZippedFile
