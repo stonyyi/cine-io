@@ -1,6 +1,7 @@
 spawn = require('child_process').spawn
 fs = require('fs')
 copyFile = Cine.require('test/helpers/copy_file')
+gzipFile = Cine.require('test/helpers/gzip_file')
 unzipAndProcessEdgecastLog = Cine.server_lib('reporting/unzip_and_process_edgecast_log')
 EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
 EdgecastStream = Cine.server_model('edgecast_stream')
@@ -11,19 +12,13 @@ describe 'unzipAndProcessEdgecastLog', ->
     @originalFileName = Cine.path "test/fixtures/edgecast_logs/fms_example.log"
 
   beforeEach (done)->
-    @gzExampleFile = Cine.path "test/fixtures/edgecast_logs/fms_gz_example.log"
+    @gzExampleFile = Cine.path "tmp/edgecast_logs/fms_example.log"
     copyFile @originalFileName, @gzExampleFile, done
 
   beforeEach (done)->
     @gzippedFileName = "#{@gzExampleFile}.gz"
     console.log("Filenames", @gzippedFileName, @gzExampleFile)
-    gzipProcess = spawn 'gzip', ["-c", @gzExampleFile]
-    logStream = fs.createWriteStream(@gzippedFileName, {flags: 'w'})
-    gzipProcess.stdout.pipe(logStream)
-    gzipProcess.stderr.pipe(logStream)
-    gzipProcess.on 'close', (code)->
-      expect(code).to.equal(0)
-      done()
+    gzipFile.replaceFile @gzExampleFile, done
 
   beforeEach (done)->
     fs.exists @gzippedFileName, (exists)->

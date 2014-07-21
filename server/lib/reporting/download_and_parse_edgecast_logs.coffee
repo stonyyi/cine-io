@@ -18,13 +18,12 @@ parseLogFile = (logName, outputFile, callback)->
       else
         parsedLog.isComplete = true
       parsedLog.save (err)->
-        return callback(err) if err
-        callback()
+        callback(err)
 
-module.exports = (done)->
+downloadAndParseEdgecastLogs = (done)->
   directory = "#{Cine.root}/tmp/edgecast_logs/"
   mkdirp.sync directory
-  ftpClient = new FtpClient
+  ftpClient = downloadAndParseEdgecastLogs.ftpFactory()
 
   processEdgecastLogFile = (logName, callback)->
     console.log("parsing", logName)
@@ -64,3 +63,8 @@ module.exports = (done)->
     console.log('got ftp greeting', msg)
 
   ftpClient.connect Cine.config('variables/edgecast').ftp
+
+downloadAndParseEdgecastLogs.ftpFactory = ->
+  new FtpClient
+
+module.exports = downloadAndParseEdgecastLogs

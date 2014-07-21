@@ -12,8 +12,6 @@ module.exports = (gzippedFileName, callback)->
     asyncCalls =
       unlinkLogFile: (cb)->
         fs.unlink unZipFile, cb
-      unlinkGzipFile: (cb)->
-        fs.unlink gzippedFileName, cb
     async.parallel asyncCalls, callback
   upzipProcess.on 'close', ->
     parseEdgecastLog unZipFile, removeZippedFile
