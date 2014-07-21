@@ -1,12 +1,16 @@
 isServer = typeof window is 'undefined'
 
-module.exports =->
-  return false if isServer
-  hasFlash = false
-  try
-    fo = new ActiveXObject("ShockwaveFlash.ShockwaveFlash")
-    hasFlash = true  if fo
-  catch e
-    hasFlash = true  if navigator.mimeTypes and navigator.mimeTypes["application/x-shockwave-flash"] isnt undefined and navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin
+flashDetect = ->
+  if isServer then false else flashDetect._clientTest()
 
-  hasFlash
+flashDetect._clientTest = ->
+  try
+    return true if new ActiveXObject("ShockwaveFlash.ShockwaveFlash")
+  catch e
+    return false if typeof navigator is 'undefined'
+    return false unless navigator.mimeTypes
+    return false if navigator.mimeTypes["application/x-shockwave-flash"] is undefined
+    return true if navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin
+  false
+
+module.exports = flashDetect
