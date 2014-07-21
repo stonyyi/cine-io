@@ -45,8 +45,14 @@ describe 'the test suite', ->
       assertThisDirectoryHasATestForEveryFile path, done
 
   notDoneYet = [
+    # admin
+    "apps/admin/app/components"
+    "apps/admin/app/controllers"
+    "apps/admin/app/views"
     # main
-    "apps/main/app/lib"
+    "apps/main/app/components"
+    # shared
+    "apps/shared/app/lib"
     # server
     "server/lib"
     "server/middleware"
