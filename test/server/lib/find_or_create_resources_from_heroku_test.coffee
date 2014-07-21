@@ -61,8 +61,8 @@ describe 'findOrCreateResourcesFromHeroku', ->
 
       it 'sends a welcome email', (done)->
         findOrCreateResourcesFromHeroku.createProjectAndUser 'new-heroku-user@heroku.com', 'enterprise', (err, @user, @project)=>
-          expect(@mailerSpy.firstCall.args[0].name).to.equal("new-heroku-user")
-          expect(@mailerSpy.firstCall.args[1]).to.equal("heroku")
+          expect(@mailerSpies[0].firstCall.args[0].name).to.equal("new-heroku-user")
+          expect(@mailerSpies[0].firstCall.args[1]).to.equal("heroku")
           done(err)
 
       describe "without a new stream", ->
