@@ -11,7 +11,8 @@ describe 'downloadAndParseEdgecastLogs', ->
     @fakeFtpClient = new FakeFtpClient
     @connectStub = sinon.stub @fakeFtpClient, 'connect'
     @listStub = sinon.stub @fakeFtpClient, 'list'
-    @lists = [{name: 'fms_example_from_ftp.log.gz'}]
+    @logName = "fms_example_from_ftp.log.gz"
+    @lists = [{name: @logName}]
     @listStub.callsArgWith 1, null, @lists
 
   beforeEach ->
@@ -21,11 +22,6 @@ describe 'downloadAndParseEdgecastLogs', ->
   afterEach ->
     @stub.restore()
     @connectStub.restore()
-
-  # beforeEach ->
-    # TODO: need to verify that this
-    # is not called in currently pending test
-    # @parseSpy = sinon.spy parseEdgecastLog
 
   describe 'success', ->
     beforeEach (done)->
@@ -37,18 +33,42 @@ describe 'downloadAndParseEdgecastLogs', ->
         @fakeFtpClient.trigger('ready')
       downloadAndParseEdgecastLogs (err)=>
         expect(err).to.be.undefined
-        EdgecastStreamReport.findOne _edgecastStream: @stream._id, (err, report)->
-          expect(err).to.be.null
-          expect(report.logEntries).to.have.length(1)
-          entry = report.logEntries[0]
-          expect(entry.entryDate.toString()).to.equal(new Date('May 14 2014 04:17:00').toString())
-          expect(entry.duration).to.equal(26)
-          expect(entry.bytes).to.equal(3965)
-          expect(entry.kind).to.equal('fms')
-          # expect(@parseSpy.calledOnce).to.be.true
-          done()
+        EdgecastParsedLog.find (err, parsedLogs)=>
+          expect(parsedLogs).to.have.length(1)
+          parsedLog = parsedLogs[0]
+          expect(parsedLog.hasStarted).to.be.true
+          expect(parsedLog.parseError).to.be.undefined
+          expect(parsedLog.isComplete).to.be.true
 
-  it 'does not double process logs'
+          EdgecastStreamReport.findOne _edgecastStream: @stream._id, (err, report)->
+            expect(err).to.be.null
+            expect(report.logEntries).to.have.length(1)
+            entry = report.logEntries[0]
+            expect(entry.entryDate.toString()).to.equal(new Date('May 14 2014 04:17:00').toString())
+            expect(entry.duration).to.equal(26)
+            expect(entry.bytes).to.equal(3965)
+            expect(entry.kind).to.equal('fms')
+            done()
+
+  describe "double processing logs", ->
+    beforeEach (done)->
+      parsedLog = new EdgecastParsedLog(hasStarted: true, logName: @logName)
+      parsedLog.save done
+
+
+    it 'does not double process logs', (done)->
+      process.nextTick =>
+        @fakeFtpClient.trigger('ready')
+      downloadAndParseEdgecastLogs (err)->
+        expect(err).to.be.undefined
+        EdgecastParsedLog.find (err, parsedLogs)->
+          expect(parsedLogs).to.have.length(1)
+
+          EdgecastStreamReport.find (err, reports)->
+            expect(err).to.be.null
+            expect(reports).to.have.length(0)
+            done()
+
   it 'will save a process error', (done)->
     process.nextTick =>
       @fakeFtpClient.trigger('ready')
