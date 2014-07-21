@@ -87,8 +87,10 @@ describe 'Users#update', ->
       params = {_id: @user._id, name: 'My Name', completedsignup: 'local'}
       session = {user: @user}
       callback = (err, response)=>
-        expect(@mailerSpy.calledOnce).to.be.true
-        expect(@mailerSpy.firstCall.args[0].name).to.equal("My Name")
+        expect(@mailerSpies[0].calledOnce).to.be.true
+        expect(@mailerSpies[0].firstCall.args[0].name).to.equal("My Name")
+        expect(@mailerSpies[1].calledOnce).to.be.true
+        expect(@mailerSpies[1].firstCall.args[0].name).to.equal("My Name")
         done()
 
       UpdateUser params, session, callback

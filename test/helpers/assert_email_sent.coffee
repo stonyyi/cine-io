@@ -16,6 +16,8 @@ stubMailer = (mailerObject, mailerName, options)->
   beforeEach ->
     @emailNocks ||= []
     @mailerSpies ||= []
+    @nocksTested = false
+    @spiesTested = false
 
   beforeEach ->
     # isDone() in nock does not respect .times(times)
@@ -25,16 +27,21 @@ stubMailer = (mailerObject, mailerName, options)->
     @mailerSpies.push sinon.spy mailerObject, mailerName
 
   afterEach (done)->
+    return done() if @nocksTested
     emailSent = false
     testFunction = -> emailSent
     checkFunction = (callback)=>
       emailSent = _.all @emailNocks, nockIsDone
       setTimeout callback
-    async.until testFunction, checkFunction, done
+    async.until testFunction, checkFunction, (err)=>
+      @nocksTested = true
+      done(err)
 
   afterEach ->
-    _.each @mailerSpies, (spy)->
-      expect(spy.calledOnce).to.be.true
-      spy.restore()
+    unless @spiesTested
+      @spiesTested = true
+      _.each @mailerSpies, (spy)->
+        expect(spy.calledOnce).to.be.true
+        spy.restore()
     delete @emailNocks if @emailNocks
     delete @mailerSpies if @mailerSpies
