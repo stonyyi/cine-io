@@ -80,7 +80,8 @@ describe 'Users#update', ->
         UpdateUser params, session, callback
 
   describe 'sending the welcome email', ->
-    assertEmailSent 'welcomeEmail', times: 2
+    assertEmailSent 'welcomeEmail'
+    assertEmailSent.admin 'newUser'
 
     it 'sends a welcome email', (done)->
       params = {_id: @user._id, name: 'My Name', completedsignup: 'local'}

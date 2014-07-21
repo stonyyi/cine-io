@@ -36,7 +36,8 @@ describe 'github auth', ->
 
     describe "with a new user", ->
 
-      assertEmailSent 'welcomeEmail', times: 2
+      assertEmailSent 'welcomeEmail'
+      assertEmailSent.admin 'newUser'
 
       beforeEach (done)->
         @stream = new EdgecastStream(streamName: 'name1')
@@ -183,7 +184,8 @@ describe 'github auth', ->
 
     describe 'with an iOS client', ->
 
-      assertEmailSent 'welcomeEmail', times: 2
+      assertEmailSent 'welcomeEmail'
+      assertEmailSent.admin 'newUser'
 
       beforeEach ->
         @profileDataNock = requireFixture('nock/github_oauth_user_response_with_email')()
