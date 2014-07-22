@@ -6,13 +6,15 @@ CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 
 thisMonth = new Date
 
+console.log("Calculating for month of", thisMonth)
+
 calculateUsage = (user, callback)->
   console.log("Calculating account usage for", user._id, user.email)
   CalculateAccountUsage.byMonth user, thisMonth, (err, monthlyBytes)->
     if err
       console.log("ERROR CALCULATING USAGE", err)
       return callback(err)
-    console.log("account usage for", user._id, user.email, monthlyBytes)
+    console.log("Total account usage for", user._id, user.email, monthlyBytes)
     callback()
 
 endFunction = (err)->
