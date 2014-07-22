@@ -14,7 +14,7 @@ calculateUsage = (user, callback)->
     if err
       console.log("ERROR CALCULATING USAGE", err)
       return callback(err)
-    console.log("Total account usage for", user._id, user.email, monthlyBytes)
+    console.log("Total account usage for", user._id, user.email, monthlyBytes, "bytes")
     callback()
 
 endFunction = (err)->
