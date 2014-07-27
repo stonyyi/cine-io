@@ -12,6 +12,7 @@ strategyOptions =
   passReqToCallback: true
 ProjectCreate = Cine.api('projects/create')
 createNewToken = Cine.middleware('authentication/remember_me').createNewToken
+_str = require('underscore.string')
 
 updateUserData = (user, profile, accessToken, callback)->
   user.githubData = profile._json
@@ -32,12 +33,13 @@ findBestGithubEmail = (githubEmails)->
 createNewUser = (profile, plan, accessToken, callback)->
   console.log('got github profile', profile)
   email = profile.emails[0] && profile.emails[0].value
+  console.log(profile)
   saveUser = ->
     user = new User
       plan: plan
       githubId: profile.id
       email: email
-      name: profile.displayName
+      name: if _str.isBlank(profile.displayName) then profile.username else profile.displayName
       githubData: profile._json
       githubAccessToken: accessToken
     console.log("creating github user", user)

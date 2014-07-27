@@ -127,6 +127,28 @@ describe 'github auth', ->
             expect(user.githubAccessToken).to.equal("5b375ac2ddd691be9a8468877ea38ad3ba86f440")
             done()
 
+      describe 'with a new user who does not have a public name', ->
+
+        beforeEach ->
+          @profileDataNock = requireFixture('nock/github_oauth_user_response_with_email_but_no_name')()
+
+        beforeEach (done)->
+          @agent
+            .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"startup"%2C"client"%3A"web"%7D')
+            .expect(302)
+            .end (err, res)=>
+              @agent.saveCookies(res)
+              @res = res
+              process.nextTick ->
+                done(err)
+        it 'uses the login from github as the name', (done)->
+          User.findOne githubId: 135461, (err, user)->
+            expect(err).to.be.null
+            expect(user.name).to.equal("growlypants")
+            expect(user.email).to.equal("thomas@givingstage.com")
+            expect(user.githubAccessToken).to.equal("5b375ac2ddd691be9a8468877ea38ad3ba86f440")
+            done()
+
     describe "with an existing user", ->
       beforeEach ->
         @profileDataNock = requireFixture('nock/github_oauth_user_response_with_email')()
