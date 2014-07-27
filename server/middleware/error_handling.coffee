@@ -2,11 +2,22 @@ express = require("express")
 fs = require("fs")
 errorHandler = express.errorHandler()
 API_PATH_REGEX = /\/api\/\d+\/-\// # /api/1/-/
+_ = require('underscore')
+raven = require('raven')
+sentryClient = new raven.Client(Cine.config('variables/sentry').DSN)
+
+sendErr = (res, err, options={})->
+  status = err.status || 400
+  if options.api
+    response = {message: err.message, status: status}
+  else
+    response = err
+  res.send(status, response)
 
 developmentHandler = (err, req, res, next) ->
   console.log('there is an err in development', err)
-  return res.send(err.status || 400, err) if req.xhr
-  return res.send(err.status || 400, err) if API_PATH_REGEX.test(req.originalUrl)
+  return sendErr(res, err) if req.xhr
+  return sendErr(res, err, api: true) if API_PATH_REGEX.test(req.originalUrl)
   errorHandler(err, req, res, next)
 
 serveStaticErrorPage = (status, res)->
@@ -18,10 +29,16 @@ serveStaticErrorPage = (status, res)->
     else
       res.send 400, "An unknown error has occured."
 
+logError = (err, req)->
+  console.log("LOGGING ERROR")
+  extra = _.extend({}, err.extra, req.headers)
+  sentryClient.captureError(err, extra: extra)
+
 productionHandler = (err, req, res, next) ->
   console.log('there is an err in production', err)
-  return res.send(err.status || 400, err) if req.xhr
-  return res.send(err.status || 400, err) if API_PATH_REGEX.test(req.originalUrl)
+  logError(err, req)
+  return sendErr(res, err) if req.xhr
+  return sendErr(res, err, api: true) if API_PATH_REGEX.test(req.originalUrl)
   switch err.status
     when 401
       res.redirect("/401?originalUrl=#{req.originalUrl}")

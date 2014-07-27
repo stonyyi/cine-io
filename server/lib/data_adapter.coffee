@@ -2,18 +2,18 @@ utils = require("rendr/server/utils")
 _ = require("underscore")
 clc = require "cli-color"
 
-class ApiErr
-  constructor: (@message, response, @status)->
-    @status = @message.status if message.status
-    # this needs to extend the response so it will have all the attributes of the response
-    _.extend(this, response) if response
+createApiErr = (message, response, status, path, params)->
+  console.log('sending an err from the data_adapter', err, status)
+  err = new Error(message)
+  err.status = status || message.status
+  err.extra = {path: path, params: params}
+  _.extend(err, response) if response
+  err
 
-class FormatResponse
-  constructor: (@jsonpCallback, @callbackFromRendr)->
+class FormatResponseForRendr
+  constructor: (@jsonpCallback, @callbackFromRendr, @path, @params)->
   callback: (err, response, options = {})=>
-    if err
-      console.log('sending an err from the data_adapter', err, options.status)
-      err = new ApiErr(err, response, options.status)
+    err = createApiErr(err, response, options.status, @path, @params) if err
     options.status ||= 200
     options = {statusCode: options.status}
     options.jsonp = true if @jsonpCallback?
@@ -60,7 +60,7 @@ class DataAdapter
     console.log(clc.blueBright("[API]"), "#{method} #{path}", params)
 
     apiReq = new InternalApiRequest(@app, method, path, params)
-    rendrResponse = new FormatResponse(params.callback, callback)
+    rendrResponse = new FormatResponseForRendr(params.callback, callback, path, params)
     apiReq.request(rendrResponse.callback)
 
   # Convert 4xx, 5xx responses to be errors.

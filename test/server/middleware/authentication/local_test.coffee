@@ -5,6 +5,7 @@ RememberMeToken = Cine.server_model('remember_me_token')
 EdgecastStream = Cine.server_model('edgecast_stream')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 login = Cine.require 'test/helpers/login_helper'
+expectSentryLog = Cine.require('test/helpers/expect_sentry_log')
 
 describe 'local authentication', ->
 
@@ -44,15 +45,19 @@ describe 'local authentication', ->
             expect(response.email).to.equal('the email')
             done(err)
 
-    it "errs if the passwords don't match", (done)->
-      @agent
-        .post('/login')
-        .set('X-Requested-With', 'XMLHttpRequest')
-        .send(username: 'the email', password: 'bad password')
-        .expect(400)
-        .end (err, res)->
-          expect(res.text).to.equal('Incorrect email/password.')
-          done(err)
+    describe 'failure', ->
+
+      expectSentryLog()
+
+      it "errs if the passwords don't match", (done)->
+        @agent
+          .post('/login')
+          .set('X-Requested-With', 'XMLHttpRequest')
+          .send(username: 'the email', password: 'bad password')
+          .expect(400)
+          .end (err, res)->
+            expect(res.text).to.equal('Incorrect email/password.')
+            done(err)
 
     it 'issues a remember me token on success', (done)->
       login @agent, @user, 'the pass', (err, res)=>

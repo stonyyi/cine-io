@@ -47,6 +47,7 @@
     "passport-local": "^1.0.0",
     "passport-remember-me": "0.0.1",
     "qs": "0.6.6",
+    "raven": "^0.7.0",
     "react": "^0.10.0",
     "rendr": "git://github.com/givingstage/rendr.git#cf9fd550f3f832ef3abd7d4c84ee7015f49d58d8",
     "rendr-handlebars": "git://github.com/airbnb/rendr-handlebars.git#6e5363074aa8fdfda0cbb2d9f70ed272be8040ea",

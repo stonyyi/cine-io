@@ -1,6 +1,7 @@
 supertest = require('supertest')
 app = Cine.require('app').app
 Project = Cine.server_model('project')
+expectSentryLog = Cine.require('test/helpers/expect_sentry_log')
 
 describe 'api routing', ->
 
@@ -24,20 +25,24 @@ describe 'api routing', ->
       @project = new Project(secretKey: 'abc', name: 'me')
       @project.save done
 
-    it 'requires an secret key', (done)->
-      @agent.get('/api/1/-/project')
-        .expect(401)
-        .end (err, res)->
-          done()
+    describe "failure", ->
 
-    it 'requires an valid secret key', (done)->
-      @agent.get('/api/1/-/project?secretKey=INVALID')
-        .expect(401)
-        .end (err, res)->
-          response = JSON.parse(res.text)
-          expect(response.message).to.equal('invalid secret key')
-          expect(response.status).to.equal(401)
-          done()
+      expectSentryLog()
+
+      it 'requires an secret key', (done)->
+        @agent.get('/api/1/-/project')
+          .expect(401)
+          .end (err, res)->
+            done()
+
+      it 'requires an valid secret key', (done)->
+        @agent.get('/api/1/-/project?secretKey=INVALID')
+          .expect(401)
+          .end (err, res)->
+            response = JSON.parse(res.text)
+            expect(response.message).to.equal('invalid secret key')
+            expect(response.status).to.equal(401)
+            done()
 
     it 'routes to an authenticated route', (done)->
       @agent.get('/api/1/-/project?secretKey=abc')

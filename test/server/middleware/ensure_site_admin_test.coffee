@@ -5,6 +5,7 @@ app = Cine.require('app').app
 parseUri = Cine.lib('parse_uri')
 qs = require('qs')
 login = Cine.require 'test/helpers/login_helper'
+expectSentryLog = Cine.require('test/helpers/expect_sentry_log')
 
 describe 'EnsureSiteAdmin', ->
 
@@ -19,17 +20,10 @@ describe 'EnsureSiteAdmin', ->
     @user.assignHashedPasswordAndSalt 'old pass', (err)=>
       @user.save(done)
 
-  it 'returns 401 when not logged in', (done)->
-    @agent.get('/admin-test').expect(302).end (err, res)->
-      expect(err).to.be.null
-      url = parseUri(res.headers.location)
-      expect(url.path).to.equal('/401')
-      params = qs.parse(url.query)
-      expect(params.originalUrl).to.equal('/admin-test')
-      done()
+  describe "failure", ->
+    expectSentryLog()
 
-  it 'returns 401 when the user is not a site admin', (done)->
-    login @agent, @user, 'old pass', =>
+    it 'returns 401 when not logged in', (done)->
       @agent.get('/admin-test').expect(302).end (err, res)->
         expect(err).to.be.null
         url = parseUri(res.headers.location)
@@ -37,6 +31,16 @@ describe 'EnsureSiteAdmin', ->
         params = qs.parse(url.query)
         expect(params.originalUrl).to.equal('/admin-test')
         done()
+
+    it 'returns 401 when the user is not a site admin', (done)->
+      login @agent, @user, 'old pass', =>
+        @agent.get('/admin-test').expect(302).end (err, res)->
+          expect(err).to.be.null
+          url = parseUri(res.headers.location)
+          expect(url.path).to.equal('/401')
+          params = qs.parse(url.query)
+          expect(params.originalUrl).to.equal('/admin-test')
+          done()
 
   it 'continues when the user is a site admin', (done)->
     @user.permissions.push objectName: 'site'

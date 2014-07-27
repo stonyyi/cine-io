@@ -4,6 +4,7 @@ ErrorHandling = Cine.middleware('error_handling')
 express = require('express')
 parseUri = Cine.lib('parse_uri')
 qs = require('qs')
+expectSentryLog = Cine.require('test/helpers/expect_sentry_log')
 
 describe 'ErrorHandling', ->
   beforeEach ->
@@ -25,6 +26,8 @@ describe 'ErrorHandling', ->
       error = message: 'some problem', status: 401
       next(error)
     @agent = supertest.agent(app)
+
+  expectSentryLog()
 
   describe 'xhr requests', ->
     it 'serves the error back to me', (done)->
