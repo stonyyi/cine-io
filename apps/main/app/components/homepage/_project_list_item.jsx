@@ -90,7 +90,7 @@ module.exports = React.createClass({
             <dt>Streams count</dt>
             <dd>{model.get('streamsCount')}</dd>
           </dl>
-          <DeleteButtonWithInputConfirmation model={model} confirmationAttribute='name' deleteCallback={this.destroyProject} />
+          <DeleteButtonWithInputConfirmation model={model} confirmationAttribute='name' deleteCallback={this.destroyProject} objectName="project" />
         </div>
       );
     }else{

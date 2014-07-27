@@ -7,6 +7,7 @@ module.exports = React.createClass({
   propTypes:{
     model: React.PropTypes.instanceOf(BaseModel).isRequired,
     confirmationAttribute: React.PropTypes.string.isRequired,
+    objectName: React.PropTypes.string.isRequired,
     deleteCallback: React.PropTypes.func.isRequired
   },
   getInitialState: function(){
@@ -50,7 +51,7 @@ module.exports = React.createClass({
           <label htmlFor='delete-input'>
             {"Type "}
             <code>{attribute}</code>
-            {" to delete your project."}
+            {" to delete your " + this.props.objectName + "."}
           </label>
           <input ref='deleteNameInput' id='delete-input' type="text" value={this.deletingObjectName} onChange={this.changeObjectDeletingName} />
           {deleteObjectSubmitButton}

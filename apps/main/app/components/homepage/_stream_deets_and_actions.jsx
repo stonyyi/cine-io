@@ -102,7 +102,7 @@ module.exports = React.createClass({
           <dt>FMS url:</dt>
           <dd>{model.get('publish').url}</dd>
         </dl>
-        <DeleteButtonWithInputConfirmation model={this.props.model} confirmationAttribute={confirmationAttribute} deleteCallback={this.destroyStream} />
+        <DeleteButtonWithInputConfirmation model={this.props.model} confirmationAttribute={confirmationAttribute} deleteCallback={this.destroyStream} objectName="stream" />
       </div>
     );
   }
