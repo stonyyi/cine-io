@@ -19,7 +19,7 @@ createNewUser = (email, cleartext_password, req, callback)->
 
 validatePasswordOfExistingUser = (user, cleartext_password, callback)->
   user.isCorrectPassword cleartext_password, (err)->
-    return callback('Incorrect email/password.', false, message: 'Incorrect username/password.') if err
+    return callback(null, false) if err
     callback(null, user)
 
 issueRememberMeToken = (req, res, next)->
@@ -37,7 +37,7 @@ strategyFunction = (req, email, cleartext_password, done)->
 module.exports = (app) ->
   passport.use new LocalStrategy(passReqToCallback: true, strategyFunction)
 
-  app.post '/login', passport.authenticate('local'), issueRememberMeToken, (req, res)->
+  app.post '/login', passport.authenticate('local', failWithError: true, failureMessage: 'Incorrect email/password.'), issueRememberMeToken, (req, res)->
     res.send(req.user.simpleCurrentUserJSON())
 
   Cine.middleware('authentication/local/update_password', app)

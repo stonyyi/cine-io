@@ -5,10 +5,13 @@ API_PATH_REGEX = /\/api\/\d+\/-\// # /api/1/-/
 _ = require('underscore')
 raven = require('raven')
 sentryClient = new raven.Client(Cine.config('variables/sentry').DSN)
+AuthenticationError = require('passport/lib/errors/authenticationerror')
 
-sendErr = (res, err, options={})->
+sendErr = (req, res, err, options={})->
   status = err.status || 400
-  if options.api
+  if err instanceof AuthenticationError
+    response = req.session.messages.pop()
+  else if options.api
     response = {message: err.message, status: status}
   else
     response = err
@@ -16,8 +19,8 @@ sendErr = (res, err, options={})->
 
 developmentHandler = (err, req, res, next) ->
   console.log('there is an err in development', err)
-  return sendErr(res, err) if req.xhr
-  return sendErr(res, err, api: true) if API_PATH_REGEX.test(req.originalUrl)
+  return sendErr(req, res, err) if req.xhr
+  return sendErr(req, res, err, api: true) if API_PATH_REGEX.test(req.originalUrl)
   errorHandler(err, req, res, next)
 
 serveStaticErrorPage = (status, res)->
@@ -37,8 +40,8 @@ logError = (err, req)->
 productionHandler = (err, req, res, next) ->
   console.log('there is an err in production', err)
   logError(err, req)
-  return sendErr(res, err) if req.xhr
-  return sendErr(res, err, api: true) if API_PATH_REGEX.test(req.originalUrl)
+  return sendErr(req, res, err) if req.xhr
+  return sendErr(req, res, err, api: true) if API_PATH_REGEX.test(req.originalUrl)
   switch err.status
     when 401
       res.redirect("/401?originalUrl=#{req.originalUrl}")

@@ -54,7 +54,7 @@ describe 'local authentication', ->
           .post('/login')
           .set('X-Requested-With', 'XMLHttpRequest')
           .send(username: 'the email', password: 'bad password')
-          .expect(400)
+          .expect(401)
           .end (err, res)->
             expect(res.text).to.equal('Incorrect email/password.')
             done(err)
