@@ -31,7 +31,7 @@ serveStaticErrorPage = (status, res)->
 
 logError = (err, req)->
   console.log("LOGGING ERROR")
-  extra = _.extend({}, err.extra, req.headers)
+  extra = _.extend({}, err.extra, req.headers, requestUrl: req.originalUrl)
   sentryClient.captureError(err, extra: extra)
 
 productionHandler = (err, req, res, next) ->
