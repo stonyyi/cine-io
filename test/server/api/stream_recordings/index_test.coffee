@@ -1,6 +1,6 @@
 _ = require('underscore')
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
-Index = testApi Cine.api('stream_archives/index')
+Index = testApi Cine.api('stream_recordings/index')
 Project = Cine.server_model('project')
 User = Cine.server_model('user')
 EdgecastStream = Cine.server_model('edgecast_stream')
@@ -56,7 +56,7 @@ describe 'StreamArchives#index', ->
     beforeEach ->
       @fakeFtpClient = new FakeFtpClient
       @listStub = @fakeFtpClient.stub('list')
-      @lists = Cine.require('test/fixtures/edgecast_stream_archives')
+      @lists = Cine.require('test/fixtures/edgecast_stream_recordings')
       @listStub.callsArgWith 1, null, @lists
 
     afterEach ->

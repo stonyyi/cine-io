@@ -8,7 +8,7 @@ describe 'listArchivedStreamFiles', ->
     @stream = new EdgecastStream(streamName: 'xkMOUbRPZl', instanceName: 'cines')
     @fakeFtpClient = new FakeFtpClient
     @listStub = @fakeFtpClient.stub('list')
-    @lists = Cine.require('test/fixtures/edgecast_stream_archives')
+    @lists = Cine.require('test/fixtures/edgecast_stream_recordings')
     @listStub.callsArgWith 1, null, @lists
 
   afterEach ->
