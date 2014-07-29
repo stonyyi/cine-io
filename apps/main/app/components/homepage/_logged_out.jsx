@@ -86,6 +86,60 @@ exports.About = React.createClass({
 });
 
 
+exports.Libraries = React.createClass({
+  displayName: 'Libraries',
+  render: function() {
+    var squareSize = 32;
+      multiplier = 2;
+    squareSize *= multiplier;
+    return (
+      <section id="libraries">
+        <div className="row text-center">
+          <div className="medium-12 columns">
+            <h2 className="bottom-margin-2">
+              Easy integration with your app.
+            </h2>
+            <ul className="small-block-grid-6 bottom-margin-2">
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/js-sdk'>
+                  <img src="/images/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-ios'>
+                  <img src="/images/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-android'>
+                  <img src="/images/android-logo.png" alt="Android logo" title="The Android SDK" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-ruby'>
+                  <img src="/images/ruby-logo.png" alt="Ruby logo" title="The Ruby Gem" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-python'>
+                  <img src="/images/python-logo.png" alt="Python logo" title="The Python Egg" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://github.com/cine-io/cineio-node'>
+                  <img src="/images/nodejs-logo.png" alt="Node.js logo" title="The Node.js Package" />
+                </a>
+              </li>
+            </ul>
+            <div>All API calls and common workflows are described in our <a href="/docs">documentation</a>. </div>
+            <p>Example applications and other resources are available on our <a target="_blank" href="http://git.cine.io">Github page</a>. </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+});
+
 
 exports.Example = React.createClass({
   displayName: 'Example',
@@ -186,61 +240,6 @@ exports.Example = React.createClass({
 });
 
 
-exports.Libraries = React.createClass({
-  displayName: 'Libraries',
-  render: function() {
-    var squareSize = 32;
-      multiplier = 2;
-    squareSize *= multiplier;
-    return (
-      <section id="libraries">
-        <div className="row text-center">
-          <div className="medium-12 columns">
-            <h2 className="bottom-margin-2">
-              Easy integration with your app.
-            </h2>
-            <ul className="small-block-grid-6 bottom-margin-2">
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/js-sdk'>
-                  <img src="/images/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-ios'>
-                  <img src="/images/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-android'>
-                  <img src="/images/android-logo.png" alt="Android logo" title="The Android SDK" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-ruby'>
-                  <img src="/images/ruby-logo.png" alt="Ruby logo" title="The Ruby Gem" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-python'>
-                  <img src="/images/python-logo.png" alt="Python logo" title="The Python Egg" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-node'>
-                  <img src="/images/nodejs-logo.png" alt="Node.js logo" title="The Node.js Package" />
-                </a>
-              </li>
-            </ul>
-            <div>All API calls and common workflows are described in our <a href="/docs">documentation</a>. </div>
-            <p>Example applications and other resources are available on our <a target="_blank" href="http://git.cine.io">Github page</a>. </p>
-          </div>
-        </div>
-      </section>
-    );
-  }
-});
-
-
 exports.Pricing = React.createClass({
   mixins: [Cine.lib('requires_app')],
 
@@ -325,3 +324,47 @@ exports.Pricing = React.createClass({
     );
   }
 });
+
+
+exports.Consulting = React.createClass({
+  displayName: 'Consulting',
+  render: function() {
+    return (
+      <section id="consulting">
+        <div className="row">
+          <div className="info text-center">
+            <h2>
+              Need help building your app?
+            </h2>
+
+            <p>
+              Bypass your competition by letting us prototype or build your
+              app for you.
+            </p>
+
+            <p>
+              The developers behind cine.io have decades of experience
+              building multi-platform, multi-tier web platforms, applications,
+              and services. In their previous lives, they built products and
+              platforms like <a href="https://www.change.org/">Change.org</a>,&nbsp;
+              <a href="https://www.givingstage.com/">Giving Stage</a>,&nbsp; and <a
+              href="https://www.ironport.com">IronPort Systems</a>.
+            </p>
+
+            <p>
+               <button className="button radius secondary">
+                 <a href="mailto:support@cine.io?subject=consulting+services">
+                  Talk to us
+                 </a>
+               </button>
+            </p>
+
+          </div>
+        </div>
+      </section>
+    );
+  }
+});
+
+
+

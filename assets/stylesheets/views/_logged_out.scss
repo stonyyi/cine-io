@@ -191,6 +191,25 @@
       }
     }
   }
+
+  #consulting {
+    background: $scheme-color-north;
+    color: white;
+    padding-bottom: 2em;
+
+    .info {
+      @include grid-column(12);
+      padding-top: 3em;
+
+      a, h2, h2 * {
+        color: $scheme-color-north-bright;
+      }
+
+      button a {
+        color: black;
+      }
+    }
+  }
 }
 
 

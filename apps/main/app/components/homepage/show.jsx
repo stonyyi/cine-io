@@ -11,6 +11,7 @@ About = LoggedOut.About,
 Example = LoggedOut.Example,
 Libraries = LoggedOut.Libraries,
 Pricing = LoggedOut.Pricing,
+Consulting = LoggedOut.Consulting,
 Projects = Cine.collection('projects');
 
 module.exports = React.createClass({
@@ -51,6 +52,7 @@ module.exports = React.createClass({
             <Libraries />
             <Example app={this.props.app}/>
             <Pricing app={this.props.app} />
+            <Consulting />
             <Footer />
           </div>
         </div>
