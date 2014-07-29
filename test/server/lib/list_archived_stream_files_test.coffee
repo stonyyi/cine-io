@@ -15,7 +15,6 @@ describe 'listArchivedStreamFiles', ->
     @fakeFtpClient.restore()
 
   it 'returns the files for a stream', (done)->
-    @fakeFtpClient.start()
     listArchivedStreamFiles @stream, (err, archivedStreams)=>
       expect(@listStub.calledOnce).to.be.true
       expect(@listStub.args[0][0]).to.equal('/cines')

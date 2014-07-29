@@ -23,7 +23,6 @@ describe 'downloadAndParseEdgecastLogs', ->
       @stream.save done
 
     it 'downloads and parses edgecast logs', (done)->
-      @fakeFtpClient.start()
       downloadAndParseEdgecastLogs (err)=>
         expect(@listStub.calledOnce).to.be.true
         expect(@listStub.firstCall.args[0]).to.equal('/logs')
@@ -51,7 +50,6 @@ describe 'downloadAndParseEdgecastLogs', ->
       parsedLog.save done
 
     it 'does not double process logs', (done)->
-      @fakeFtpClient.start()
       downloadAndParseEdgecastLogs (err)->
         expect(err).to.be.undefined
         EdgecastParsedLog.find (err, parsedLogs)->
@@ -63,7 +61,6 @@ describe 'downloadAndParseEdgecastLogs', ->
             done()
 
   it 'will save a process error', (done)->
-    @fakeFtpClient.start()
     downloadAndParseEdgecastLogs (err)=>
       expect(err).to.be.undefined
       expect(@fakeFtpClient.connectStub.calledOnce).to.be.true

@@ -26,7 +26,7 @@ class FakeFtpStream
 module.exports = class FakeFtpClient
   constructor: (@events={})->
     @stubs = []
-    @connectStub = @stub('connect')
+    @connectStub = sinon.spy(this, 'connect')
     @builderStub = sinon.stub edgecastFtpClientFactory, 'builder'
     @builderStub.returns(this)
 
@@ -35,23 +35,26 @@ module.exports = class FakeFtpClient
     @stubs.push(stub)
     stub
 
-  start: ->
-    process.nextTick =>
-      @trigger('ready')
-
   restore: ->
     @builderStub.restore()
+    @connectStub.restore()
     _.invoke(@stubs, 'restore')
 
   on: (event, callback)->
     @events[event] = callback
+
   connect: ->
+    process.nextTick =>
+      @trigger('ready')
+
   list: ->
   get: (name, callback)->
     ftpStream = new FakeFtpStream(name)
     process.nextTick ->
       callback(null, ftpStream)
+
   end: ->
     @trigger('end')
+
   trigger: (event, args)->
     @events[event](args)

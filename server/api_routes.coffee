@@ -30,6 +30,8 @@ module.exports = (app)->
   put     'streams#update', url: 'stream'
   destroy 'streams#delete', url: 'stream'
 
+  get 'stream_archives#index', url: 'stream/archives'
+
   get 'static_documents#show', url: 'static-document'
 
   get  'users#show', url: 'user'

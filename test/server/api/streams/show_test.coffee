@@ -7,10 +7,12 @@ _ = require('underscore')
 describe 'Streams#Show', ->
   testApi.requresApiKey Show, 'either'
 
+  now = new Date
+
   beforeEach (done)->
     @project = new Project(name: 'my project')
     @project.save done
-  now = new Date
+
   beforeEach (done)->
     @projectStream = new EdgecastStream
       instanceName: 'cines'
