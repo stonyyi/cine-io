@@ -31,7 +31,7 @@ End point:
 Example: `curl -X POST --data "secretKey=MY_SECRET_KEY&name=first%20stream" https://www.cine.io/api/1/-/stream`
 
 ### 2. Publish a live stream
-*Location: Web Client*
+*Location: Client*
 
 Now you've saved your stream `id` and stream `password`. Using the [JS SDK](https://github.com/cine-io/js-sdk), you'll need to pass you project's *public key* to the client. If your specific user has permission in your application to publish to this stream, then you'll need to send along the stream `id` and stream `password` to your web client. For example, this endpoint would be useful if you are building a "virtual classroom" and the current logged-in user has a "teacher" role.
 
@@ -52,7 +52,7 @@ publisher.start();
 ```
 
 ### 3. Play a live stream
-*Location: Web Client*
+*Location: Client*
 
 Using the [JS SDK](https://github.com/cine-io/js-sdk), you'll need to pass you project's *public key* to the client. To play a stream using the JS SDK, you only need to send out the stream `id`. Only serve the stream `id` to users who have permission to view a stream. For example, in our aforementioned "virtual classroom" application, this endpoint would be useful when the current logged-in user has a "student" role.
 
@@ -132,6 +132,23 @@ End point:
  * id: stream id
 
 Example: `curl -X DELETE "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId"`
+
+
+### Get the recordings of a live stream
+*Location: Client or Web Server*
+
+This endpoint fetches all of the recordings of a single live stream. A new recording file is created for each live streaming session.
+
+End point:
+
+* method: GET
+* url: /api/1/-/stream/recordings
+* response format: JSON
+* parameters:
+ * publicKey: CINE_IO_PUBLIC_KEY
+ * id: stream id
+
+Example: `curl "https://www.cine.io/api/1/-/stream/recordings?publicKey=MY_PUBLIC_KEY&id=streamId"`
 
 ### Get the project details
 *Location: Web Server*
