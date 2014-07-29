@@ -1,10 +1,10 @@
-FtpClient = require('ftp')
 async = require('async')
 fs = require("fs")
 _ = require('underscore')
 mkdirp = require('mkdirp')
 parseEdgecastLog = Cine.server_lib('reporting/unzip_and_process_edgecast_log')
 EdgecastParsedLog = Cine.server_model('edgecast_parsed_log')
+edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 
 parseLogFile = (logName, outputFile, callback)->
   console.log("creating EdgecastParsedLog", logName)
@@ -23,7 +23,6 @@ parseLogFile = (logName, outputFile, callback)->
 downloadAndParseEdgecastLogs = (done)->
   directory = "#{Cine.root}/tmp/edgecast_logs/"
   mkdirp.sync directory
-  ftpClient = downloadAndParseEdgecastLogs.ftpFactory()
 
   processEdgecastLogFile = (logName, callback)->
     console.log("parsing", logName)
@@ -39,7 +38,7 @@ downloadAndParseEdgecastLogs = (done)->
         parseLogFile(logName, outputFile, callback)
       stream.pipe(fs.createWriteStream(outputFile))
 
-  ftpClient.on "ready", ->
+  listLogs = ->
     ftpClient.list '/logs', (err, list) ->
       ftpLogNames = _.pluck(list, 'name')
       EdgecastParsedLog.find logName: {$in: ftpLogNames}, (err, parsedLogs)->
@@ -48,23 +47,9 @@ downloadAndParseEdgecastLogs = (done)->
         toProcess = _.without(ftpLogNames, parsedLogNames...)
         console.log("Going to process: ", toProcess)
         async.eachLimit toProcess, 1, processEdgecastLogFile, (err)->
-          return done(err) if err
           ftpClient.end()
+          done(err)
 
-  ftpClient.on "error", (error)->
-    console.log("FTP ERROR", error)
-    done(error)
-
-  ftpClient.on "end", ->
-    console.log("FTP END")
-    done()
-
-  ftpClient.on "greeting", (msg)->
-    console.log('got ftp greeting', msg)
-
-  ftpClient.connect Cine.config('variables/edgecast').ftp
-
-downloadAndParseEdgecastLogs.ftpFactory = ->
-  new FtpClient
+  ftpClient = edgecastFtpClientFactory done, listLogs
 
 module.exports = downloadAndParseEdgecastLogs

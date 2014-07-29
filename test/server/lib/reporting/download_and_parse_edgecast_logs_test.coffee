@@ -4,6 +4,7 @@ downloadAndParseEdgecastLogs = Cine.server_lib('reporting/download_and_parse_edg
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
 EdgecastStream = Cine.server_model('edgecast_stream')
 EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
+edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 
 describe 'downloadAndParseEdgecastLogs', ->
 
@@ -16,7 +17,7 @@ describe 'downloadAndParseEdgecastLogs', ->
     @listStub.callsArgWith 1, null, @lists
 
   beforeEach ->
-    @stub = sinon.stub downloadAndParseEdgecastLogs, 'ftpFactory'
+    @stub = sinon.stub edgecastFtpClientFactory, 'builder'
     @stub.returns(@fakeFtpClient)
 
   afterEach ->
