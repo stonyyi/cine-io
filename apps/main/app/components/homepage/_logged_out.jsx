@@ -265,7 +265,7 @@ exports.Pricing = React.createClass({
               <div className="pitch">
                 All plans include live-streaming <strong>to and from any
                 device</strong> (web, iOS, Android), distribution via our
-                Global CDN (5,000 interconnected networks on 5 continents), no
+                Global CDN (2,000 interconnected networks on 5 continents), no
                 ads of any kind, and email support from our developers.
               </div>
 
