@@ -27,6 +27,8 @@ exports.HomeHero = React.createClass({
     window.history.pushState(null, "#about", "#about");
   },
   render: function() {
+    var squareSize = 32;
+
     return (
       <section id="home-hero">
         <div className="row">
@@ -34,7 +36,7 @@ exports.HomeHero = React.createClass({
             <a href="/" title="cine.io">
               <h1 className="brand">cine.io</h1>
             </a>
-            <h2 className="subtitle">Device-agnostic live video streaming.</h2>
+            <h2 className="subtitle">Video live-streaming API for web and mobile apps.</h2>
             <h3 className="pitch">Get started for free.</h3>
             <div className="actions">
               <a href="" onClick={this.getApiKey} className="button radius">Get API Key</a><br/>
@@ -82,6 +84,8 @@ exports.About = React.createClass({
     );
   }
 });
+
+
 
 exports.Example = React.createClass({
   displayName: 'Example',
@@ -140,7 +144,7 @@ exports.Example = React.createClass({
             <div className='bottom-margin-1'>
               <PublishCodeExample streamId={this.state.streamId} password={this.state.streamPassword}/>
             </div>
-            <div id={this.state.publisherId}>
+            <div className="show-for-medium-up" id={this.state.publisherId}>
               <div className="aspect-wrapper">
                 <div className="main">
                   <div className="center-wrapper">
@@ -156,7 +160,7 @@ exports.Example = React.createClass({
             <div className='bottom-margin-1'>
               <PlayCodeExample streamId={this.state.streamId}/>
             </div>
-            <div id={this.state.playerId}>
+            <div className="show-for-medium-up" id={this.state.playerId}>
               <div className="aspect-wrapper">
                 <div className="main">
                   <div className="center-wrapper">
@@ -185,46 +189,45 @@ exports.Example = React.createClass({
 exports.Libraries = React.createClass({
   displayName: 'Libraries',
   render: function() {
-    var squareSize = 36;
+    var squareSize = 32;
       multiplier = 2;
     squareSize *= multiplier;
     return (
       <section id="libraries">
-        <hr/>
         <div className="row text-center">
           <div className="medium-12 columns">
             <h2 className="bottom-margin-2">
               Easy integration with your app.
             </h2>
-            <ul className="inline-list bottom-margin-2">
+            <ul className="small-block-grid-6 bottom-margin-2">
               <li>
                 <a target="_blank" href='https://github.com/cine-io/js-sdk'>
-                  <img width={squareSize} height={squareSize} src="/images/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
+                  <img src="/images/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-ios'>
-                  <img width={squareSize} height={squareSize} src="/images/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
+                  <img src="/images/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-android'>
-                  <img width={squareSize} height={squareSize} src="/images/android-logo.png" alt="Android logo" title="The Android SDK" />
+                  <img src="/images/android-logo.png" alt="Android logo" title="The Android SDK" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-ruby'>
-                  <img width={squareSize} height={squareSize} src="/images/ruby-logo.png" alt="Ruby logo" title="The Ruby Gem" />
+                  <img src="/images/ruby-logo.png" alt="Ruby logo" title="The Ruby Gem" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-python'>
-                  <img width={squareSize} height={squareSize} src="/images/python-logo.png" alt="Python logo" title="The Python Egg" />
+                  <img src="/images/python-logo.png" alt="Python logo" title="The Python Egg" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-node'>
-                  <img width={squareSize} height={squareSize} src="/images/nodejs-logo.png" alt="Node.js logo" title="The Node.js Package" />
+                  <img src="/images/nodejs-logo.png" alt="Node.js logo" title="The Node.js Package" />
                 </a>
               </li>
             </ul>
@@ -232,7 +235,6 @@ exports.Libraries = React.createClass({
             <p>Example applications and other resources are available on our <a target="_blank" href="http://git.cine.io">Github page</a>. </p>
           </div>
         </div>
-        <hr/>
       </section>
     );
   }

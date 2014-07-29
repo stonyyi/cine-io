@@ -110,6 +110,7 @@
   }
 
   #example {
+    background: #ccc;
     pre {
       border: 2px solid white;
       border-radius: 6px;
@@ -157,13 +158,12 @@
   }
 
   #libraries{
-    $list-margin: 4.375rem;
-    $negative: $list-margin * -1;
     ul{
-      display: inline-block;
-      margin-left: $negative;
       li{
-        margin-left: $list-margin;
+        img{
+          width: 32px;
+          height: 32px;
+        }
       }
     }
   }
@@ -226,6 +226,17 @@
 
       .play-script {
         @include grid-column(6);
+      }
+    }
+
+    #libraries {
+      ul {
+        li {
+          img {
+            width: 64px;
+            height: 64px;
+          }
+        }
       }
     }
   }

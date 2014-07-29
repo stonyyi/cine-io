@@ -48,8 +48,8 @@ module.exports = React.createClass({
             <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
             <HomeHero app={this.props.app} />
             <About />
-            <Example app={this.props.app}/>
             <Libraries />
+            <Example app={this.props.app}/>
             <Pricing app={this.props.app} />
             <Footer />
           </div>
