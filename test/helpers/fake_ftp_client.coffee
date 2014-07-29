@@ -35,6 +35,10 @@ module.exports = class FakeFtpClient
     @stubs.push(stub)
     stub
 
+  start: ->
+    process.nextTick =>
+      @trigger('ready')
+
   restore: ->
     @builderStub.restore()
     _.invoke(@stubs, 'restore')
