@@ -16,7 +16,7 @@ ftpFilesToResponse = (ftpFiles)->
   _.chain(ftpFiles).map(onlySelectUsefulValues).sortBy(dateSort).value()
 
 module.exports = (params, callback)->
-  getProject params, requires: 'secret', userOverride: true, (err, project, options)->
+  getProject params, requires: 'either', userOverride: true, (err, project, options)->
     return callback(err, project, options) if err
     return callback("id required", null, status: 400) unless params.id
     query =

@@ -7,7 +7,7 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 
 describe 'StreamArchives#index', ->
 
-  testApi.requresApiKey Index, 'secret'
+  testApi.requresApiKey Index, 'either'
 
   now = new Date
 
@@ -63,7 +63,7 @@ describe 'StreamArchives#index', ->
       @fakeFtpClient.restore()
 
     it 'will return a json of the stream archives sorted by date', (done)->
-      params = secretKey: @project.secretKey, id: @projectStream._id
+      params = publicKey: @project.publicKey, id: @projectStream._id
       Index params, (err, response, options)->
         expect(err).to.be.null
         expect(options).to.be.undefined
