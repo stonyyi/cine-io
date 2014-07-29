@@ -33,48 +33,71 @@ ensurePlayerLoaded = (cb)->
 userOrDefault = (userOptions, key)->
   if Object.prototype.hasOwnProperty.call(userOptions, key) then userOptions[key] else defaultOptions[key]
 
+
+playNative = (source, domNode, playOptions)->
+  videoOptions =
+     width: userOrDefault(playOptions, 'width')
+     height: '100%'
+     autoplay: userOrDefault(playOptions, 'autostart')
+     controls: userOrDefault(playOptions, 'controls')
+     mute: userOrDefault(playOptions, 'mute')
+     src: source
+  videoElement = "<video src='#{videoOptions.src}' height='#{videoOptions.height}' #{'autoplay' if videoOptions.autoplay} #{'controls' if videoOptions.controls} #{'mute' if videoOptions.mute}>"
+  document.getElementById(domNode).innerHTML = videoElement
+
+startJWPlayer = (flashSource, nativeSouce, domNode, playOptions)->
+  switchToNative = ->
+    return if flashDetect()
+    playNative(nativeSouce, domNode, playOptions)
+
+  jwplayer.key = CineIO.config.jwPlayerKey
+  options =
+    file: flashSource
+    stretching: userOrDefault(playOptions, 'stretching')
+    width: userOrDefault(playOptions, 'width')
+    aspectratio: userOrDefault(playOptions, 'aspectratio')
+    primary: userOrDefault(playOptions, 'primary')
+    autostart: userOrDefault(playOptions, 'autostart')
+    metaData: userOrDefault(playOptions, 'metaData')
+    mute: userOrDefault(playOptions, 'mute')
+    rtmp: userOrDefault(playOptions, 'rtmp')
+    controlbar: userOrDefault(playOptions, 'controls')
+
+  console.log('playing', options)
+
+  jwplayer(domNode).setup(options)
+  jwplayer().setControls(false) if !userOrDefault(playOptions, 'controls')
+
+  jwplayer().onReady switchToNative
+  jwplayer().onSetupError switchToNative
+
 # this assumes JW player is loaded
-play = (streamId, domNode, playOptions)->
-  getStreamDetails streamId, (err, stream)->
-    switchToNative = ->
-      return if jwplayer().getRenderingMode() == "flash"
-      videoOptions =
-         width: userOrDefault(playOptions, 'width')
-         height: '100%'
-         autoplay: userOrDefault(playOptions, 'autostart')
-         controls: userOrDefault(playOptions, 'controls')
-         mute: userOrDefault(playOptions, 'mute')
-         src: stream.play.hls
-      videoElement = "<video src='#{videoOptions.src}' height='#{videoOptions.height}' #{'autoplay' if videoOptions.autoplay} #{'controls' if videoOptions.controls} #{'autoplay' if videoOptions.mute}>"
-      document.getElementById(domNode).innerHTML = videoElement
-
-    jwplayer.key = CineIO.config.jwPlayerKey
-    stream = stream
+playLive = (streamId, domNode, playOptions)->
+  ApiBridge.getStreamDetails streamId, (err, stream)->
     console.log('streaming', stream)
-    rtmpUrl = stream.play.rtmp
-    options =
-      file: rtmpUrl
-      stretching: userOrDefault(playOptions, 'stretching')
-      width: userOrDefault(playOptions, 'width')
-      aspectratio: userOrDefault(playOptions, 'aspectratio')
-      primary: userOrDefault(playOptions, 'primary')
-      autostart: userOrDefault(playOptions, 'autostart')
-      metaData: userOrDefault(playOptions, 'metaData')
-      mute: userOrDefault(playOptions, 'mute')
-      rtmp: userOrDefault(playOptions, 'rtmp')
-      controlbar: userOrDefault(playOptions, 'controls')
-    console.log('playing', options)
-    jwplayer(domNode).setup(options)
-    if !userOrDefault(playOptions, 'controls')
-      jwplayer().setControls(false)
-    jwplayer().onReady switchToNative
-    jwplayer().onSetupError switchToNative
+    startJWPlayer(stream.play.rtmp, stream.play.hls, domNode, playOptions)
 
+getRecordingUrl = (recordings, recordingName)->
+  url = null
+  for recording in recordings
+    return recording.url if recording.name == recordingName
 
+playRecording = (streamId, recordingName, domNode, playOptions)->
+  ApiBridge.getStreamRecordings streamId, (err, recordings)->
+    recordingUrl = getRecordingUrl(recordings, recordingName)
+    throw new Error("Recording not found") unless recordingUrl
+    # JWPlayer totally fails when primary is set to flash.
+    playOptions.primary = null
+    startJWPlayer(recordingUrl, recordingUrl, domNode, playOptions)
 
-module.exports = (streamId, domNode, playOptions)->
+exports.live = (streamId, domNode, playOptions)->
   ensurePlayerLoaded ->
-    play(streamId, domNode, playOptions)
+    playLive(streamId, domNode, playOptions)
+
+exports.recording = (streamId, recordingName, domNode, playOptions)->
+  ensurePlayerLoaded ->
+    playRecording(streamId, recordingName, domNode, playOptions)
 
 getScript = require('./get_script')
-getStreamDetails = require('./get_stream_details')
+flashDetect = require('./flash_detect')
+ApiBridge = require('./api_bridge')

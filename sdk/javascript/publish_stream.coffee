@@ -114,7 +114,7 @@ class Publisher
     console.log('loading publisher')
     @_ensureLoaded (publisher)=>
       console.log('fetching stream', publisher)
-      getStreamDetails @streamId, (err, stream)=>
+      ApiBridge.getStreamDetails @streamId, (err, stream)=>
         options = @_options(stream)
         console.log('streamingggg!!', options)
         publisher.setOptions options
@@ -156,4 +156,4 @@ window._jsLogFunction = (msg)->
   console.log('_jsLogFunction', msg)
 
 getScript = require('./get_script')
-getStreamDetails = require('./get_stream_details')
+ApiBridge = require('./api_bridge')
