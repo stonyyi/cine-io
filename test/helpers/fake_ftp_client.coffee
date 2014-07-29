@@ -1,6 +1,7 @@
 copyFile = Cine.require('test/helpers/copy_file')
 gzipFile = Cine.require('test/helpers/gzip_file')
-
+edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
+_ = require('underscore')
 writeExampleFmsFile = (outputStream, callback)->
   fmsExampleLog = Cine.path('test/fixtures/edgecast_logs/fms_example.log')
   unZipFile = outputStream.path.slice(0, outputStream.path.length-3)
@@ -24,6 +25,20 @@ class FakeFtpStream
 
 module.exports = class FakeFtpClient
   constructor: (@events={})->
+    @stubs = []
+    @connectStub = @stub('connect')
+    @builderStub = sinon.stub edgecastFtpClientFactory, 'builder'
+    @builderStub.returns(this)
+
+  stub: (functionName)->
+    stub = sinon.stub this, functionName
+    @stubs.push(stub)
+    stub
+
+  restore: ->
+    @builderStub.restore()
+    _.invoke(@stubs, 'restore')
+
   on: (event, callback)->
     @events[event] = callback
   connect: ->

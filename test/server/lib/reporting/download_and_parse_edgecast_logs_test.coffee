@@ -4,25 +4,18 @@ downloadAndParseEdgecastLogs = Cine.server_lib('reporting/download_and_parse_edg
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
 EdgecastStream = Cine.server_model('edgecast_stream')
 EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
-edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 
 describe 'downloadAndParseEdgecastLogs', ->
 
   beforeEach ->
     @fakeFtpClient = new FakeFtpClient
-    @connectStub = sinon.stub @fakeFtpClient, 'connect'
-    @listStub = sinon.stub @fakeFtpClient, 'list'
+    @listStub = @fakeFtpClient.stub('list')
     @logName = "fms_example_from_ftp.log.gz"
     @lists = [{name: @logName}]
     @listStub.callsArgWith 1, null, @lists
 
-  beforeEach ->
-    @stub = sinon.stub edgecastFtpClientFactory, 'builder'
-    @stub.returns(@fakeFtpClient)
-
   afterEach ->
-    @stub.restore()
-    @connectStub.restore()
+    @fakeFtpClient.restore()
 
   describe 'success', ->
     beforeEach (done)->
@@ -33,6 +26,7 @@ describe 'downloadAndParseEdgecastLogs', ->
       process.nextTick =>
         @fakeFtpClient.trigger('ready')
       downloadAndParseEdgecastLogs (err)=>
+        expect(@listStub.firstCall.args[0]).to.equal('/logs')
         expect(err).to.be.undefined
         EdgecastParsedLog.find (err, parsedLogs)=>
           expect(parsedLogs).to.have.length(1)
@@ -56,7 +50,6 @@ describe 'downloadAndParseEdgecastLogs', ->
       parsedLog = new EdgecastParsedLog(hasStarted: true, logName: @logName)
       parsedLog.save done
 
-
     it 'does not double process logs', (done)->
       process.nextTick =>
         @fakeFtpClient.trigger('ready')
@@ -75,8 +68,8 @@ describe 'downloadAndParseEdgecastLogs', ->
       @fakeFtpClient.trigger('ready')
     downloadAndParseEdgecastLogs (err)=>
       expect(err).to.be.undefined
-      expect(@connectStub.calledOnce).to.be.true
-      expect(@connectStub.firstCall.args).to.deep.equal([host: "ftp.vny.C45E.edgecastcdn.net", user: 'fake-account', password: 'fake-password'])
+      expect(@fakeFtpClient.connectStub.calledOnce).to.be.true
+      expect(@fakeFtpClient.connectStub.firstCall.args).to.deep.equal([host: "ftp.vny.C45E.edgecastcdn.net", user: 'fake-account', password: 'fake-password'])
       EdgecastParsedLog.find (err, parsedLogs)->
         expect(parsedLogs).to.have.length(1)
         parsedLog = parsedLogs[0]
