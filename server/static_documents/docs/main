@@ -17,10 +17,11 @@
 <li>parameters:<ul>
 <li>secretKey: CINE_IO_SECRET_KEY</li>
 <li>name (optional): any text to help you identify your stream</li>
+<li>record (true|false): record each session of the live stream for later viewing, defaults to false</li>
 </ul>
 </li>
 </ul>
-<p>Example: <code>curl -X POST --data &quot;secretKey=MY_SECRET_KEY&amp;name=first%20stream&quot; https://www.cine.io/api/1/-/stream</code></p>
+<p>Example: <code>curl -X POST --data &quot;secretKey=MY_SECRET_KEY&amp;name=first%20stream&amp;record=true&quot; https://www.cine.io/api/1/-/stream</code></p>
 <h3 id="2-publish-a-live-stream">2. Publish a live stream</h3>
 <p><em>Location: Client</em></p>
 <p>Now you&#39;ve saved your stream <code>id</code> and stream <code>password</code>. Using the <a href="https://github.com/cine-io/js-sdk">JS SDK</a>, you&#39;ll need to pass you project&#39;s <em>public key</em> to the client. If your specific user has permission in your application to publish to this stream, then you&#39;ll need to send along the stream <code>id</code> and stream <code>password</code> to your web client. For example, this endpoint would be useful if you are building a &quot;virtual classroom&quot; and the current logged-in user has a &quot;teacher&quot; role.</p>

@@ -27,8 +27,9 @@ End point:
 * parameters:
   * secretKey: CINE_IO_SECRET_KEY
   * name (optional): any text to help you identify your stream
+  * record (true|false): record each session of the live stream for later viewing, defaults to false
 
-Example: `curl -X POST --data "secretKey=MY_SECRET_KEY&name=first%20stream" https://www.cine.io/api/1/-/stream`
+Example: `curl -X POST --data "secretKey=MY_SECRET_KEY&name=first%20stream&record=true" https://www.cine.io/api/1/-/stream`
 
 ### 2. Publish a live stream
 *Location: Client*
