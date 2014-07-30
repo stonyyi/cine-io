@@ -1,4 +1,3 @@
-mkdirp = require('mkdirp')
 _ = require('underscore')
 _str = require('underscore.string')
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
