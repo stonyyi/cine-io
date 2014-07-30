@@ -42,6 +42,7 @@ allocateNewStreamToProject = (project, options, callback)->
     stream._project = project._id
     stream.assignedAt = new Date
     stream.name = options.name if options.name
+    stream.record = options.record if options.record
 
     stream.save (err, stream)->
       return callback(err, stream) if err

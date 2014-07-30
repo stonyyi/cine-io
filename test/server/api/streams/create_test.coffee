@@ -42,13 +42,14 @@ describe 'Streams#Create', ->
         expectedPublishResponse =
           url: "rtmp://stream.lax.cine.io/20C45E/cines"
           stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
-        expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish', 'streamName'])
+        expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish', 'record', 'streamName'])
         expect(response.play).to.deep.equal(expectedPlayResponse)
         expect(response.publish).to.deep.equal(expectedPublishResponse)
         expect(response.id).to.equal(@stream._id.toString())
         expect(response.streamName).to.equal('cine1')
         expect(response.password).to.equal('bass35')
         expect(response.assignedAt).to.be.ok
+        expect(response.record).to.be.false
         expect(options).to.be.undefined
         done()
 
@@ -69,4 +70,15 @@ describe 'Streams#Create', ->
           expect(err).to.be.null
           expect(stream._project.toString()).to.equal(@project._id.toString())
           expect(stream.name).to.equal('my fun stream')
+          done()
+
+    it 'can pass a record parameter', (done)->
+      params = secretKey: @project.secretKey, record: 'true'
+      Create params, (err, response, options)=>
+        expect(err).to.be.null
+        expect(response.record).to.be.true
+        EdgecastStream.findById @stream._id, (err, stream)=>
+          expect(err).to.be.null
+          expect(stream._project.toString()).to.equal(@project._id.toString())
+          expect(stream.record).to.be.true
           done()

@@ -80,7 +80,7 @@ describe 'Streams#Show', ->
         expectedPublishResponse =
           url: "rtmp://stream.lax.cine.io/20C45E/cines"
           stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
-        expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish', 'streamName'])
+        expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish', 'record', 'streamName'])
         expect(response.streamName).to.deep.equal('cine1')
         expect(response.name).to.deep.equal('my fun name')
         expect(response.password).to.deep.equal('bass35')

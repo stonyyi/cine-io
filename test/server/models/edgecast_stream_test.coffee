@@ -6,6 +6,13 @@ _ = require('underscore')
 describe 'EdgecastStream', ->
   modelTimestamps EdgecastStream
 
+  describe 'record', ->
+    it 'defaults to false', (done)->
+      stream = new EdgecastStream(streamName: 'name1')
+      stream.save (err, s)->
+        expect(s.record).to.be.false
+        done(err)
+
   describe '.nextAvailable', ->
     beforeEach (done)->
       @stream1 = new EdgecastStream(streamName: 'name1')
