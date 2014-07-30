@@ -5,7 +5,7 @@ Project = Cine.server_model('project')
 User = Cine.server_model('user')
 EdgecastStream = Cine.server_model('edgecast_stream')
 
-describe 'StreamArchives#index', ->
+describe 'StreamArchives#Index', ->
 
   testApi.requresApiKey Index, 'either'
 
