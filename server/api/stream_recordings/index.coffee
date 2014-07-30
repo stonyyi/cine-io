@@ -1,7 +1,7 @@
 _ = require('underscore')
 EdgecastStream = Cine.server_model('edgecast_stream')
 getProject = Cine.server_lib('get_project')
-listArchivedStreamFiles = Cine.server_lib('list_archived_stream_files')
+getStreamRecordings = Cine.server_lib('get_stream_recordings')
 
 onlySelectUsefulValues = (ftpFile)->
   name: ftpFile.name
@@ -28,6 +28,6 @@ module.exports = (params, callback)->
     EdgecastStream.findOne query, (err, stream)->
       return callback(err, null, status: 400) if err
       return callback("stream not found", null, status: 404) unless stream
-      listArchivedStreamFiles stream, (err, files)->
+      getStreamRecordings stream, (err, files)->
         return callback(err, null, status: 400) if err
         callback(null, ftpFilesToResponse(files))

@@ -1,8 +1,8 @@
-listArchivedStreamFiles = Cine.server_lib('list_archived_stream_files')
+getStreamRecordings = Cine.server_lib('get_stream_recordings')
 EdgecastStream = Cine.server_model('edgecast_stream')
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
 
-describe 'listArchivedStreamFiles', ->
+describe 'getStreamRecordings', ->
 
   beforeEach ->
     @stream = new EdgecastStream(streamName: 'xkMOUbRPZl', instanceName: 'cines')
@@ -15,7 +15,7 @@ describe 'listArchivedStreamFiles', ->
     @fakeFtpClient.restore()
 
   it 'returns the files for a stream', (done)->
-    listArchivedStreamFiles @stream, (err, archivedStreams)=>
+    getStreamRecordings @stream, (err, archivedStreams)=>
       expect(@listStub.calledOnce).to.be.true
       expect(@listStub.args[0][0]).to.equal('/cines')
       expect(err).to.be.null
