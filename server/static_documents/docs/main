@@ -120,6 +120,22 @@ CineIO.play(streamId, domId);</code></pre>
 </li>
 </ul>
 <p>Example: <code>curl &quot;https://www.cine.io/api/1/-/stream/recordings?publicKey=MY_PUBLIC_KEY&amp;id=streamId&quot;</code></p>
+<h3 id="delete-a-recording-of-a-live-stream">Delete a recording of a live stream</h3>
+<p><em>Location: Client or Web Server</em></p>
+<p>This endpoint permanently deletes a stream recording.</p>
+<p>End point:</p>
+<ul>
+<li>method: DELETE</li>
+<li>url: /api/1/-/stream/recordings</li>
+<li>response format: JSON</li>
+<li>parameters:<ul>
+<li>publicKey: CINE_IO_SECRET_KEY</li>
+<li>id: stream id</li>
+<li>name: the recording name</li>
+</ul>
+</li>
+</ul>
+<p>Example: <code>curl -X DELETE &quot;https://www.cine.io/api/1/-/stream/recording?secretKey=MY_SECRET_KEY&amp;id=streamId&amp;name=RECORDING_NAME&quot;</code></p>
 <h3 id="get-the-project-details">Get the project details</h3>
 <p><em>Location: Web Server</em></p>
 <p>You can fetch your project details via api.</p>

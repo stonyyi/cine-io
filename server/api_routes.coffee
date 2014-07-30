@@ -31,6 +31,7 @@ module.exports = (app)->
   destroy 'streams#delete', url: 'stream'
 
   get 'stream_recordings#index', url: 'stream/recordings'
+  destroy 'stream_recordings#delete', url: 'stream/recording'
 
   get 'static_documents#show', url: 'static-document'
 

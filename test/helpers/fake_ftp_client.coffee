@@ -47,7 +47,8 @@ module.exports = class FakeFtpClient
     process.nextTick =>
       @trigger('ready')
 
-  list: ->
+  list: (name, callback)->
+  delete: (name, callback)->
   get: (name, callback)->
     ftpStream = new FakeFtpStream(name)
     process.nextTick ->

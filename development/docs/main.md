@@ -150,6 +150,23 @@ End point:
 
 Example: `curl "https://www.cine.io/api/1/-/stream/recordings?publicKey=MY_PUBLIC_KEY&id=streamId"`
 
+### Delete a recording of a live stream
+*Location: Client or Web Server*
+
+This endpoint permanently deletes a stream recording.
+
+End point:
+
+* method: DELETE
+* url: /api/1/-/stream/recordings
+* response format: JSON
+* parameters:
+ * publicKey: CINE_IO_SECRET_KEY
+ * id: stream id
+ * name: the recording name
+
+Example: `curl -X DELETE "https://www.cine.io/api/1/-/stream/recording?secretKey=MY_SECRET_KEY&id=streamId&name=RECORDING_NAME"`
+
 ### Get the project details
 *Location: Web Server*
 
