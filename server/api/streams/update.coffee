@@ -1,6 +1,7 @@
+_ = require('underscore')
 EdgecastStream = Cine.server_model('edgecast_stream')
 getProject = Cine.server_lib('get_project')
-StreamShow = Cine.api('projects/show')
+StreamShow = Cine.api('streams/show')
 
 module.exports = (params, callback)->
   getProject params, requires: 'secret', userOverride: true, (err, project, options)->
@@ -14,7 +15,8 @@ module.exports = (params, callback)->
 
     EdgecastStream.findOne query, (err, stream)->
       return callback(err, null, status: 400) if err
-      stream.name = params.name
+      stream.name = params.name if _.has(params, 'name')
+      stream.record = params.record if _.has(params, 'record')
       stream.save (err, stream)->
         return callback(err, null, status: 400) if err
-        StreamShow.toJSON(stream, callback)
+        StreamShow.fullJSON(stream, callback)

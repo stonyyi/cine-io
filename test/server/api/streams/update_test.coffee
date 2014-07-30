@@ -33,3 +33,26 @@ describe 'Streams#Update', ->
       EdgecastStream.findById @projectStream._id, (err, stream)->
         expect(stream.name).to.be.equal('new name')
         done()
+
+  it 'sets record on the stream', (done)->
+    params = secretKey: @project.secretKey, id: @projectStream._id, record: 'true'
+    Update params, (err, response, options)=>
+      expect(err).to.be.null
+      expect(response.id).to.equal(@projectStream._id.toString())
+      expect(response.record).to.be.true
+      EdgecastStream.findById @projectStream._id, (err, stream)->
+        expect(response.record).to.be.true
+        done()
+
+  it 'can change record from true to false on the stream', (done)->
+    @projectStream.record = true
+    @projectStream.save (err, stream)=>
+      expect(err).to.be.null
+      params = secretKey: @project.secretKey, id: @projectStream._id, record: 'false'
+      Update params, (err, response, options)=>
+        expect(err).to.be.null
+        expect(response.id).to.equal(@projectStream._id.toString())
+        expect(response.record).to.be.false
+        EdgecastStream.findById @projectStream._id, (err, stream)->
+          expect(response.record).to.be.false
+          done()
