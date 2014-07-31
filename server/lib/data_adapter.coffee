@@ -57,6 +57,8 @@ class DataAdapter
 
     params = _.extend({}, api.body, api.query)
     params.sessionUserId = req.user
+    params.remoteIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+
     console.log(clc.blueBright("[API]"), "#{method} #{path}", params)
 
     apiReq = new InternalApiRequest(@app, method, path, params)

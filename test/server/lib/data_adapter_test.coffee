@@ -29,7 +29,7 @@ describe 'DataAdapter', ->
       }
       app = {routes: {post: [notMatchingRoute, matchingRoute]}}
       da = new DataAdapter(app)
-      req = {method: 'post'}
+      req = {method: 'post', headers: {}, connection: {}}
       api = {path: '/fake-path', body: {param1: 'value1'}}
       da.request req, api, null, (err, options, response)->
         expect(err).to.equal(null)
@@ -56,7 +56,7 @@ describe 'DataAdapter', ->
       }
       app = {routes: {get: [notMatchingRoute, matchingRoute]}}
       da = new DataAdapter(app)
-      req = {method: 'get'}
+      req = {method: 'get', headers: {}, connection: {}}
       api = {path: '/fake-path', body: {param1: 'value1', callback: 'fuun'}}
       da.request req, api, null, (err, options, response)->
         expect(err).to.equal(null)
@@ -75,13 +75,68 @@ describe 'DataAdapter', ->
       }
       app = {routes: {post: [matchingRoute]}}
       da = new DataAdapter(app)
-      req = {method: 'post', user: 'some_user_id'}
+      req = {method: 'post', user: 'some_user_id', headers: {}, connection: {}}
       api = {path: '/fake-path', body: {param1: 'value1'}}
       da.request req, api, null, (err, options, response)->
         expect(err).to.equal(null)
         expect(options.statusCode).to.equal(200)
         expect(response).to.equal 'some_user_id'
         done()
+
+    describe 'ip address', ->
+      it 'prefers the x-forwarded-for header', (done)->
+        matchingRoute = {
+          callbacks: [(params, callback)->
+            callback(null, params.remoteIpAddress)
+          ]
+          match: (path)->
+            expect(path).to.equal('/api/fake-path')
+        }
+        app = {routes: {post: [matchingRoute]}}
+        da = new DataAdapter(app)
+        req = {method: 'post', user: 'some_user_id', headers: {'x-forwarded-for': '123'}, connection: {remoteAddress: '456'}}
+        api = {path: '/fake-path', body: {param1: 'value1'}}
+        da.request req, api, null, (err, options, response)->
+          expect(err).to.equal(null)
+          expect(options.statusCode).to.equal(200)
+          expect(response).to.equal '123'
+          done()
+
+      it 'prefers the returns to the remoteAddress header', (done)->
+        matchingRoute = {
+          callbacks: [(params, callback)->
+            callback(null, params.remoteIpAddress)
+          ]
+          match: (path)->
+            expect(path).to.equal('/api/fake-path')
+        }
+        app = {routes: {post: [matchingRoute]}}
+        da = new DataAdapter(app)
+        req = {method: 'post', user: 'some_user_id', headers: {}, connection: {remoteAddress: '456'}}
+        api = {path: '/fake-path', body: {param1: 'value1'}}
+        da.request req, api, null, (err, options, response)->
+          expect(err).to.equal(null)
+          expect(options.statusCode).to.equal(200)
+          expect(response).to.equal '456'
+          done()
+
+      it 'will otherwise be undefined', (done)->
+        matchingRoute = {
+          callbacks: [(params, callback)->
+            callback(null, params.remoteIpAddress)
+          ]
+          match: (path)->
+            expect(path).to.equal('/api/fake-path')
+        }
+        app = {routes: {post: [matchingRoute]}}
+        da = new DataAdapter(app)
+        req = {method: 'post', user: 'some_user_id', headers: {}, connection: {}}
+        api = {path: '/fake-path', body: {param1: 'value1'}}
+        da.request req, api, null, (err, options, response)->
+          expect(err).to.equal(null)
+          expect(options.statusCode).to.equal(200)
+          expect(response).to.be.undefined
+          done()
 
     it 'appropriately sends errors', (done)->
       matchingRoute = {
@@ -93,7 +148,7 @@ describe 'DataAdapter', ->
       }
       app = {routes: {post: [matchingRoute]}}
       da = new DataAdapter(app)
-      req = {method: 'post'}
+      req = {method: 'post', headers: {}, connection: {}}
       api = {path: '/fake-path', body: {param1: 'value1'}}
       da.request req, api, null, (err, options, response)->
         expect(err.status).to.equal(401)
@@ -112,7 +167,7 @@ describe 'DataAdapter', ->
       }
       app = {routes: {post: [matchingRoute]}}
       da = new DataAdapter(app)
-      req = {method: 'post'}
+      req = {method: 'post', headers: {}, connection: {}}
       api = {path: '/fake-path', body: {param1: 'value1'}}
       da.request req, api, null, (err, options, response)->
         expect(err.status).to.equal(401)
@@ -133,7 +188,7 @@ describe 'DataAdapter', ->
       }
       app = {routes: {get: [matchingRoute]}}
       da = new DataAdapter(app)
-      req = {method: 'HEAD'}
+      req = {method: 'HEAD', headers: {}, connection: {}}
       api = {path: '/fake-path', body: {param1: 'value1'}}
       da.request req, api, null, (err, options, response)->
         expect(err).to.be.null
