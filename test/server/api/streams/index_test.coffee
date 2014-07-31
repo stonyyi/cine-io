@@ -39,3 +39,13 @@ describe 'Streams#Index', ->
       expect(response[0].publish).to.be.instanceOf(Object)
       expect(response[1].publish).to.be.instanceOf(Object)
       done()
+
+  it 'returns the edgecast streams with a localized publish url when given an ipAddress', (done)->
+    # 81.169.145.154 is berlin, germany
+    params = secretKey: @project.secretKey, ipAddress: '81.169.145.154'
+    Index params, (err, response, options)->
+      expect(err).to.be.undefined
+      expect(response).to.have.length(2)
+      expect(response[0].publish.url).to.include('stream.fra.cine.io')
+      expect(response[1].publish.url).to.include('stream.fra.cine.io')
+      done()

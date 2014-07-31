@@ -90,14 +90,52 @@ describe 'Streams#Show', ->
         expect(response.assignedAt.toString()).to.equal(now.toString())
         done()
 
+    it 'will return a localized publish value for a client ip address', (done)->
+      # 93.191.59.34 is russia
+      params = id: @projectStream._id, secretKey: @project.secretKey, remoteIpAddress: "93.191.59.34"
+      Show params, (err, response, options)->
+        expect(err).to.be.null
+        expectedPublishResponse =
+          url: "rtmp://stream.hhp.cine.io/20C45E/cines"
+          stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
+        expect(response.publish).to.deep.equal(expectedPublishResponse)
+        done()
+
+    it 'will return a localized publish value for parameter ipAddress', (done)->
+      # 81.169.145.154 is berlin, germany
+      params = id: @projectStream._id, secretKey: @project.secretKey, ipAddress: "81.169.145.154"
+      Show params, (err, response, options)->
+        expect(err).to.be.null
+        expectedPublishResponse =
+          url: "rtmp://stream.fra.cine.io/20C45E/cines"
+          stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
+        expect(response.publish).to.deep.equal(expectedPublishResponse)
+        done()
+
     describe 'fmleProfile', ->
       it 'will return the fmleProfile for a stream', (done)->
-        params = id: @projectStream._id, fmleProfile: true, secretKey: @project.secretKey
+        params = id: @projectStream._id, fmleProfile: 'true', secretKey: @project.secretKey
         Show params, (err, response, options)->
           expect(err).to.be.null
           expect(_.keys(response)).to.deep.equal(['content'])
           expect(response.content).to.contain('<stream>cine1?bass35&amp;adbe-live-event=cine1ENAME</stream>')
           expect(response.content).to.contain('<url>rtmp://stream.lax.cine.io/20C45E/cines</url>')
+          done()
+
+      it 'will return a localized url for a client ip address', (done)->
+        # 93.191.59.34 is russia
+        params = id: @projectStream._id, fmleProfile: 'true', secretKey: @project.secretKey, remoteIpAddress: "93.191.59.34"
+        Show params, (err, response, options)->
+          expect(err).to.be.null
+          expect(response.content).to.contain('<url>rtmp://stream.hhp.cine.io/20C45E/cines</url>')
+          done()
+
+      it 'will return a localized url for parameter ipAddress', (done)->
+        # 93.191.59.34 is berlin, germany
+        params = id: @projectStream._id, fmleProfile: 'true', secretKey: @project.secretKey, ipAddress: "81.169.145.154"
+        Show params, (err, response, options)->
+          expect(err).to.be.null
+          expect(response.content).to.contain('<url>rtmp://stream.fra.cine.io/20C45E/cines</url>')
           done()
 
   describe 'deleted streams', ->

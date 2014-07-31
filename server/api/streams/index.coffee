@@ -12,6 +12,12 @@ module.exports = (params, callback)->
       .sort(createdAt: -1)
     scope.exec (err, streams)->
       return callback(err, null, status: err.status || 400) if err
-      jsonFunction = if options.secure then Show.fullJSON else Show.playJSON
+      streamOptions = {}
+      Show.addEdgecastServerToStreamOptions(streamOptions, params) if options.secure
+
+      fullJsonFunction = (stream, callback)->
+        Show.fullJSON(stream, streamOptions, callback)
+
+      jsonFunction = if options.secure then fullJsonFunction else Show.playJSON
       async.map streams, jsonFunction, (err, response)->
         callback(err, response)

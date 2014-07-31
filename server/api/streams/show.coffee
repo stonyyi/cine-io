@@ -3,6 +3,7 @@ fs = require('fs')
 profileFileName = "#{Cine.root}/server/api/streams/fmle_profile.xml"
 getProject = Cine.server_lib('get_project')
 BASE_URL = "rtmp://fml.cine.io/20C45E"
+convertIpAddressToEdgecastServer = Cine.server_lib('convert_ip_address_to_edgecast_server')
 
 fmleProfile = (stream, options, callback)->
   if typeof options == "function"
@@ -49,6 +50,13 @@ fullJSON = (stream, options, callback)->
     streamJSON.deletedAt = stream.deletedAt if stream.deletedAt
     callback(null, streamJSON)
 
+addEdgecastServerToStreamOptions = (streamOptions, params)->
+  ipAddress = params.ipAddress || params.remoteIpAddress
+  return unless ipAddress
+  edgecastServer = convertIpAddressToEdgecastServer(ipAddress)
+  return unless edgecastServer
+  streamOptions.server = edgecastServer.code
+
 Show = (params, callback)->
   getProject params, requires: 'either', (err, project, options)->
     return callback(err, project, options) if err
@@ -62,12 +70,16 @@ Show = (params, callback)->
     EdgecastStream.findOne query, (err, stream)->
       return callback(err, null, status: 400) if err
       return callback("stream not found", null, status: 404) unless stream
+      streamOptions = {}
       if params.fmleProfile == 'true'
         return callback("secret key required", null, status: 401) unless options.secure
-        return fmleProfile(stream, callback)
+        addEdgecastServerToStreamOptions(streamOptions, params)
+        return fmleProfile(stream, streamOptions, callback)
       return playJSON(stream, callback) unless options.secure
-      fullJSON(stream, callback)
+      addEdgecastServerToStreamOptions(streamOptions, params)
+      fullJSON(stream, streamOptions, callback)
 
 module.exports = Show
 module.exports.fullJSON = fullJSON
+module.exports.addEdgecastServerToStreamOptions = addEdgecastServerToStreamOptions
 module.exports.playJSON = playJSON

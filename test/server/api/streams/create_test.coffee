@@ -53,6 +53,19 @@ describe 'Streams#Create', ->
         expect(options).to.be.undefined
         done()
 
+    it 'returns an edgecast stream with a localized publish url', (done)->
+      # 81.169.145.154 is berlin, germany
+      params = secretKey: @project.secretKey, ipAddress: '81.169.145.154'
+      Create params, (err, response, options)->
+        expect(err).to.be.null
+        expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish', 'record', 'streamName'])
+        expectedPublishResponse =
+          url: "rtmp://stream.fra.cine.io/20C45E/cines"
+          stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
+        expect(response.publish).to.deep.equal(expectedPublishResponse)
+        expect(options).to.be.undefined
+        done()
+
     it 'assigns the stream to the project', (done)->
       params = secretKey: @project.secretKey
       Create params, (err, response, options)=>
