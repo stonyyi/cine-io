@@ -4,24 +4,29 @@ stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 
 describe 'createNewStreamInEdgecast', ->
 
-  beforeEach (done)->
-    @stream1 = new EdgecastStream(instanceName: 'cines', streamName: 'name1')
-    @stream1.save done
+  describe 'creating a new stream', ->
+    beforeEach (done)->
+      @stream1 = new EdgecastStream(instanceName: 'cines', streamName: 'name1')
+      @stream1.save done
 
-  beforeEach (done)->
-    @stream1 = new EdgecastStream(instanceName: 'bobs', streamName: 'name1')
-    @stream1.save done
+    beforeEach (done)->
+      @stream1 = new EdgecastStream(instanceName: 'bobs', streamName: 'name1')
+      @stream1.save done
 
-  stubEdgecast(streamName: 'yoooo')
+    stubEdgecast(streamName: 'yoooo')
 
-  it 'calls to edgecast and creates a new EdgecastStream in the db', (done)->
-    createNewStreamInEdgecast (err, stream)->
-      expect(err).to.be.null
-      expect(stream.streamName).to.equal('yoooo')
-      expect(stream.eventName).to.equal('yoooo')
-      expect(stream.instanceName).to.equal('cines')
-      d = new Date
-      expect(stream.expiration.getDate()).to.equal(d.getDate())
-      expect(stream.expiration.getMonth()).to.equal(d.getMonth())
-      expect(stream.expiration.getFullYear()).to.equal(d.getFullYear()+20)
-      done()
+    it 'calls to edgecast and creates a new EdgecastStream in the db', (done)->
+      createNewStreamInEdgecast (err, stream)->
+        expect(err).to.be.null
+        expect(stream.streamName).to.equal('yoooo')
+        expect(stream.eventName).to.equal('yoooo')
+        expect(stream.instanceName).to.equal('cines')
+        d = new Date
+        expect(stream.expiration.getDate()).to.equal(d.getDate())
+        expect(stream.expiration.getMonth()).to.equal(d.getMonth())
+        expect(stream.expiration.getFullYear()).to.equal(d.getFullYear()+20)
+        done()
+
+  describe 'instanceName', ->
+    it 'is cines', ->
+      expect(createNewStreamInEdgecast.instanceName).to.equal('cines')

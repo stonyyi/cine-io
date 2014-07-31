@@ -88,3 +88,5 @@ module.exports = (originalCallback)->
   async.parallel prepareCreateStreamAsyncOptions, (err, response)->
     return originalCallback(err) if err
     createStream(response, originalCallback)
+
+module.exports.instanceName = instanceName
