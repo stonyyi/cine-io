@@ -4,11 +4,17 @@ profileFileName = "#{Cine.root}/server/api/streams/fmle_profile.xml"
 getProject = Cine.server_lib('get_project')
 BASE_URL = "rtmp://fml.cine.io/20C45E"
 
-fmleProfile = (stream, callback)->
+fmleProfile = (stream, options, callback)->
+  if typeof options == "function"
+    callback = options
+    options = {}
+  options.server ||= 'lax'
+
   fs.readFile profileFileName, 'utf8', (err, profileFile)->
     return callback("cannot read profile", null, status: 500) if err
     content = profileFile
       .toString()
+      .replace(/EDGECAST_SERVER_NAME/g, options.server)
       .replace(/EDGECAST_INSTANCE_NAME/g, stream.instanceName)
       .replace(/EDGECAST_STREAM_NAME/g, stream.streamName)
       .replace(/EDGECAST_STREAM_KEY/g, stream.streamKey)
@@ -25,10 +31,16 @@ playJSON = (stream, callback)->
       rtmp: "#{BASE_URL}/#{stream.instanceName}/#{stream.streamName}?adbe-live-event=#{stream.eventName}"
   callback(null, streamJSON)
 
-fullJSON = (stream, callback)->
+fullJSON = (stream, options, callback)->
+  if typeof options == "function"
+    callback = options
+    options = {}
+
+  options.server ||= 'lax'
+
   playJSON stream, (err, streamJSON)->
     streamJSON.publish =
-      url: "rtmp://stream.lax.cine.io/20C45E/#{stream.instanceName}"
+      url: "rtmp://stream.#{options.server}.cine.io/20C45E/#{stream.instanceName}"
       stream: "#{stream.streamName}?#{stream.streamKey}&amp;adbe-live-event=#{stream.eventName}"
     streamJSON.password = stream.streamKey
     streamJSON.expiration = stream.expiration
