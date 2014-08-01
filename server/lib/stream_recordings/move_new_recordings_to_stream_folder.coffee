@@ -86,7 +86,12 @@ moveNewRecordingsToStreamFolder = (done)->
     done(err)
 
   findNewRecordingsAndMoveThemToStreamFolder = (err, list) ->
+    return done(err) if err
+
     allFiles = _.where(list, type: fileType)
+
+    console.log("No files to move.") if allFiles.length == 0
+
     async.eachSeries allFiles, moveNewRecordingsToProjectFolder, finish
 
   fetchStreamList = ->
