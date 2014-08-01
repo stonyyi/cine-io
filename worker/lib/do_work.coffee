@@ -1,9 +1,15 @@
 _ = require('underscore')
 async = require('async')
 
-onceADayJobs = [
-  'reporting/download_and_parse_edgecast_logs'
-]
+scheduledTasks =
+  once_a_day_worker:
+    [
+      'reporting/download_and_parse_edgecast_logs'
+    ]
+  stream_recordings_processor:
+    [
+      'stream_recordings/move_new_recordings_to_stream_folder'
+    ]
 
 runServerLib = (libraryName, payload, callback)->
   console.log("running #{libraryName} with", payload)
@@ -18,14 +24,16 @@ currentEnvironment = (jobName, payload, done)->
     console.log(response)
     done(err, response)
 
-runOnceADayWorker = (payload, done)->
+runScheduledJob = (jobName, payload, done)->
+  console.log("Running scheduled job", jobName)
   runner = (libName, callback)-> runServerLib(libName, payload, callback)
-  async.each onceADayJobs, runner, done
+  # needs to be series because recordings_processor needs to move files, then reap them
+  async.eachSeries scheduledTasks[jobName], runner, done
 
 doWork = (jobName, payload, done)->
   return done('unacceptable job') unless _.include(scheduableTasks, jobName)
   environment = require('../../config/environment')
-  return runOnceADayWorker(payload, done) if jobName == 'once_a_day_worker'
+  return runScheduledJob(jobName, payload, done) if _.chain(scheduledTasks).keys().contains(jobName).value()
   return currentEnvironment(jobName, payload, done) if jobName == 'current_environment'
   runServerLib(jobName, payload, done)
 
@@ -33,9 +41,7 @@ doWork.acceptableJobs = [
   'current_environment'
 ]
 
-otherJobNames = [
-  'once_a_day_worker'
-]
+otherJobNames = _.keys(scheduledTasks)
 
 scheduableTasks = doWork.acceptableJobs.concat otherJobNames
 

@@ -75,26 +75,23 @@ class NewRecordingHandler
       streamRecordings.recordings.push newRecording
       streamRecordings.save callback
 
-moveNewRecordingsToStreamFolder = (originalCallback)->
+moveNewRecordingsToStreamFolder = (done)->
 
-  moveNewRecordingsToProjectFolder = (ftpRecordingEntry, perStreamCallback)->
+  moveNewRecordingsToProjectFolder = (ftpRecordingEntry, callback)->
     recordingHandler = new NewRecordingHandler(ftpClient, ftpRecordingEntry)
-    recordingHandler.waterfall(perStreamCallback)
+    recordingHandler.waterfall(callback)
+
+  finish = (err)->
+    ftpClient.end()
+    done(err)
 
   findNewRecordingsAndMoveThemToStreamFolder = (err, list) ->
-    # allFolders = _.where(list, type: directoryType)
-    # console.log("allFolders", pickAllNameAndType(allFolders))
-
     allFiles = _.where(list, type: fileType)
-    # console.log("allFiles", pickAllNameAndType(allFiles))
-
-    async.eachSeries allFiles, moveNewRecordingsToProjectFolder, (err)->
-      ftpClient.end()
-      originalCallback(err)
+    async.eachSeries allFiles, moveNewRecordingsToProjectFolder, finish
 
   fetchStreamList = ->
     ftpClient.list recordingDir, findNewRecordingsAndMoveThemToStreamFolder
 
-  ftpClient = edgecastFtpClientFactory originalCallback, fetchStreamList
+  ftpClient = edgecastFtpClientFactory done, fetchStreamList
 
 module.exports = moveNewRecordingsToStreamFolder
