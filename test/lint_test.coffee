@@ -39,6 +39,7 @@ describe 'the test suite', ->
     "apps/main/app/views"
     # server
     "server/api"
+    "server/models"
   ]
   _.each fullyTestedDirectories, (path)->
     it "tests every file in #{path}", (done)->
@@ -56,7 +57,6 @@ describe 'the test suite', ->
     # server
     "server/lib"
     "server/middleware"
-    "server/models"
   ]
   _.each notDoneYet, (path)->
     it "tests every file in #{path}"
