@@ -1,5 +1,14 @@
 module.exports =
   [{
+    type: 'd',
+    name: 'mynewdir',
+    target: undefined,
+    rights: { user: 'rwx', group: 'rx', other: 'rx' },
+    owner: '65534',
+    group: 'nogroup',
+    size: 59,
+    date: "Thu Jul 31 2014 23:08:00 GMT+0000 (UTC)"
+  }, {
     type: '-',
     name: 'xkMOUbRPZl.1.mp4',
     target: undefined,

@@ -48,6 +48,8 @@ module.exports = class FakeFtpClient
       @trigger('ready')
 
   list: (name, callback)->
+  mkdir: (name, callback)->
+  rename: (oldName, newName, callback)->
   delete: (name, callback)->
   get: (name, callback)->
     ftpStream = new FakeFtpStream(name)

@@ -1,33 +1,44 @@
 _ = require('underscore')
 EdgecastStream = Cine.server_model('edgecast_stream')
 getProject = Cine.server_lib('get_project')
-getStreamRecordings = Cine.server_lib('get_stream_recordings')
-
-onlySelectUsefulValues = (ftpFile)->
-  name: ftpFile.name
-  url: "http://vod.cine.io/cines/#{ftpFile.name}"
-  size: ftpFile.size
-  date: ftpFile.date
-
-dateSort = (ftpFile)->
-  ftpFile.date
-
-ftpFilesToResponse = (ftpFiles)->
-  _.chain(ftpFiles).map(onlySelectUsefulValues).sortBy(dateSort).value()
+EdgecastRecordings = Cine.server_model('edgecast_recordings')
+async = require('async')
 
 module.exports = (params, callback)->
   getProject params, requires: 'either', userOverride: true, (err, project, options)->
     return callback(err, project, options) if err
     return callback("id required", null, status: 400) unless params.id
-    query =
-      _id: params.id
-      _project: project._id
-      deletedAt:
-        $exists: false
 
-    EdgecastStream.findOne query, (err, stream)->
-      return callback(err, null, status: 400) if err
-      return callback("stream not found", null, status: 404) unless stream
-      getStreamRecordings stream, (err, files)->
-        return callback(err, null, status: 400) if err
-        callback(null, ftpFilesToResponse(files))
+    toRecordingJSON = (recording)->
+      name: recording.name
+      url: "http://vod.cine.io/cines/#{project.publicKey}/#{recording.name}"
+      size: recording.size
+      date: recording.date
+
+    # I want to validate that the project owns the stream
+    # so I do both queries at once, this should make the positive case faster
+    # the err needs to be the the name of the call
+    # this allows us to return the proper response
+    asyncCalls =
+      findStream: (cb)->
+        query =
+          _id: params.id
+          _project: project._id
+          deletedAt:
+            $exists: false
+        EdgecastStream.findOne query, (err, stream)->
+          return cb("findStream", err, null, status: 400) if err
+          return cb("findStream", "stream not found", null, status: 404) unless stream
+          cb(null, err, stream)
+      findRecordings: (cb)->
+        query =
+          _edgecastStream: params.id
+        EdgecastRecordings.findOne query, (err, edgecastRecordings)->
+          return cb("findRecordings", err, null, status: 400) if err
+          return cb(null, null, []) unless edgecastRecordings
+          response = _.map(edgecastRecordings.recordings, toRecordingJSON)
+          cb(null, null, response)
+
+    async.parallel asyncCalls, (err, response)->
+      return callback(response[err]...) if err
+      callback(response.findRecordings...)

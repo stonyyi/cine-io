@@ -1,9 +1,9 @@
 _ = require('underscore')
-FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
 Index = testApi Cine.api('stream_recordings/index')
 Project = Cine.server_model('project')
 User = Cine.server_model('user')
 EdgecastStream = Cine.server_model('edgecast_stream')
+EdgecastRecordings = Cine.server_model('edgecast_recordings')
 
 describe 'StreamArchives#Index', ->
 
@@ -12,7 +12,7 @@ describe 'StreamArchives#Index', ->
   now = new Date
 
   beforeEach (done)->
-    @project = new Project(name: 'my project')
+    @project = new Project(name: 'my project', publicKey: 'mah-pub-key')
     @project.save done
 
   beforeEach (done)->
@@ -52,15 +52,22 @@ describe 'StreamArchives#Index', ->
         expect(options.status).to.equal(404)
         done()
 
-  describe 'success', ->
-    beforeEach ->
-      @fakeFtpClient = new FakeFtpClient
-      @listStub = @fakeFtpClient.stub('list')
-      @lists = Cine.require('test/fixtures/edgecast_stream_recordings')
-      @listStub.callsArgWith 1, null, @lists
+  describe 'without recordings', ->
+    it 'will return an empty array', (done)->
+      params = publicKey: @project.publicKey, id: @projectStream._id
+      Index params, (err, response, options)->
+        expect(err).to.be.null
+        expect(options).to.be.undefined
+        expect(response).to.deep.equal([])
+        done()
 
-    afterEach ->
-      @fakeFtpClient.restore()
+  describe 'with recordings', ->
+    beforeEach (done)->
+      @recordings = new EdgecastRecordings(_edgecastStream: @projectStream._id)
+      @recordings.recordings.push name: "rec1.mp4", size: 12345, date: new Date
+      @recordings.recordings.push name: "rec2.mp4", size: 67890, date: new Date
+      @recordings.recordings.push name: "rec3.mp4", size: 98765, date: new Date
+      @recordings.save done
 
     it 'will return a json of the stream archives sorted by date', (done)->
       params = publicKey: @project.publicKey, id: @projectStream._id
@@ -68,6 +75,6 @@ describe 'StreamArchives#Index', ->
         expect(err).to.be.null
         expect(options).to.be.undefined
         expect(response).to.have.length(3)
-        expect(response[0].name).to.equal('xkMOUbRPZl.mp4')
-        expect(response[0].url).to.equal('http://vod.cine.io/cines/xkMOUbRPZl.mp4')
+        expect(response[0].name).to.equal('rec1.mp4')
+        expect(response[0].url).to.equal('http://vod.cine.io/cines/mah-pub-key/rec1.mp4')
         done()
