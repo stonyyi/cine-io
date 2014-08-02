@@ -22,15 +22,14 @@ EdgecastStreamReportSchema = new mongoose.Schema
 
 EdgecastStreamReportSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
-isSameDate = (date1, date2)->
+isSameMonth = (date1, date2)->
   (date1.getFullYear() == date2.getFullYear()) &&
-  (date1.getMonth() == date2.getMonth()) &&
-  (date1.getDate() == date2.getDate())
+  (date1.getMonth() == date2.getMonth())
 
 # dateToCheck is a full date
 EdgecastStreamReportSchema.methods.bytesForMonth = (dateToCheck)->
   addBytesIfSameMonth = (accum, entry)->
-    if isSameDate(entry.entryDate, dateToCheck) then accum + entry.bytes else accum
+    if isSameMonth(entry.entryDate, dateToCheck) then accum + entry.bytes else accum
   _.reduce @logEntries, addBytesIfSameMonth, 0
 
 EdgecastStreamReportSchema.methods.totalBytes = (dateToCheck)->

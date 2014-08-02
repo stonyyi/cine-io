@@ -4,7 +4,7 @@ modelTimestamps = Cine.require('test/helpers/model_timestamps')
 describe 'EdgecastStreamReport', ->
   modelTimestamps EdgecastStreamReport
 
-  addReportEntries = (report, thisMonth, lastMonth)->
+  addReportEntries = (report, thisMonth, thisMonth2, lastMonth)->
 
     report.logEntries.push
       bytes: 169034
@@ -20,18 +20,24 @@ describe 'EdgecastStreamReport', ->
 
     report.logEntries.push
       bytes: 7675007
-      entryDate: thisMonth
+      entryDate: thisMonth2
       duration: 250
       kind: 'fms'
 
   beforeEach (done)->
     @report = new EdgecastStreamReport
     @thisMonth = new Date
+    @thisMonth2 = new Date
+    if @thisMonth.getDate() == 1
+      @thisMonth2.setDate(@thisMonth2.getDate() + 1)
+    else
+      @thisMonth2.setDate(@thisMonth2.getDate() - 1)
+
     @lastMonth = new Date
     @lastMonth.setMonth(@lastMonth.getMonth() - 1)
     @twoMonthsAgo = new Date
     @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
-    addReportEntries(@report, @thisMonth, @lastMonth)
+    addReportEntries(@report, @thisMonth, @thisMonth2, @lastMonth)
     @report.save done
 
   describe '#bytesForMonth', ->
