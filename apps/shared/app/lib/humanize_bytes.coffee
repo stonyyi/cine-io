@@ -1,16 +1,27 @@
 # https://github.com/HubSpot/humanize/blob/master/coffee/src/humanize.coffee
+TB = 1099511627776
+GB = 1073741824
+MB = 1048576
+KB = 1024
+
 module.exports = (filesize) ->
-  if filesize >= 1073741824
-    sizeStr = formatNumber(filesize / 1073741824, 2, "") + " GB"
-  else if filesize >= 1048576
-    sizeStr = formatNumber(filesize / 1048576, 2, "") + " MB"
-  else if filesize >= 1024
-    sizeStr = formatNumber(filesize / 1024, 0) + " KB"
+  if filesize >= TB
+    sizeStr = formatNumber(filesize / TB, 2, "") + " TB"
+  else if filesize >= GB
+    sizeStr = formatNumber(filesize / GB, 2, "") + " GB"
+  else if filesize >= MB
+    sizeStr = formatNumber(filesize / MB, 2, "") + " MB"
+  else if filesize >= KB
+    sizeStr = formatNumber(filesize / KB, 0) + " KB"
   else
     sizeStr = formatNumber(filesize, 0) + pluralize filesize, " byte"
 
   sizeStr
 
+module.exports.TB = TB
+module.exports.GB = GB
+module.exports.MB = MB
+module.exports.KB = KB
 # Formats a number to a human-readable string.
 # Localize by overriding the precision, thousand and decimal arguments.
 formatNumber = (number, precision=0, thousand=",", decimal=".") ->

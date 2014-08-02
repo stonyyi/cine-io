@@ -18,7 +18,8 @@ require "mongoose-querystream-worker"
 moment = require('moment')
 User = Cine.server_model('user')
 CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
-humanizeBytes = Cine.server_lib('humanize_bytes')
+humanizeBytes = Cine.lib('humanize_bytes')
+
 _ = require('underscore')
 
 callbackFunction = (user, callback)->
