@@ -6,6 +6,9 @@ CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 
 thisMonth = new Date
 
+dateString = process.argv[2]
+thisMonth = new Date(dateString) if dateString
+
 console.log("Calculating for month of", thisMonth)
 
 calculateUsage = (user, callback)->
