@@ -29,6 +29,10 @@ describe 'unzipAndProcessEdgecastLog', ->
     @stream = new EdgecastStream(instanceName: 'i-name', streamName: 'sName')
     @stream.save done
 
+  beforeEach (done)->
+    @stream = new EdgecastStream(instanceName: 'i-name2', streamName: 'sName2')
+    @stream.save done
+
   it 'unzips a file, runs it through parseEdgecastLog, then deletes the file', (done)->
     unzipAndProcessEdgecastLog @gzippedFileName, (err)=>
       expect(err).to.be.undefined

@@ -37,17 +37,6 @@ saveDataOnRecord = (instanceName, streamName, entryData, callback)->
     esr.save callback
 
 
-processFMSRecord = (data, rowNumber, callback)->
-  return callback() unless data['#Fields: x-event'] == 'stop'
-  instanceName = convertUriStemToInstanceName(data['cs-uri-stem'])
-  streamName = data['x-sname']
-  entryData =
-    bytes: Number(data['sc-bytes'])
-    entryDate: new Date "#{data.date} #{data.time}"
-    duration: Number data['x-duration']
-    kind: 'fms'
-  saveDataOnRecord(instanceName, streamName, entryData, callback)
-
 # http://hls.cine.io/23C45E/stages/stage45/stage45Num3.ts
 convertCReferrerToInstanceAndStream = (cReferrer)->
   parts = cReferrer.split('/')
@@ -58,6 +47,7 @@ convertCReferrerToInstanceAndStream = (cReferrer)->
 
 module.exports = (absoluteFileName, done)->
   console.log('parsing', absoluteFileName)
+  errs = []
 
   errorFunction = (err)->
     console.error("ERROR", err)
@@ -65,7 +55,23 @@ module.exports = (absoluteFileName, done)->
 
   closeFunction = (count) ->
     console.log "Number of lines: " + count
+    return done(errs) if errs.length > 0
     done()
+
+
+  processFMSRecord = (data, rowNumber, callback)->
+    return callback() unless data['#Fields: x-event'] == 'stop'
+    instanceName = convertUriStemToInstanceName(data['cs-uri-stem'])
+    streamName = data['x-sname']
+    entryData =
+      bytes: Number(data['sc-bytes'])
+      entryDate: new Date "#{data.date} #{data.time}"
+      duration: Number data['x-duration']
+      kind: 'fms'
+    saveDataOnRecord instanceName, streamName, entryData, (err)->
+      console.log('saved', err)
+      errs.push(data: data, rowNumber: rowNumber, error: err) if err
+      callback()
 
   headers = null
   processWPCRecord = (rowData, rowNumber, callback)->
@@ -89,7 +95,9 @@ module.exports = (absoluteFileName, done)->
     return callback() unless entryData.bytes > 1000
     # console.log(data['sc-status'], entryData.bytes, data['rs-bytes'])
     # callback()
-    saveDataOnRecord(streamData.instanceName, streamData.streamName, entryData, callback)
+    saveDataOnRecord streamData.instanceName, streamData.streamName, entryData, (err)->
+      errs.push(data: data, rowNumber: rowNumber, error: err) if err
+      callback()
 
   switch path.basename(absoluteFileName).slice(0,3)
     when 'fms'

@@ -13,10 +13,8 @@ parseLogFile = (logName, outputFile, callback)->
     return callback(err) if err
     parseEdgecastLog outputFile, (err)->
       console.log("parsed edgecast log file", logName, err)
-      if err
-        parsedLog.parseError = err
-      else
-        parsedLog.isComplete = true
+      parsedLog.parseErrors = err if err
+      parsedLog.isComplete = true
       parsedLog.save (err)->
         callback(err)
 
