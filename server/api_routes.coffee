@@ -16,6 +16,8 @@ module.exports = (app)->
   # delete is a reserved keyword
   destroy = (controllerAction, options)-> newApiRoute(controllerAction, options, 'delete')
 
+  get 'server#nearest', url: 'nearest-server'
+
   get 'health#index', url: 'health'
 
   get     'projects#index', url: 'projects'
