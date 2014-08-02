@@ -18,3 +18,13 @@ exports.byMonth = (projectId, month, callback)->
     totalProjectBytes = _.reduce reports, addStreamBytes, 0
 
     callback(null, totalProjectBytes)
+
+exports.total = (projectId, callback)->
+  getReportsForProject projectId, (err, reports)->
+    return callback(err) if err
+
+    addStreamBytes = (accum, stream)->
+      accum + stream.totalBytes()
+    totalProjectBytes = _.reduce reports, addStreamBytes, 0
+
+    callback(null, totalProjectBytes)

@@ -11,3 +11,13 @@ exports.byMonth = (user, month, callback)->
       callback(null, accum + projectMonthlyBytes)
 
   async.reduce projectIds, 0, calculateProjectUsage, callback
+
+exports.total = (user, callback)->
+  projectIds = user.permissionIdsFor('Project')
+
+  calculateProjectUsage = (accum, projectId, callback)->
+    CalculateProjectUsage.total projectId, (err, projectMonthlyBytes)->
+      return callback(err) if err
+      callback(null, accum + projectMonthlyBytes)
+
+  async.reduce projectIds, 0, calculateProjectUsage, callback

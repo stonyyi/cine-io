@@ -32,7 +32,7 @@ EdgecastStreamReportSchema.methods.bytesForMonth = (dateToCheck)->
     if isSameMonth(entry.entryDate, dateToCheck) then accum + entry.bytes else accum
   _.reduce @logEntries, addBytesIfSameMonth, 0
 
-EdgecastStreamReportSchema.methods.totalBytes = (dateToCheck)->
+EdgecastStreamReportSchema.methods.totalBytes = ->
   accumEntryBytes = (accum, entry)->
     accum + entry.bytes
   _.reduce @logEntries, accumEntryBytes, 0

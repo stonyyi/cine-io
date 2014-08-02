@@ -75,3 +75,11 @@ describe 'CalculateProjectUsage', ->
         expect(err).to.be.null
         expect(monthlyBytes).to.equal(0)
         done()
+
+  describe '#total', ->
+
+    it 'will aggregate all project streams', (done)->
+      CalculateProjectUsage.total @project._id, (err, monthlyBytes)->
+        expect(err).to.be.null
+        expect(monthlyBytes).to.equal(21774240)
+        done()

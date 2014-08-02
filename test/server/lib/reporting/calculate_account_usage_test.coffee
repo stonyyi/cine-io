@@ -97,3 +97,11 @@ describe 'CalculateAccountUsage', ->
         expect(err).to.be.undefined
         expect(monthlyBytes).to.equal(0)
         done()
+
+  describe '#total', ->
+
+    it 'can aggrigate all user projects', (done)->
+      CalculateAccountUsage.total @user, (err, monthlyBytes)->
+        expect(err).to.be.undefined
+        expect(monthlyBytes).to.equal(43548480)
+        done()
