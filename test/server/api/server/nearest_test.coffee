@@ -8,7 +8,7 @@ describe 'Server#Nearest', ->
     params = {}
     Nearest params, (err, response, options)->
       expect(err).to.equal("ipAddress not available")
-      expect(response).to.deep.equal(server: null)
+      expect(response).to.deep.equal(server: null, code: null)
       expect(options).to.deep.equal(status: 400)
       done()
 
@@ -17,7 +17,7 @@ describe 'Server#Nearest', ->
     params = remoteIpAddress: "127.0.0.1"
     Nearest params, (err, response, options)->
       expect(err).to.be.null
-      expect(response).to.deep.equal(server: null)
+      expect(response).to.deep.equal(server: null, code: null)
       done()
 
   it 'will return a localized publish value for a client ip address', (done)->
@@ -25,7 +25,7 @@ describe 'Server#Nearest', ->
     params = remoteIpAddress: "93.191.59.34"
     Nearest params, (err, response, options)->
       expect(err).to.be.null
-      expect(response).to.deep.equal(server: "rtmp://stream.hhp.cine.io/20C45E/cines")
+      expect(response).to.deep.equal(code: 'hhp', server: "rtmp://stream.hhp.cine.io/20C45E/cines")
       done()
 
   it 'will return a localized publish value for parameter ipAddress', (done)->
@@ -33,5 +33,5 @@ describe 'Server#Nearest', ->
     params = ipAddress: "81.169.145.154"
     Nearest params, (err, response, options)->
       expect(err).to.be.null
-      expect(response).to.deep.equal(server: "rtmp://stream.fra.cine.io/20C45E/cines")
+      expect(response).to.deep.equal(code: 'fra', server: "rtmp://stream.fra.cine.io/20C45E/cines")
       done()
