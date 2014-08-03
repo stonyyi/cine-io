@@ -18,9 +18,14 @@ describe 'ShowUsageReports', ->
 
   it 'calculates a usage report', (done)->
     params = {sessionUserId: @user._id}
-    callback = (err, response)->
+    callback = (err, response)=>
       expect(err).to.be.null
-      expect(response).to.deep.equal(id: @user.masterKey, monthlyBytes: 0)
+      expectedResponse =
+        "2014-5": 0,
+        "2014-6": 0,
+        "2014-7": 0,
+        "masterKey": @user.masterKey
+      expect(response).to.deep.equal(expectedResponse)
       done()
 
     ShowUsageReports params, callback

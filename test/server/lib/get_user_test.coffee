@@ -10,7 +10,7 @@ describe 'getUser', ->
 
   it 'requires a sessionUserId or a masterKey', (done)->
     getUser {}, (err, user, options)->
-      expect(err).to.equal('not logged in or master token not supplied')
+      expect(err).to.equal('not logged in or masterKey not supplied')
       expect(user).to.be.null
       expect(options).to.deep.equal(status: 401)
       done()

@@ -14,7 +14,7 @@ describe 'RecoverPasswords', ->
     @fetchStub.restore()
 
   describe '#show', ->
-    it 'fetches the password chagne request', (done)->
+    it 'fetches the password change request', (done)->
       params = identifier: 'the ident'
       callback = (err, result)->
         expect(err).to.equal(null)

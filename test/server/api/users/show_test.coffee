@@ -10,7 +10,7 @@ describe 'Users#show', ->
   it 'requires a masterKey', (done)->
     params = {}
     callback = (err, response)->
-      expect(err).to.contain("master token not supplied")
+      expect(err).to.equal("not logged in or masterKey not supplied")
       expect(response).to.equal(null)
       done()
 
@@ -18,10 +18,20 @@ describe 'Users#show', ->
 
   it 'returns the user when given a masterKey', (done)->
     params = { masterKey: @user.masterKey }
-    callback = (err, response, options)->
+    callback = (err, response, options)=>
       expect(err).to.equal(null)
       expect(response.email).to.equal('mah@example.com')
-      expect(response.masterKey).not.to.equal(null)
+      expect(response.masterKey).to.equal(@user.masterKey)
+      done()
+
+    ShowUser params, callback
+
+  it 'returns the user when loggedIn', (done)->
+    params = { sessionUserId: @user._id }
+    callback = (err, response, options)=>
+      expect(err).to.equal(null)
+      expect(response.email).to.equal('mah@example.com')
+      expect(response.masterKey).to.equal(@user.masterKey)
       done()
 
     ShowUser params, callback
