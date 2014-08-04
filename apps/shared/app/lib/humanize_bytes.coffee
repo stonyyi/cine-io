@@ -18,6 +18,18 @@ module.exports = (filesize) ->
 
   sizeStr
 
+module.exports.formatString = (filesize)->
+  if filesize >= TB
+    return "TB"
+  else if filesize >= GB
+    return "GB"
+  else if filesize >= MB
+    return "MB"
+  else if filesize >= KB
+    return "KB"
+  else
+    return "byte"
+
 module.exports.TB = TB
 module.exports.GB = GB
 module.exports.MB = MB

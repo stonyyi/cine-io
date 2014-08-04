@@ -8,7 +8,6 @@ module.exports = class UsageReport extends Base
   idAttribute: 'masterKey'
   url: if isServer then "/usage-report?masterKey=:masterKey" else "/usage-report"
 
-  # TODO, move to actual bytes numbers
   @maxUsagePerAccount: (user)->
     switch user.get('plan')
       when 'free', 'starter', 'test' then humanizeBytes.GB
