@@ -26,15 +26,14 @@ var UsageGraph = React.createClass({
   componentDidUpdate: function(){
     var ltm = UsageReport.lastThreeMonths(),
       model = this.props.model,
-      data = [["Month", "Usage", "Cap"]],
+      data = [["Month", { role: 'annotation' }, "Usage", "Cap"]],
       planUsageInBytes = UsageReport.maxUsagePerAccount(this.props.app.currentUser),
       formatString = humanizeBytes.formatString(planUsageInBytes),
       planUsage = planUsageInBytes / humanizeBytes[formatString];
 
     _.each(ltm, function(month){
       var monthlyUsage = model.get(month.format) / humanizeBytes[formatString];
-      bottomLabel = month.format + " ("+humanizeBytes(model.get(month.format))+")"
-      data.push([bottomLabel, monthlyUsage, planUsage]);
+      data.push([month.format, humanizeBytes(model.get(month.format)), monthlyUsage, planUsage]);
     });
 
     var options = {
