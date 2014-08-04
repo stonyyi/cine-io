@@ -127,7 +127,7 @@ CineIO.play(streamId, domId);</code></pre>
 <p>End point:</p>
 <ul>
 <li>method: DELETE</li>
-<li>url: /api/1/-/stream/recordings</li>
+<li>url: /api/1/-/stream/recording</li>
 <li>response format: JSON</li>
 <li>parameters:<ul>
 <li>publicKey: CINE_IO_SECRET_KEY</li>

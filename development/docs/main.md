@@ -159,7 +159,7 @@ This endpoint permanently deletes a stream recording.
 End point:
 
 * method: DELETE
-* url: /api/1/-/stream/recordings
+* url: /api/1/-/stream/recording
 * response format: JSON
 * parameters:
  * publicKey: CINE_IO_SECRET_KEY
