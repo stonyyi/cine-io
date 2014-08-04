@@ -104,7 +104,7 @@ Example: `curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY`
 ### Update a live stream
 *Location: Web Server*
 
-This will update the stream details. Currently only `name` is supported.
+This will update the stream details.
 
 End point:
 
@@ -115,6 +115,7 @@ End point:
  * secretKey: CINE_IO_SECRET_KEY
  * id: stream id
  * name: any text to help you identify your stream
+ * record (true|false):  (changing a live stream from true to false will not delete old recordings)
 
 Example: `curl -X PUT "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId&name=new%20name"`
 
