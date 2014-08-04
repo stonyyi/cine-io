@@ -1,10 +1,10 @@
-moveNewRecordingsToStreamFolder = Cine.server_lib('stream_recordings/move_new_recordings_to_stream_folder.coffee')
+processNewStreamRecordings = Cine.server_lib('stream_recordings/process_new_stream_recordings.coffee')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
 
-describe 'moveNewRecordingsToStreamFolder', ->
+describe 'processNewStreamRecordings', ->
   beforeEach ->
     @fakeFtpClient = new FakeFtpClient
 
@@ -17,31 +17,31 @@ describe 'moveNewRecordingsToStreamFolder', ->
 
   describe 'without a matching stream', ->
     it 'errors when a stream is not found', (done)->
-      moveNewRecordingsToStreamFolder (err)->
+      processNewStreamRecordings (err)->
         expect(err).to.equal('stream not found')
         done()
 
   describe 'without a project', ->
     beforeEach (done)->
       p = new Project
-      @stream = new EdgecastStream(streamName: 'xkMOUbRPZl', instanceName: 'cines', _project: p._id)
+      @stream = new EdgecastStream(streamName: 'xkMOUbRPZl', instanceName: 'cines', _project: p._id, record: true)
       @stream.save done
 
     it 'errors when a project is not found', (done)->
-      moveNewRecordingsToStreamFolder (err)->
+      processNewStreamRecordings (err)->
         expect(err).to.equal('project not found')
         done()
 
   describe 'when a stream is not bound to a project', ->
     beforeEach (done)->
-      @stream = new EdgecastStream(streamName: 'xkMOUbRPZl', instanceName: 'cines')
+      @stream = new EdgecastStream(streamName: 'xkMOUbRPZl', instanceName: 'cines', record: true)
       @stream.save done
     it 'errors when a stream is not bound to a project', (done)->
-      moveNewRecordingsToStreamFolder (err)->
+      processNewStreamRecordings (err)->
         expect(err).to.equal('stream not assigned to project')
         done()
 
-  describe 'success', ->
+  describe 'success moving recordings', ->
     beforeEach ->
       @mkdirStub = @fakeFtpClient.stub('mkdir')
       directoryAlreadyExists = new Error("Can't create directory: File exists")
@@ -69,7 +69,7 @@ describe 'moveNewRecordingsToStreamFolder', ->
       @project1.save done
 
     beforeEach (done)->
-      @stream1 = new EdgecastStream(streamName: 'xkMOUbRPZl', instanceName: 'cines', _project: @project1._id)
+      @stream1 = new EdgecastStream(streamName: 'xkMOUbRPZl', instanceName: 'cines', _project: @project1._id, record: true)
       @stream1.save done
 
     beforeEach (done)->
@@ -77,11 +77,11 @@ describe 'moveNewRecordingsToStreamFolder', ->
       @project2.save done
 
     beforeEach (done)->
-      @stream2 = new EdgecastStream(streamName: 'ykMOUbRPZl', instanceName: 'cines', _project: @project2._id)
+      @stream2 = new EdgecastStream(streamName: 'ykMOUbRPZl', instanceName: 'cines', _project: @project2._id, record: true)
       @stream2.save done
 
     it 'moves all the streams from a the /cines directory to the project folder', (done)->
-      moveNewRecordingsToStreamFolder (err)=>
+      processNewStreamRecordings (err)=>
         expect(err).to.be.undefined
         expect(@mkdirStub.callCount).to.equal(6)
         expect(@renameStub.callCount).to.equal(6)
@@ -104,7 +104,7 @@ describe 'moveNewRecordingsToStreamFolder', ->
       expect(recordings[2].date.toString()).to.equal('Wed Jul 16 2014 20:34:00 GMT+0000 (UTC)')
 
     it 'creates an EdgecastRecordings entry', (done)->
-      moveNewRecordingsToStreamFolder (err)=>
+      processNewStreamRecordings (err)=>
         expect(err).to.be.undefined
         EdgecastRecordings.find _edgecastStream: @stream1._id, (err, allRecordingsForStream)->
           expect(err).to.be.null
@@ -113,3 +113,36 @@ describe 'moveNewRecordingsToStreamFolder', ->
           expect(edgecastRecordings.recordings).to.have.length(3)
           assertRecordigns(edgecastRecordings.recordings)
           done()
+
+  describe 'success removing recordings', ->
+    beforeEach ->
+      @deleteStub = @fakeFtpClient.stub('delete')
+      @deleteStub.withArgs('/cines/xkMOUbRPZl.1.mp4').callsArgWith 1, null
+      @deleteStub.withArgs('/cines/xkMOUbRPZl.2.mp4').callsArgWith 1, null
+      @deleteStub.withArgs('/cines/xkMOUbRPZl.mp4').callsArgWith 1, null
+
+      @deleteStub.withArgs('/cines/ykMOUbRPZl.1.mp4').callsArgWith 1, null
+      @deleteStub.withArgs('/cines/ykMOUbRPZl.2.mp4').callsArgWith 1, null
+      @deleteStub.withArgs('/cines/ykMOUbRPZl.mp4').callsArgWith 1, null
+
+    beforeEach (done)->
+      @project1 = new Project(publicKey: 'abc')
+      @project1.save done
+
+    beforeEach (done)->
+      @stream1 = new EdgecastStream(streamName: 'xkMOUbRPZl', instanceName: 'cines', _project: @project1._id, record: false)
+      @stream1.save done
+
+    beforeEach (done)->
+      @project2 = new Project(publicKey: 'def')
+      @project2.save done
+
+    beforeEach (done)->
+      @stream2 = new EdgecastStream(streamName: 'ykMOUbRPZl', instanceName: 'cines', _project: @project2._id, record: false)
+      @stream2.save done
+
+    it 'removes the recordings when record is set to false', (done)->
+      processNewStreamRecordings (err)=>
+        expect(err).to.be.undefined
+        expect(@deleteStub.callCount).to.equal(6)
+        done()

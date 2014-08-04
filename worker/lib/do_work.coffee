@@ -8,7 +8,7 @@ scheduledTasks =
     ]
   stream_recordings_processor:
     [
-      'stream_recordings/move_new_recordings_to_stream_folder'
+      'stream_recordings/process_new_stream_recordings'
     ]
 
 runServerLib = (libraryName, payload, callback)->

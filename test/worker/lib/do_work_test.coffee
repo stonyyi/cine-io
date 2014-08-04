@@ -23,7 +23,7 @@ describe 'doWork', ->
         }
         {
           name: 'stream_recordings_processor'
-          libs: 'stream_recordings/move_new_recordings_to_stream_folder'
+          libs: 'stream_recordings/process_new_stream_recordings'
         }
       ]
       _.each schedulableJobs, (schedulableJob)->

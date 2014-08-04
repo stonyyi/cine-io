@@ -19,24 +19,15 @@ pickNameAndType = (item)->
 pickAllNameAndType = (list)->
   _.map(list, pickNameAndType)
 
-class NewRecordingHandler
-  constructor: (@ftpClient, @ftpRecordingEntry)->
+class SaveStreamRecording
+  constructor: (@ftpClient, @ftpRecordingEntry, @stream)->
     @fileName = @ftpRecordingEntry.name
 
-  waterfall: (callback)=>
-    waterfallCalls = [@_queryEdgecastStream, @_findStreamProject, @_mkProjectDir, @_renameProject, @_addRecordingToEdgecastRecordings]
+  process: (callback)=>
+    waterfallCalls = [@_findStreamProject, @_mkProjectDir, @_moveRecordingToProjectFolder, @_addRecordingToEdgecastRecordings]
     async.series waterfallCalls, callback
 
-  _queryEdgecastStream: (callback)=>
-    streamName = @fileName.split('.')[0]
-    query =
-      streamName: streamName
-      instanceName: createNewStreamInEdgecast.instanceName
-    EdgecastStream.findOne query, (err, @stream)=>
-      callback(err)
-
   _findStreamProject: (callback)=>
-    return callback('stream not found') unless @stream
     return callback('stream not assigned to project') unless @stream._project
 
     Project.findById @stream._project, (err, @project)=>
@@ -57,7 +48,7 @@ class NewRecordingHandler
     streamFolder = @project.publicKey
     projectDir = "#{recordingDir}/#{streamFolder}"
 
-  _renameProject: (callback)=>
+  _moveRecordingToProjectFolder: (callback)=>
     newName = "#{@_projectDir()}/#{@fileName}"
     oldName = "#{recordingDir}/#{@fileName}"
     console.log("moving", oldName, newName)
@@ -75,11 +66,39 @@ class NewRecordingHandler
       streamRecordings.recordings.push newRecording
       streamRecordings.save callback
 
-moveNewRecordingsToStreamFolder = (done)->
+class RemoveStreamRecording
+  constructor: (@ftpClient, @ftpRecordingEntry, @stream)->
+    @fileName = @ftpRecordingEntry.name
+
+  process: (callback)=>
+    fullPath = "#{recordingDir}/#{@fileName}"
+    console.log("Deleting", fullPath)
+    @ftpClient.delete fullPath, callback
+
+class NewRecordingHandler
+  constructor: (@ftpClient, @ftpRecordingEntry)->
+    @fileName = @ftpRecordingEntry.name
+
+  process: (callback)=>
+    @_findEdgecastStream (err, stream)=>
+      return callback(err) if err
+      return callback("stream not found") unless stream
+      HandlerClass = if stream.record then SaveStreamRecording else RemoveStreamRecording
+      handler = new HandlerClass(@ftpClient, @ftpRecordingEntry, stream)
+      handler.process(callback)
+
+  _findEdgecastStream: (callback)=>
+    streamName = @fileName.split('.')[0]
+    query =
+      streamName: streamName
+      instanceName: createNewStreamInEdgecast.instanceName
+    EdgecastStream.findOne query, callback
+
+processNewStreamRecordings = (done)->
 
   moveNewRecordingsToProjectFolder = (ftpRecordingEntry, callback)->
     recordingHandler = new NewRecordingHandler(ftpClient, ftpRecordingEntry)
-    recordingHandler.waterfall(callback)
+    recordingHandler.process(callback)
 
   finish = (err)->
     ftpClient.end()
@@ -99,4 +118,4 @@ moveNewRecordingsToStreamFolder = (done)->
 
   ftpClient = edgecastFtpClientFactory done, fetchStreamList
 
-module.exports = moveNewRecordingsToStreamFolder
+module.exports = processNewStreamRecordings
