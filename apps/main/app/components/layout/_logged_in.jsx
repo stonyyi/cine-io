@@ -36,6 +36,7 @@ module.exports = React.createClass({
             <ul className="dropdown">
               <li><a href='/'>Home</a></li>
               <li><a href='/account'>Account</a></li>
+              <li><a href='/usage'>Usage</a></li>
               <li><a href='' onClick={this.logout}>Sign Out</a></li>
             </ul>
           </li>

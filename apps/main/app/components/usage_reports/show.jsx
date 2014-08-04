@@ -11,19 +11,17 @@ _ = require('underscore');
 var UsageGraph = React.createClass({
   displayName: "UsageGraph",
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
-  getInitialState: function(){
-    return {chartsReady: false};
-  },
   getBackboneObjects: function(){
     return this.props.model;
   },
   componentDidMount: function(){
-    google.setOnLoadCallback(this.setIsReady);
+    if (document.readyState !== 'complete'){
+      google.setOnLoadCallback(this.loadChart);
+    }else{
+      this.loadChart();
+    }
   },
-  setIsReady: function(){
-    this.setState({chartsReady: true});
-  },
-  componentDidUpdate: function(){
+  loadChart: function(){
     var ltm = UsageReport.lastThreeMonths(),
       model = this.props.model,
       data = [["Month", { role: 'annotation' }, "Usage", "Cap"]],
@@ -48,13 +46,7 @@ var UsageGraph = React.createClass({
     chart.draw(google.visualization.arrayToDataTable(data), options);
   },
   render: function(){
-    if (!this.state.chartsReady){
-      return (<div/>);
-    }
-
-    return (
-      <div ref="chartDiv" />
-    )
+    return (<div ref="chartDiv" />);
   }
 });
 module.exports = React.createClass({
