@@ -46,7 +46,6 @@ fullJSON = (stream, options, callback)->
   playJSON stream, (err, streamJSON)->
     streamJSON.publish =
       url: options.server
-      transcode: options.transcode
       stream: "#{stream.streamName}?#{stream.streamKey}&amp;adbe-live-event=#{stream.eventName}"
     streamJSON.password = stream.streamKey
     streamJSON.expiration = stream.expiration
@@ -60,7 +59,6 @@ addEdgecastServerToStreamOptions = (streamOptions, params)->
   return unless _.has(response, 'code')
   streamOptions.code = response.code
   streamOptions.server = response.server
-  streamOptions.transcode = response.transcode
 
 Show = (params, callback)->
   getProject params, requires: 'either', (err, project, options)->
