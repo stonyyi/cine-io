@@ -18,7 +18,11 @@ convert = (params)->
 
 module.exports = (params, callback)->
   response = convert(params)
-  return callback(response, nullCase, status: 400) unless _.has(response, 'code')
+  unless response.code
+    return callback(null, module.exports.default) if params.default == 'true'
+    errorResponse = nullCase
+    response = null if _.has(response, 'code')
+    return callback(response, errorResponse, status: 400)
 
   callback(null, response)
 

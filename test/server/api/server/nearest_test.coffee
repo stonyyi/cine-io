@@ -11,11 +11,33 @@ describe 'Server#Nearest', ->
       expect(options).to.deep.equal(status: 400)
       done()
 
+  it 'will return the default without an ip address whith default true', (done)->
+    params = {default: true}
+    Nearest params, (err, response, options)->
+      expect(err).to.be.null
+      expect(response).to.deep.equal
+        code: 'lax'
+        url: "rtmp://stream.lax.cine.io/20C45E/cines"
+        transcode: "rtmp://publish-west.cine.io/live"
+      expect(options).to.be.undefined
+      done()
+
   it 'will return a null when unknown', (done)->
     params = remoteIpAddress: "127.0.0.1"
     Nearest params, (err, response, options)->
       expect(err).to.be.null
       expect(response).to.deep.equal(server: null, code: null, transcode: null)
+      done()
+
+  it 'will return a default when unknown but with default true', (done)->
+    params = remoteIpAddress: "127.0.0.1", default: true
+    Nearest params, (err, response, options)->
+      expect(err).to.be.null
+      expect(response).to.deep.equal
+        code: 'lax'
+        url: "rtmp://stream.lax.cine.io/20C45E/cines"
+        transcode: "rtmp://publish-west.cine.io/live"
+      expect(options).to.be.undefined
       done()
 
   it 'will return a localized publish value for a client ip address', (done)->
