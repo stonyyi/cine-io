@@ -17,6 +17,14 @@ module.exports = React.createClass({
   changeCvc: function(event){
     this.setState({cvc: event.target.value});
   },
+  componentDidMount: function(){
+    this.refs.creditField.getDOMNode().focus()
+  },
+  componentDidUpdate: function(){
+    $(this.refs.creditField.getDOMNode()).payment('formatCardNumber');
+    $(this.refs.expField.getDOMNode()).payment('formatCardExpiry');
+    $(this.refs.cvcField.getDOMNode()).payment('formatCardCVC');
+  },
   validateAndSaveCreditCard: function(event){
     event.preventDefault();
     var expiration = $.payment.cardExpiryVal(this.state.expiration);
@@ -64,11 +72,6 @@ module.exports = React.createClass({
       return false;
     }
     return true;
-  },
-  componentDidUpdate: function(){
-    $(this.refs.creditField.getDOMNode()).payment('formatCardNumber');
-    $(this.refs.expField.getDOMNode()).payment('formatCardExpiry');
-    $(this.refs.cvcField.getDOMNode()).payment('formatCardCVC');
   },
   render: function() {
     return (
