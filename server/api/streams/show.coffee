@@ -4,18 +4,21 @@ profileFileName = "#{Cine.root}/server/api/streams/fmle_profile.xml"
 getProject = Cine.server_lib('get_project')
 BASE_URL = "rtmp://fml.cine.io/20C45E"
 convertIpAddressToEdgecastServer = Cine.server_lib('convert_ip_address_to_edgecast_server')
+NearestServer = Cine.api('server/nearest')
+_ = require('underscore')
 
 fmleProfile = (stream, options, callback)->
   if typeof options == "function"
     callback = options
     options = {}
-  options.server ||= 'lax'
+
+  options.code ||= NearestServer.default.code
 
   fs.readFile profileFileName, 'utf8', (err, profileFile)->
     return callback("cannot read profile", null, status: 500) if err
     content = profileFile
       .toString()
-      .replace(/EDGECAST_SERVER_NAME/g, options.server)
+      .replace(/EDGECAST_SERVER_NAME/g, options.code)
       .replace(/EDGECAST_INSTANCE_NAME/g, stream.instanceName)
       .replace(/EDGECAST_STREAM_NAME/g, stream.streamName)
       .replace(/EDGECAST_STREAM_KEY/g, stream.streamKey)
@@ -37,11 +40,13 @@ fullJSON = (stream, options, callback)->
     callback = options
     options = {}
 
-  options.server ||= 'lax'
+  options.server ||= NearestServer.default.url
+  options.transcode ||= NearestServer.default.transcode
 
   playJSON stream, (err, streamJSON)->
     streamJSON.publish =
-      url: "rtmp://stream.#{options.server}.cine.io/20C45E/#{stream.instanceName}"
+      url: options.server
+      transcode: options.transcode
       stream: "#{stream.streamName}?#{stream.streamKey}&amp;adbe-live-event=#{stream.eventName}"
     streamJSON.password = stream.streamKey
     streamJSON.expiration = stream.expiration
@@ -51,11 +56,11 @@ fullJSON = (stream, options, callback)->
     callback(null, streamJSON)
 
 addEdgecastServerToStreamOptions = (streamOptions, params)->
-  ipAddress = params.ipAddress || params.remoteIpAddress
-  return unless ipAddress
-  edgecastServer = convertIpAddressToEdgecastServer(ipAddress)
-  return unless edgecastServer
-  streamOptions.server = edgecastServer.code
+  response = NearestServer.convert params
+  return unless _.has(response, 'code')
+  streamOptions.code = response.code
+  streamOptions.server = response.server
+  streamOptions.transcode = response.transcode
 
 Show = (params, callback)->
   getProject params, requires: 'either', (err, project, options)->

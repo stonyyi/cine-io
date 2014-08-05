@@ -7,7 +7,7 @@ describe 'Server#Nearest', ->
     params = {}
     Nearest params, (err, response, options)->
       expect(err).to.equal("ipAddress not available")
-      expect(response).to.deep.equal(server: null, code: null, transcoding: null)
+      expect(response).to.deep.equal(server: null, code: null, transcode: null)
       expect(options).to.deep.equal(status: 400)
       done()
 
@@ -15,7 +15,7 @@ describe 'Server#Nearest', ->
     params = remoteIpAddress: "127.0.0.1"
     Nearest params, (err, response, options)->
       expect(err).to.be.null
-      expect(response).to.deep.equal(server: null, code: null, transcoding: null)
+      expect(response).to.deep.equal(server: null, code: null, transcode: null)
       done()
 
   it 'will return a localized publish value for a client ip address', (done)->
@@ -26,7 +26,7 @@ describe 'Server#Nearest', ->
       expect(response).to.deep.equal
         code: 'hhp'
         server: "rtmp://stream.hhp.cine.io/20C45E/cines"
-        transcoding: "rtmp://publish-ams.cine.io/20C45E/cines"
+        transcode: "rtmp://publish-ams.cine.io/live"
       done()
 
   it 'will return a localized publish value for parameter ipAddress', (done)->
@@ -37,7 +37,7 @@ describe 'Server#Nearest', ->
       expect(response).to.deep.equal
         code: 'fra'
         server: "rtmp://stream.fra.cine.io/20C45E/cines"
-        transcoding: "rtmp://publish-ams.cine.io/20C45E/cines"
+        transcode: "rtmp://publish-ams.cine.io/live"
       done()
 
   it 'will return a localized publish value for lax', (done)->
@@ -48,5 +48,5 @@ describe 'Server#Nearest', ->
       expect(response).to.deep.equal
         code: 'lax'
         server: "rtmp://stream.lax.cine.io/20C45E/cines"
-        transcoding: "rtmp://publish-west.cine.io/20C45E/cines"
+        transcode: "rtmp://publish-west.cine.io/live"
       done()
