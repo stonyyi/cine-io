@@ -37,6 +37,17 @@ module.exports = React.createClass({
       return;
     }
     var stripeToken = response.id;
+    var app = this.props.app;
+    app.currentUser.set('stripeToken', response.id)
+    app.currentUser.save(null, {
+      success: function(model, response, options){
+        model.store()
+        app.flash('Successfully saved credit card.', 'success');
+      },
+      error: function(model, response, options){
+        app.flash('Could not save credit card.', 'alert');
+      }
+    });
   },
   validateNewCreditCard: function(stripeData){
     if (!Stripe.card.validateCardNumber(stripeData.number)) {
@@ -86,7 +97,7 @@ module.exports = React.createClass({
             <div className="large-3 columns end">
               <label>
                 Security code
-                <input type='tel' ref="cvcField" name="stripe[cvc]" required value={this.state.cvc} onChange={this.changeCvc} placeholder="CVC" maxlength="4" pattern="\d*"/>
+                <input type='tel' ref="cvcField" name="stripe[cvc]" required value={this.state.cvc} onChange={this.changeCvc} placeholder="CVC" maxLength="4" pattern="\d*"/>
               </label>
             </div>
           </div>

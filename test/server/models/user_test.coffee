@@ -94,7 +94,7 @@ describe 'User', ->
       u = new User(name: 'my name', email: 'my email', hashed_password: 'hash', password_salt: 'salt', plan: 'free', githubId: 123)
       u.save (err, user)->
         expect(err).to.be.null
-        keys = ['createdAt', 'email', 'firstName', 'githubId', 'id', 'lastName', 'masterKey', 'name', 'permissions', 'plan']
+        keys = ['createdAt', 'email', 'firstName', 'githubId', 'id', 'lastName', 'masterKey', 'name', 'permissions', 'plan', 'stripeCard']
         jsonKeys = _.keys(u.simpleCurrentUserJSON()).sort()
         expect(jsonKeys).to.deep.equal(keys)
         done()
@@ -110,6 +110,16 @@ describe 'User', ->
     it 'has a lastName', ->
       u = new User(name: 'my name')
       expect(u.simpleCurrentUserJSON().lastName).to.equal("name")
+
+    it 'formats the stripeCard', ->
+      cards = [
+        {stripeCardId: '123', last4: 'the last 4', brand: 'visa', exp_month: '01', exp_year: '2013'},
+        {stripeCardId: '456', last4: 'these last 4', brand: 'master', exp_month: '12', exp_year: '2014'}
+      ]
+      u = new User(plan: 'my plan', name: 'my name', stripeCustomer: {cards: cards})
+      json = u.simpleCurrentUserJSON()
+      expected = {id: u.stripeCustomer.cards[0]._id, last4: 'the last 4', brand: 'visa', exp_month: 1, exp_year: 2013}
+      expect(json.stripeCard).to.deep.equal(expected)
 
   describe 'names', ->
     it 'has a firstName', ->

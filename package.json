@@ -55,6 +55,7 @@
     "rendr-handlebars": "git://github.com/airbnb/rendr-handlebars.git#6e5363074aa8fdfda0cbb2d9f70ed272be8040ea",
     "request": "2.34.0",
     "shortid": "^2.0.0",
+    "stripe": "2.4.5",
     "type-of": "^2.0.1",
     "underscore": "1.6.0",
     "underscore.string": "2.3.3"

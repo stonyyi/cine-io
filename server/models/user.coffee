@@ -11,6 +11,14 @@ Permission = new Schema
   objectId: mongoose.Schema.Types.ObjectId
   objectName: String
 
+StripeCard = new Schema
+  stripeCardId: String
+  last4: String
+  brand: String
+  exp_month: Number
+  exp_year: Number
+  deletedAt: Date
+
 UserSchema = new Schema
   # Email login
   email:
@@ -48,6 +56,9 @@ UserSchema = new Schema
   plan:
     type: String
     required: true
+  stripeCustomer:
+    stripeCustomerId: String
+    cards: [StripeCard]
   deletedAt:
     type: Date
   masterKey:
@@ -97,6 +108,13 @@ UserSchema.methods.simpleCurrentUserJSON = ->
   result.id = json._id
   result.firstName = @firstName()
   result.lastName = @lastName()
+  cards = stripeCards = []
+  _.each json.stripeCustomer.cards, (card)->
+    return if card.deletedAt?
+    newCard = _.pick(card, 'id', 'last4', 'brand', 'exp_month', 'exp_year')
+    newCard.id = card._id
+    stripeCards.push(newCard)
+  result.stripeCard = cards[0]
   result
 
 UserSchema.methods.streamLimit = ->
