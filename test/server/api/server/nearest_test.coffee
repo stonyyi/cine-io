@@ -12,7 +12,7 @@ describe 'Server#Nearest', ->
       done()
 
   it 'will return the default without an ip address whith default true', (done)->
-    params = {default: true}
+    params = {default: 'ok'}
     Nearest params, (err, response, options)->
       expect(err).to.be.null
       expect(response).to.deep.equal
@@ -30,7 +30,7 @@ describe 'Server#Nearest', ->
       done()
 
   it 'will return a default when unknown but with default true', (done)->
-    params = remoteIpAddress: "127.0.0.1", default: true
+    params = remoteIpAddress: "127.0.0.1", default: 'ok'
     Nearest params, (err, response, options)->
       expect(err).to.be.null
       expect(response).to.deep.equal
