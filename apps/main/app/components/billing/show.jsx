@@ -2,6 +2,7 @@
 var React = require('react'),
 PageWrapper = Cine.component('layout/_page_wrapper'),
 NewCreditCard = Cine.component('billing/_new_credit_card');
+CurrentCreditCard = Cine.component('billing/_current_credit_card');
 
 module.exports = React.createClass({
   displayName: 'BillingShow',
@@ -10,22 +11,12 @@ module.exports = React.createClass({
     return this.props.app.currentUser;
   },
   render: function() {
-    var cu = this.props.app.currentUser,
-      card = cu.get('stripeCard'),
-      content;
-    if (card){
-      content = (
-        <div>
-          Card on file: {card.brand}, {card.last4}, {card.exp_month} / {card.exp_year}
-        </div>
-      )
-    }else{
-      content = (<NewCreditCard app={this.props.app}/>)
-    }
+    var CardModule = this.props.app.currentUser.get('stripeCard') ? CurrentCreditCard : NewCreditCard;
+
     return (
       <PageWrapper app={this.props.app}>
         <h1 className="bottom-margin-1">Billing Information</h1>
-        {content}
+        <CardModule app={this.props.app} />
       </PageWrapper>
     );
   }

@@ -118,3 +118,23 @@ describe 'Users#update', ->
           done()
 
       UpdateUser params, session, callback
+
+  describe 'deleting a credit card', ->
+    beforeEach (done)->
+      @user = new User(plan: 'enterprise', email: 'the email', name: 'Chillin')
+      @user.stripeCustomer.cards.push(stripeCardId: 'card_102gkI2AL5avr9E4geO0PpkC')
+      @user.save done
+
+    it 'deletes the credit card', (done)->
+      params = {id: @user._id, deleteCard: @user.stripeCustomer.cards[0]._id}
+      session = {user: @user}
+      callback = (err, response)=>
+        expect(err).to.equal(null)
+        expect(response.stripeCard).to.be.undefined
+        User.findById @user._id, (err, user)->
+          expect(err).to.be.null
+          expect(user.stripeCustomer.cards).to.have.length(1)
+          expect(user.stripeCustomer.cards[0].deletedAt).to.be.instanceOf(Date)
+          done()
+
+      UpdateUser params, session, callback

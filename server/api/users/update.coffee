@@ -3,6 +3,7 @@ _str = require 'underscore.string'
 TextMongooseErrorMessage = Cine.server_lib('text_mongoose_error_message')
 mailer = Cine.server_lib('mailer')
 addStripeCardToUser = Cine.server_lib("add_stripe_card_to_user")
+deleteStripeCard = Cine.server_lib("delete_stripe_card")
 
 updateUser = (params, callback)->
   return callback("not logged in", null, status: 401) unless params.sessionUserId
@@ -20,6 +21,11 @@ updateUser.doUpdate = (params, callback)->
 
     if params.stripeToken
       return addStripeCardToUser user, params.stripeToken, (err, user)->
+        return callback(TextMongooseErrorMessage(err), null, status: 400) if err
+        callback(null, user.simpleCurrentUserJSON())
+
+    if params.deleteCard
+      return deleteStripeCard user, params.deleteCard, (err, user)->
         return callback(TextMongooseErrorMessage(err), null, status: 400) if err
         callback(null, user.simpleCurrentUserJSON())
 
