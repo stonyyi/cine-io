@@ -15,6 +15,7 @@ module.exports = (grunt) ->
             'assets/vendor/jquery.js'
             'assets/vendor/jquery.easing.js'
             'assets/vendor/jquery.scrollto.js'
+            'assets/vendor/jquery.payment.js'
             'bower_components/modernizr/modernizr.js'
             'bower_components/fastclick/lib/fastclick.js'
             'bower_components/foundation/js/foundation.js'

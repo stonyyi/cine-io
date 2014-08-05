@@ -61,6 +61,11 @@
   </script>
   {{! end Mixpanel }}
 
+  <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+  <script type="text/javascript">
+    Stripe.setPublishableKey(App.attributes.stripe.publishableKey);
+  </script>
+
   <script type="text/javascript">
     window.App.start()
     $(document).foundation();

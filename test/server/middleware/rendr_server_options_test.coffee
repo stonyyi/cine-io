@@ -19,3 +19,7 @@ describe 'rendrServerOptions', ->
     it 'does not include google analytics secrets', ->
       googleAnalyticsKeys = _.keys(@appData.google_analytics)
       expect(googleAnalyticsKeys).to.deep.equal(['domain', 'tracking_id'])
+
+    it 'does not include stripe secrets', ->
+      stripeKeys = _.keys(@appData.stripe)
+      expect(stripeKeys).to.deep.equal(['publishableKey'])

@@ -1,0 +1,24 @@
+.billing-show{
+  input.credit-card-field{
+    background-position: 95% 50%;
+    background-repeat: no-repeat;
+    &.amex{
+      background-image: url('//res.cloudinary.com/hqpopkkbb/image/upload/v1390946986/application/credit_cards/amex.gif');
+    }
+    &.discover{
+      background-image: url('//res.cloudinary.com/hqpopkkbb/image/upload/v1390946986/application/credit_cards/discover.jpg');
+    }
+    &.dinersclub{
+      background-image: url('//res.cloudinary.com/hqpopkkbb/image/upload/v1390946986/application/credit_cards/dinersclub.jpg');
+    }
+    &.jcb{
+      background-image: url('//res.cloudinary.com/hqpopkkbb/image/upload/v1390946986/application/credit_cards/jcb.png');
+    }
+    &.mastercard{
+      background-image: url('//res.cloudinary.com/hqpopkkbb/image/upload/v1390946986/application/credit_cards/mastercard.gif');
+    }
+    &.visa{
+      background-image: url('//res.cloudinary.com/hqpopkkbb/image/upload/v1390946986/application/credit_cards/visa.gif');
+    }
+  }
+}

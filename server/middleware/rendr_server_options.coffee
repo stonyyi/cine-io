@@ -14,5 +14,7 @@ createServerOptions.appData = (app)->
   google_analytics: Cine.config('variables/google_analytics')
   mixpanel:
     tracking_id: Cine.config('variables/mixpanel').tracking_id
+  stripe:
+    publishableKey: Cine.config('variables/stripe').publishableKey
 
 module.exports = createServerOptions
