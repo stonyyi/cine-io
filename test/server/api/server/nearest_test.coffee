@@ -4,20 +4,18 @@ Nearest = testApi ServerNearest
 describe 'Server#Nearest', ->
 
   it 'will return an error without an ip address', (done)->
-    # 93.191.59.34 is russia
     params = {}
     Nearest params, (err, response, options)->
       expect(err).to.equal("ipAddress not available")
-      expect(response).to.deep.equal(server: null, code: null)
+      expect(response).to.deep.equal(server: null, code: null, transcoding: null)
       expect(options).to.deep.equal(status: 400)
       done()
 
   it 'will return a null when unknown', (done)->
-    # 93.191.59.34 is russia
     params = remoteIpAddress: "127.0.0.1"
     Nearest params, (err, response, options)->
       expect(err).to.be.null
-      expect(response).to.deep.equal(server: null, code: null)
+      expect(response).to.deep.equal(server: null, code: null, transcoding: null)
       done()
 
   it 'will return a localized publish value for a client ip address', (done)->
@@ -25,7 +23,10 @@ describe 'Server#Nearest', ->
     params = remoteIpAddress: "93.191.59.34"
     Nearest params, (err, response, options)->
       expect(err).to.be.null
-      expect(response).to.deep.equal(code: 'hhp', server: "rtmp://stream.hhp.cine.io/20C45E/cines")
+      expect(response).to.deep.equal
+        code: 'hhp'
+        server: "rtmp://stream.hhp.cine.io/20C45E/cines"
+        transcoding: "rtmp://publish-ams.cine.io/20C45E/cines"
       done()
 
   it 'will return a localized publish value for parameter ipAddress', (done)->
@@ -33,5 +34,19 @@ describe 'Server#Nearest', ->
     params = ipAddress: "81.169.145.154"
     Nearest params, (err, response, options)->
       expect(err).to.be.null
-      expect(response).to.deep.equal(code: 'fra', server: "rtmp://stream.fra.cine.io/20C45E/cines")
+      expect(response).to.deep.equal
+        code: 'fra'
+        server: "rtmp://stream.fra.cine.io/20C45E/cines"
+        transcoding: "rtmp://publish-ams.cine.io/20C45E/cines"
+      done()
+
+  it 'will return a localized publish value for lax', (done)->
+    # 50.184.110.201 is berkeley, ca
+    params = ipAddress: "50.184.110.201"
+    Nearest params, (err, response, options)->
+      expect(err).to.be.null
+      expect(response).to.deep.equal
+        code: 'lax'
+        server: "rtmp://stream.lax.cine.io/20C45E/cines"
+        transcoding: "rtmp://publish-west.cine.io/20C45E/cines"
       done()
