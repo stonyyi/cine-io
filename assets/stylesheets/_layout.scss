@@ -5,13 +5,29 @@
 
 html, body {
   height: 100%;
+}
+
+#content, #content > div, #page-layout {
+  height: 100%;
+}
+#page-layout{
   overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-#content {
+$footer-height: 103px;
+$footer-height-neg: $footer-height * -1;
+
+.main-wrapper {
+  min-height: 100%;
+  height: auto !important;
   height: 100%;
+  margin: 0 auto $footer-height-neg; /* the bottom margin is the negative value of the footer's height */
 }
+footer, .push {
+  height: $footer-height; /* '.push' must be the same height as 'footer' */
+}
+//end sticky footer
 
 //flash
 .flash-holder{

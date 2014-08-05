@@ -12,13 +12,16 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div id="page-layout" className={this.canvasClasses()}>
-        <FlashHolder app={this.props.app} />
-        <div className="inner-wrap">
-          <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
-          <Header app={this.props.app} />
-          <div className="container">
-            {this.props.children}
+        <div className='main-wrapper'>
+          <FlashHolder app={this.props.app} />
+          <div className="inner-wrap">
+            <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
+            <Header app={this.props.app} />
+            <div className="container">
+              {this.props.children}
+            </div>
           </div>
+          <div className='push'/>
         </div>
         <Footer />
       </div>
