@@ -1,11 +1,12 @@
 /** @jsx React.DOM */
 var React = require('react'),
+PageWrapper = Cine.component('layout/_page_wrapper'),
+FlashHolder = Cine.component('layout/flash_holder'),
 Header = Cine.component('layout/header'),
 LeftNav = Cine.component('layout/left_nav'),
+Footer = Cine.component('layout/footer'),
 LoggedOut = Cine.component('homepage/_logged_out'),
 LoggedIn = Cine.component('homepage/_logged_in'),
-FlashHolder = Cine.component('layout/flash_holder'),
-Footer = Cine.component('layout/footer'),
 HomeHero = LoggedOut.HomeHero,
 About = LoggedOut.About,
 Example = LoggedOut.Example,
@@ -30,15 +31,9 @@ module.exports = React.createClass({
 
     if (this.props.app.currentUser.isLoggedIn()) {
       return (
-        <div id='homepage-logged-in' className={this.canvasClasses()}>
-          <FlashHolder app={this.props.app}/>
-          <div className="inner-wrap">
-            <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
-            <Header app={this.props.app} />
-            <LoggedIn app={this.props.app} collection={this.state.projects} />
-          </div>
-          <Footer />
-        </div>
+        <PageWrapper app={this.props.app}>
+          <LoggedIn app={this.props.app} collection={this.state.projects} />
+        </PageWrapper>
       );
 
     }else{

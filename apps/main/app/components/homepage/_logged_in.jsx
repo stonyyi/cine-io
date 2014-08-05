@@ -67,7 +67,7 @@ module.exports = React.createClass({
       streamsPanel = (<ProjectStreamsWrapper app={this.props.app} model={selectedProject} />);
     }
     return (
-      <div>
+      <div id="homepage-logged-in">
         <div className='row'>
           <div className='medium-8 columns'>
             <div className="panels-wrapper panel">
@@ -143,8 +143,6 @@ module.exports = React.createClass({
           </div>
         </div>
         {streamsPanel}
-        <div className="panel">
-        </div>
       </div>
     );
   }
