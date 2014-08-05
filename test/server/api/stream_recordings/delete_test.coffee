@@ -6,7 +6,7 @@ User = Cine.server_model('user')
 EdgecastStream = Cine.server_model('edgecast_stream')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
 
-describe 'StreamArchives#Delete', ->
+describe 'StreamRecordings#Delete', ->
 
   testApi.requresApiKey Delete, 'secret'
 
