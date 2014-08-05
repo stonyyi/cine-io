@@ -1,9 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react'),
-Header = Cine.component('layout/header'),
-Footer = Cine.component('layout/footer'),
-LeftNav = Cine.component('layout/left_nav'),
-FlashHolder = Cine.component('layout/flash_holder'),
+PageWrapper = Cine.component('layout/_page_wrapper'),
 humanizeBytes = Cine.lib('humanize_bytes'),
 UsageReport = Cine.model('usage_report'),
 _ = require('underscore');
@@ -58,20 +55,14 @@ module.exports = React.createClass({
   },
   render: function() {
     return (
-      <div className={this.canvasClasses()}>
-        <FlashHolder app={this.props.app}/>
-        <div className="inner-wrap">
-          <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
-          <Header app={this.props.app} />
-          <div className='row'>
-            <div className='small-12 columns'>
-              <h1>Usage Report</h1>
-              <UsageGraph model={this.props.model} app={this.props.app}/>
-            </div>
+      <PageWrapper app={this.props.app}>
+        <div className='row'>
+          <div className='small-12 columns'>
+            <h1>Usage Report</h1>
+            <UsageGraph model={this.props.model} app={this.props.app}/>
           </div>
         </div>
-        <Footer />
-      </div>
+      </PageWrapper>
     );
   }
 });

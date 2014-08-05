@@ -1,9 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react'),
-Header = Cine.component('layout/header'),
-Footer = Cine.component('layout/footer'),
-LeftNav = Cine.component('layout/left_nav'),
-FlashHolder = Cine.component('layout/flash_holder'),
+PageWrapper = Cine.component('layout/_page_wrapper'),
 NewCreditCard = Cine.component('billing/_new_credit_card');
 
 module.exports = React.createClass({
@@ -26,18 +23,10 @@ module.exports = React.createClass({
       content = (<NewCreditCard app={this.props.app}/>)
     }
     return (
-      <div id='docs' className={this.canvasClasses()}>
-        <FlashHolder app={this.props.app}/>
-        <div className="inner-wrap">
-          <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
-          <Header app={this.props.app} />
-          <div className="container">
-            <h1 className="bottom-margin-1">Billing Information</h1>
-            {content}
-          </div>
-        </div>
-        <Footer />
-      </div>
+      <PageWrapper app={this.props.app}>
+        <h1 className="bottom-margin-1">Billing Information</h1>
+        {content}
+      </PageWrapper>
     );
   }
 });

@@ -1,9 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react'),
-Header = Cine.component('layout/header'),
-Footer = Cine.component('layout/footer'),
-LeftNav = Cine.component('layout/left_nav'),
-FlashHolder = Cine.component('layout/flash_holder'),
+PageWrapper = Cine.component('layout/_page_wrapper'),
 Static = Cine.component('shared/_static');
 
 module.exports = React.createClass({
@@ -26,22 +23,14 @@ module.exports = React.createClass({
     classNames[slug] = "active";
 
     return (
-      <div id='legal' className={this.canvasClasses()}>
-        <FlashHolder app={this.props.app}/>
-        <div className="inner-wrap">
-          <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
-          <Header app={this.props.app} />
-          <div className="container">
-            <dl className="sub-nav">
-              <dd className={classNames['terms-of-service']}><a href="/legal/terms-of-service">Terms of Service</a></dd>
-              <dd className={classNames['privacy-policy']}><a href="/legal/privacy-policy">Privacy Policy</a></dd>
-              <dd className={classNames['copyright-claims']}><a href="/legal/copyright-claims">Copyright Claims</a></dd>
-            </dl>
-            <Static document={this.props.model.get('document')} />
-          </div>
-        </div>
-        <Footer />
-      </div>
+      <PageWrapper app={this.props.app}>
+        <dl className="sub-nav">
+          <dd className={classNames['terms-of-service']}><a href="/legal/terms-of-service">Terms of Service</a></dd>
+          <dd className={classNames['privacy-policy']}><a href="/legal/privacy-policy">Privacy Policy</a></dd>
+          <dd className={classNames['copyright-claims']}><a href="/legal/copyright-claims">Copyright Claims</a></dd>
+        </dl>
+        <Static document={this.props.model.get('document')} />
+      </PageWrapper>
     );
   }
 });
