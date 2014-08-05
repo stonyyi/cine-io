@@ -30,6 +30,9 @@ trackEvent = (eventName, data={}, options={})->
 tracker.userSignup = ->
   trackEvent('userSignup')
 
+tracker.addedCard = ->
+  trackEvent('addedCard')
+
 tracker.getApiKey = (data)->
   trackEvent('getApiKey', data)
 

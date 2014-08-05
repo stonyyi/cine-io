@@ -111,6 +111,16 @@ describe 'tracker', ->
       it 'sends a mixpanel event', ->
         assertMixpanel('userSignup')
 
+    describe '#addedCard', ->
+      beforeEach ->
+        tracker.addedCard()
+
+      it 'sends a ga event', ->
+        assertGA('addedCard')
+
+      it 'sends a mixpanel event', ->
+        assertMixpanel('addedCard')
+
     describe '#getApiKey', ->
       beforeEach ->
         tracker.getApiKey(value: 12)

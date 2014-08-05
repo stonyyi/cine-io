@@ -41,8 +41,9 @@ module.exports = React.createClass({
     app.currentUser.set('stripeToken', response.id)
     app.currentUser.save(null, {
       success: function(model, response, options){
-        model.store()
+        model.store();
         app.flash('Successfully saved credit card.', 'success');
+        app.tracker.addedCard();
       },
       error: function(model, response, options){
         app.flash('Could not save credit card.', 'alert');
