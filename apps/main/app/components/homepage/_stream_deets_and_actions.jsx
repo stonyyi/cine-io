@@ -64,6 +64,7 @@ module.exports = React.createClass({
   render: function(){
     var model = this.props.model,
       confirmationAttribute = this.props.model.get('name') ? 'name' : 'id',
+      embedUrl = "/embed/"+this.props.project.get('publicKey')+"/"+this.props.model.get('id'),
       modelName;
     if (this.state.showingNameForm){
       modelName = (
@@ -88,6 +89,7 @@ module.exports = React.createClass({
           <dt>Assigned at:</dt>
           <dd>{model.assignedAt().toString()}</dd>
         </dl>
+        <a target="_blank" href={embedUrl} data-pass-thru={true}>Quick embed url</a>
         <hr/>
         <dl>
           <dt>RTMP:</dt>
