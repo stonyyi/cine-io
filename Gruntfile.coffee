@@ -99,10 +99,6 @@ module.exports = (grunt) ->
         files: ["apps/main/app/**/*.coffee", "apps/admin/app/**/*.coffee"]
         tasks: ["rendr_stitch"]
 
-      jssdk:
-        files: ["sdk/javascript/**/*.coffee", "sdk/javascript/**/*.js"]
-        tasks: ["browserify:jssdk"]
-
     react:
       dynamic_mappings:
         files: [
@@ -129,15 +125,6 @@ module.exports = (grunt) ->
 
     rendr_stitch: stitchConfig
 
-    browserify:
-      jssdk:
-        files:
-          'public/compiled/cineio-dev.js': ['sdk/javascript/main.coffee']
-        options:
-          browserifyOptions:
-            extensions: ['.coffee', '.js']
-          transform: ['coffeeify']
-
     uglify:
       options:
         report: "min"
@@ -163,14 +150,13 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-nodemon"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-concurrent"
-  grunt.registerTask "compile", ["react", "rendr_stitch", "browserify"]
+  grunt.registerTask "compile", ["react", "rendr_stitch"]
   grunt.registerTask "build", ["compile", "sass", "concat"]
   grunt.registerTask "prepareProductionAssets", ["compile", "sass", "concat", "uglify"]
   grunt.registerTask "dev", ["build", "concurrent:dev"]
   grunt.registerTask "default", ["dev"]
   grunt.loadNpmTasks 'grunt-react'
   grunt.loadNpmTasks('grunt-rendr-stitch');
-  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-markdown');
 
