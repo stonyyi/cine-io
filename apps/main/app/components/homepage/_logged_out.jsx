@@ -40,7 +40,7 @@ exports.HomeHero = React.createClass({
             <h3 className="pitch">Get started for free.</h3>
             <div className="actions">
               <a href="" onClick={this.getApiKey} className="button radius">Get API Key</a><br/>
-              <a href="" onClick={this.showSignIn}>Already a customer? Sign in.</a>
+              <a href="" className="sign-in-link" onClick={this.showSignIn}>Already a customer? Sign in.</a>
             </div>
           </div>
         </div>
