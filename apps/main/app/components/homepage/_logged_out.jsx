@@ -325,7 +325,9 @@ exports.Pricing = React.createClass({
                   </ul>
                 </div>
               </div>
-
+              <div className="postscript">
+                <div>Or, <a href="" onClick={this.getApiKey.bind(this, 'free', 1)}>try for free</a>.</div>
+              </div>
             </div>
           </div>
         </section>

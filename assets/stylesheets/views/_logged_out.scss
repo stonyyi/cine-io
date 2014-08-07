@@ -200,7 +200,7 @@
       @include grid-column(12);
       padding-top: 1.5em;
 
-      .pitch, .postscript {
+      .pitch {
         margin-top: 1em;
         div {
           margin-bottom: 2em;
@@ -294,7 +294,7 @@
       .info {
         @include grid-column(10, true, true, 1);
 
-        .pitch, .postscript {
+        .pitch {
           margin-top: 1em;
           @include grid-column(8, true, true, 2);
           div {
