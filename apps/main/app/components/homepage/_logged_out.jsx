@@ -73,8 +73,8 @@ exports.About = React.createClass({
               You do not want to think about configuring a CDN, building a
               cross-platform viewing experience, or learning a new tool.
             </p>
-            <p>
-              <strong>Focus on your app.</strong> We&apos;ll do the rest.
+            <p className="hook">
+              Build ... ship ... <a target="_blank" href="https://www.youtube.com/watch?v=zS1cLOIxsQ8&amp;t=28s">do the happy dance</a>.
             </p>
           </div>
         </div>

@@ -82,10 +82,20 @@
 
     .info {
       @include grid-column(12);
-      padding-top: 3em;
+      padding-top: 1.5em;
 
       h2, h2 * {
         color: $scheme-color-north-bright;
+      }
+    }
+
+    .hook {
+      text-transform: uppercase;
+      a {
+        color: white;
+      }
+      a:hover {
+        text-decoration: underline;
       }
     }
 
@@ -113,6 +123,8 @@
   }
 
   #example {
+    padding-top: 1.5em;
+
     background: #ccc;
     pre {
       border: 2px solid white;
@@ -161,6 +173,8 @@
   }
 
   #libraries{
+    padding-top: 1.5em;
+
     ul{
       li{
         img{
@@ -184,7 +198,7 @@
 
     .info {
       @include grid-column(12);
-      padding-top: 3em;
+      padding-top: 1.5em;
 
       .pitch, .postscript {
         margin-top: 1em;
@@ -206,11 +220,10 @@
   #consulting {
     background: $scheme-color-north;
     color: white;
-    padding-bottom: 2em;
 
     .info {
       @include grid-column(12);
-      padding-top: 3em;
+      padding-top: 1.5em;
 
       a, h2, h2 * {
         color: $scheme-color-north-bright;
@@ -246,8 +259,6 @@
     }
 
     #example {
-      padding-top: 2em;
-
       .head-script {
         @include grid-column(12);
       }
