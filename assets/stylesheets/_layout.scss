@@ -5,6 +5,7 @@
 
 html, body {
   height: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
 #content, #content > div, #page-layout {
