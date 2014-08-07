@@ -169,6 +169,14 @@
         }
       }
     }
+    .icon-list {
+      @include block-grid(6);
+    }
+    .developer-actions {
+      a.button {
+        width: 250px;
+      }
+    }
   }
   #pricing {
     background: white;
@@ -238,6 +246,8 @@
     }
 
     #example {
+      padding-top: 2em;
+
       .head-script {
         @include grid-column(12);
       }
@@ -259,6 +269,9 @@
             height: 64px;
           }
         }
+      }
+      .icon-list {
+        @include block-grid(7);
       }
     }
   }

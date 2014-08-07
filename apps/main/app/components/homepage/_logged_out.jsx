@@ -36,7 +36,7 @@ exports.HomeHero = React.createClass({
             <a href="/" title="cine.io">
               <h1 className="brand">cine.io</h1>
             </a>
-            <h2 className="subtitle">Video live-streaming API for web and mobile apps.</h2>
+            <h2 className="subtitle">Build powerful live-streaming apps.</h2>
             <h3 className="pitch">Get started for free.</h3>
             <div className="actions">
               <a href="" onClick={this.getApiKey} className="button radius">Get API Key</a><br/>
@@ -72,11 +72,9 @@ exports.About = React.createClass({
             <p>
               You do not want to think about configuring a CDN, building a
               cross-platform viewing experience, or learning a new tool.
-              <strong> You want to write code.</strong> cine.io lets you
-              programatically set up, configure, and provision your streams
-              through a RESTful API. That means less hassle, less wasted time,
-              and happy developers. There are no account minimums, and you can
-              get started today.
+            </p>
+            <p>
+              <strong>Focus on your app.</strong> We&apos;ll do the rest.
             </p>
           </div>
         </div>
@@ -97,9 +95,9 @@ exports.Libraries = React.createClass({
         <div className="row text-center">
           <div className="medium-12 columns">
             <h2 className="bottom-margin-2">
-              Easy integration with your app.
+              We speak your language.
             </h2>
-            <ul className="small-block-grid-6 bottom-margin-2">
+            <ul className="icon-list">
               <li>
                 <a target="_blank" href='https://github.com/cine-io/js-sdk'>
                   <img src="/images/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
@@ -130,9 +128,19 @@ exports.Libraries = React.createClass({
                   <img src="/images/nodejs-logo.png" alt="Node.js logo" title="The Node.js Package" />
                 </a>
               </li>
+              <li className="show-for-medium-up">
+                <a target="_blank" href='https://github.com/cine-io'>
+                  <img src="/images/github-logo.png" alt="GitHub logo" title="Find us on GitHub" />
+                </a>
+              </li>
             </ul>
-            <div>All API calls and common workflows are described in our <a href="/docs">documentation</a>. </div>
-            <p>Example applications and other resources are available on our <a target="_blank" href="http://git.cine.io">Github page</a>. </p>
+            <div>
+              <p>Working in another framework / language? Don&apos;t sweat it. Our <a href="/docs">REST API</a> has you covered.</p>
+            </div>
+            <div className="developer-actions">
+              <a href="/docs" className="button radius">View documentation</a>&nbsp;&nbsp;
+              <a href="https://www.hipchat.com/gZCLRQ9Ih" className="button radius">Developer chat</a>
+            </div>
           </div>
         </div>
       </section>
@@ -188,7 +196,7 @@ exports.Example = React.createClass({
 
     return (
       <section id="example">
-        <div className="row top-margin-2">
+        <div className="row">
           <div className="head-script">
             <InitializeCodeExample publicKey={this.state.examplePublicKey} />
           </div>
