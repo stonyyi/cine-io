@@ -8,9 +8,14 @@ describe 'processNewStreamRecordings', ->
   beforeEach ->
     @fakeFtpClient = new FakeFtpClient
 
-    @listStub = @fakeFtpClient.stub('list')
+    @listStub = sinon.stub()
+
+    thingLister = (args, callback)=>
+      callback null, @listStub(args)
+
+    @fakeFtpClient.stub('list', thingLister)
     @lists = Cine.require('test/fixtures/edgecast_stream_recordings')
-    @listStub.callsArgWith 1, null, @lists
+    @listStub.withArgs('/cines').returns(@lists)
 
   afterEach ->
     @fakeFtpClient.restore()
@@ -64,6 +69,20 @@ describe 'processNewStreamRecordings', ->
       @renameStub.withArgs('/cines/ykMOUbRPZl.2.mp4', '/cines/def/ykMOUbRPZl.2.mp4').callsArgWith 2, null
       @renameStub.withArgs('/cines/ykMOUbRPZl.mp4', '/cines/def/ykMOUbRPZl.mp4').callsArgWith 2, null
 
+    beforeEach ->
+      fullAbcList =   [{name: 'xkMOUbRPZl.mp4'}, {name: 'xkMOUbRPZl.1.mp4'},{name: 'xkMOUbRPZl.2.mp4'}]
+      fullDefList =   [{name: 'ykMOUbRPZl.mp4'}, {name: 'ykMOUbRPZl.1.mp4'},{name: 'ykMOUbRPZl.2.mp4'}]
+
+      @listStub.withArgs('/cines/abc')
+        .onFirstCall().returns(fullAbcList.slice(0,0))
+        .onSecondCall().returns(fullAbcList.slice(0,1))
+        .onThirdCall().returns(fullAbcList.slice(0,2))
+
+      @listStub.withArgs('/cines/def')
+        .onFirstCall().returns(fullDefList.slice(0,0))
+        .onSecondCall().returns(fullDefList.slice(0,1))
+        .onThirdCall().returns(fullDefList.slice(0,2))
+
     beforeEach (done)->
       @project1 = new Project(publicKey: 'abc')
       @project1.save done
@@ -88,22 +107,22 @@ describe 'processNewStreamRecordings', ->
         done()
 
     assertRecordigns = (recordings)->
-      expect(recordings[0].name).to.equal('xkMOUbRPZl.1.mp4')
-      expect(recordings[0].size).to.equal(7782264)
+      expect(recordings[0].name).to.equal('xkMOUbRPZl.mp4')
+      expect(recordings[0].size).to.equal(4684422)
       expect(recordings[0].date).to.be.instanceOf(Date)
-      expect(recordings[0].date.toString()).to.equal('Wed Jul 16 2014 21:36:00 GMT+0000 (UTC)')
+      expect(recordings[0].date.toString()).to.equal('Wed Jul 16 2014 20:34:00 GMT+0000 (UTC)')
 
-      expect(recordings[1].name).to.equal('xkMOUbRPZl.2.mp4')
-      expect(recordings[1].size).to.equal(110410741)
+      expect(recordings[1].name).to.equal('xkMOUbRPZl.1.mp4')
+      expect(recordings[1].size).to.equal(7782264)
       expect(recordings[1].date).to.be.instanceOf(Date)
-      expect(recordings[1].date.toString()).to.equal('Wed Jul 16 2014 22:20:00 GMT+0000 (UTC)')
+      expect(recordings[1].date.toString()).to.equal('Wed Jul 16 2014 21:36:00 GMT+0000 (UTC)')
 
-      expect(recordings[2].name).to.equal('xkMOUbRPZl.mp4')
-      expect(recordings[2].size).to.equal(4684422)
+      expect(recordings[2].name).to.equal('xkMOUbRPZl.2.mp4')
+      expect(recordings[2].size).to.equal(110410741)
       expect(recordings[2].date).to.be.instanceOf(Date)
-      expect(recordings[2].date.toString()).to.equal('Wed Jul 16 2014 20:34:00 GMT+0000 (UTC)')
+      expect(recordings[2].date.toString()).to.equal('Wed Jul 16 2014 22:20:00 GMT+0000 (UTC)')
 
-    it 'creates an EdgecastRecordings entry', (done)->
+    it 'creates an EdgecastRecordings entry sorted by date', (done)->
       processNewStreamRecordings (err)=>
         expect(err).to.be.undefined
         EdgecastRecordings.find _edgecastStream: @stream1._id, (err, allRecordingsForStream)->

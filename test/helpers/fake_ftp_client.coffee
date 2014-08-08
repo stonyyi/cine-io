@@ -30,8 +30,8 @@ module.exports = class FakeFtpClient
     @builderStub = sinon.stub edgecastFtpClientFactory, 'builder'
     @builderStub.returns(this)
 
-  stub: (functionName)->
-    stub = sinon.stub this, functionName
+  stub: (functionName, callbackInstead)->
+    stub = sinon.stub this, functionName, callbackInstead
     @stubs.push(stub)
     stub
 

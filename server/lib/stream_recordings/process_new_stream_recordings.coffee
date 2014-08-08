@@ -5,10 +5,12 @@ async = require('async')
 EdgecastStream = Cine.server_model('edgecast_stream')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
 Project = Cine.server_model('project')
+numberOfStreamRecordings = Cine.server_lib('stream_recordings/number_of_stream_recordings')
 
 recordingDir = "/#{createNewStreamInEdgecast.instanceName}"
 directoryType = 'd'
 fileType = '-'
+
 
 directoryAlreadyExistsError = (err)->
   err.message == "Can't create directory: File exists" && err.code == 550
@@ -24,7 +26,7 @@ class SaveStreamRecording
     @fileName = @ftpRecordingEntry.name
 
   process: (callback)=>
-    waterfallCalls = [@_findStreamProject, @_mkProjectDir, @_moveRecordingToProjectFolder, @_addRecordingToEdgecastRecordings]
+    waterfallCalls = [@_findStreamProject, @_mkProjectDir, @_moveRecordingToProjectFolder, @_ensureNewRecordingHasUniqueName, @_addRecordingToEdgecastRecordings]
     async.series waterfallCalls, callback
 
   _findStreamProject: (callback)=>
@@ -44,9 +46,17 @@ class SaveStreamRecording
         return callback(err)
       callback()
 
-  _projectDir: ->
-    streamFolder = @project.publicKey
-    projectDir = "#{recordingDir}/#{streamFolder}"
+  _ensureNewRecordingHasUniqueName: (callback)=>
+    console.log("listing", @_projectDir())
+    @ftpClient.list @_projectDir(), (err, files)=>
+      console.log("GOT FILES", err, files)
+      return callback(err) if err
+      totalFiles = numberOfStreamRecordings(@fileName, files)
+      if totalFiles > 0
+        newFileName = @fileName.split('.')[0]
+        newFileName += ".#{totalFiles}.mp4"
+        @fileName = newFileName
+      callback()
 
   _moveRecordingToProjectFolder: (callback)=>
     newName = "#{@_projectDir()}/#{@fileName}"
@@ -54,6 +64,10 @@ class SaveStreamRecording
     console.log("moving", oldName, newName)
 
     @ftpClient.rename oldName, newName, callback
+
+  _projectDir: ->
+    streamFolder = @project.publicKey
+    projectDir = "#{recordingDir}/#{streamFolder}"
 
   _addRecordingToEdgecastRecordings: (callback)=>
     EdgecastRecordings.findOrCreate _edgecastStream: @stream._id, (err, streamRecordings, created)=>
@@ -94,6 +108,10 @@ class NewRecordingHandler
       instanceName: createNewStreamInEdgecast.instanceName
     EdgecastStream.findOne query, callback
 
+
+descendingDateSort = (ftpListItem)->
+  return (new Date(ftpListItem.date)).getTime()
+
 processNewStreamRecordings = (done)->
 
   moveNewRecordingsToProjectFolder = (ftpRecordingEntry, callback)->
@@ -107,7 +125,7 @@ processNewStreamRecordings = (done)->
   findNewRecordingsAndMoveThemToStreamFolder = (err, list) ->
     return done(err) if err
 
-    allFiles = _.where(list, type: fileType)
+    allFiles = _.chain(list).where(type: fileType).sortBy(descendingDateSort).value()
 
     console.log("No files to move.") if allFiles.length == 0
 
