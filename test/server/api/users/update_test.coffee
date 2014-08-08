@@ -104,6 +104,8 @@ describe 'Users#update', ->
       @user = new User(plan: 'enterprise', email: 'the email', name: 'Chillin')
       @user.save done
 
+    assertEmailSent.admin 'cardAdded'
+
     it 'adds a new credit card to the user', (done)->
       params = {id: @user._id, stripeToken: "tok_102gkI2AL5avr9E4wef0ysJa"}
       session = {user: @user}
@@ -116,6 +118,16 @@ describe 'Users#update', ->
           expect(user.stripeCustomer.cards).to.have.length(1)
           expect(user.stripeCustomer.cards[0].last4).to.equal('4242')
           done()
+
+      UpdateUser params, session, callback
+
+    it 'sends a welcome email', (done)->
+      params = {id: @user._id, stripeToken: "tok_102gkI2AL5avr9E4wef0ysJa"}
+      session = {user: @user}
+      callback = (err, response)=>
+        expect(@mailerSpies[0].calledOnce).to.be.true
+        expect(@mailerSpies[0].firstCall.args[0].name).to.equal("Chillin")
+        done()
 
       UpdateUser params, session, callback
 

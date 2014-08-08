@@ -22,6 +22,7 @@ updateUser.doUpdate = (params, callback)->
     if params.stripeToken
       return addStripeCardToUser user, params.stripeToken, (err, user)->
         return callback(TextMongooseErrorMessage(err), null, status: 400) if err
+        mailer.admin.cardAdded(user)
         callback(null, user.simpleCurrentUserJSON())
 
     if params.deleteCard

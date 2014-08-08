@@ -3,6 +3,19 @@ _ = require('underscore')
 util = require('util')
 noop = ->
 
+exports.cardAdded = (user, callback=noop)->
+  options =
+    email: user.email
+    _id: user._id
+    plan: user.plan
+  mailOptions =
+    subject: '[KPI] Credit Card added'
+    content: """
+    <p>A user added a credit card!</p>
+    <p><pre>#{util.inspect(options)}</pre></p>
+    """
+  sendAdminEmail mailOptions, callback
+
 exports.newUser = (user, context, callback=noop)->
   mailOptions =
     subject: '[KPI] New User'
