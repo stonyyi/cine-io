@@ -3,7 +3,7 @@ machine:
   pre:
     - npm config set ca ""
   node:
-    version: v0.10.26
+    version: v0.10.30
 
 dependencies:
   pre:
