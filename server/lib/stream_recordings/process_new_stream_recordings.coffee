@@ -72,7 +72,7 @@ class SaveStreamRecording
     EdgecastRecordings.findOrCreate _edgecastStream: @stream._id, (err, streamRecordings, created)=>
 
       newRecording =
-        name: @fileName
+        name: @newFileName
         size: @ftpRecordingEntry.size
         date: @ftpRecordingEntry.date
 
