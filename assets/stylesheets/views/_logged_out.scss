@@ -188,8 +188,12 @@
       @include block-grid(6);
     }
     .developer-actions {
-      a.button {
-        width: 250px;
+      @include grid-row();
+      div {
+        @include grid-column(12);
+        a.button {
+          width: 100%;
+        }
       }
     }
   }
@@ -284,6 +288,17 @@
       }
       .icon-list {
         @include block-grid(7);
+      }
+      .developer-actions {
+        div {
+          @include grid-column(4, false, false, 2);
+          a.button {
+            width: 100%;
+          }
+        }
+        div:last-child {
+          @include grid-column(4, true, false, 0);
+        }
       }
     }
   }

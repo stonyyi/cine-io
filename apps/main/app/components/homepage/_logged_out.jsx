@@ -138,8 +138,12 @@ exports.Libraries = React.createClass({
               <p>Working in another framework / language? Don&apos;t sweat it. Our <a href="/docs">REST API</a> has you covered.</p>
             </div>
             <div className="developer-actions">
-              <a href="/docs" className="button radius">View documentation</a>&nbsp;&nbsp;
-              <a href="https://www.hipchat.com/gZCLRQ9Ih" className="button radius">Developer chat</a>
+              <div>
+                <a href="/docs" className="button radius">View documentation</a>
+              </div>
+              <div>
+                <a href="https://www.hipchat.com/gZCLRQ9Ih" className="button radius">Developer chat</a>
+              </div>
             </div>
           </div>
         </div>
@@ -227,7 +231,7 @@ exports.Example = React.createClass({
                 <div className="main">
                   <div className="center-wrapper">
                     <div className='center-content'>
-                      <p>During the demo, this box will deliver your live-stream from our Global CDN.</p>
+                      <p>During the demo, this box will deliver your live-stream from our global CDN.</p>
                     </div>
                   </div>
                 </div>
@@ -273,8 +277,9 @@ exports.Pricing = React.createClass({
                 <p>
                   All plans include live-streaming <strong>to and from any
                   device</strong> (web, iOS, Android), distribution via our
-                  Global CDN (2,000 interconnected networks on 5 continents), no
-                  ads of any kind, and email support from our developers.
+                  global CDN (2,000 interconnected networks across 5
+                  continents), no ads of any kind, and email support from our
+                  developers.
                 </p>
               </div>
 
