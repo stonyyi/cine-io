@@ -363,8 +363,10 @@ exports.Consulting = React.createClass({
               The developers behind cine.io have decades of experience
               building multi-platform, multi-tier web platforms, applications,
               and services. In their previous lives, they built products and
-              platforms like <a href="https://www.change.org/">Change.org</a>,&nbsp;
-              <a href="https://www.givingstage.com/">Giving Stage</a>,&nbsp; and <a
+              platforms like <a target="_blank"
+              href="https://www.change.org/">Change.org</a>,&nbsp; <a
+              target="_blank" href="https://www.givingstage.com/">Giving
+              Stage</a>,&nbsp; and <a target="_blank"
               href="https://www.ironport.com">IronPort Systems</a>.
             </p>
 
