@@ -26,7 +26,7 @@ class SaveStreamRecording
     @fileName = @ftpRecordingEntry.name
 
   process: (callback)=>
-    waterfallCalls = [@_findStreamProject, @_mkProjectDir, @_moveRecordingToProjectFolder, @_ensureNewRecordingHasUniqueName, @_addRecordingToEdgecastRecordings]
+    waterfallCalls = [@_findStreamProject, @_mkProjectDir, @_ensureNewRecordingHasUniqueName, @_moveRecordingToProjectFolder, @_addRecordingToEdgecastRecordings]
     async.series waterfallCalls, callback
 
   _findStreamProject: (callback)=>
@@ -47,19 +47,18 @@ class SaveStreamRecording
       callback()
 
   _ensureNewRecordingHasUniqueName: (callback)=>
-    console.log("listing", @_projectDir())
+    @newFileName = @fileName
     @ftpClient.list @_projectDir(), (err, files)=>
-      console.log("GOT FILES", err, files)
       return callback(err) if err
       totalFiles = numberOfStreamRecordings(@fileName, files)
       if totalFiles > 0
         newFileName = @fileName.split('.')[0]
         newFileName += ".#{totalFiles}.mp4"
-        @fileName = newFileName
+        @newFileName = newFileName
       callback()
 
   _moveRecordingToProjectFolder: (callback)=>
-    newName = "#{@_projectDir()}/#{@fileName}"
+    newName = "#{@_projectDir()}/#{@newFileName}"
     oldName = "#{recordingDir}/#{@fileName}"
     console.log("moving", oldName, newName)
 

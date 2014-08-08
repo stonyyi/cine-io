@@ -52,7 +52,7 @@ module.exports =
     owner: '65534',
     group: 'nogroup',
     size: 96755,
-    date: "Thu Jul 17 2014 15:00:00 GMT+0000 (UTC)"
+    date: "Thu Jul 17 2014 03:00:00 GMT+0000 (UTC)"
   }, {
     type: '-',
     name: 'xkMOUbRPZl.mp4',
