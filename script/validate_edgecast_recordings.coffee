@@ -29,23 +29,33 @@ findRecordingsMissingInListOne = (listOne, listTwo)->
       secondItem.date.toString() == firstItem.date.toString()
     matchingSavedRecording?
 
-validateSameRecordings = (edgecastStreamRecordingsList, savedRecordingsList)->
+removeUnnecessaryRecordings = (edgecastRecordings, missingInEdgecast, callback)->
+  _.invoke missingInEdgecast, 'remove'
+  edgecastRecordings.save callback
+
+validateSameRecordings = (edgecastStreamRecordingsList, edgecastRecordingsInDb, callback)->
+  savedRecordingsList = edgecastRecordingsInDb.recordings
   console.log("total recordings", edgecastStreamRecordingsList.length)
   missingSavedInDb = findRecordingsMissingInListOne(edgecastStreamRecordingsList, savedRecordingsList)
   if missingSavedInDb.length > 0
     console.log("missingSavedInDb", missingSavedInDb)
     err = "not all recordings saved in db"
-  else if savedRecordingsList.length != edgecastStreamRecordingsList.length
+    console.log("ERROR", err)
+  else if savedRecordingsList.length > edgecastStreamRecordingsList.length
     missingInEdgecast = findRecordingsMissingInListOne(savedRecordingsList, edgecastStreamRecordingsList)
     console.log("missingInEdgecast", missingInEdgecast)
     err = "too many saved recordings"
-  console.log("ERROR", err)
-  return
+    console.log("ERROR", err)
+    return removeUnnecessaryRecordings(edgecastRecordingsInDb, missingInEdgecast, callback)
+  else if savedRecordingsList.length < edgecastStreamRecordingsList.length
+    err = "recording list is totally fucked"
+    console.log("ERROR", err)
+  return callback()
 
 validateStreamRecordings = (streamRecordingsTuple, callback)->
   streamName = streamRecordingsTuple[0]
   edgecastStreamRecordingsList = streamRecordingsTuple[1]
-  console.log('streamName', streamName)
+  # console.log('streamName', streamName)
   # console.log('edgecastStreamRecordingsList', edgecastStreamRecordingsList)
   EdgecastStream.findOne streamName: streamName, (err, stream)->
     return callback(err) if err
@@ -58,8 +68,7 @@ validateStreamRecordings = (streamRecordingsTuple, callback)->
         console.error("no recordings for stream", stream._id)
         return callback()
       # console.log("got recordings", recordings)
-      savedRecordingsList = recordings.recordings
-      callback validateSameRecordings(edgecastStreamRecordingsList, savedRecordingsList)
+      validateSameRecordings(edgecastStreamRecordingsList, recordings, callback)
 
 validateEveryRecording = (directory, callback)->
   console.log("processing", directory.name)
