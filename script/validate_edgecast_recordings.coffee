@@ -15,6 +15,8 @@ done = (err)->
 
 directoryType = 'd'
 
+processedEdgecastRecordingIds = {}
+
 # removes directories, and groups by streamName ie abc.12.mp4 goes into group abc
 groupByStreamName = (list)->
   _.chain(list).where(type: '-').groupBy((listItem)->
@@ -77,6 +79,7 @@ validateStreamRecordings = (streamRecordingsTuple, callback)->
       console.error("stream not found", streamName)
       return callback()
     EdgecastRecordings.findOne _edgecastStream: stream._id, (err, recordings)->
+      processedEdgecastRecordingIds[recordings._id.toString()] = true
       return callback(err) if err
       unless recordings
         console.error("no recordings for stream", stream._id)
@@ -90,6 +93,22 @@ validateEveryRecording = (directory, callback)->
     return callback(err) if err
     async.eachSeries groupByStreamName(recordingsList), validateStreamRecordings, callback
 
+ensureWeProcessedEveryRecording = (err)->
+  return done(err) if err
+  EdgecastRecordings.find {}, '_id', (err, recordings)->
+    return done(err) if err
+    edgecastRecordingIdsFromDb = _.chain(recordings).pluck('_id').invoke('toString').value().sort()
+    processedRecordings = _.keys(processedEdgecastRecordingIds).sort()
+    # happy case
+    if _.isEqual(edgecastRecordingIdsFromDb, processedRecordings)
+      console.log("Happily processed every #{processedRecordings.length} recordings entry. All complete!")
+      return done()
+    unprocessedRecordings = _.without(edgecastRecordingIdsFromDb, processedRecordings...)
+    console.log("edgecastRecordingIdsFromDb", edgecastRecordingIdsFromDb)
+    console.log("processedRecordings", processedRecordings)
+    console.log("did not process unprocessedRecordings", unprocessedRecordings)
+    done("DID NOT PROCESS EVERYTHING")
+
 goThroughEveryDirectory = (err, list) ->
   return done(err) if err
 
@@ -97,7 +116,7 @@ goThroughEveryDirectory = (err, list) ->
 
   console.log("No directories.") if allDirectories.length == 0
 
-  async.eachSeries allDirectories, validateEveryRecording, done
+  async.eachSeries allDirectories, validateEveryRecording, ensureWeProcessedEveryRecording
 
 processAllRecodings = ->
   ftpClient.list "/cines", goThroughEveryDirectory
