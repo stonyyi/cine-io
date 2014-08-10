@@ -33,6 +33,17 @@ removeUnnecessaryRecordings = (edgecastRecordings, missingInEdgecast, callback)-
   _.invoke missingInEdgecast, 'remove'
   edgecastRecordings.save callback
 
+
+addNewRecordingsToDB = (edgecastRecordingsInDb, missingSavedInDb, callback)->
+  _.each missingSavedInDb, (recording)->
+
+    edgecastRecordingsInDb.recordings.push
+      name: recording.name
+      size: recording.size
+      date: recording.date
+
+  edgecastRecordingsInDb.save callback
+
 validateSameRecordings = (edgecastStreamRecordingsList, edgecastRecordingsInDb, callback)->
   savedRecordingsList = edgecastRecordingsInDb.recordings
   console.log("total recordings", edgecastStreamRecordingsList.length)
@@ -41,9 +52,12 @@ validateSameRecordings = (edgecastStreamRecordingsList, edgecastRecordingsInDb, 
     console.log("missingSavedInDb", missingSavedInDb)
     err = "not all recordings saved in db"
     console.log("ERROR", err)
+    return addNewRecordingsToDB(edgecastRecordingsInDb, missingSavedInDb, callback)
   else if savedRecordingsList.length > edgecastStreamRecordingsList.length
     missingInEdgecast = findRecordingsMissingInListOne(savedRecordingsList, edgecastStreamRecordingsList)
     console.log("missingInEdgecast", missingInEdgecast)
+    if (missingInEdgecast.length == 0)
+      console.log("something is totally weird with this list", savedRecordingsList, edgecastStreamRecordingsList)
     err = "too many saved recordings"
     console.log("ERROR", err)
     return removeUnnecessaryRecordings(edgecastRecordingsInDb, missingInEdgecast, callback)
