@@ -7,14 +7,12 @@ createNewStreamInEdgecast = Cine.server_lib('create_new_stream_in_edgecast')
 recordingDir = "/#{createNewStreamInEdgecast.instanceName}"
 directoryType = 'd'
 fileType = '-'
-processedPath = "/processed"
+ftpOutputPath = "/fixed_recordings"
 downloadDirectory = "#{Cine.root}/tmp/edgecast_recordings/"
 fixedDirectory = "#{Cine.root}/tmp/fixed_edgecast_recordings/"
 # transcodeRecording = Cine.server_lib("stream_recordings/transcode_recording")
 makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
 nextStreamRecordingNumber = Cine.server_lib('stream_recordings/next_stream_recording_number')
-
-ftpFixedDirectory = "/fixed_recordings"
 
 # TODO DELETE THIS ONCE TRANSCODING IS READY
 temporarilyJustMoveRecording = fs.link
@@ -33,9 +31,9 @@ class DownloadAndProcessRecording
       # 1. ensure recording_directory is there
       # 2. ensure our streamName has a unique incremental name
       # 3. upload the mp4 file
-      makeFtpDirectory @ftpClient, ftpFixedDirectory, (err)=>
+      makeFtpDirectory @ftpClient, ftpOutputPath, (err)=>
         return callback(err) if err
-        @ftpClient.list ftpFixedDirectory, (err, files)=>
+        @ftpClient.list ftpOutputPath, (err, files)=>
           return callback(err) if err
           newFileName = @recordingName
           totalFiles = nextStreamRecordingNumber(@recordingName, files)
@@ -43,7 +41,7 @@ class DownloadAndProcessRecording
             newFileName = @recordingName.split('.')[0]
             newFileName += ".#{totalFiles}.mp4"
 
-          ftpLocation = "#{ftpFixedDirectory}/#{newFileName}"
+          ftpLocation = "#{ftpOutputPath}/#{newFileName}"
           @ftpClient.put transcodedFileName, ftpLocation, callback
 
     @ftpClient.get fullFTPName, (err, stream)->
@@ -88,4 +86,4 @@ streamRecordingsCodecFixer = (done)->
   ftpClient = edgecastFtpClientFactory done, fetchStreamList
 
 module.exports = streamRecordingsCodecFixer
-module.exports.processedPath = processedPath
+module.exports.outputPath = ftpOutputPath

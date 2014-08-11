@@ -76,3 +76,10 @@ describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
       calledWithSecondStream = @putStub.calledWith(Cine.path("/tmp/fixed_edgecast_recordings/exampleStream.1.mp4"), "/fixed_recordings/exampleStream.1.mp4")
       expect(calledWithSecondStream).to.be.true
       done()
+
+  it 'schedules a worker if there are new recordings', (done)->
+    ironIONock = requireFixture('nock/schedule_ironio_worker')('stream_recordings/process_fixed_recordings').nock
+    fixEdgecastCodecsOnNewStreamRecordings (err)=>
+      expect(err).to.be.undefined
+      expect(@scheduleProcessFixedRecordingsNock.isDone()).to.be.true
+      done()

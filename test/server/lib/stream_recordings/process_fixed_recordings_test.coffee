@@ -1,10 +1,10 @@
-processNewStreamRecordings = Cine.server_lib('stream_recordings/process_new_stream_recordings.coffee')
+processFixedRecordings = Cine.server_lib('stream_recordings/process_fixed_recordings')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
 
-describe 'processNewStreamRecordings', ->
+describe 'processFixedRecordings', ->
   beforeEach ->
     @fakeFtpClient = new FakeFtpClient
 
@@ -19,14 +19,14 @@ describe 'processNewStreamRecordings', ->
     @fakeFtpClient.stub 'list', (args, callback)=>
       callback null, @listStub(args)
     @lists = Cine.require('test/fixtures/edgecast_stream_recordings')
-    @listStub.withArgs('/cines').returns(@lists)
+    @listStub.withArgs('/fixed_recordings').returns(@lists)
 
   afterEach ->
     @fakeFtpClient.restore()
 
   describe 'without a matching stream', ->
     it 'errors when a stream is not found', (done)->
-      processNewStreamRecordings (err)->
+      processFixedRecordings (err)->
         expect(err).to.equal('stream not found')
         done()
 
@@ -37,7 +37,7 @@ describe 'processNewStreamRecordings', ->
       @stream.save done
 
     it 'errors when a project is not found', (done)->
-      processNewStreamRecordings (err)->
+      processFixedRecordings (err)->
         expect(err).to.equal('project not found')
         done()
 
@@ -46,7 +46,7 @@ describe 'processNewStreamRecordings', ->
       @stream = new EdgecastStream(streamName: 'xkMOUbRPZl', instanceName: 'cines', record: true)
       @stream.save done
     it 'errors when a stream is not bound to a project', (done)->
-      processNewStreamRecordings (err)->
+      processFixedRecordings (err)->
         expect(err).to.equal('stream not assigned to project')
         done()
 
@@ -83,13 +83,13 @@ describe 'processNewStreamRecordings', ->
     describe "moving a new recording to a folder with previous recordings", ->
       beforeEach ->
         @renameStub = @fakeFtpClient.stub('rename')
-        @renameStub.withArgs('/cines/xkMOUbRPZl.1.mp4', '/cines/abc/xkMOUbRPZl.4.mp4').callsArgWith 2, null
-        @renameStub.withArgs('/cines/xkMOUbRPZl.2.mp4', '/cines/abc/xkMOUbRPZl.5.mp4').callsArgWith 2, null
-        @renameStub.withArgs('/cines/xkMOUbRPZl.mp4', '/cines/abc/xkMOUbRPZl.3.mp4').callsArgWith 2, null
+        @renameStub.withArgs('/fixed_recordings/xkMOUbRPZl.1.mp4', '/cines/abc/xkMOUbRPZl.4.mp4').callsArgWith 2, null
+        @renameStub.withArgs('/fixed_recordings/xkMOUbRPZl.2.mp4', '/cines/abc/xkMOUbRPZl.5.mp4').callsArgWith 2, null
+        @renameStub.withArgs('/fixed_recordings/xkMOUbRPZl.mp4', '/cines/abc/xkMOUbRPZl.3.mp4').callsArgWith 2, null
 
-        @renameStub.withArgs('/cines/ykMOUbRPZl.1.mp4', '/cines/def/ykMOUbRPZl.4.mp4').callsArgWith 2, null
-        @renameStub.withArgs('/cines/ykMOUbRPZl.2.mp4', '/cines/def/ykMOUbRPZl.5.mp4').callsArgWith 2, null
-        @renameStub.withArgs('/cines/ykMOUbRPZl.mp4', '/cines/def/ykMOUbRPZl.3.mp4').callsArgWith 2, null
+        @renameStub.withArgs('/fixed_recordings/ykMOUbRPZl.1.mp4', '/cines/def/ykMOUbRPZl.4.mp4').callsArgWith 2, null
+        @renameStub.withArgs('/fixed_recordings/ykMOUbRPZl.2.mp4', '/cines/def/ykMOUbRPZl.5.mp4').callsArgWith 2, null
+        @renameStub.withArgs('/fixed_recordings/ykMOUbRPZl.mp4', '/cines/def/ykMOUbRPZl.3.mp4').callsArgWith 2, null
 
       beforeEach ->
         fullAbcList =   [
@@ -119,8 +119,8 @@ describe 'processNewStreamRecordings', ->
           .onSecondCall().returns(fullDefList.slice(0,1+3))
           .onThirdCall().returns(fullDefList.slice(0,2+3))
 
-      it 'moves all the streams from a the /cines directory to the project folder', (done)->
-        processNewStreamRecordings (err)=>
+      it 'moves all the streams from a the /fixed_recordings directory to the project folder', (done)->
+        processFixedRecordings (err)=>
           expect(err).to.be.undefined
           expect(@mkdirStub.callCount).to.equal(6)
           expect(@renameStub.callCount).to.equal(6)
@@ -143,7 +143,7 @@ describe 'processNewStreamRecordings', ->
         expect(recordings[2].date.toString()).to.equal('Wed Jul 16 2014 22:20:00 GMT+0000 (UTC)')
 
       it 'creates an EdgecastRecordings entry sorted by date', (done)->
-        processNewStreamRecordings (err)=>
+        processFixedRecordings (err)=>
           expect(err).to.be.undefined
           EdgecastRecordings.find _edgecastStream: @stream1._id, (err, allRecordingsForStream)->
             expect(err).to.be.null
@@ -156,13 +156,13 @@ describe 'processNewStreamRecordings', ->
     describe "with no previous recordings", ->
       beforeEach ->
         @renameStub = @fakeFtpClient.stub('rename')
-        @renameStub.withArgs('/cines/xkMOUbRPZl.1.mp4', '/cines/abc/xkMOUbRPZl.1.mp4').callsArgWith 2, null
-        @renameStub.withArgs('/cines/xkMOUbRPZl.2.mp4', '/cines/abc/xkMOUbRPZl.2.mp4').callsArgWith 2, null
-        @renameStub.withArgs('/cines/xkMOUbRPZl.mp4', '/cines/abc/xkMOUbRPZl.mp4').callsArgWith 2, null
+        @renameStub.withArgs('/fixed_recordings/xkMOUbRPZl.1.mp4', '/cines/abc/xkMOUbRPZl.1.mp4').callsArgWith 2, null
+        @renameStub.withArgs('/fixed_recordings/xkMOUbRPZl.2.mp4', '/cines/abc/xkMOUbRPZl.2.mp4').callsArgWith 2, null
+        @renameStub.withArgs('/fixed_recordings/xkMOUbRPZl.mp4', '/cines/abc/xkMOUbRPZl.mp4').callsArgWith 2, null
 
-        @renameStub.withArgs('/cines/ykMOUbRPZl.1.mp4', '/cines/def/ykMOUbRPZl.1.mp4').callsArgWith 2, null
-        @renameStub.withArgs('/cines/ykMOUbRPZl.2.mp4', '/cines/def/ykMOUbRPZl.2.mp4').callsArgWith 2, null
-        @renameStub.withArgs('/cines/ykMOUbRPZl.mp4', '/cines/def/ykMOUbRPZl.mp4').callsArgWith 2, null
+        @renameStub.withArgs('/fixed_recordings/ykMOUbRPZl.1.mp4', '/cines/def/ykMOUbRPZl.1.mp4').callsArgWith 2, null
+        @renameStub.withArgs('/fixed_recordings/ykMOUbRPZl.2.mp4', '/cines/def/ykMOUbRPZl.2.mp4').callsArgWith 2, null
+        @renameStub.withArgs('/fixed_recordings/ykMOUbRPZl.mp4', '/cines/def/ykMOUbRPZl.mp4').callsArgWith 2, null
 
       beforeEach ->
         fullAbcList =   [{name: 'xkMOUbRPZl.mp4'}, {name: 'xkMOUbRPZl.1.mp4'},{name: 'xkMOUbRPZl.2.mp4'}]
@@ -179,7 +179,7 @@ describe 'processNewStreamRecordings', ->
           .onThirdCall().returns(fullDefList.slice(0,2))
 
       it 'moves all the streams from a the /cines directory to the project folder', (done)->
-        processNewStreamRecordings (err)=>
+        processFixedRecordings (err)=>
           expect(err).to.be.undefined
           expect(@mkdirStub.callCount).to.equal(6)
           expect(@renameStub.callCount).to.equal(6)
@@ -202,7 +202,7 @@ describe 'processNewStreamRecordings', ->
         expect(recordings[2].date.toString()).to.equal('Wed Jul 16 2014 22:20:00 GMT+0000 (UTC)')
 
       it 'creates an EdgecastRecordings entry sorted by date', (done)->
-        processNewStreamRecordings (err)=>
+        processFixedRecordings (err)=>
           expect(err).to.be.undefined
           EdgecastRecordings.find _edgecastStream: @stream1._id, (err, allRecordingsForStream)->
             expect(err).to.be.null
@@ -215,13 +215,13 @@ describe 'processNewStreamRecordings', ->
   describe 'success removing recordings', ->
     beforeEach ->
       @deleteStub = @fakeFtpClient.stub('delete')
-      @deleteStub.withArgs('/cines/xkMOUbRPZl.1.mp4').callsArgWith 1, null
-      @deleteStub.withArgs('/cines/xkMOUbRPZl.2.mp4').callsArgWith 1, null
-      @deleteStub.withArgs('/cines/xkMOUbRPZl.mp4').callsArgWith 1, null
+      @deleteStub.withArgs('/fixed_recordings/xkMOUbRPZl.1.mp4').callsArgWith 1, null
+      @deleteStub.withArgs('/fixed_recordings/xkMOUbRPZl.2.mp4').callsArgWith 1, null
+      @deleteStub.withArgs('/fixed_recordings/xkMOUbRPZl.mp4').callsArgWith 1, null
 
-      @deleteStub.withArgs('/cines/ykMOUbRPZl.1.mp4').callsArgWith 1, null
-      @deleteStub.withArgs('/cines/ykMOUbRPZl.2.mp4').callsArgWith 1, null
-      @deleteStub.withArgs('/cines/ykMOUbRPZl.mp4').callsArgWith 1, null
+      @deleteStub.withArgs('/fixed_recordings/ykMOUbRPZl.1.mp4').callsArgWith 1, null
+      @deleteStub.withArgs('/fixed_recordings/ykMOUbRPZl.2.mp4').callsArgWith 1, null
+      @deleteStub.withArgs('/fixed_recordings/ykMOUbRPZl.mp4').callsArgWith 1, null
 
     beforeEach (done)->
       @project1 = new Project(publicKey: 'abc')
@@ -240,7 +240,7 @@ describe 'processNewStreamRecordings', ->
       @stream2.save done
 
     it 'removes the recordings when record is set to false', (done)->
-      processNewStreamRecordings (err)=>
+      processFixedRecordings (err)=>
         expect(err).to.be.undefined
         expect(@deleteStub.callCount).to.equal(6)
         done()

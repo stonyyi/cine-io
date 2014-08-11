@@ -7,8 +7,10 @@ EdgecastRecordings = Cine.server_model('edgecast_recordings')
 Project = Cine.server_model('project')
 nextStreamRecordingNumber = Cine.server_lib('stream_recordings/next_stream_recording_number')
 makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
+fixEdgecastCodecsOnNewStreamRecordings = Cine.server_lib("stream_recordings/fix_edgecast_codecs_on_new_stream_recordings")
 
-recordingDir = "/#{createNewStreamInEdgecast.instanceName}"
+recordingDir = fixEdgecastCodecsOnNewStreamRecordings.outputPath
+vodDir = "/#{createNewStreamInEdgecast.instanceName}"
 directoryType = 'd'
 fileType = '-'
 
@@ -56,7 +58,7 @@ class SaveStreamRecording
 
   _projectDir: ->
     streamFolder = @project.publicKey
-    projectDir = "#{recordingDir}/#{streamFolder}"
+    projectDir = "#{vodDir}/#{streamFolder}"
 
   _addRecordingToEdgecastRecordings: (callback)=>
     EdgecastRecordings.findOrCreate _edgecastStream: @stream._id, (err, streamRecordings, created)=>
@@ -101,7 +103,7 @@ class NewRecordingHandler
 descendingDateSort = (ftpListItem)->
   return (new Date(ftpListItem.date)).getTime()
 
-processNewStreamRecordings = (done)->
+processFixedRecordings = (done)->
 
   moveNewRecordingsToProjectFolder = (ftpRecordingEntry, callback)->
     recordingHandler = new NewRecordingHandler(ftpClient, ftpRecordingEntry)
@@ -125,4 +127,4 @@ processNewStreamRecordings = (done)->
 
   ftpClient = edgecastFtpClientFactory done, fetchStreamList
 
-module.exports = processNewStreamRecordings
+module.exports = processFixedRecordings
