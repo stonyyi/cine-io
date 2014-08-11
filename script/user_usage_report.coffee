@@ -1,4 +1,5 @@
 # Usage
+# heroku run coffee script/user_usage_report.coffee compact humanize
 # coffee script/user_usage_report.coffee
 # coffee script/user_usage_report.coffee all # does every month
 # coffee script/user_usage_report.coffee 2014-01
