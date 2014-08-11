@@ -1,7 +1,7 @@
 BandwidthCalculator = Cine.lib('bandwidth_calculator')
 
 describe 'BandwidthCalculator', ->
-  describe 'new'
+  describe 'new', ->
     it 'has defaults', ->
       b = new BandwidthCalculator
       expect(b.numberOfViewers).to.equal(0)
