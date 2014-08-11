@@ -2,6 +2,8 @@ copyFile = Cine.require('test/helpers/copy_file')
 gzipFile = Cine.require('test/helpers/gzip_file')
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 _ = require('underscore')
+_str = require('underscore.string')
+
 writeExampleFmsFile = (outputStream, callback)->
   fmsExampleLog = Cine.path('test/fixtures/edgecast_logs/fms_example.log')
   unZipFile = outputStream.path.slice(0, outputStream.path.length-3)
@@ -12,6 +14,12 @@ writeExampleFmsFile = (outputStream, callback)->
       expect(err).to.be.undefined
       callback()
 
+copyMp4Example = (outputStream, callback)->
+  badStreamExample = Cine.path('test/fixtures/edgecast_recordings/bad_stream_example.mp4')
+  copyFile badStreamExample, outputStream.path, (err)->
+    expect(err).to.be.undefined
+    callback()
+
 class FakeFtpStream
   constructor: (@name, @events={})->
   once: (event, callback)->
@@ -20,8 +28,14 @@ class FakeFtpStream
     @events[event](args)
   pipe: (outputStream)->
     @trigger("readable")
-    writeExampleFmsFile outputStream, (err)=>
-      @trigger("close")
+    if _str.endsWith(outputStream.path, '.log.gz')
+      writeExampleFmsFile outputStream, (err)=>
+        @trigger("close")
+    else if _str.endsWith(outputStream.path, ".mp4")
+      copyMp4Example outputStream, (err)=>
+        @trigger("close")
+    else
+      throw new Error("Don't understand ", outputStream.path)
 
 module.exports = class FakeFtpClient
   constructor: (@events={})->
@@ -55,6 +69,8 @@ module.exports = class FakeFtpClient
     throw new Error("rename not mocked")
   delete: (name, callback)->
     throw new Error("delete not mocked")
+  put: (name, callback)->
+    throw new Error("put not mocked")
   get: (name, callback)->
     ftpStream = new FakeFtpStream(name)
     process.nextTick ->
