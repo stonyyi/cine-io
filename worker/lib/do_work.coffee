@@ -6,9 +6,9 @@ scheduledTasks =
     [
       'reporting/download_and_parse_edgecast_logs'
     ]
-  stream_recordings_processor:
+  fix_edgecast_codecs_on_new_stream_recordings:
     [
-      'stream_recordings/process_new_stream_recordings'
+      'stream_recordings/fix_edgecast_codecs_on_new_stream_recordings'
     ]
 
 runServerLib = (libraryName, payload, callback)->
@@ -39,6 +39,7 @@ doWork = (jobName, payload, done)->
 
 doWork.acceptableJobs = [
   'current_environment'
+  'stream_recordings/process_new_stream_recordings'
 ]
 
 otherJobNames = _.keys(scheduledTasks)
