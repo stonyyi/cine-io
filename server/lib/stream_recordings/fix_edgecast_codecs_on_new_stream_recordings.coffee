@@ -51,7 +51,7 @@ class DownloadAndProcessRecording
       stream.once 'readable', ->
         console.log("Ready to read data", fullFTPName)
 
-      stream.once 'close', =>
+      stream.once 'close', ->
         transcodeRecording(downloadedFileName, transcodedFileName, uploadFixedFile)
 
       stream.pipe(fs.createWriteStream(downloadedFileName))
