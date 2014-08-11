@@ -5,7 +5,7 @@ _ = require('underscore')
 writeExampleFmsFile = (outputStream, callback)->
   fmsExampleLog = Cine.path('test/fixtures/edgecast_logs/fms_example.log')
   unZipFile = outputStream.path.slice(0, outputStream.path.length-3)
-  console.log('writing fake faile to', unZipFile)
+  console.log('writing fake file to', unZipFile)
   copyFile fmsExampleLog, unZipFile, (err)->
     expect(err).to.be.undefined
     gzipFile.replaceFile unZipFile, (err)->
@@ -48,9 +48,13 @@ module.exports = class FakeFtpClient
       @trigger('ready')
 
   list: (name, callback)->
+    throw new Error("list not mocked")
   mkdir: (name, callback)->
+    throw new Error("mkdir not mocked")
   rename: (oldName, newName, callback)->
+    throw new Error("rename not mocked")
   delete: (name, callback)->
+    throw new Error("delete not mocked")
   get: (name, callback)->
     ftpStream = new FakeFtpStream(name)
     process.nextTick ->
