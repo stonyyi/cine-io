@@ -13,6 +13,7 @@ fixedDirectory = "#{Cine.root}/tmp/fixed_edgecast_recordings/"
 # transcodeRecording = Cine.server_lib("stream_recordings/transcode_recording")
 makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
 nextStreamRecordingNumber = Cine.server_lib('stream_recordings/next_stream_recording_number')
+scheduleJob = Cine.server_lib('schedule_job')
 
 # TODO DELETE THIS ONCE TRANSCODING IS READY
 temporarilyJustMoveRecording = fs.link
@@ -62,6 +63,7 @@ streamRecordingsCodecFixer = (done)->
 
   mkdirp.sync downloadDirectory
   mkdirp.sync fixedDirectory
+  scheduleFollowupJob = false
 
   transcodeEachNewFile = (ftpRecordingEntry, callback)->
     recordingHandler = new DownloadAndProcessRecording(ftpClient, ftpRecordingEntry)
@@ -69,14 +71,19 @@ streamRecordingsCodecFixer = (done)->
 
   finish = (err)->
     ftpClient.end()
-    done(err)
+    return done(err) if err
+    return done() unless scheduleFollowupJob
+    scheduleJob 'stream_recordings/process_fixed_recordings', done
 
   findNewRecordingsAndMoveThemToStreamFolder = (err, list) ->
     return done(err) if err
 
     allFiles = _.chain(list).where(type: fileType).sortBy(descendingDateSort).value()
 
-    console.log("No files to process.") if allFiles.length == 0
+    if allFiles.length == 0
+      console.log("No files to process.")
+    else
+      scheduleFollowupJob = true
 
     async.eachSeries allFiles, transcodeEachNewFile, finish
 

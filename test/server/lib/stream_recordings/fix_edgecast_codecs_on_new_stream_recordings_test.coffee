@@ -65,9 +65,12 @@ describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
   beforeEach ->
     @putStub = @fakeFtpClient.stub('put').callsArg(2)
 
+  beforeEach ->
+    @scheduleProcessFixedRecordingsNock = requireFixture('nock/schedule_ironio_worker')('stream_recordings/process_fixed_recordings').nock
+
   it 'downloads the files and reuploads them to /fixed_recordings', (done)->
     fixEdgecastCodecsOnNewStreamRecordings (err)=>
-      expect(err).to.be.undefined
+      expect(err).to.be.null
       expect(@mkdirStub.callCount).to.equal(2)
       expect(@listStub.callCount).to.equal(3)
       expect(@putStub.callCount).to.equal(2)
@@ -78,8 +81,7 @@ describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
       done()
 
   it 'schedules a worker if there are new recordings', (done)->
-    ironIONock = requireFixture('nock/schedule_ironio_worker')('stream_recordings/process_fixed_recordings').nock
     fixEdgecastCodecsOnNewStreamRecordings (err)=>
-      expect(err).to.be.undefined
+      expect(err).to.be.null
       expect(@scheduleProcessFixedRecordingsNock.isDone()).to.be.true
       done()
