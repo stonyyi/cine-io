@@ -5,15 +5,12 @@ async = require('async')
 EdgecastStream = Cine.server_model('edgecast_stream')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
 Project = Cine.server_model('project')
-numberOfStreamRecordings = Cine.server_lib('stream_recordings/number_of_stream_recordings')
+nextStreamRecordingNumber = Cine.server_lib('stream_recordings/next_stream_recording_number')
+makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
 
 recordingDir = "/#{createNewStreamInEdgecast.instanceName}"
 directoryType = 'd'
 fileType = '-'
-
-
-directoryAlreadyExistsError = (err)->
-  err.message == "Can't create directory: File exists" && err.code == 550
 
 pickNameAndType = (item)->
   _.pick(item, 'name', 'type')
@@ -37,20 +34,13 @@ class SaveStreamRecording
 
   _mkProjectDir: (callback)=>
     return callback('project not found') unless @project
-
-    @ftpClient.mkdir @_projectDir(), (err)->
-      # there's no "ensure directory"
-      # so just mkdir then catch a directory already exists
-      if err && !directoryAlreadyExistsError(err)
-        console.log("mkdir error", err)
-        return callback(err)
-      callback()
+    makeFtpDirectory @ftpClient, @_projectDir(), callback
 
   _ensureNewRecordingHasUniqueName: (callback)=>
     @newFileName = @fileName
     @ftpClient.list @_projectDir(), (err, files)=>
       return callback(err) if err
-      totalFiles = numberOfStreamRecordings(@fileName, files)
+      totalFiles = nextStreamRecordingNumber(@fileName, files)
       if totalFiles > 0
         newFileName = @fileName.split('.')[0]
         newFileName += ".#{totalFiles}.mp4"
