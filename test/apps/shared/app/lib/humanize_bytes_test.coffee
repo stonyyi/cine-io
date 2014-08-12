@@ -8,6 +8,7 @@ describe 'humanizeBytes', ->
     expect(humanizeBytes(1238888855)).to.equal("1.15 GB")
     expect(humanizeBytes(1238888855)).to.equal("1.15 GB")
     expect(humanizeBytes(7373737373636)).to.equal("6.71 TB")
+    expect(humanizeBytes(7373737373636000)).to.equal("6,706.38 TB")
 
   describe '#formatString', ->
     it 'returns the correct format', ->

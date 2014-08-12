@@ -4,15 +4,15 @@ GB = 1073741824
 MB = 1048576
 KB = 1024
 
-module.exports = (filesize) ->
+module.exports = (filesize, thousand=',') ->
   if filesize >= TB
-    sizeStr = formatNumber(filesize / TB, 2, "") + " TB"
+    sizeStr = formatNumber(filesize / TB, 2, thousand) + " TB"
   else if filesize >= GB
-    sizeStr = formatNumber(filesize / GB, 2, "") + " GB"
+    sizeStr = formatNumber(filesize / GB, 2, thousand) + " GB"
   else if filesize >= MB
-    sizeStr = formatNumber(filesize / MB, 2, "") + " MB"
+    sizeStr = formatNumber(filesize / MB, 2, thousand) + " MB"
   else if filesize >= KB
-    sizeStr = formatNumber(filesize / KB, 0) + " KB"
+    sizeStr = formatNumber(filesize / KB, 0, thousand) + " KB"
   else
     sizeStr = formatNumber(filesize, 0) + pluralize filesize, " byte"
 
@@ -34,6 +34,7 @@ module.exports.TB = TB
 module.exports.GB = GB
 module.exports.MB = MB
 module.exports.KB = KB
+
 # Formats a number to a human-readable string.
 # Localize by overriding the precision, thousand and decimal arguments.
 formatNumber = (number, precision=0, thousand=",", decimal=".") ->
