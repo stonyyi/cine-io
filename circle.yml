@@ -17,4 +17,4 @@ deployment:
       - git push git@heroku.com:cine-io.git $CIRCLE_SHA1:refs/heads/master
       - coffee script/smoke_test.coffee
       - (cd worker; iron_worker upload main_worker):
-        timeout: 600
+          timeout: 600
