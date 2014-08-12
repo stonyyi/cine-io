@@ -6,9 +6,9 @@ scheduledTasks =
     [
       'reporting/download_and_parse_edgecast_logs'
     ]
-  fix_edgecast_codecs_on_new_stream_recordings:
+  process_new_edgecast_recordings:
     [
-      'stream_recordings/fix_edgecast_codecs_on_new_stream_recordings'
+      'stream_recordings/process_new_edgecast_recordings'
     ]
 
 runServerLib = (libraryName, payload, callback)->

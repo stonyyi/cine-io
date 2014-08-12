@@ -1,0 +1,103 @@
+# this library is in a cron job that does 2 things
+# it sees if there are new recordings
+# if the associated stream for this recording is set to true
+# then it moves it into a folder to be fixed by our worker
+# if the stream supposed to not save
+# then delete the recording
+_ = require('underscore')
+async = require('async')
+EdgecastStream = Cine.server_model('edgecast_stream')
+makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
+edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
+nextStreamRecordingNumber = Cine.server_lib('stream_recordings/next_stream_recording_number')
+EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
+recordingDir = "/#{EdgecastFtpInfo.vodDirectory}"
+
+folderToFix = "/#{EdgecastFtpInfo.readyToBeFixedDirectory}"
+
+class SaveStreamRecording
+  constructor: (@ftpClient, @ftpRecordingEntry, @stream)->
+    @fileName = @ftpRecordingEntry.name
+
+  process: (callback)=>
+    waterfallCalls = [@_mkFixFolder, @_ensureNewRecordingHasUniqueName, @_moveRecordingToProcessFolder]
+    async.series waterfallCalls, callback
+
+  _mkFixFolder: (callback)=>
+    makeFtpDirectory @ftpClient, folderToFix, callback
+
+  _ensureNewRecordingHasUniqueName: (callback)=>
+    @newFileName = @fileName
+    @ftpClient.list folderToFix, (err, files)=>
+      return callback(err) if err
+      totalFiles = nextStreamRecordingNumber(@fileName, files)
+      if totalFiles > 0
+        newFileName = @fileName.split('.')[0]
+        newFileName += ".#{totalFiles}.mp4"
+        @newFileName = newFileName
+      callback()
+
+  _moveRecordingToProcessFolder: (callback)=>
+    newName = "#{folderToFix}/#{@newFileName}"
+    oldName = "#{recordingDir}/#{@fileName}"
+    console.log("moving", oldName, newName)
+
+    @ftpClient.rename oldName, newName, callback
+
+class NewRecordingHandler
+  constructor: (@ftpClient, @ftpRecordingEntry)->
+    @fileName = @ftpRecordingEntry.name
+
+  process: (callback)=>
+    @_findEdgecastStream (err, stream)=>
+      return callback(err) if err
+      return callback("stream not found") unless stream
+      HandlerClass = if stream.record then SaveStreamRecording else RemoveStreamRecording
+      handler = new HandlerClass(@ftpClient, @ftpRecordingEntry, stream)
+      handler.process(callback)
+
+  _findEdgecastStream: (callback)=>
+    streamName = @fileName.split('.')[0]
+    query =
+      streamName: streamName
+      instanceName: EdgecastFtpInfo.vodDirectory
+    EdgecastStream.findOne query, callback
+
+class RemoveStreamRecording
+  constructor: (@ftpClient, @ftpRecordingEntry, @stream)->
+    @fileName = @ftpRecordingEntry.name
+
+  process: (callback)=>
+    fullPath = "#{recordingDir}/#{@fileName}"
+    console.log("Deleting", fullPath)
+    @ftpClient.delete fullPath, callback
+
+descendingDateSort = (ftpListItem)->
+  return (new Date(ftpListItem.date)).getTime()
+
+processNewEdgecastRecordings = (done)->
+
+  moveNewRecordingsToAppropriateFolder = (ftpRecordingEntry, callback)->
+    recordingHandler = new NewRecordingHandler(ftpClient, ftpRecordingEntry)
+    recordingHandler.process(callback)
+
+  finish = (err)->
+    ftpClient.end()
+    done(err)
+
+  findNewRecordingsAndMoveThemToStreamFolder = (err, list) ->
+    return done(err) if err
+
+    allFiles = _.chain(list).where(type: EdgecastFtpInfo.fileType).sortBy(descendingDateSort).value()
+
+    console.log("No new recordings to process.") if allFiles.length == 0
+
+    async.eachSeries allFiles, moveNewRecordingsToAppropriateFolder, finish
+
+  fetchStreamList = ->
+    ftpClient.list recordingDir, findNewRecordingsAndMoveThemToStreamFolder
+
+  ftpClient = edgecastFtpClientFactory done, fetchStreamList
+
+module.exports = processNewEdgecastRecordings
+module.exports.outputPath = folderToFix

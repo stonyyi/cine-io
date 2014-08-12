@@ -22,8 +22,8 @@ describe 'doWork', ->
           libs: 'reporting/download_and_parse_edgecast_logs'
         }
         {
-          name: 'fix_edgecast_codecs_on_new_stream_recordings'
-          libs: 'stream_recordings/fix_edgecast_codecs_on_new_stream_recordings'
+          name: 'process_new_edgecast_recordings'
+          libs: 'stream_recordings/process_new_edgecast_recordings'
         }
       ]
       _.each schedulableJobs, (schedulableJob)->

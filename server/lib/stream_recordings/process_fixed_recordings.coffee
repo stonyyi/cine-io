@@ -1,18 +1,15 @@
 _ = require('underscore')
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
-createNewStreamInEdgecast = Cine.server_lib('create_new_stream_in_edgecast')
 async = require('async')
 EdgecastStream = Cine.server_model('edgecast_stream')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
 Project = Cine.server_model('project')
 nextStreamRecordingNumber = Cine.server_lib('stream_recordings/next_stream_recording_number')
 makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
-fixEdgecastCodecsOnNewStreamRecordings = Cine.server_lib("stream_recordings/fix_edgecast_codecs_on_new_stream_recordings")
+EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
 
-recordingDir = fixEdgecastCodecsOnNewStreamRecordings.outputPath
-vodDir = "/#{createNewStreamInEdgecast.instanceName}"
-directoryType = 'd'
-fileType = '-'
+initialDirectory = "/#{EdgecastFtpInfo.readyToBeCatalogued}"
+finalDirectory = "/#{EdgecastFtpInfo.vodDirectory}"
 
 pickNameAndType = (item)->
   _.pick(item, 'name', 'type')
@@ -51,14 +48,14 @@ class SaveStreamRecording
 
   _moveRecordingToProjectFolder: (callback)=>
     newName = "#{@_projectDir()}/#{@newFileName}"
-    oldName = "#{recordingDir}/#{@fileName}"
+    oldName = "#{initialDirectory}/#{@fileName}"
     console.log("moving", oldName, newName)
 
     @ftpClient.rename oldName, newName, callback
 
   _projectDir: ->
     streamFolder = @project.publicKey
-    projectDir = "#{vodDir}/#{streamFolder}"
+    projectDir = "#{finalDirectory}/#{streamFolder}"
 
   _addRecordingToEdgecastRecordings: (callback)=>
     EdgecastRecordings.findOrCreate _edgecastStream: @stream._id, (err, streamRecordings, created)=>
@@ -71,15 +68,6 @@ class SaveStreamRecording
       streamRecordings.recordings.push newRecording
       streamRecordings.save callback
 
-class RemoveStreamRecording
-  constructor: (@ftpClient, @ftpRecordingEntry, @stream)->
-    @fileName = @ftpRecordingEntry.name
-
-  process: (callback)=>
-    fullPath = "#{recordingDir}/#{@fileName}"
-    console.log("Deleting", fullPath)
-    @ftpClient.delete fullPath, callback
-
 class NewRecordingHandler
   constructor: (@ftpClient, @ftpRecordingEntry)->
     @fileName = @ftpRecordingEntry.name
@@ -88,15 +76,14 @@ class NewRecordingHandler
     @_findEdgecastStream (err, stream)=>
       return callback(err) if err
       return callback("stream not found") unless stream
-      HandlerClass = if stream.record then SaveStreamRecording else RemoveStreamRecording
-      handler = new HandlerClass(@ftpClient, @ftpRecordingEntry, stream)
+      handler = new SaveStreamRecording(@ftpClient, @ftpRecordingEntry, stream)
       handler.process(callback)
 
   _findEdgecastStream: (callback)=>
     streamName = @fileName.split('.')[0]
     query =
       streamName: streamName
-      instanceName: createNewStreamInEdgecast.instanceName
+      instanceName: EdgecastFtpInfo.vodDirectory
     EdgecastStream.findOne query, callback
 
 
@@ -116,14 +103,13 @@ processFixedRecordings = (done)->
   findNewRecordingsAndMoveThemToStreamFolder = (err, list) ->
     return done(err) if err
 
-    allFiles = _.chain(list).where(type: fileType).sortBy(descendingDateSort).value()
-
+    allFiles = _.chain(list).where(type: EdgecastFtpInfo.fileType).sortBy(descendingDateSort).value()
     console.log("No files to move.") if allFiles.length == 0
 
     async.eachSeries allFiles, moveNewRecordingsToProjectFolder, finish
 
   fetchStreamList = ->
-    ftpClient.list recordingDir, findNewRecordingsAndMoveThemToStreamFolder
+    ftpClient.list initialDirectory, findNewRecordingsAndMoveThemToStreamFolder
 
   ftpClient = edgecastFtpClientFactory done, fetchStreamList
 

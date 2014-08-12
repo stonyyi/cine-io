@@ -178,7 +178,7 @@ describe 'processFixedRecordings', ->
           .onSecondCall().returns(fullDefList.slice(0,1))
           .onThirdCall().returns(fullDefList.slice(0,2))
 
-      it 'moves all the streams from a the /cines directory to the project folder', (done)->
+      it 'moves all the streams from the /fixed_recordings directory to the project folder', (done)->
         processFixedRecordings (err)=>
           expect(err).to.be.undefined
           expect(@mkdirStub.callCount).to.equal(6)
@@ -212,35 +212,3 @@ describe 'processFixedRecordings', ->
             assertRecordigns(edgecastRecordings.recordings)
             done()
 
-  describe 'success removing recordings', ->
-    beforeEach ->
-      @deleteStub = @fakeFtpClient.stub('delete')
-      @deleteStub.withArgs('/fixed_recordings/xkMOUbRPZl.1.mp4').callsArgWith 1, null
-      @deleteStub.withArgs('/fixed_recordings/xkMOUbRPZl.2.mp4').callsArgWith 1, null
-      @deleteStub.withArgs('/fixed_recordings/xkMOUbRPZl.mp4').callsArgWith 1, null
-
-      @deleteStub.withArgs('/fixed_recordings/ykMOUbRPZl.1.mp4').callsArgWith 1, null
-      @deleteStub.withArgs('/fixed_recordings/ykMOUbRPZl.2.mp4').callsArgWith 1, null
-      @deleteStub.withArgs('/fixed_recordings/ykMOUbRPZl.mp4').callsArgWith 1, null
-
-    beforeEach (done)->
-      @project1 = new Project(publicKey: 'abc')
-      @project1.save done
-
-    beforeEach (done)->
-      @stream1 = new EdgecastStream(streamName: 'xkMOUbRPZl', instanceName: 'cines', _project: @project1._id, record: false)
-      @stream1.save done
-
-    beforeEach (done)->
-      @project2 = new Project(publicKey: 'def')
-      @project2.save done
-
-    beforeEach (done)->
-      @stream2 = new EdgecastStream(streamName: 'ykMOUbRPZl', instanceName: 'cines', _project: @project2._id, record: false)
-      @stream2.save done
-
-    it 'removes the recordings when record is set to false', (done)->
-      processFixedRecordings (err)=>
-        expect(err).to.be.undefined
-        expect(@deleteStub.callCount).to.equal(6)
-        done()
