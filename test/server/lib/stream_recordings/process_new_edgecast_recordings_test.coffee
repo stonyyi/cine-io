@@ -67,11 +67,20 @@ describe 'processNewEdgecastRecordings', ->
         .onCall(4).returns(fullDefList.slice(0,1))
         .onCall(5).returns(fullDefList.slice(0,2))
 
+    beforeEach ->
+      @scheduleFixRecordingsNock = requireFixture('nock/schedule_ironio_worker')('stream_recordings/fix_edgecast_codecs_on_new_stream_recordings').nock
+
     it 'moves all the streams from a the /ready_to_fix directory to the project folder', (done)->
       processNewEdgecastRecordings (err)=>
-        expect(err).to.be.undefined
+        expect(err).to.be.null
         expect(@mkdirStub.callCount).to.equal(6)
         expect(@renameStub.callCount).to.equal(6)
+        done()
+
+    it 'schedules a worker if there are new recordings', (done)->
+      processNewEdgecastRecordings (err)=>
+        expect(err).to.be.null
+        expect(@scheduleFixRecordingsNock.isDone()).to.be.true
         done()
 
   describe 'when the stream is set to delete', ->

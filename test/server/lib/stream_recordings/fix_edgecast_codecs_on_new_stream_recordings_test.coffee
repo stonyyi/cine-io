@@ -46,7 +46,7 @@ describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
         date: "Wed Jul 16 2014 20:34:00 GMT+0000 (UTC)"
       }
     ]
-    @listStub.withArgs('/cines').returns(list)
+    @listStub.withArgs('/ready_to_fix').returns(list)
     @listStub.withArgs('/fixed_recordings')
       .onFirstCall().returns([])
       .onSecondCall().returns(list.slice(1,2))

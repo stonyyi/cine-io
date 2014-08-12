@@ -1,6 +1,6 @@
 _ = require('underscore')
-edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 async = require('async')
+edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 EdgecastStream = Cine.server_model('edgecast_stream')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
 Project = Cine.server_model('project')

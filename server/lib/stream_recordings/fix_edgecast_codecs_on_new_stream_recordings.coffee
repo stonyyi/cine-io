@@ -4,16 +4,16 @@ mkdirp = require('mkdirp')
 fs = require("fs")
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 createNewStreamInEdgecast = Cine.server_lib('create_new_stream_in_edgecast')
-recordingDir = "/#{createNewStreamInEdgecast.instanceName}"
-directoryType = 'd'
-fileType = '-'
-ftpOutputPath = "/fixed_recordings"
-downloadDirectory = "#{Cine.root}/tmp/edgecast_recordings/"
-fixedDirectory = "#{Cine.root}/tmp/fixed_edgecast_recordings/"
 # transcodeRecording = Cine.server_lib("stream_recordings/transcode_recording")
 makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
 nextStreamRecordingNumber = Cine.server_lib('stream_recordings/next_stream_recording_number')
 scheduleJob = Cine.server_lib('schedule_job')
+EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
+
+recordingDir = "/#{EdgecastFtpInfo.readyToBeFixedDirectory}"
+ftpOutputPath = "/#{EdgecastFtpInfo.readyToBeCatalogued}"
+downloadDirectory = "#{Cine.root}/tmp/edgecast_recordings/"
+fixedDirectory = "#{Cine.root}/tmp/fixed_edgecast_recordings/"
 
 # TODO DELETE THIS ONCE TRANSCODING IS READY
 temporarilyJustMoveRecording = fs.link
@@ -78,7 +78,7 @@ streamRecordingsCodecFixer = (done)->
   findNewRecordingsAndMoveThemToStreamFolder = (err, list) ->
     return done(err) if err
 
-    allFiles = _.chain(list).where(type: fileType).sortBy(descendingDateSort).value()
+    allFiles = _.chain(list).where(type: EdgecastFtpInfo.fileType).sortBy(descendingDateSort).value()
 
     if allFiles.length == 0
       console.log("No files to process.")

@@ -26,7 +26,3 @@ describe 'createNewStreamInEdgecast', ->
         expect(stream.expiration.getMonth()).to.equal(d.getMonth())
         expect(stream.expiration.getFullYear()).to.equal(d.getFullYear()+20)
         done()
-
-  describe 'instanceName', ->
-    it 'is cines', ->
-      expect(createNewStreamInEdgecast.instanceName).to.equal('cines')

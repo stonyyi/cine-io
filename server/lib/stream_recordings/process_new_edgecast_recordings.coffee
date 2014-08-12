@@ -11,8 +11,9 @@ makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 nextStreamRecordingNumber = Cine.server_lib('stream_recordings/next_stream_recording_number')
 EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
-recordingDir = "/#{EdgecastFtpInfo.vodDirectory}"
+scheduleJob = Cine.server_lib('schedule_job')
 
+recordingDir = "/#{EdgecastFtpInfo.vodDirectory}"
 folderToFix = "/#{EdgecastFtpInfo.readyToBeFixedDirectory}"
 
 class SaveStreamRecording
@@ -21,7 +22,9 @@ class SaveStreamRecording
 
   process: (callback)=>
     waterfallCalls = [@_mkFixFolder, @_ensureNewRecordingHasUniqueName, @_moveRecordingToProcessFolder]
-    async.series waterfallCalls, callback
+    async.series waterfallCalls, (err)->
+      return callback(err) if err
+      callback(null, savedRecording: true)
 
   _mkFixFolder: (callback)=>
     makeFtpDirectory @ftpClient, folderToFix, callback
@@ -76,14 +79,20 @@ descendingDateSort = (ftpListItem)->
   return (new Date(ftpListItem.date)).getTime()
 
 processNewEdgecastRecordings = (done)->
-
+  newRecordingToProcess = false
   moveNewRecordingsToAppropriateFolder = (ftpRecordingEntry, callback)->
     recordingHandler = new NewRecordingHandler(ftpClient, ftpRecordingEntry)
-    recordingHandler.process(callback)
+    recordingHandler.process (err, options)->
+      return callback(err) if err
+      if options && options.savedRecording
+        newRecordingToProcess = true
+      callback()
 
   finish = (err)->
     ftpClient.end()
-    done(err)
+    return done(err) if err
+    return done() unless newRecordingToProcess
+    scheduleJob 'stream_recordings/fix_edgecast_codecs_on_new_stream_recordings', done
 
   findNewRecordingsAndMoveThemToStreamFolder = (err, list) ->
     return done(err) if err
