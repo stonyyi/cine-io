@@ -11,8 +11,8 @@ module.exports = React.createClass({
   mixins: [Cine.lib('requires_app'), Cine.lib('has_nav')],
   render: function() {
     return (
-      <div id="page-layout" className={this.canvasClasses()}>
-        <div className='main-wrapper'>
+      <div id="page-layout">
+        <div className='main-wrapper' className={this.canvasClasses()}>
           <FlashHolder app={this.props.app} />
           <div className="inner-wrap">
             <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
