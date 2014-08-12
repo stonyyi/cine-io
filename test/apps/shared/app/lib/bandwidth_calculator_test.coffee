@@ -1,16 +1,26 @@
 BandwidthCalculator = Cine.lib('bandwidth_calculator')
 
 describe 'BandwidthCalculator', ->
+  beforeEach ->
+    @calc = new BandwidthCalculator
+
   describe 'new', ->
     it 'has defaults', ->
-      b = new BandwidthCalculator
-      expect(b.numberOfViewers).to.equal(0)
-      expect(b.videoQuality).to.equal(0)
-      expect(b.videoLength).to.equal(0)
-      expect(b.simultaneousBroadcasts).to.equal(0)
+      expect(@calc.numberOfViewers).to.equal(0)
+      expect(@calc.bitRate).to.equal(0)
+      expect(@calc.videoLength).to.equal(0)
+      expect(@calc.simultaneousBroadcasts).to.equal(1)
 
   describe '#calculate', ->
-    beforeEach ->
-      @calc = new BandwidthCalculator
+    it 'returns to total consumed bytes', ->
+      @calc.numberOfViewers = 100
+      @calc.videoLength = 30
+      @calc.bitRate = 1500
+      expect(@calc.calculate()).to.equal(33750000)
 
-    it 'is implemented'
+    it 'doubles with more broadcasts', ->
+      @calc.numberOfViewers = 100
+      @calc.videoLength = 30
+      @calc.bitRate = 1500
+      @calc.simultaneousBroadcasts = 2
+      expect(@calc.calculate()).to.equal(67500000)
