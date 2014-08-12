@@ -15,6 +15,13 @@ module.exports = class UsageReport extends Base
       when 'startup' then humanizeBytes.GB * 150
       when 'enterprise' then humanizeBytes.TB
 
+  @lowestPlanPerUsage: (bytes)->
+    switch
+      when bytes <= humanizeBytes.GB then 'starter'
+      when bytes <= humanizeBytes.GB * 20 then 'solo'
+      when bytes <= humanizeBytes.GB * 150 then 'startup'
+      else 'enterprise'
+
   @lastThreeMonths: ->
     thisMonth = new Date
     lastMonth = new Date
