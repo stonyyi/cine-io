@@ -68,6 +68,11 @@ describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
   beforeEach ->
     @scheduleProcessFixedRecordingsNock = requireFixture('nock/schedule_ironio_worker')('stream_recordings/process_fixed_recordings').nock
 
+  beforeEach ->
+    @deleteStub = @fakeFtpClient.stub('delete')
+    @deleteStub.withArgs('/ready_to_fix/exampleStream.mp4').callsArgWith 1, null
+    @deleteStub.withArgs('/ready_to_fix/exampleStream.1.mp4').callsArgWith 1, null
+
   it 'downloads the files and reuploads them to /fixed_recordings', (done)->
     fixEdgecastCodecsOnNewStreamRecordings (err)=>
       expect(err).to.be.null
@@ -84,4 +89,10 @@ describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
     fixEdgecastCodecsOnNewStreamRecordings (err)=>
       expect(err).to.be.null
       expect(@scheduleProcessFixedRecordingsNock.isDone()).to.be.true
+      done()
+
+  it 'deletes all broken recordings after fixing them', (done)->
+    fixEdgecastCodecsOnNewStreamRecordings (err)=>
+      expect(err).to.be.null
+      expect(@deleteStub.callCount).to.equal(2)
       done()

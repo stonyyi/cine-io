@@ -43,7 +43,9 @@ class DownloadAndProcessRecording
             newFileName += ".#{totalFiles}.mp4"
 
           ftpLocation = "#{ftpOutputPath}/#{newFileName}"
-          @ftpClient.put transcodedFileName, ftpLocation, callback
+          @ftpClient.put transcodedFileName, ftpLocation, (err)=>
+            return callback(err) if err
+            @ftpClient.delete fullFTPName, callback
 
     @ftpClient.get fullFTPName, (err, stream)->
       return callback(err) if err
