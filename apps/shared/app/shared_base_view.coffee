@@ -15,7 +15,7 @@ ReactView = RendrView.extend
     @Component @_renderOptions()
 
   _renderOptions: ->
-    options = app: @app
+    options = app: @app, options: @options
     options.model = @model if @model
     options.collection = @collection if @collection
     options
