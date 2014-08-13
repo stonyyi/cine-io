@@ -40,7 +40,7 @@ module.exports = (app) ->
   # generic force https and www
   app.use Cine.middleware('force_https_and_www') if app.settings.env is "production"
 
-  if app.settings.env is "staging"
+  if process.env.USE_BASIC_AUTH
     authCredentials = Cine.config('variables/basic_auth')
     app.use express.basicAuth(authCredentials.user, authCredentials.password)
 
