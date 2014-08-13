@@ -32,10 +32,12 @@ serveStaticErrorPage = (status, res)->
     else
       res.send 400, "An unknown error has occured."
 
+captureExtraData = (err, req)->
+  extra = _.extend({httpMethod: req.method}, err.extra, req.headers, requestUrl: req.originalUrl)
+
 logError = (err, req)->
   console.log("LOGGING ERROR")
-  extra = _.extend({httpMethod: req.method}, err.extra, req.headers, requestUrl: req.originalUrl)
-  sentryClient.captureError(err, extra: extra)
+  sentryClient.captureError(err, extra: captureExtraData(err, req))
 
 productionHandler = (err, req, res, next) ->
   console.log('there is an err in production', err)
@@ -48,4 +50,18 @@ productionHandler = (err, req, res, next) ->
     else
       serveStaticErrorPage(err.status, res)
 
-module.exports = if process.env.NODE_ENV == 'development' then developmentHandler else productionHandler
+stagingHandler = (err, req, res, next) ->
+  console.log('there is an err in staging', err)
+  console.log(captureExtraData(err, req))
+  return sendErr(req, res, err) if req.xhr
+  return sendErr(req, res, err, api: true) if API_PATH_REGEX.test(req.originalUrl)
+  switch err.status
+    when 401
+      res.redirect("/401?originalUrl=#{req.originalUrl}")
+    else
+      serveStaticErrorPage(err.status, res)
+
+module.exports = switch process.env.NODE_ENV
+  when 'development' then developmentHandler
+  when 'staging' then stagingHandler
+  else productionHandler
