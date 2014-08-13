@@ -34,12 +34,13 @@ AccountSchema = new mongoose.Schema
     type: String
     index: true
     sparse: true
+  appdirectData: mongoose.Schema.Types.Mixed
 
 AccountSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
 streamLimitForPlan = (planName)->
   switch planName
-    when 'free', 'starter' then 1
+    when 'free', 'starter', 'sample-addon' then 1
     when 'solo' then 5
     when 'basic', 'pro', 'test' then Infinity
     else throw new Error("Don't know this plan")
@@ -50,18 +51,11 @@ aggregatePlanCount = (aggr, planName)->
 AccountSchema.methods.streamLimit = ->
   _.inject @plans, aggregatePlanCount, 0
 
-herokuBetaPlans = ['test', 'foo']
-herokuPlans = ['starter']
-
-allPlans = BackboneAccount.plans.concat(herokuBetaPlans).concat(herokuPlans)
-
-planRegex = new RegExp allPlans.join('|')
-
 allProvidersRegex = new RegExp _.keys(ProvidersAndPlans).join('|')
 
 AccountSchema.path('billingProvider').validate ((value)->
   allProvidersRegex.test value
-), 'Invalid plan'
+), 'Invalid billing provider'
 
 
 AccountSchema.pre 'save', (next)->

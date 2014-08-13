@@ -1,5 +1,4 @@
 async = require('async')
-
 module.exports = (user, callback)->
   asyncCalls =
     deleteUser: (callback)->

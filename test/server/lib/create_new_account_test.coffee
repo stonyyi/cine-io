@@ -11,7 +11,7 @@ describe 'createNewAccount', ->
 
   beforeEach ->
     @accountAttributes = name: "the new account name", herokuId: 'heroku-id-yo', billingProvider: 'heroku', plan: 'starter'
-    @userAttributes = email: "my-email", name: 'user name'
+    @userAttributes = email: "my-email", name: 'user name', appdirectUUID: 'some appdirect uuid'
     @projectAttributes = name: 'this project'
     @streamAttributes = name: 'this stream'
 
@@ -43,6 +43,7 @@ describe 'createNewAccount', ->
         expect(err).to.be.null
         expect(user.name).to.equal("user name")
         expect(user.email).to.equal("my-email")
+        expect(user.appdirectUUID).to.equal("some appdirect uuid")
         done()
 
     # TODO: DEPRECATED - need to wait until console app is updated
@@ -138,6 +139,12 @@ describe 'createNewAccount', ->
       createNewAccount @accountAttributes, @userAttributes, @projectAttributes, @streamAttributes, (err, results)=>
         @results = results
         done(err)
+
+    it 'adds the appdirectUUID to the user', (done)->
+      User.findById @results.user._id, (err, user)->
+        expect(err).to.be.null
+        expect(user.appdirectUUID).to.equal('some appdirect uuid')
+        done()
 
     it 'adds the new account to the same user', (done)->
       User.findById @results.user._id, (err, user)=>

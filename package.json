@@ -42,9 +42,11 @@
     "mongoose-findorcreate": "^0.1.2",
     "mongoose-querystream-worker": "0.0.2",
     "newrelic": "^1.5.4",
+    "oauth-sign": "^0.4.0",
     "passport": "^0.2.0",
     "passport-github": "^0.1.5",
     "passport-local": "^1.0.0",
+    "passport-openid": "^0.3.1",
     "passport-remember-me": "0.0.1",
     "qs": "0.6.6",
     "raven": "^0.7.0",
@@ -56,7 +58,8 @@
     "stripe": "2.4.5",
     "type-of": "^2.0.1",
     "underscore": "1.6.0",
-    "underscore.string": "2.3.3"
+    "underscore.string": "2.3.3",
+    "xmlbuilder": "^2.4.3"
   },
   "devDependencies": {
     "chai": "1.9.1",

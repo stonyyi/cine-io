@@ -11,6 +11,7 @@ addUserToAccount = (account, userAttributes, callback)->
   User.findOne email: userAttributes.email, (err, user)->
     return callback(err) if err
     if user
+      user.appdirectUUID ||= userAttributes.appdirectUUID
       user._accounts.push account._id
       return user.save callback
     else
@@ -54,7 +55,9 @@ module.exports = (accountAttributes, userAttributes={}, projectAttributes={}, st
   # trim any whitespace
   userAttributes.email = _str.trim(userAttributes.email)
 
-  accountAttributes.plans = [accountAttributes.plan]
+  accountAttributes.plans = []
+  accountAttributes.plans.push accountAttributes.plan if accountAttributes.plan
+
   accountAttributes.name ||= userAttributes.name
   accountAttributes.billingEmail ||= userAttributes.email
   results = {}

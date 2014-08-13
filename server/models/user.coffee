@@ -5,6 +5,7 @@ _.str = require 'underscore.string'
 Schema = mongoose.Schema
 BackboneUser = Cine.model('user')
 crypto = require('crypto')
+findOrCreate = require('mongoose-findorcreate')
 
 UserSchema = new Schema
   _accounts:
@@ -20,6 +21,8 @@ UserSchema = new Schema
     index: true
     sparse: true
     unique: true
+  hashed_password: String
+  password_salt: String
   # github login
   githubId:
     type: Number
@@ -28,8 +31,9 @@ UserSchema = new Schema
   githubAccessToken:
     type: String
   githubData: mongoose.Schema.Types.Mixed
-  hashed_password: String
-  password_salt: String
+  #appdirect login
+  appdirectUUID:
+    type: String
   # Other Info
   _referringUser:
     type: mongoose.Schema.Types.ObjectId
@@ -47,6 +51,7 @@ UserSchema = new Schema
     type: String
 
 UserSchema.plugin(Cine.server_lib('mongoose_timestamps'))
+UserSchema.plugin(findOrCreate)
 
 generateSaltAndHashForPassword = (cleartext_password, callback)->
   bcrypt.genSalt 10, (error, salt)->
