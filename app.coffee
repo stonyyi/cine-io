@@ -5,6 +5,10 @@ http = require 'http'
 app = exports.app = express()
 exports.server = http.createServer(app)
 
+# since we're running on heroku which uses nginx
+# http://expressjs.com/guide.html#proxies
+app.enable('trust proxy')
+
 app.set 'title', 'Cine.io'
 
 Cine.middleware 'middleware', app
