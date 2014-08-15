@@ -1,0 +1,16 @@
+runtime 'node'
+stack 'node-0.10'
+exec 'mp4repair_worker.js'
+name 'MP4RepairWorker'
+
+set_env "PATH", "./ubuntu_binaries/bin:$PATH"
+set_env "LD_LIBRARY_PATH", "./ubuntu_binaries/lib:$LD_LIBRARY_PATH"
+
+dir '../apps'
+dir '../config'
+dir '../node_modules'
+dir '../server'
+dir '../worker'
+dir '../ubuntu_binaries'
+file '../README.md'
+file '/Users/jeffrey/Downloads/wrongaspect.mp4'
