@@ -40,7 +40,7 @@ logError = (err, req)->
   sentryClient.captureError(err, extra: captureExtraData(err, req))
 
 productionHandler = (err, req, res, next) ->
-  console.log('there is an err in production', err)
+  console.log("there is an err in #{process.env.NODE_ENV}", err)
   logError(err, req)
   return sendErr(req, res, err) if req.xhr
   return sendErr(req, res, err, api: true) if API_PATH_REGEX.test(req.originalUrl)
