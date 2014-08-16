@@ -1,6 +1,15 @@
 mongoose = require 'mongoose'
 crypto = require('crypto')
 
+
+StripeCard = new Schema
+  stripeCardId: String
+  last4: String
+  brand: String
+  exp_month: Number
+  exp_year: Number
+  deletedAt: Date
+
 AccountSchema = new mongoose.Schema
   name:
     type: String
