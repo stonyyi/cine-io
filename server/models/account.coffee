@@ -2,7 +2,7 @@ mongoose = require 'mongoose'
 crypto = require('crypto')
 
 
-StripeCard = new Schema
+StripeCard = new mongoose.Schema
   stripeCardId: String
   last4: String
   brand: String
