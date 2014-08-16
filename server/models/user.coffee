@@ -20,6 +20,11 @@ StripeCard = new Schema
   deletedAt: Date
 
 UserSchema = new Schema
+  _accounts:
+    [type: mongoose.Schema.Types.ObjectId, ref: 'Account']
+  isSiteAdmin:
+    type: Boolean
+    default: false
   # Email login
   email:
     type: String
@@ -28,6 +33,7 @@ UserSchema = new Schema
     index: true
     sparse: true
     unique: true
+  # github login
   githubId:
     type: Number
     index: true
