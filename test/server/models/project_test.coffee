@@ -20,7 +20,7 @@ describe 'Project', ->
         expect(project.publicKey.length).to.equal(32)
         done()
 
-    it 'will not override the password change request on future saves', (done)->
+    it 'will not override the publicKey on future saves', (done)->
       project = new Project(name: 'some name', plan: 'free')
       project.save (err)->
         expect(err).to.be.null
@@ -38,7 +38,7 @@ describe 'Project', ->
         expect(project.secretKey.length).to.equal(32)
         done()
 
-    it 'will not override the password change request on future saves', (done)->
+    it 'will not override secretKey on future saves', (done)->
       project = new Project(name: 'some name', plan: 'free')
       project.save (err)->
         expect(err).to.be.null
