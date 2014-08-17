@@ -10,7 +10,6 @@ var Cine = require('./config/cine_server')
     , "MP4Box -version"
     , "which MP4Box"
     , "ldd ./ubuntu_binaries/bin/MP4Box"
-    , "find /usr/lib -print"
     ]
   , commandFuncs = commands.map(function(command) {
       return function(callback) {
