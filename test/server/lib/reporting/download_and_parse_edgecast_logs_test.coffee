@@ -69,7 +69,7 @@ describe 'downloadAndParseEdgecastLogs', ->
     downloadAndParseEdgecastLogs (err)=>
       expect(err).to.be.undefined
       expect(@fakeFtpClient.connectStub.calledOnce).to.be.true
-      expect(@fakeFtpClient.connectStub.firstCall.args).to.deep.equal([host: "ftp.vny.C45E.edgecastcdn.net", user: 'fake-account', password: 'fake-password'])
+      expect(@fakeFtpClient.connectStub.firstCall.args).to.deep.equal([host: "ftp.vny.C45E.edgecastcdn.net", user: 'fake-account', password: 'fake-password', connTimeout: 30000])
       EdgecastParsedLog.find (err, parsedLogs)->
         expect(parsedLogs).to.have.length(1)
         parsedLog = parsedLogs[0]

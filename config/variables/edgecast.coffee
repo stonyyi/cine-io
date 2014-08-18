@@ -5,3 +5,4 @@ module.exports =
     host: process.env.EDGECAST_FTP_HOST || "ftp.vny.C45E.edgecastcdn.net"
     user: process.env.EDGECAST_FTP_USER || 'fake-account'
     password: process.env.EDGECAST_FTP_PASSWORD || 'fake-password'
+    connTimeout: 30000
