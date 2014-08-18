@@ -1,9 +1,0 @@
-runtime "binary"
-exec "ffmpeg_mp4box_worker.sh"
-name 'FfmpegMP4BoxWorker'
-
-set_env "PATH", "./vidtools/bin:$PATH"
-set_env "LD_LIBRARY_PATH", "./vidtools/lib:$LD_LIBRARY_PATH"
-
-dir "../ubuntu_binaries/bin", "./vidtools"
-dir "../ubuntu_binaries/lib", "./vidtools"
