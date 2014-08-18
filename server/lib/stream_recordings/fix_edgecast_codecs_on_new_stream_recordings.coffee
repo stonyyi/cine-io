@@ -12,6 +12,7 @@ EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
 
 recordingDir = "/#{EdgecastFtpInfo.readyToBeFixedDirectory}"
 ftpOutputPath = "/#{EdgecastFtpInfo.readyToBeCatalogued}"
+ftpErrorPath = "/#{EdgecastFtpInfo.failedContainerFix}"
 downloadDirectory = "#{Cine.root}/tmp/edgecast_recordings/"
 fixedDirectory = "#{Cine.root}/tmp/fixed_edgecast_recordings/"
 
@@ -24,10 +25,22 @@ class DownloadAndProcessRecording
     downloadedFileName = "#{downloadDirectory}#{@recordingName}"
     transcodedFileName = "#{fixedDirectory}#{@recordingName}"
 
-    uploadFixedFile = (err)=>
-      # 1. ensure recording_directory is there
-      # 2. ensure our streamName has a unique incremental name
-      # 3. upload the mp4 file
+    moveOriginalFileToBrokenFolder = =>
+      makeFtpDirectory @ftpClient, ftpErrorPath, (err)=>
+        console.log("YO", err)
+        return callback(err) if err
+        @ftpClient.list ftpErrorPath, (err, files)=>
+          return callback(err) if err
+          newFileName = @recordingName
+          totalFiles = nextStreamRecordingNumber(@recordingName, files)
+          if totalFiles > 0
+            newFileName = @recordingName.split('.')[0]
+            newFileName += ".#{totalFiles}.mp4"
+
+          ftpLocation = "#{ftpErrorPath}/#{newFileName}"
+          @ftpClient.rename fullFTPName, ftpLocation, callback
+
+    uploadFixedFile = =>
       makeFtpDirectory @ftpClient, ftpOutputPath, (err)=>
         return callback(err) if err
         @ftpClient.list ftpOutputPath, (err, files)=>
@@ -43,6 +56,15 @@ class DownloadAndProcessRecording
             return callback(err) if err
             @ftpClient.delete fullFTPName, callback
 
+    finishedContainerFix = (err)->
+      # 1. ensure recording_directory is there
+      # 2. ensure our streamName has a unique incremental name
+      # 3. upload the mp4 file
+      if err
+        moveOriginalFileToBrokenFolder()
+      else
+        uploadFixedFile()
+
     @ftpClient.get fullFTPName, (err, stream)->
       return callback(err) if err
 
@@ -50,7 +72,7 @@ class DownloadAndProcessRecording
         console.log("Ready to read data", fullFTPName)
 
       stream.once 'close', ->
-        fixMP4Container(downloadedFileName, transcodedFileName, uploadFixedFile)
+        fixMP4Container(downloadedFileName, transcodedFileName, finishedContainerFix)
 
       stream.pipe(fs.createWriteStream(downloadedFileName))
 

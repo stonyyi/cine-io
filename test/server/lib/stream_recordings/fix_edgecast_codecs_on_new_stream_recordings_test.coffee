@@ -1,7 +1,11 @@
 fixEdgecastCodecsOnNewStreamRecordings = Cine.server_lib('stream_recordings/fix_edgecast_codecs_on_new_stream_recordings')
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
+fixMP4Container = Cine.server_lib("stream_recordings/fix_mp4_container")
 
 describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
+
+  directoryAlreadyExists = new Error("Can't create directory: File exists")
+  directoryAlreadyExists.code = 550
 
   beforeEach ->
     @fakeFtpClient = new FakeFtpClient
@@ -50,49 +54,73 @@ describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
     @listStub.withArgs('/fixed_recordings')
       .onFirstCall().returns([])
       .onSecondCall().returns(list.slice(1,2))
+    @listStub.withArgs('/failed_to_fix')
+      .onFirstCall().returns([])
+      .onSecondCall().returns(list.slice(1,2))
 
   afterEach ->
     @fakeFtpClient.restore()
 
   beforeEach ->
-    @mkdirStub = @fakeFtpClient.stub('mkdir')
-    directoryAlreadyExists = new Error("Can't create directory: File exists")
-    directoryAlreadyExists.code = 550
-    @mkdirStub.withArgs('/fixed_recordings')
-      .onFirstCall().callsArgWith(1, null)
-      .onSecondCall().callsArgWith(1, directoryAlreadyExists)
-
-  beforeEach ->
-    @putStub = @fakeFtpClient.stub('put').callsArg(2)
-
-  beforeEach ->
     @scheduleProcessFixedRecordingsNock = requireFixture('nock/schedule_ironio_worker')('stream_recordings/process_fixed_recordings', {}, {priority: 1}).nock
 
-  beforeEach ->
-    @deleteStub = @fakeFtpClient.stub('delete')
-    @deleteStub.withArgs('/ready_to_fix/exampleStream.mp4').callsArgWith 1, null
-    @deleteStub.withArgs('/ready_to_fix/exampleStream.1.mp4').callsArgWith 1, null
+  describe 'success', ->
+    beforeEach ->
+      @mkdirStub = @fakeFtpClient.stub('mkdir')
+      @mkdirStub.withArgs('/fixed_recordings')
+        .onFirstCall().callsArgWith(1, null)
+        .onSecondCall().callsArgWith(1, directoryAlreadyExists)
 
-  it 'downloads the files and reuploads them to /fixed_recordings', (done)->
-    fixEdgecastCodecsOnNewStreamRecordings (err)=>
-      expect(err).to.be.null
-      expect(@mkdirStub.callCount).to.equal(2)
-      expect(@listStub.callCount).to.equal(3)
-      expect(@putStub.callCount).to.equal(2)
-      calledWithFirstStream = @putStub.calledWith(Cine.path("/tmp/fixed_edgecast_recordings/exampleStream.mp4"), "/fixed_recordings/exampleStream.mp4")
-      expect(calledWithFirstStream).to.be.true
-      calledWithSecondStream = @putStub.calledWith(Cine.path("/tmp/fixed_edgecast_recordings/exampleStream.1.mp4"), "/fixed_recordings/exampleStream.1.mp4")
-      expect(calledWithSecondStream).to.be.true
-      done()
+    beforeEach ->
+      @putStub = @fakeFtpClient.stub('put').callsArg(2)
 
-  it 'schedules a worker if there are new recordings', (done)->
-    fixEdgecastCodecsOnNewStreamRecordings (err)=>
-      expect(err).to.be.null
-      expect(@scheduleProcessFixedRecordingsNock.isDone()).to.be.true
-      done()
 
-  it 'deletes all broken recordings after fixing them', (done)->
-    fixEdgecastCodecsOnNewStreamRecordings (err)=>
-      expect(err).to.be.null
-      expect(@deleteStub.callCount).to.equal(2)
-      done()
+    beforeEach ->
+      @deleteStub = @fakeFtpClient.stub('delete')
+      @deleteStub.withArgs('/ready_to_fix/exampleStream.mp4').callsArgWith 1, null
+      @deleteStub.withArgs('/ready_to_fix/exampleStream.1.mp4').callsArgWith 1, null
+
+    it 'downloads the files and reuploads them to /fixed_recordings', (done)->
+      fixEdgecastCodecsOnNewStreamRecordings (err)=>
+        expect(err).to.be.null
+        expect(@mkdirStub.callCount).to.equal(2)
+        expect(@listStub.callCount).to.equal(3)
+        expect(@putStub.callCount).to.equal(2)
+        calledWithFirstStream = @putStub.calledWith(Cine.path("/tmp/fixed_edgecast_recordings/exampleStream.mp4"), "/fixed_recordings/exampleStream.mp4")
+        expect(calledWithFirstStream).to.be.true
+        calledWithSecondStream = @putStub.calledWith(Cine.path("/tmp/fixed_edgecast_recordings/exampleStream.1.mp4"), "/fixed_recordings/exampleStream.1.mp4")
+        expect(calledWithSecondStream).to.be.true
+        done()
+
+    it 'schedules a worker if there are new recordings', (done)->
+      fixEdgecastCodecsOnNewStreamRecordings (err)=>
+        expect(err).to.be.null
+        expect(@scheduleProcessFixedRecordingsNock.isDone()).to.be.true
+        done()
+
+    it 'deletes all broken recordings after fixing them', (done)->
+      fixEdgecastCodecsOnNewStreamRecordings (err)=>
+        expect(err).to.be.null
+        expect(@deleteStub.callCount).to.equal(2)
+        done()
+
+  describe 'with a container fix error', ->
+    beforeEach ->
+      @mkdirStub = @fakeFtpClient.stub('mkdir')
+      @mkdirStub.withArgs('/failed_to_fix')
+        .onFirstCall().callsArgWith(1, null)
+        .onSecondCall().callsArgWith(1, directoryAlreadyExists)
+
+    beforeEach ->
+      @renameStub = @fakeFtpClient.stub('rename')
+      @renameStub.withArgs('/ready_to_fix/exampleStream.mp4', '/failed_to_fix/exampleStream.mp4').callsArgWith 2, null
+      @renameStub.withArgs('/ready_to_fix/exampleStream.1.mp4', '/failed_to_fix/exampleStream.1.mp4').callsArgWith 2, null
+
+    xit 'uploads the file to broken folder', (done)->
+      fixEdgecastCodecsOnNewStreamRecordings (err)=>
+        expect(err).to.be.null
+        expect(@listStub.callCount).to.equal(3)
+        expect(@mkdirStub.callCount).to.equal(2)
+        expect(@renameStub.callCount).to.equal(2)
+        expect(@scheduleProcessFixedRecordingsNock.isDone()).to.be.true
+        done()
