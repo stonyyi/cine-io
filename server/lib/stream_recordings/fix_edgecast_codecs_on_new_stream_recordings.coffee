@@ -4,7 +4,7 @@ mkdirp = require('mkdirp')
 fs = require("fs")
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 createNewStreamInEdgecast = Cine.server_lib('create_new_stream_in_edgecast')
-# transcodeRecording = Cine.server_lib("stream_recordings/transcode_recording")
+fixMP4Container = Cine.server_lib("stream_recordings/fix_mp4_container")
 makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
 nextStreamRecordingNumber = Cine.server_lib('stream_recordings/next_stream_recording_number')
 scheduleJob = Cine.server_lib('schedule_job')
@@ -14,10 +14,6 @@ recordingDir = "/#{EdgecastFtpInfo.readyToBeFixedDirectory}"
 ftpOutputPath = "/#{EdgecastFtpInfo.readyToBeCatalogued}"
 downloadDirectory = "#{Cine.root}/tmp/edgecast_recordings/"
 fixedDirectory = "#{Cine.root}/tmp/fixed_edgecast_recordings/"
-
-# TODO DELETE THIS ONCE TRANSCODING IS READY
-temporarilyJustMoveRecording = fs.link
-transcodeRecording = temporarilyJustMoveRecording
 
 class DownloadAndProcessRecording
   constructor: (@ftpClient, @ftpRecordingEntry)->
@@ -54,7 +50,7 @@ class DownloadAndProcessRecording
         console.log("Ready to read data", fullFTPName)
 
       stream.once 'close', ->
-        transcodeRecording(downloadedFileName, transcodedFileName, uploadFixedFile)
+        fixMP4Container(downloadedFileName, transcodedFileName, uploadFixedFile)
 
       stream.pipe(fs.createWriteStream(downloadedFileName))
 
