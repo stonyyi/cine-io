@@ -55,5 +55,6 @@ module.exports = (project, options, callback)->
     callback = options
     options = {}
   ensureUserCanAddAnotherStream project, (err, canAddAnotherStream)->
+    # console.log("checked", err, canAddAnotherStream)
     return returnExistingStream(project, callback) unless canAddAnotherStream
     allocateNewStreamToProject(project, options, callback)
