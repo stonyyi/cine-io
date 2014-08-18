@@ -25,14 +25,18 @@ mergePayloadWithEnvironment = (jobPayload)->
 
   environment: environmentPayload, jobPayload: jobPayload
 
-scheduleJob = (jobName, jobPayload={}, callback=noop)->
-  if _.isFunction jobPayload
+scheduleJob = (jobName, jobPayload={}, options={}, callback=noop)->
+  if _.isFunction options
+    callback = options
+    options = {}
+  else if _.isFunction jobPayload
     callback = jobPayload
     jobPayload = {}
+    options = {}
 
   throw new Error("#{jobName} is not a possible job") unless _.include(doWork.acceptableJobs, jobName)
   payload = mergePayloadWithEnvironment(jobPayload)
   payload.jobName = jobName
-  client.tasksCreate WORKER_NAME, payload, {priority: 1}, callback
+  client.tasksCreate WORKER_NAME, payload, options, callback
 
 module.exports = scheduleJob

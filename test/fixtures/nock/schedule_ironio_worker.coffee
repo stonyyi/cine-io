@@ -1,10 +1,12 @@
+_extend = require('underscore').extend
+
 ironIOResponse =
   msg:"Queued up"
   tasks:[
     id:'5359a10cac845a1dd20084ef'
   ]
 
-module.exports = (jobName, jobPayload={})->
+module.exports = (jobName, jobPayload={}, options={})->
   payload =
     environment:
       NODE_ENV:"test"
@@ -16,14 +18,15 @@ module.exports = (jobName, jobPayload={})->
       EDGECAST_FTP_USER: 'fake-account'
       EDGECAST_FTP_PASSWORD: 'fake-password'
 
-
     jobPayload: jobPayload
     jobName: jobName
 
   postBody =
     tasks:[
-      code_name: 'MainWorker'
-      payload: JSON.stringify(payload)
+      _extend({
+        'code_name': 'MainWorker',
+        'payload': JSON.stringify(payload)
+      }, options)
     ]
 
   nockCall = nock('https://worker-aws-us-east-1.iron.io:443:443')

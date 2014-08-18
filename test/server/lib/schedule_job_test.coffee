@@ -26,6 +26,17 @@ describe 'scheduleJob', ->
         expect(ironIONock.nock.isDone()).to.be.true
         done()
 
+    it 'can pass on additional options (like priority)', (done)->
+      ironIONock = requireFixture('nock/schedule_ironio_worker')('current_environment', {thisIsA: 'pload'}, {priority: 1})
+      scheduleJob 'current_environment', {thisIsA: 'pload'}, {priority: 1}, (err, body)->
+        expect(err).to.be.null
+        expect(body.id).to.equal('5359a10cac845a1dd20084ef')
+        expect(ironIONock.postBody.tasks).to.have.length(1)
+        expect(JSON.parse(ironIONock.postBody.tasks[0].payload).jobPayload).to.deep.equal(thisIsA: 'pload')
+        expect(ironIONock.postBody.tasks[0].priority).to.equal(1)
+        expect(ironIONock.nock.isDone()).to.be.true
+        done()
+
     describe 'passing environment', ->
       it 'will pass along the environment', (done)->
         ironIONock = requireFixture('nock/schedule_ironio_worker')('current_environment')
