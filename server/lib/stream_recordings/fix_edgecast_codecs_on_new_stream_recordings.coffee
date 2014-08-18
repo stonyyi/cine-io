@@ -71,7 +71,7 @@ streamRecordingsCodecFixer = (done)->
     ftpClient.end()
     return done(err) if err
     return done() unless scheduleFollowupJob
-    scheduleJob 'stream_recordings/process_fixed_recordings', done
+    scheduleJob 'stream_recordings/process_fixed_recordings', {}, {priority: 1}, done
 
   findNewRecordingsAndMoveThemToStreamFolder = (err, list) ->
     return done(err) if err

@@ -92,7 +92,7 @@ processNewEdgecastRecordings = (done)->
     ftpClient.end()
     return done(err) if err
     return done() unless newRecordingToProcess
-    scheduleJob 'stream_recordings/fix_edgecast_codecs_on_new_stream_recordings', done
+    scheduleJob 'stream_recordings/fix_edgecast_codecs_on_new_stream_recordings', {}, {priority: 1}, done
 
   findNewRecordingsAndMoveThemToStreamFolder = (err, list) ->
     return done(err) if err
