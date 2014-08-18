@@ -33,6 +33,6 @@ scheduleJob = (jobName, jobPayload={}, callback=noop)->
   throw new Error("#{jobName} is not a possible job") unless _.include(doWork.acceptableJobs, jobName)
   payload = mergePayloadWithEnvironment(jobPayload)
   payload.jobName = jobName
-  client.tasksCreate WORKER_NAME, payload, {}, callback
+  client.tasksCreate WORKER_NAME, payload, {priority: 1}, callback
 
 module.exports = scheduleJob
