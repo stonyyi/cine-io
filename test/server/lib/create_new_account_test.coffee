@@ -44,6 +44,13 @@ describe 'createNewAccount', ->
         done()
 
     # TODO: DEPRECATED
+    it 'adds a tempPlan to the account', (done)->
+      Account.findById @results.account._id, (err, account)->
+        expect(err).to.be.null
+        expect(account.tempPlan).to.equal('starter')
+        done()
+
+    # TODO: DEPRECATED
     it 'creates a project linked to the user', (done)->
       User.findById @results.user._id, (err, user)=>
         expect(err).to.be.null

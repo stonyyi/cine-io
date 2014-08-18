@@ -55,6 +55,7 @@ module.exports = (accountAttributes, userAttributes, projectAttributes={}, strea
     streamAttributes = {}
 
   userAttributes.plan = accountAttributes.plan
+  accountAttributes.tempPlan = accountAttributes.plan
   userAttributes.herokuId = accountAttributes.herokuId
 
   account = new Account(accountAttributes)

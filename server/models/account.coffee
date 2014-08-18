@@ -17,6 +17,9 @@ AccountSchema = new mongoose.Schema
     type: String
   masterKey:
     type: String
+  # TODO: DEPRECATED
+  tempPlan:
+    type: String
   _billingProvider:
     type: mongoose.Schema.Types.ObjectId
     ref: 'BillingProvider'
