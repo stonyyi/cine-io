@@ -1,5 +1,5 @@
 async = require('async')
-exec = require('child_process').exec
+cp = require('child_process')
 fs = require('fs')
 # ffmpeg -i input.mp4 -c:v copy -c:a copy output.mp4
 # MP4Box -par 1=1:1 output.mp4
@@ -22,7 +22,7 @@ module.exports = (inputFile, outputFile, callback)->
   callFfmpeg = (callback)->
     cmd = "#{ffmpeg} -i #{inputFile} -c:v copy -c:a copy -movflags faststart #{outputFile}"
     console.log("Executing FFMPEG: ", cmd)
-    exec cmd, (error, stdout, stderr)->
+    cp.exec cmd, (error, stdout, stderr)->
       if (error)
         console.log('exec error: ' + error)
         return callback(error)
@@ -33,7 +33,7 @@ module.exports = (inputFile, outputFile, callback)->
   callMp4Box = (callback)->
     cmd = "#{MP4Box} -par 1=1:1 #{outputFile}"
     console.log("Executing MP4Box: ", cmd)
-    exec cmd, (error, stdout, stderr)->
+    cp.exec cmd, (error, stdout, stderr)->
       if (error)
         console.log('exec error: ' + error)
         return callback(error)

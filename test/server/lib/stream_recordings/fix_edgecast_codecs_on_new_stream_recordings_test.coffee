@@ -1,6 +1,6 @@
 fixEdgecastCodecsOnNewStreamRecordings = Cine.server_lib('stream_recordings/fix_edgecast_codecs_on_new_stream_recordings')
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
-fixMP4Container = Cine.server_lib("stream_recordings/fix_mp4_container")
+cp = require('child_process')
 
 describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
 
@@ -116,7 +116,14 @@ describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
       @renameStub.withArgs('/ready_to_fix/exampleStream.mp4', '/failed_to_fix/exampleStream.mp4').callsArgWith 2, null
       @renameStub.withArgs('/ready_to_fix/exampleStream.1.mp4', '/failed_to_fix/exampleStream.1.mp4').callsArgWith 2, null
 
-    xit 'uploads the file to broken folder', (done)->
+    beforeEach ->
+      @execStub = sinon.stub(cp, 'exec')
+      @execStub.callsArgWith(1, "I HAZ ERROR")
+
+    afterEach ->
+      @execStub.restore()
+
+    it 'uploads the file to broken folder', (done)->
       fixEdgecastCodecsOnNewStreamRecordings (err)=>
         expect(err).to.be.null
         expect(@listStub.callCount).to.equal(3)
