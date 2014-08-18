@@ -61,6 +61,7 @@ module.exports = (accountAttributes, userAttributes, projectAttributes={}, strea
   account = new Account(accountAttributes)
   account.save (err, account)->
     return callback(err) if err
+    userAttributes.masterKey = account.masterKey
     addUserToAccount account, userAttributes, (err, user)->
       return callback(err) if err
       addFirstProjectToAccount account, user, projectAttributes, streamAttributes, (err, results)->
