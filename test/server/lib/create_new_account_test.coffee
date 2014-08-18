@@ -100,5 +100,47 @@ describe 'createNewAccount', ->
         expect(stream._id.toString()).to.equal(@stream._id.toString())
         done()
 
+  describe 'with a password', ->
+    beforeEach ->
+      @userAttributes.cleartextPassword = 'my password'
+
+    beforeEach (done)->
+      createNewAccount @accountAttributes, @userAttributes, @projectAttributes, @streamAttributes, (err, results)=>
+        @results = results
+        done(err)
+
+    it 'adds a hashed password to the user', (done)->
+      expect(@results.user.hashed_password).to.be.ok
+      expect(@results.user.password_salt).to.be.ok
+      User.findById @results.user._id, (err, user)->
+        expect(err).to.be.null
+        expect(user.hashed_password).to.be.ok
+        expect(user.password_salt).to.be.ok
+        done()
+
+    it 'makes the correct password', (done)->
+      @results.user.isCorrectPassword 'my password', (err)=>
+        expect(err).to.be.null
+        User.findById @results._user
+        done()
+
   describe 'with an existing user', ->
+
+    beforeEach (done)->
+      @user = new User(email: "my-email", name: 'user name', plan: 'enterprise')
+      @user.save done
+
+    beforeEach (done)->
+      createNewAccount @accountAttributes, @userAttributes, @projectAttributes, @streamAttributes, (err, results)=>
+        @results = results
+        done(err)
+
     it 'adds the new account to the same user'
+
+    # TODO: DEPRECATED
+    it 'updates the plan of the existing user', (done)->
+      expect(@results.user.plan).to.equal('starter')
+      User.findById @results.user._id, (err, user)->
+        expect(err).to.be.null
+        expect(user.plan).to.equal('starter')
+        done()

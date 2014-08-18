@@ -13,6 +13,7 @@ strategyOptions =
 ProjectCreate = Cine.api('projects/create')
 createNewToken = Cine.middleware('authentication/remember_me').createNewToken
 _str = require('underscore.string')
+createNewAccount = Cine.server_lib('create_new_account')
 
 updateUserData = (user, profile, accessToken, callback)->
   user.githubData = profile._json
@@ -35,20 +36,19 @@ createNewUser = (profile, plan, accessToken, callback)->
   email = profile.emails[0] && profile.emails[0].value
   console.log(profile)
   saveUser = ->
-    user = new User
-      plan: plan
+    accountAttributes = plan: plan
+    userAttributes =
       githubId: profile.id
       email: email
       name: if _str.isBlank(profile.displayName) then profile.username else profile.displayName
       githubData: profile._json
       githubAccessToken: accessToken
-    console.log("creating github user", user)
-    ProjectCreate.addExampleProjectToUser user, (err, projectJSON, options)->
-      mailer.welcomeEmail(user)
-      mailer.admin.newUser(user, 'github')
-      # we still want to allow the user to be created even if there is no stream
-      return callback(null, user) if err == 'Next stream not available, please try again later'
-      callback(err, user)
+    console.log("creating github user", userAttributes)
+    createNewAccount accountAttributes, userAttributes, (err, results)->
+      # console.log("CREATED GITHUB ACCOUNT", err, results)
+      mailer.welcomeEmail(results.user)
+      mailer.admin.newUser(results.user, 'github')
+      callback(err, results.user)
 
   return saveUser() if email
   console.log('no email')

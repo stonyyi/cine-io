@@ -14,91 +14,52 @@ describe 'findOrCreateResourcesFromHeroku', ->
       user.permissions.push objectId: project._id, objectName: 'Project'
       user.save callback
 
-  describe 'createProjectAndUser' , ->
-    describe "with an existing user", ->
+  describe 'newAccount' , ->
+
+    assertEmailSent.admin "newUser"
+
+    it 'sends a welcome email', (done)->
+      findOrCreateResourcesFromHeroku.newAccount 'new-heroku-user@heroku.com', 'enterprise', (err, @user, @project)=>
+        expect(@mailerSpies[0].firstCall.args[0].name).to.equal("new-heroku-user")
+        expect(@mailerSpies[0].firstCall.args[1]).to.equal("heroku")
+        done(err)
+
+    describe "without a new stream", ->
       beforeEach (done)->
-        @user = new User(plan: 'test', herokuId: 'theheroku@heroku.com')
-        @user.save done
+        findOrCreateResourcesFromHeroku.newAccount 'new-heroku-user@heroku.com', 'enterprise', (err, @user, @project)=>
+          done(err)
+      it 'creates a new user with permissions on the project', ->
+        expect(@user.email).be.undefined
+        expect(@user.name).to.equal("new-heroku-user")
+        expect(@user.permissions).to.have.length(1)
+        expect(@user.permissions[0].objectId.toString()).to.equal(@project._id.toString())
+        expect(@user.permissions[0].objectName).to.equal("Project")
 
-      it 'returns an existing user with an existing project', (done)->
-        addProjectToUser @user, (err, user)=>
-          expect(err).to.be.null
-          findOrCreateResourcesFromHeroku.createProjectAndUser 'theheroku@heroku.com', 'test', (err, user, project)=>
-            expect(err).to.be.null
-            expect(user._id.toString()).to.equal(@user._id.toString())
-            expect(user.plan).to.equal("test")
-            expect(project.name).to.equal("in test project")
-            done()
+      it 'creates a new project', ->
+        expect(@project).to.be.instanceOf(Project)
+        expect(@project.name).to.equal("new-heroku-user")
+        expect(@project.streamsCount).to.equal(0)
 
-      it 'creates a new project when the user does not have a project', (done)->
-        findOrCreateResourcesFromHeroku.createProjectAndUser 'theheroku@heroku.com', 'test', (err, user, project)=>
-          expect(err).to.be.null
-          expect(user._id.toString()).to.equal(@user._id.toString())
-          expect(project.name).to.equal("theheroku")
-          done()
+    describe 'with a new stream', ->
+      stubEdgecast()
 
-      it 'makes sure the user has the new plan', (done)->
-        findOrCreateResourcesFromHeroku.createProjectAndUser 'theheroku@heroku.com', 'startup', (err, user, project)=>
-          expect(err).to.be.null
-          expect(user._id.toString()).to.equal(@user._id.toString())
-          expect(user.plan).to.equal("startup")
-          done()
-
-      it 'undeletes a user', (done)->
-        @user.deletedAt = new Date
-        @user.save (err, user)=>
-          expect(err).to.be.null
-          expect(user.deletedAt).to.be.instanceOf(Date)
-          findOrCreateResourcesFromHeroku.createProjectAndUser 'theheroku@heroku.com', 'startup', (err, user, project)=>
-            expect(err).to.be.null
-            expect(user._id.toString()).to.equal(@user._id.toString())
-            expect(user.deletedAt).to.be.undefined
-            done()
-
-    describe "with a new user", ->
-
-      assertEmailSent.admin "newUser"
-
-      it 'sends a welcome email', (done)->
-        findOrCreateResourcesFromHeroku.createProjectAndUser 'new-heroku-user@heroku.com', 'enterprise', (err, @user, @project)=>
-          expect(@mailerSpies[0].firstCall.args[0].name).to.equal("new-heroku-user")
-          expect(@mailerSpies[0].firstCall.args[1]).to.equal("heroku")
+      beforeEach (done)->
+        @stream = new EdgecastStream(streamName: 'name1')
+        @stream.save(done)
+      beforeEach (done)->
+        findOrCreateResourcesFromHeroku.newAccount 'new-heroku-user@heroku.com', 'enterprise', (err, @user, @project)=>
           done(err)
 
-      describe "without a new stream", ->
-        beforeEach (done)->
-          findOrCreateResourcesFromHeroku.createProjectAndUser 'new-heroku-user@heroku.com', 'enterprise', (err, @user, @project)=>
-            done(err)
-        it 'creates a new user with permissions on the project', ->
-          expect(@user.email).be.undefined
-          expect(@user.name).to.equal("new-heroku-user")
-          expect(@user.permissions).to.have.length(1)
-          expect(@user.permissions[0].objectId.toString()).to.equal(@project._id.toString())
-          expect(@user.permissions[0].objectName).to.equal("Project")
-
-        it 'creates a new project', ->
-          expect(@project).to.be.instanceOf(Project)
-          expect(@project.name).to.equal("new-heroku-user")
-          expect(@project.streamsCount).to.equal(0)
-      describe 'with a new stream', ->
-        stubEdgecast()
-
-        beforeEach (done)->
-          @stream = new EdgecastStream(streamName: 'name1')
-          @stream.save(done)
-        beforeEach (done)->
-          findOrCreateResourcesFromHeroku.createProjectAndUser 'new-heroku-user@heroku.com', 'enterprise', (err, @user, @project)=>
-            done(err)
-
-        it 'adds a stream to that project', (done)->
-          expect(@project.streamsCount).to.equal(1)
-          EdgecastStream.find _project: @project._id, (err, streams)=>
-            expect(err).to.be.null
-            expect(streams).to.have.length(1)
-            expect(streams[0]._id.toString()).to.equal(@stream._id.toString())
-            done()
+      it 'adds a stream to that project', (done)->
+        expect(@project.streamsCount).to.equal(1)
+        EdgecastStream.find _project: @project._id, (err, streams)=>
+          expect(err).to.be.null
+          expect(streams).to.have.length(1)
+          expect(streams[0]._id.toString()).to.equal(@stream._id.toString())
+          done()
 
   describe 'findUser', ->
+
     beforeEach (done)->
       @user = new User(plan: 'test')
       @user.save done
@@ -109,6 +70,7 @@ describe 'findOrCreateResourcesFromHeroku', ->
         expect(user.plan).to.equal("test")
         done()
   describe 'updatePlan', ->
+
     beforeEach (done)->
       @user = new User(plan: 'test')
       @user.save done

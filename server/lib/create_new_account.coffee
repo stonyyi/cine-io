@@ -8,10 +8,19 @@ addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 addUserToAccount = (account, userAttributes, callback)->
   User.findOne email: userAttributes.email, (err, user)->
     return callback(err) if err
-    user = new User(userAttributes) unless user
-
-    user._accounts.push(account._id)
-    return user.save callback
+    if user
+      return callback(null, user) if user.plan == userAttributes.plan
+      # TODO DEPRECATED
+      user.plan = userAttributes.plan
+      return user.save callback
+    else
+      user = new User(userAttributes)
+      cleartextPassword = userAttributes.cleartextPassword
+      user._accounts.push(account._id)
+      return user.save(callback) unless cleartextPassword
+      user.assignHashedPasswordAndSalt cleartextPassword, (err)->
+        return callback(err) if err
+        return user.save callback
 
 addProjectToAccount = (account, user, projectAttributes, streamAttributes, callback)->
   project = new Project name: projectAttributes.name, _account: account._id
@@ -46,7 +55,6 @@ module.exports = (accountAttributes, userAttributes, projectAttributes={}, strea
     streamAttributes = {}
 
   userAttributes.plan = accountAttributes.plan
-  userAttributes.herokuId = accountAttributes.herokuId
   userAttributes.herokuId = accountAttributes.herokuId
 
   account = new Account(accountAttributes)

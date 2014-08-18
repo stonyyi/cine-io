@@ -116,7 +116,7 @@ describe 'local authentication', ->
             expect(err).to.be.null
             expect(projects).to.have.length(1)
             project = projects[0]
-            expect(project.name).to.equal('Development')
+            expect(project.name).to.equal('First Project')
             EdgecastStream.find _project: project._id, (err, streams)=>
               expect(err).to.be.null
               expect(streams).to.have.length(1)

@@ -4,41 +4,27 @@ _ = require('underscore')
 addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 mailer = Cine.server_lib('mailer')
 deleteUser = Cine.server_lib('delete_user')
+createNewAccount = Cine.server_lib('create_new_account')
 
 nameFromEmail = (herokuId)->
   herokuId.split('@')[0]
 
-# they're creating or updating a plan, it cannot be deleted then
-getOrAddProjectToExistingUser = (user, herokuId, plan, callback)->
-  user.projects (err, projects)->
-    return callback(null, user, projects[0]) if projects.length > 0
-    project = new Project(name: nameFromEmail(herokuId))
-    project.save (err, project)->
-      return callback(err) if err
-      user.permissions.push objectId: project._id, objectName: 'Project'
-      setPlanAndEnsureNotDeleted user, plan, (err, user)->
-        callback(null, user, project)
-
 # herokuId: 'app6848@kensa.heroku.com'
 # plan: 'free'
 # callback(err, user, project)
-exports.createProjectAndUser = (herokuId, plan, callback)->
-  User.findOne herokuId: herokuId, (err, user)->
-    callback(err, project) if err
-    return getOrAddProjectToExistingUser(user, herokuId, plan, callback) if user
-
-    project = new Project(name: nameFromEmail(herokuId))
-    project.save (err, project)->
-      return callback(err) if err
-      user = new User(name: nameFromEmail(herokuId), plan: plan, herokuId: herokuId)
-      user.permissions.push objectId: project._id, objectName: 'Project'
-      user.save (err, user)->
-        return callback(err) if err
-        addNextStreamToProject project, (err, stream)->
-          # we still want to allow the project to be created even if there is no stream
-          mailer.admin.newUser(user, 'heroku')
-          return callback(null, user, project) if err == 'Next stream not available, please try again later'
-          callback(err, user, project)
+exports.newAccount = (herokuId, plan, callback)->
+  accountAttributes =
+    herokuId: herokuId
+    plan: plan
+  projectAttributes =
+    name: nameFromEmail(herokuId)
+  # TODO: DEPRECATED
+  userAttributes =
+    name: nameFromEmail(herokuId)
+  createNewAccount accountAttributes, userAttributes, projectAttributes, (err, results)->
+    return callback(err) if err
+    mailer.admin.newUser(results.user, 'heroku')
+    callback(null, results.user, results.project)
 
 # callback(err, user)
 exports.findUser = (userId, callback)->

@@ -58,7 +58,7 @@ module.exports = (app)->
     console.log "POSTING HEROKU RESOURCES", request.body
     herokuId = request.body.heroku_id
     plan = request.body.plan
-    findOrCreateResourcesFromHeroku.createProjectAndUser herokuId, plan, (err, user, project)->
+    findOrCreateResourcesFromHeroku.newAccount herokuId, plan, (err, user, project)->
       console.log('created heroku account', err, user, project)
       return response.send err, 400 if err
       return response.send 'could not make user', 400 unless user

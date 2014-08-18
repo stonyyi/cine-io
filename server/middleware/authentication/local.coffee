@@ -3,22 +3,20 @@ LocalStrategy = require('passport-local').Strategy
 User = Cine.server_model('user')
 createNewToken = Cine.middleware('authentication/remember_me').createNewToken
 ProjectCreate = Cine.api('projects/create')
+createNewAccount = Cine.server_lib('create_new_account')
 
-assignNewPasswordAndAddAProjectAndSave = (user, cleartext_password, req, callback)->
-  user.assignHashedPasswordAndSalt cleartext_password, (err)->
-    return callback(err, false) if err
-    ProjectCreate.addExampleProjectToUser user, (err, projectJSON, options)->
-      # we still want to allow the user to be created even if there is no stream
-      return callback(null, user) if err == 'Next stream not available, please try again later'
-      callback(err, user)
+createNewUser = (email, cleartextPassword, req, callback)->
+  accountAttributes =
+    plan: req.body.plan
+  userAttributes =
+    email: email
+    cleartextPassword: cleartextPassword
+  createNewAccount accountAttributes, userAttributes, (err, results)->
+    return callback(err) if err
+    callback(null, results.user)
 
-createNewUser = (email, cleartext_password, req, callback)->
-  plan = req.body.plan
-  user = new User(email: email, plan: plan)
-  assignNewPasswordAndAddAProjectAndSave(user, cleartext_password, req, callback)
-
-validatePasswordOfExistingUser = (user, cleartext_password, callback)->
-  user.isCorrectPassword cleartext_password, (err)->
+validatePasswordOfExistingUser = (user, cleartextPassword, callback)->
+  user.isCorrectPassword cleartextPassword, (err)->
     return callback(null, false) if err
     callback(null, user)
 
@@ -28,11 +26,11 @@ issueRememberMeToken = (req, res, next)->
     res.cookie('remember_me', token, maxAge: createNewToken.oneYear, httpOnly: true)
     next()
 
-strategyFunction = (req, email, cleartext_password, done)->
+strategyFunction = (req, email, cleartextPassword, done)->
   User.findOne email: email, (err, user)->
     return done(err) if err
-    return createNewUser(email, cleartext_password, req, done) unless user
-    validatePasswordOfExistingUser(user, cleartext_password, done)
+    return createNewUser(email, cleartextPassword, req, done) unless user
+    validatePasswordOfExistingUser(user, cleartextPassword, done)
 
 module.exports = (app) ->
   passport.use new LocalStrategy(passReqToCallback: true, strategyFunction)
