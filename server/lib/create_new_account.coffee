@@ -23,8 +23,7 @@ addProjectToAccount = (account, user, projectAttributes, streamAttributes, callb
       return callback(err) if err
 
       addNextStreamToProject project, name: streamAttributes.name, (err, stream)->
-        return callback(err) if err
-        callback(null, stream: stream, project: project)
+        callback(err, stream: stream, project: project)
 
 # callback err, project: project, stream: stream
 addFirstProjectToAccount = (account, user, projectAttributes, streamAttributes, callback)->
@@ -56,6 +55,7 @@ module.exports = (accountAttributes, userAttributes, projectAttributes={}, strea
     addUserToAccount account, userAttributes, (err, user)->
       return callback(err) if err
       addFirstProjectToAccount account, user, projectAttributes, streamAttributes, (err, results)->
-        return callback(err) if err
         # console.log("done results", results)
-        callback(null, account: account, user: user, project: results.project, stream: results.stream)
+        # we still want to allow the user to be created even if there is no stream
+        err = null if err == 'Next stream not available, please try again later'
+        callback(err, account: account, user: user, project: results.project, stream: results.stream)
