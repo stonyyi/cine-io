@@ -74,7 +74,6 @@ describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
     beforeEach ->
       @putStub = @fakeFtpClient.stub('put').callsArg(2)
 
-
     beforeEach ->
       @deleteStub = @fakeFtpClient.stub('delete')
       @deleteStub.withArgs('/ready_to_fix/exampleStream.mp4').callsArgWith 1, null
