@@ -80,6 +80,13 @@ describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
       @deleteStub.withArgs('/ready_to_fix/exampleStream.mp4').callsArgWith 1, null
       @deleteStub.withArgs('/ready_to_fix/exampleStream.1.mp4').callsArgWith 1, null
 
+    beforeEach ->
+      @execStub = sinon.stub(cp, 'exec')
+      @execStub.callsArgWith(1, null, "cmd STDOUT", "cmd STDERR")
+
+    afterEach ->
+      @execStub.restore()
+
     it 'downloads the files and reuploads them to /fixed_recordings', (done)->
       fixEdgecastCodecsOnNewStreamRecordings (err)=>
         expect(err).to.be.null
