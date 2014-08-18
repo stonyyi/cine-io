@@ -1,7 +1,6 @@
 environment = require('../config/environment')
 return console.error('not development') if environment != 'development'
 
-
 mongoose = require('mongoose')
 async = require 'async'
 _ = require 'underscore'
@@ -10,7 +9,7 @@ mongooseResultToUsable = (results)->
   _.map results, (result)->
     result[0]
 
-seed = (callback)->
+prepare = (callback)->
   console.log('seeding')
   createUsers = require('./seed/user_seed')
   createProjects = require('./seed/project_seed')
@@ -25,8 +24,7 @@ seed = (callback)->
       createStreams projects, (err, results)->
         console.log('third pass', err)
         console.log('done')
-        return process.exit(1) if err
-        return process.exit()
+        callback()
 
 resetMongo = (done)->
   if mongoose.connection._readyState == 1
@@ -36,4 +34,14 @@ resetMongo = (done)->
     console.log('ready2')
     mongoose.connection.db.dropDatabase done
 
-resetMongo(seed)
+done = (err)->
+  if err
+    console.log("DONE ERR", err)
+    process.exit(1)
+  process.exit()
+
+resetMongo ->
+  prepare (err)->
+    done(err) if err
+    Cine.require('seed') (err)->
+      done(err)
