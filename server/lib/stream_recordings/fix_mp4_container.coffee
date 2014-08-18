@@ -20,7 +20,7 @@ module.exports = (inputFile, outputFile, callback)->
       callback(err)
 
   callFfmpeg = (callback)->
-    cmd = "#{ffmpeg} -i #{inputFile} -c:v copy -c:a copy #{outputFile}"
+    cmd = "#{ffmpeg} -i #{inputFile} -c:v copy -c:a copy -movflags faststart #{outputFile}"
     console.log("Executing FFMPEG: ", cmd)
     exec cmd, (error, stdout, stderr)->
       if (error)
