@@ -68,7 +68,7 @@ describe 'processNewEdgecastRecordings', ->
         .onCall(5).returns(fullDefList.slice(0,2))
 
     beforeEach ->
-      @scheduleFixRecordingsNock = requireFixture('nock/schedule_ironio_worker')('stream_recordings/fix_edgecast_codecs_on_new_stream_recordings').nock
+      @scheduleFixRecordingsNock = requireFixture('nock/schedule_ironio_worker')('stream_recordings/fix_edgecast_codecs_on_new_stream_recordings', {}, {priority: 1}).nock
 
     it 'moves all the streams from a the /ready_to_fix directory to the project folder', (done)->
       processNewEdgecastRecordings (err)=>

@@ -66,7 +66,7 @@ describe 'fixEdgecastCodecsOnNewStreamRecordings', ->
     @putStub = @fakeFtpClient.stub('put').callsArg(2)
 
   beforeEach ->
-    @scheduleProcessFixedRecordingsNock = requireFixture('nock/schedule_ironio_worker')('stream_recordings/process_fixed_recordings').nock
+    @scheduleProcessFixedRecordingsNock = requireFixture('nock/schedule_ironio_worker')('stream_recordings/process_fixed_recordings', {}, {priority: 1}).nock
 
   beforeEach ->
     @deleteStub = @fakeFtpClient.stub('delete')
