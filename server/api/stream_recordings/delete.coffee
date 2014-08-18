@@ -2,6 +2,7 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 getProject = Cine.server_lib('get_project')
 deleteStreamRecordingOnEdgecast = Cine.server_lib('delete_stream_recording_on_edgecast')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
+_ = require('underscore')
 
 module.exports = (params, callback)->
   getProject params, requires: 'secret', userOverride: true, (err, project, options)->
@@ -17,11 +18,17 @@ module.exports = (params, callback)->
       return callback(err, null, status: 400) if err
       return callback("stream not found", null, status: 404) unless stream
       return callback("name required", null, status: 404) unless params.name
-      deleteStreamRecordingOnEdgecast stream, params.name, (err)->
-        query = _edgecastStream: stream._id
-        update =
-          $pull: {recordings: {name: params.name}}
-        options = safe: true, multi: false
-        EdgecastRecordings.update query, update, options, (err, numAffected)->
-          return callback(err, null, status: 400) if err
-          callback(null, deletedAt: new Date)
+      query = _edgecastStream: stream._id
+      EdgecastRecordings.findOne query, (err, recordings)->
+        return callback(err, null, status: 400) if err
+        return callback("recording not found", null, status: 404) unless recordings
+        savedRecordingEntry = _.findWhere recordings.recordings, name: params.name
+        return callback("recording not found", null, status: 404) unless savedRecordingEntry
+
+        deleteStreamRecordingOnEdgecast stream, params.name, (err)->
+          update =
+            $pull: {recordings: {name: params.name}}
+          options = safe: true, multi: false
+          EdgecastRecordings.update query, update, options, (err, numAffected)->
+            return callback(err, null, status: 400) if err
+            callback(null, deletedAt: new Date)

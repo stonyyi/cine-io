@@ -61,6 +61,20 @@ describe 'StreamRecordings#Delete', ->
         expect(options.status).to.equal(404)
         done()
 
+    describe 'invalid name', ->
+      beforeEach (done)->
+        @recordings = new EdgecastRecordings(_edgecastStream: @projectStream._id)
+        @recordings.recordings.push name: "rec1.mp4", size: 12345, date: new Date
+        @recordings.recordings.push name: "abc", size: 67890, date: new Date
+        @recordings.save done
+      it 'errors when the stream recording does not contain that name', (done)->
+        params = secretKey: @project.secretKey, id: @projectStream._id, name: 'def'
+        Delete params, (err, response, options)->
+          expect(err).to.equal('recording not found')
+          expect(response).to.be.null
+          expect(options.status).to.equal(404)
+          done()
+
   describe 'success', ->
     beforeEach (done)->
       @recordings = new EdgecastRecordings(_edgecastStream: @projectStream._id)
