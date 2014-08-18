@@ -69,7 +69,7 @@
     "jquery": "^2.1.1",
     "jsdom": "^0.10.6",
     "mocha": "1.18.2",
-    "nock": "git://github.com/cine-io/nock.git#73e36d4664939de32de533b2c8ca68414c4fc223",
+    "nock": "0.45.0",
     "nodemon": "1.0.17",
     "sinon": "1.9.1",
     "supertest": "0.12.1"
