@@ -6,7 +6,7 @@ BillingProviderSchema  = new mongoose.Schema
   url:
     type: String
 
-BillingProviderSchema .plugin(Cine.server_lib('mongoose_timestamps'))
+BillingProviderSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
 BillingProvider = mongoose.model 'BillingProvider', BillingProviderSchema
 

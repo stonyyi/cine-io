@@ -36,6 +36,7 @@ AccountSchema = new mongoose.Schema
     index: true
     sparse: true
 
+AccountSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
 AccountSchema.methods.streamLimit = ->
   switch @tempPlan
@@ -59,8 +60,6 @@ AccountSchema.pre 'save', (next)->
 
 AccountSchema.methods.projects = (callback)->
   Project.find().where('_account').equals(@_id).exists('deletedAt', false).sort(createdAt: 1).exec(callback)
-
-AccountSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
 Account = mongoose.model 'Account', AccountSchema
 

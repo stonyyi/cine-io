@@ -21,7 +21,7 @@ BillingPlanSchema  = new mongoose.Schema
     type: mongoose.Schema.Types.ObjectId
     ref: 'BillingProvider'
 
-BillingPlanSchema .plugin(Cine.server_lib('mongoose_timestamps'))
+BillingPlanSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
 BillingPlan = mongoose.model 'BillingPlan', BillingPlanSchema
 
