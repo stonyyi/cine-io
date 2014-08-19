@@ -41,8 +41,13 @@ AccountSchema.pre 'save', (next)->
     @masterKey = buf.toString('hex')
     next()
 
+AccountSchema.methods.projects = (callback)->
+  Project.find().where('_account').equals(@_id).exists('deletedAt', false).sort(createdAt: 1).exec(callback)
+
 AccountSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
 Account = mongoose.model 'Account', AccountSchema
 
 module.exports = Account
+
+Project = Cine.server_model('project')

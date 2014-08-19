@@ -1,6 +1,7 @@
 Account = Cine.server_model('account')
 _ = require('underscore')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
+Project = Cine.server_model('project')
 
 describe 'Account', ->
   modelTimestamps(Account, name: 'hey')
@@ -22,3 +23,27 @@ describe 'Account', ->
         account.save (err)->
           expect(account.masterKey).to.equal(masterKey)
           done(err)
+
+  describe '#projects', ->
+
+    beforeEach (done)->
+      @account = new Account(tempPlan: 'test')
+      @account.save done
+
+    beforeEach (done)->
+      @ownedProject1 = new Project(name: "in test project", _account: @account._id)
+      @ownedProject1.save done
+    beforeEach (done)->
+      @ownedProject2 = new Project(name: "in test project2", _account: @account._id)
+      @ownedProject2.save done
+    beforeEach (done)->
+      @notOwnedProject = new Project(name: "in test project3")
+      @notOwnedProject.save done
+
+    it 'returns the projects', (done)->
+      @account.projects (err, projects)=>
+        expect(err).to.be.null
+        expect(projects).to.have.length(2)
+        expect(projects[0]._id.toString()).to.equal(@ownedProject1._id.toString())
+        expect(projects[1]._id.toString()).to.equal(@ownedProject2._id.toString())
+        done()
