@@ -1,6 +1,6 @@
 Project = Cine.server_model('project')
 _ = require('underscore')
-getUser = Cine.server_lib('get_user')
+getAccount = Cine.server_lib('get_account')
 Show = Cine.api('projects/show')
 async = require('async')
 
@@ -11,11 +11,9 @@ toJsonProxy = (model)->
   model.toJSON()
 
 module.exports = (params, callback)->
-  getUser params, (err, user, status)->
-    return callback(err, user, status) if err
-    projectIds = _.chain(user.permissions, isProject).pluck('objectId').value()
-    return callback(null, []) if _.isEmpty(projectIds)
-    user.projects (err, projects)->
+  getAccount params, (err, account, status)->
+    return callback(err, account, status) if err
+    account.projects (err, projects)->
       return callback(err, null, status: 400) if err
       async.map projects, Show.toJSON, (err, response)->
         callback(err, response)

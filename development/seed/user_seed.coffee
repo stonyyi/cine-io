@@ -12,9 +12,7 @@ adminMaker = (name, callback)->
     name: name
     isSiteAdmin: true
     cleartextPassword: 'cine'
-  createNewAccount accountAttributes, userAttributes, (err, results)->
-    return callback(err) if err
-    callback(null, results.user)
+  createNewAccount accountAttributes, userAttributes, callback
 
 module.exports = (callback)->
   console.log('creating users')

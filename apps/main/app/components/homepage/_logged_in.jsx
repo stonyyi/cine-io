@@ -11,13 +11,14 @@ module.exports = React.createClass({
   displayName: 'LoggedIn',
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
   propTypes: {
-    collection: React.PropTypes.instanceOf(Projects).isRequired
+    collection: React.PropTypes.instanceOf(Projects).isRequired,
+    masterKey: React.PropTypes.string.isRequired
   },
   getInitialState: function(){
-    return {selectedProjectId: null, showingNewProject: false};
+    return {selectedProjectId: null, showingNewProject: false, };
   },
   componentDidMount: function() {
-    this.props.collection.fetch();
+    this.props.collection.fetch({ data: { masterKey: this.props.masterKey} });
   },
   getBackboneObjects: function(){
     return this.props.collection;
@@ -60,7 +61,7 @@ module.exports = React.createClass({
     });
 
     if (this.state.showingNewProject){
-      newProject = (<NewProject app={this.props.app}/>);
+      newProject = (<NewProject app={this.props.app} masterKey={this.props.masterKey}/>);
     }
     if (selectedProjectId){
       var selectedProject = this.props.collection.get(selectedProjectId);

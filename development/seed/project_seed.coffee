@@ -9,19 +9,24 @@ testStripeData =
   stripeUserId: "acct_102czJ2AL5avr9E4"
   stripePublishableKey: "pk_test_ckE0OqfgahrU3Xje3RhMi0mV"
 
-createProjectWithUsers = (users, attributes, callback)->
+createProjectWithUsers = (accountsAndUsers, attributes, callback)->
     project = new Project attributes
     project.save (err)->
-      addPermission = (user, cb)->
-        user.permissions.push objectId: project._id, objectName: 'Project'
-        user.save cb
-      async.each users, addPermission, (err)->
+      addPermission = (accountsAndUser, cb)->
+        accountsAndUser.user.permissions.push objectId: project._id, objectName: 'Project'
+        accountsAndUser.user.save (err, user)->
+          return cb(err) if err
+          project._account = accountsAndUser.account._id
+          project.save cb
+      accountAndUser = _.sample(accountsAndUsers)
+
+      addPermission accountAndUser, (err)->
         callback(null, project)
 
-module.exports = (users, cb)->
+module.exports = (accountsAndUsers, cb)->
   console.log('creating projects')
   async.parallel [(callback) ->
-    createProjectWithUsers(users, name: 'Giving Stage (Development)', callback)
+    createProjectWithUsers(accountsAndUsers, name: 'Giving Stage (Development)', callback)
   , (callback) ->
-    createProjectWithUsers(users, name: 'Giving Stage (Production)', callback)
+    createProjectWithUsers(accountsAndUsers, name: 'Giving Stage (Production)', callback)
   ], cb

@@ -54,3 +54,11 @@ testApi.requresLoggedIn = (testApiResource)->
       expect(response).to.be.null
       expect(options.status).to.equal(401)
       done()
+
+testApi.requiresMasterKey = (testApiResource)->
+  it 'requires an account masterKey', (done)->
+    testApiResource {}, (err, response, options)->
+      expect(err).to.equal('masterKey not supplied')
+      expect(response).to.be.null
+      expect(options.status).to.equal(401)
+      done()

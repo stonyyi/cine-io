@@ -17,8 +17,8 @@ prepare = (callback)->
 
   async.parallel [createUsers], (err, results)->
     console.log('first pass', err)
-    users = results[0]
-    createProjects users, (err, results)->
+    accountsAndUsers = results[0]
+    createProjects accountsAndUsers, (err, results)->
       console.log('second pass', err)
       projects = results
       createStreams projects, (err, results)->

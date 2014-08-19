@@ -34,6 +34,11 @@ module.exports = class App extends BaseApp
       $('body').scrollTo('#content', 200, easing: 'easeOutQuart')
     ), this
 
+  # assume a single account for now
+  # will be able to be set later on
+  currentAccount: ->
+    @currentUser.get('accounts')[0]
+
   _setupTracker: ->
     @tracker.load()
     @currentUser.on 'login', =>

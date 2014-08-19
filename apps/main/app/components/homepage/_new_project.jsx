@@ -8,6 +8,9 @@ var
 module.exports = React.createClass({
   displayName: 'NewProject',
   mixins: [Cine.lib('requires_app')],
+  propTypes: {
+    masterKey: React.PropTypes.string.isRequired
+  },
   getInitialState: function() {
     return {};
   },
@@ -21,6 +24,7 @@ module.exports = React.createClass({
       data = qs.parse(form.serialize()),
       projectAttrs = data.project;
     projectAttrs.createStream = true;
+    projectAttrs.masterKey = this.props.masterKey;
     var p = new Project(projectAttrs, {app: this.props.app});
     p.save(null, {
       success: function(model, response, options){

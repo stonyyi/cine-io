@@ -2,7 +2,7 @@ _ = require('underscore')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
 createNewStreamInEdgecast = Cine.server_lib('create_new_stream_in_edgecast')
-User = Cine.server_model('user')
+Account = Cine.server_model('account')
 noop = ->
 
 infinitePlan = (plan)->
@@ -19,21 +19,20 @@ returnExistingStream = (project, callback)->
 projectSummer = (accumulator, project)->
   project.streamsCount + accumulator
 
-checkAllOtherProjects = (user, callback)->
-  user.projects (err, projects)->
+checkAllOtherProjects = (account, callback)->
+  account.projects (err, projects)->
     return callback(err, null) if err
     streamsSum = _.inject(projects, projectSummer, 0) || 0
-    callback null, streamsSum < user.streamLimit()
+    callback null, streamsSum < account.streamLimit()
 
-ensureUserCanAddAnotherStream = (project, callback)->
-  query = "permissions.objectId": project._id, "permissions.objectName": 'Project'
-  User.findOne query, (err, user)->
-    return callback(err || 'no user for project') if err || !user
-    # if the user has no plan, return an error
-    return callback('user not on a plan') unless user.plan
-    # if the user is on an infinite plan, just return true
-    return callback(null, true) if user.streamLimit() == Infinity
-    checkAllOtherProjects(user, callback)
+ensureAccountCanAddAnotherStream = (project, callback)->
+  Account.findById project._account, (err, account)->
+    return callback(err || 'no account for project') if err || !account
+    # if the account has no plan, return an error
+    return callback('account not on a plan') unless account.tempPlan
+    # if the account is on an infinite plan, just return true
+    return callback(null, true) if account.streamLimit() == Infinity
+    checkAllOtherProjects(account, callback)
 
 allocateNewStreamToProject = (project, options, callback)->
   EdgecastStream.nextAvailable (err, stream)->
@@ -54,7 +53,7 @@ module.exports = (project, options, callback)->
   if typeof options == "function"
     callback = options
     options = {}
-  ensureUserCanAddAnotherStream project, (err, canAddAnotherStream)->
+  ensureAccountCanAddAnotherStream project, (err, canAddAnotherStream)->
     # console.log("checked", err, canAddAnotherStream)
     return returnExistingStream(project, callback) unless canAddAnotherStream
     allocateNewStreamToProject(project, options, callback)
