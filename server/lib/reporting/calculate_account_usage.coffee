@@ -2,22 +2,22 @@ Project = Cine.server_model('project')
 CalculateProjectUsage = Cine.server_lib('reporting/calculate_project_usage')
 async = require('async')
 
-exports.byMonth = (user, month, callback)->
-  projectIds = user.permissionIdsFor('Project')
+exports.byMonth = (account, month, callback)->
 
-  calculateProjectUsage = (accum, projectId, callback)->
-    CalculateProjectUsage.byMonth projectId, month, (err, projectMonthlyBytes)->
+  calculateProjectUsage = (accum, project, callback)->
+    CalculateProjectUsage.byMonth project._id, month, (err, projectMonthlyBytes)->
       return callback(err) if err
       callback(null, accum + projectMonthlyBytes)
 
-  async.reduce projectIds, 0, calculateProjectUsage, callback
+  account.projects (err, projects)->
+    async.reduce projects, 0, calculateProjectUsage, callback
 
-exports.total = (user, callback)->
-  projectIds = user.permissionIdsFor('Project')
+exports.total = (account, callback)->
 
-  calculateProjectUsage = (accum, projectId, callback)->
-    CalculateProjectUsage.total projectId, (err, projectMonthlyBytes)->
+  calculateProjectUsage = (accum, project, callback)->
+    CalculateProjectUsage.total project._id, (err, projectMonthlyBytes)->
       return callback(err) if err
       callback(null, accum + projectMonthlyBytes)
 
-  async.reduce projectIds, 0, calculateProjectUsage, callback
+  account.projects (err, projects)->
+    async.reduce projects, 0, calculateProjectUsage, callback

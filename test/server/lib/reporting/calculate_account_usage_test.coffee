@@ -1,4 +1,4 @@
-User = Cine.server_model('user')
+Account = Cine.server_model('account')
 Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')
 EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
@@ -7,19 +7,17 @@ CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 describe 'CalculateAccountUsage', ->
 
   beforeEach (done)->
-    @project1 = new Project(name: 'project1')
+    @account = new Account(name: 'dat account', tempPlan: 'startup')
+    @account.save done
+  beforeEach (done)->
+    @project1 = new Project(name: 'project1', _account: @account._id)
     @project1.save done
   beforeEach (done)->
-    @project2 = new Project(name: 'project2')
+    @project2 = new Project(name: 'project2', _account: @account._id)
     @project2.save done
   beforeEach (done)->
     @notOwnedProject = new Project(name: 'notOwnedProject')
     @notOwnedProject.save done
-  beforeEach (done)->
-    @user = new User(name: 'project owner', plan: 'startup')
-    @user.permissions.push objectId: @project1._id, objectName: "Project"
-    @user.permissions.push objectId: @project2._id, objectName: "Project"
-    @user.save done
   beforeEach (done)->
     @stream1 = new EdgecastStream(_project: @project1._id)
     @stream1.save done
@@ -81,27 +79,27 @@ describe 'CalculateAccountUsage', ->
   describe '#byMonth', ->
 
     it 'can aggrigate for this month', (done)->
-      CalculateAccountUsage.byMonth @user, @thisMonth, (err, monthlyBytes)->
+      CalculateAccountUsage.byMonth @account, @thisMonth, (err, monthlyBytes)->
         expect(err).to.be.undefined
         expect(monthlyBytes).to.equal(31376164)
         done()
 
     it 'can aggrigate by last month', (done)->
-      CalculateAccountUsage.byMonth @user, @lastMonth, (err, monthlyBytes)->
+      CalculateAccountUsage.byMonth @account, @lastMonth, (err, monthlyBytes)->
         expect(err).to.be.undefined
         expect(monthlyBytes).to.equal(12172316)
         done()
 
     it 'can aggrigate by two months ago', (done)->
-      CalculateAccountUsage.byMonth @user, @twoMonthsAgo, (err, monthlyBytes)->
+      CalculateAccountUsage.byMonth @account, @twoMonthsAgo, (err, monthlyBytes)->
         expect(err).to.be.undefined
         expect(monthlyBytes).to.equal(0)
         done()
 
   describe '#total', ->
 
-    it 'can aggrigate all user projects', (done)->
-      CalculateAccountUsage.total @user, (err, monthlyBytes)->
+    it 'can aggrigate all account projects', (done)->
+      CalculateAccountUsage.total @account, (err, monthlyBytes)->
         expect(err).to.be.undefined
         expect(monthlyBytes).to.equal(43548480)
         done()

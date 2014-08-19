@@ -23,7 +23,7 @@ describe 'UsageReportsController', ->
 
     describe 'with a current user', ->
       beforeEach ->
-        mainApp.currentUser.set(id: 'my id', masterKey: 'the master key')
+        mainApp.currentUser.set(id: 'my id', accounts: [{masterKey: 'the master key'}])
 
       afterEach ->
         mainApp.currentUser.clear()

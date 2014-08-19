@@ -3,7 +3,7 @@ exports.show = (params, callback)->
   return callback(status: 401) unless @app.currentUser.isLoggedIn()
 
   spec =
-    model: { model: 'UsageReport', params: { masterKey: @app.currentUser.get('masterKey') } }
+    model: { model: 'UsageReport', params: { masterKey: @app.currentAccount().masterKey } }
 
   @app.fetch spec, (err, result)->
     callback(err, result)
