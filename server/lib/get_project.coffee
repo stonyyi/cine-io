@@ -1,6 +1,6 @@
 Project = Cine.server_model('project')
 User = Cine.server_model('user')
-PermissionManager = Cine.lib('permission_manager')
+_ = require('underscore')
 
 requiredMessage = (requires)->
   switch requires
@@ -27,13 +27,16 @@ doFind = (queryParams, options, callback)->
     # return secure: true if we queried based on an secretKey
     callback(null, project, secure: queryParams.secretKey?)
 
+userCanEditProject = (user, project)->
+  _.any user._accounts, (accountId)->
+    accountId.toString() == project._account.toString()
+
 userOverrideVersion = (params, options, callback)->
   doFind {publicKey: params.publicKey}, options, (err, project, returnOptions)->
     return callback(err, project, returnOptions) if err || !project
     User.findById params.sessionUserId, (err, user)->
       return callback(err, null, status: 400) if err
-      p = new PermissionManager(user.permissions)
-      return callback('not permitted', null, status: 401) unless p.check('edit', project)
+      return callback('not permitted', null, status: 401) unless userCanEditProject(user, project)
       callback(null, project, secure: true)
 
 module.exports = (params, options, callback)->

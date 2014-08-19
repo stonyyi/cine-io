@@ -1,5 +1,6 @@
 Project = Cine.server_model('project')
 User = Cine.server_model('user')
+Account = Cine.server_model('account')
 getProject = Cine.server_lib('get_project')
 
 describe 'getProject', ->
@@ -7,6 +8,10 @@ describe 'getProject', ->
   beforeEach (done)->
     @project = new Project(name: 'my project')
     @project.save done
+
+  beforeEach (done)->
+    @account = new Account(name: 'my account', tempPlan: 'free')
+    @account.save done
 
   beforeEach (done)->
     @user = new User(name: 'the user', email: 'some email', plan: 'free')
@@ -53,11 +58,16 @@ describe 'getProject', ->
         expect(project).to.be.null
         expect(options).to.deep.equal(status: 401)
         done()
+    describe 'success', ->
+      beforeEach (done)->
+        @user._accounts.push @account._id
+        @user.save done
 
-    it 'returns a project based on a logged in user', (done)->
-      @user.permissions.push objectId: @project._id, objectName: 'Project'
-      @user.save (err, user)=>
-        expect(err).to.be.null
+      beforeEach (done)->
+        @project._account = @account._id
+        @project.save done
+
+      it 'returns a project based on a logged in user', (done)->
         getProject {sessionUserId: @user._id.toString(), publicKey: @project.publicKey}, requires: 'secret', userOverride: 'true', (err, project, options)=>
           expect(err).to.be.null
           expect(project._id.toString()).to.equal(@project._id.toString())
