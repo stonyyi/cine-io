@@ -1,20 +1,18 @@
 User = Cine.server_model('user')
-ShowUser = testApi Cine.api('users/show')
+Account = Cine.server_model('account')
+Show = testApi Cine.api('users/show')
 
-describe 'Users#show', ->
+describe 'Users#Show', ->
+  testApi.requresLoggedIn Show
 
   beforeEach (done)->
-    @user = new User name: 'Mah name', email: 'mah@example.com', plan: 'free'
+    @account = new Account(name: 'account name yo', tempPlan: 'free')
+    @account.save done
+
+  beforeEach (done)->
+    @user = new User name: 'Mah name', email: 'mah@example.com', plan: @account.tempPlan
+    @user._accounts.push @account._id
     @user.save done
-
-  it 'requires a masterKey', (done)->
-    params = {}
-    callback = (err, response)->
-      expect(err).to.equal("not logged in or masterKey not supplied")
-      expect(response).to.equal(null)
-      done()
-
-    ShowUser params, callback
 
   it 'returns the user when given a masterKey', (done)->
     params = { masterKey: @user.masterKey }
@@ -24,7 +22,7 @@ describe 'Users#show', ->
       expect(response.masterKey).to.equal(@user.masterKey)
       done()
 
-    ShowUser params, callback
+    Show params, callback
 
   it 'returns the user when loggedIn', (done)->
     params = { sessionUserId: @user._id }
@@ -32,6 +30,8 @@ describe 'Users#show', ->
       expect(err).to.equal(null)
       expect(response.email).to.equal('mah@example.com')
       expect(response.masterKey).to.equal(@user.masterKey)
+      expect(response.accounts).to.have.length(1)
+      expect(response.accounts[0].name).to.equal('account name yo')
       done()
 
-    ShowUser params, callback
+    Show params, callback
