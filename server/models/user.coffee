@@ -88,13 +88,6 @@ UserSchema.methods.lastName = ->
   parts = @name.split(' ')
   parts.slice(1, parts.length).join(' ')
 
-UserSchema.methods.permissionIdsFor = (objectName)->
-  _.chain(@permissions).where(objectName: objectName).pluck('objectId').value()
-
-UserSchema.methods.projects = (callback)->
-  ids = @permissionIdsFor('Project')
-  Project.find().where('_id').in(ids).exists('deletedAt', false).sort(createdAt: 1).exec(callback)
-
 UserSchema.methods.isCorrectPassword = (cleartext_password, callback)->
   generateHashForPasswordAndSalt cleartext_password, @password_salt, (err, hash, salt)=>
     return callback(err) if err

@@ -213,13 +213,11 @@ describe 'github auth', ->
           expect(currentUser.id.toString()).to.equal(@user._id.toString())
           done()
 
-      it 'does not add a project', (done)->
+      it 'does not add an account', (done)->
         User.findOne githubId: 135461, (err, user)->
           expect(err).to.be.null
-          user.projects (err, projects)->
-            expect(err).to.be.null
-            expect(projects).to.have.length(0)
-            done()
+          expect(user._accounts).to.have.length(0)
+          done()
 
       it 'sets a remember me token', (done)->
         remember_me = @res.headers['set-cookie'][0]

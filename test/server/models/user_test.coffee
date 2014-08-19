@@ -129,36 +129,3 @@ describe 'User', ->
     it 'has a lastName', ->
       u = new User(name: 'my full name')
       expect(u.lastName()).to.equal("full name")
-
-  describe '#projects and #permissionIdsFor', ->
-    beforeEach (done)->
-      @ownedProject1 = new Project(name: "in test project")
-      @ownedProject1.save done
-    beforeEach (done)->
-      @ownedProject2 = new Project(name: "in test project2")
-      @ownedProject2.save done
-    beforeEach (done)->
-      @notOwnedProject = new Project(name: "in test project3")
-      @notOwnedProject.save done
-    beforeEach (done)->
-      @user = new User(plan: 'test')
-      @user.permissions.push objectId: @ownedProject1._id, objectName: 'Project'
-      @user.permissions.push objectId: @ownedProject2._id, objectName: 'Project'
-      @user.save done
-
-    describe '#permissionIdsFor', ->
-      stringIds = (ary)->
-        _.chain(ary).pluck('_id').invoke('toString').value().sort()
-
-      it "returns the ids users's Projects", ->
-        expectedProjectIds = stringIds([@ownedProject1, @ownedProject2])
-        projectIds = _.invoke(@user.permissionIdsFor('Project'), 'toString').sort()
-        expect(projectIds).to.deep.equal(expectedProjectIds)
-
-      it 'returns the users projects', (done)->
-        expectedProjectIds = stringIds([@ownedProject1, @ownedProject2])
-        @user.projects (err, projects)->
-          projectIds = stringIds(projects)
-          expect(err).to.be.null
-          expect(projectIds).to.deep.equal(expectedProjectIds)
-          done()
