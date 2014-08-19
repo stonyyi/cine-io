@@ -2,7 +2,6 @@ _ = require('underscore')
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
 Delete = testApi Cine.api('stream_recordings/delete')
 Project = Cine.server_model('project')
-User = Cine.server_model('user')
 EdgecastStream = Cine.server_model('edgecast_stream')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
 
@@ -15,11 +14,6 @@ describe 'StreamRecordings#Delete', ->
   beforeEach (done)->
     @project = new Project(name: 'my project')
     @project.save done
-
-  beforeEach (done)->
-    @user = new User name: 'some user', email: 'my email', plan: 'free'
-    @user.permissions.push objectId: @project._id, objectName: 'Project'
-    @user.save done
 
   beforeEach (done)->
     @projectStream = new EdgecastStream
