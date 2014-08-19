@@ -1,6 +1,6 @@
 mongoose = require 'mongoose'
 crypto = require('crypto')
-
+BackboneUser = Cine.model('user')
 
 StripeCard = new mongoose.Schema
   stripeCardId: String
@@ -20,6 +20,7 @@ AccountSchema = new mongoose.Schema
   # TODO: DEPRECATED
   tempPlan:
     type: String
+    required: true
   _billingProvider:
     type: mongoose.Schema.Types.ObjectId
     ref: 'BillingProvider'
@@ -34,6 +35,21 @@ AccountSchema = new mongoose.Schema
     type: String
     index: true
     sparse: true
+
+
+AccountSchema.methods.streamLimit = ->
+  switch @tempPlan
+    when 'free', 'starter' then 1
+    when 'solo' then 5
+    when 'startup', 'enterprise', 'test' then Infinity
+    else throw new Error("Don't know this plan")
+
+herokuSpecificPlans = ['test', 'starter', 'foo']
+
+planRegex = new RegExp BackboneUser.plans.concat(herokuSpecificPlans).join('|')
+AccountSchema.path('tempPlan').validate ((value)->
+  planRegex.test value
+), 'Invalid plan'
 
 AccountSchema.pre 'save', (next)->
   return next() if @masterKey

@@ -123,7 +123,7 @@ describe 'findOrCreateResourcesFromHeroku', ->
   describe 'updatePlan', ->
 
     beforeEach (done)->
-      @account = new Account(plan: 'test')
+      @account = new Account(tempPlan: 'test')
       @account.save done
 
     beforeEach (done)->
@@ -158,7 +158,7 @@ describe 'findOrCreateResourcesFromHeroku', ->
   describe 'deleteAccount', ->
 
     beforeEach (done)->
-      @account = new Account(plan: 'test')
+      @account = new Account(tempPlan: 'test')
       @account.save done
 
     it "adds deletedAt to an account", (done)->
