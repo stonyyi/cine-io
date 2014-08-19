@@ -13,7 +13,7 @@ StripeCard = new mongoose.Schema
 AccountSchema = new mongoose.Schema
   name:
     type: String
-  masterEmail:
+  billingEmail:
     type: String
   masterKey:
     type: String
