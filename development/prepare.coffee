@@ -17,7 +17,7 @@ prepare = (callback)->
 
   async.parallel [createUsers], (err, results)->
     console.log('first pass', err)
-    users = mongooseResultToUsable(results[0])
+    users = results[0]
     createProjects users, (err, results)->
       console.log('second pass', err)
       projects = results
@@ -41,7 +41,7 @@ done = (err)->
   process.exit()
 
 resetMongo ->
-  prepare (err)->
+  Cine.require('seed') (err)->
     done(err) if err
-    Cine.require('seed') (err)->
+    prepare (err)->
       done(err)
