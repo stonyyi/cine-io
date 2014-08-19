@@ -18,6 +18,7 @@ exports.newAccount = (herokuId, plan, callback)->
     herokuId: herokuId
     name: nameFromEmail(herokuId)
     plan: plan
+    billingProviderName: 'heroku'
   projectAttributes =
     name: nameFromEmail(herokuId)
   # TODO: DEPRECATED

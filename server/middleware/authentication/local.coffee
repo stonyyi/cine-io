@@ -8,6 +8,7 @@ createNewAccount = Cine.server_lib('create_new_account')
 createNewUser = (email, cleartextPassword, req, callback)->
   accountAttributes =
     plan: req.body.plan
+    billingProviderName: 'cine.io'
   userAttributes =
     email: email
     cleartextPassword: cleartextPassword

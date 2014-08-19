@@ -2,15 +2,19 @@ Account = Cine.server_model("account")
 EdgecastStream = Cine.server_model("edgecast_stream")
 User = Cine.server_model("user")
 Project = Cine.server_model("project")
+BillingProvider = Cine.server_model('billing_provider')
 _ = require('underscore')
 addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 createNewAccount = Cine.server_lib('create_new_account')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
+requiresSeed = Cine.require 'test/helpers/requires_seed'
 
 describe 'createNewAccount', ->
 
+  requiresSeed()
+
   beforeEach ->
-    @accountAttributes = name: "the new account name", plan: 'starter', herokuId: 'heroku-id-yo'
+    @accountAttributes = name: "the new account name", plan: 'starter', herokuId: 'heroku-id-yo', billingProviderName: 'heroku'
     @userAttributes = email: "my-email", name: 'user name'
     @projectAttributes = name: 'this project'
     @streamAttributes = name: 'this stream'
@@ -26,6 +30,12 @@ describe 'createNewAccount', ->
       Account.findById @results.account._id, (err, account)->
         expect(err).to.be.null
         expect(account.name).to.equal("the new account name")
+        done()
+
+    it 'links the provider', (done)->
+      BillingProvider.findById @results.account._billingProvider, (err, provider)->
+        expect(err).to.be.null
+        expect(provider.name).to.equal('heroku')
         done()
 
     it 'creates a user', (done)->

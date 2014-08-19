@@ -36,7 +36,9 @@ createNewUser = (profile, plan, accessToken, callback)->
   email = profile.emails[0] && profile.emails[0].value
   console.log(profile)
   saveUser = ->
-    accountAttributes = plan: plan
+    accountAttributes =
+      plan: plan
+      billingProviderName: 'cine.io'
     userAttributes =
       githubId: profile.id
       email: email

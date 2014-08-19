@@ -57,8 +57,8 @@ createPlans = (providers, callback)->
 module.exports = (callback)->
   createProviders (err, providers)->
     return callback(err) if err
-    console.log("created providers", providers)
+    # console.log("created providers", providers)
     createPlans providers, (err, plans)->
       return callback(err) if err
-      console.log("created plans", plans)
+      # console.log("created plans", plans)
       callback()

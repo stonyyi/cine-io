@@ -1,6 +1,7 @@
 Account = Cine.server_model("account")
 User = Cine.server_model("user")
 Project = Cine.server_model("project")
+BillingProvider = Cine.server_model('billing_provider')
 _ = require('underscore')
 addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 
@@ -57,15 +58,23 @@ module.exports = (accountAttributes, userAttributes, projectAttributes={}, strea
   userAttributes.plan = accountAttributes.plan
   accountAttributes.tempPlan = accountAttributes.plan
   userAttributes.herokuId = accountAttributes.herokuId
-
-  account = new Account(accountAttributes)
-  account.save (err, account)->
-    return callback(err) if err
-    userAttributes.masterKey = account.masterKey
-    addUserToAccount account, userAttributes, (err, user)->
+  go = ->
+    account = new Account(accountAttributes)
+    account.save (err, account)->
       return callback(err) if err
-      addFirstProjectToAccount account, user, projectAttributes, streamAttributes, (err, results)->
-        # console.log("done results", results)
-        # we still want to allow the user to be created even if there is no stream
-        err = null if err == 'Next stream not available, please try again later'
-        callback(err, account: account, user: user, project: results.project, stream: results.stream)
+      userAttributes.masterKey = account.masterKey
+      addUserToAccount account, userAttributes, (err, user)->
+        return callback(err) if err
+        addFirstProjectToAccount account, user, projectAttributes, streamAttributes, (err, results)->
+          # console.log("done results", results)
+          # we still want to allow the user to be created even if there is no stream
+          err = null if err == 'Next stream not available, please try again later'
+          callback(err, account: account, user: user, project: results.project, stream: results.stream)
+  if accountAttributes.billingProviderName
+    BillingProvider.findOne name: accountAttributes.billingProviderName, (err, billingProvider)->
+      return callback(err) if err
+      accountAttributes._billingProvider = billingProvider._id if billingProvider
+      go()
+
+  else
+    go()

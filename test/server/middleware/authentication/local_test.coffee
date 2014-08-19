@@ -1,11 +1,14 @@
 supertest = require('supertest')
 User = Cine.server_model('user')
+BillingProvider = Cine.server_model('billing_provider')
+Account = Cine.server_model('account')
 app = Cine.require('app').app
 RememberMeToken = Cine.server_model('remember_me_token')
 EdgecastStream = Cine.server_model('edgecast_stream')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 login = Cine.require 'test/helpers/login_helper'
 expectSentryLog = Cine.require('test/helpers/expect_sentry_log')
+requiresSeed = Cine.require 'test/helpers/requires_seed'
 
 describe 'local authentication', ->
 
@@ -77,6 +80,8 @@ describe 'local authentication', ->
 
     stubEdgecast()
 
+    requiresSeed()
+
     it 'returns the user', (done)->
       login @agent, 'new email', 'new pass', 'solo', (err, res)->
         response = JSON.parse(res.text)
@@ -91,12 +96,36 @@ describe 'local authentication', ->
           expect(user.email).to.equal('new email')
           done(err)
 
+    it 'creates an account', (done)->
+      login @agent, 'new email', 'new pass', 'free', (err, res)->
+        response = JSON.parse(res.text)
+        User.findById response.id, (err, user)->
+          expect(err).to.be.null
+          expect(user._accounts).to.have.length(1)
+          Account.findById user._accounts[0], (err, account)->
+            expect(err).to.be.null
+            expect(account.tempPlan).to.equal('free')
+            done()
+
+    it 'adds the correct billing provider', (done)->
+      login @agent, 'new email', 'new pass', 'free', (err, res)->
+        response = JSON.parse(res.text)
+        User.findById response.id, (err, user)->
+          expect(err).to.be.null
+          expect(user._accounts).to.have.length(1)
+          Account.findById user._accounts[0], (err, account)->
+            expect(err).to.be.null
+            BillingProvider.findById account._billingProvider, (err, provider)->
+              expect(err).to.be.null
+              expect(provider.name).to.equal('cine.io')
+              done()
+
     it 'gives that user a hashed_password and salt', (done)->
       login @agent, 'new email', 'new pass', 'free', (err, res)->
         response = JSON.parse(res.text)
         User.findById response.id, (err, user)->
-          expect(user.hashed_password).not.to.be.null
-          expect(user.password_salt).not.to.be.null
+          expect(user.hashed_password).to.be.ok
+          expect(user.password_salt).to.be.ok
           done(err)
 
     it 'gives that user a plan', (done)->

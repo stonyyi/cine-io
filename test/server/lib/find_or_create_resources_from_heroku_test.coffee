@@ -1,10 +1,12 @@
 Project = Cine.server_model('project')
 Account = Cine.server_model('account')
 User = Cine.server_model('user')
+BillingProvider = Cine.server_model('billing_provider')
 findOrCreateResourcesFromHeroku = Cine.server_lib('find_or_create_resources_from_heroku')
 EdgecastStream = Cine.server_model('edgecast_stream')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
+requiresSeed = Cine.require 'test/helpers/requires_seed'
 
 describe 'findOrCreateResourcesFromHeroku', ->
 
@@ -16,6 +18,8 @@ describe 'findOrCreateResourcesFromHeroku', ->
       user.save callback
 
   describe 'newAccount' , ->
+
+    requiresSeed()
 
     assertEmailSent.admin "newUser"
 
@@ -51,6 +55,12 @@ describe 'findOrCreateResourcesFromHeroku', ->
         expect(@project.name).to.equal("new-heroku-user")
         expect(@project.streamsCount).to.equal(0)
         expect(@project._account.toString()).to.equal(@account._id.toString())
+
+      it 'adds the correct billingProvider', (done)->
+        BillingProvider.findById @account._billingProvider, (err, provider)->
+          expect(err).to.be.null
+          expect(provider.name).to.equal('heroku')
+          done()
 
     describe 'with a new stream', ->
       stubEdgecast()
