@@ -30,6 +30,7 @@ describe 'createNewAccount', ->
       Account.findById @results.account._id, (err, account)->
         expect(err).to.be.null
         expect(account.name).to.equal("the new account name")
+        expect(account.billingEmail).to.equal("my-email")
         done()
 
     it 'links the provider', (done)->

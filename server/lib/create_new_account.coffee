@@ -56,8 +56,10 @@ module.exports = (accountAttributes, userAttributes, projectAttributes={}, strea
     streamAttributes = {}
 
   userAttributes.plan = accountAttributes.plan
-  accountAttributes.tempPlan = accountAttributes.plan
   userAttributes.herokuId = accountAttributes.herokuId
+
+  accountAttributes.tempPlan = accountAttributes.plan
+  accountAttributes.billingEmail ||= userAttributes.email
   go = ->
     account = new Account(accountAttributes)
     account.save (err, account)->
