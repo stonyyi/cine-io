@@ -7,8 +7,8 @@ module.exports = React.createClass({
   deleteCard: function(event){
     var app = this.props.app;
     event.preventDefault();
-    app.currentUser.set('deleteCard', this.props.app.currentUser.get('stripeCard').id);
-    app.currentUser.save(null, {
+    app.currentAccount().set('deleteCard', this.props.app.currentAccount().get('stripeCard').id);
+    app.currentAccount().save(null, {
       success: function(model, response, options){
         model.unset('deleteCard');
         // sending {stripeCard: undefined} from the server
@@ -29,7 +29,7 @@ module.exports = React.createClass({
     });
   },
   render: function() {
-    var cu = this.props.app.currentUser,
+    var cu = this.props.app.currentAccount(),
       card = cu.get('stripeCard');
     return (
       <div>

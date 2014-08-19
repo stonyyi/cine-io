@@ -5,7 +5,11 @@ Account = Cine.server_model('account')
 describe 'fullCurrentUserJson', ->
 
   beforeEach (done)->
-    @account = new Account(name: 'account name', tempPlan: 'solo', masterKey: '1mkey')
+    cards = [
+      {stripeCardId: '123', last4: 'the last 4', brand: 'visa', exp_month: '01', exp_year: '2013'},
+      {stripeCardId: '456', last4: 'these last 4', brand: 'master', exp_month: '12', exp_year: '2014'}
+    ]
+    @account = new Account(name: 'account name', tempPlan: 'solo', masterKey: '1mkey', stripeCustomer: {stripeCustomerId: 'cus_2ghmxawfvEwXkw', cards: cards})
     @account.save done
 
   beforeEach (done)->
@@ -46,10 +50,22 @@ describe 'fullCurrentUserJson', ->
 
     it 'returns the accounts details', ->
       firstAccount = @userJson.accounts[0]
-      expect(firstAccount._id.toString()).to.equal(@account._id.toString())
+      expect(firstAccount.id.toString()).to.equal(@account._id.toString())
       expect(firstAccount.name).to.equal('account name')
       expect(firstAccount.masterKey).to.equal('1mkey')
       secondAccount = @userJson.accounts[1]
-      expect(secondAccount._id.toString()).to.equal(@account2._id.toString())
+      expect(secondAccount.id.toString()).to.equal(@account2._id.toString())
       expect(secondAccount.name).to.equal('second account')
       expect(secondAccount.masterKey).to.equal('2mkey')
+
+    it 'returns the accounts stripe details', ->
+      firstAccount = @userJson.accounts[0]
+      expect(firstAccount.stripeCustomer).to.be.undefined
+      expect(firstAccount.stripeCard.id.toString()).to.equal(@account.stripeCustomer.cards[0]._id.toString())
+      expect(firstAccount.stripeCard.last4).to.equal('the last 4')
+      expect(firstAccount.stripeCard.brand).to.equal('visa')
+      expect(firstAccount.stripeCard.exp_month).to.equal(1)
+      expect(firstAccount.stripeCard.exp_year).to.equal(2013)
+      secondAccount = @userJson.accounts[1]
+      expect(secondAccount.stripeCustomer).to.be.undefined
+      expect(secondAccount.stripeCard).to.be.undefined

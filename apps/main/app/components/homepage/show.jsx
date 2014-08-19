@@ -32,7 +32,7 @@ module.exports = React.createClass({
     if (this.props.app.currentUser.isLoggedIn()) {
       return (
         <PageWrapper app={this.props.app}>
-          <LoggedIn app={this.props.app} collection={this.state.projects} masterKey={this.props.app.currentAccount().masterKey}/>
+          <LoggedIn app={this.props.app} collection={this.state.projects} masterKey={this.props.app.currentAccount().get('masterKey')}/>
         </PageWrapper>
       );
 

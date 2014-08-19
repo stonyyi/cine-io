@@ -1,6 +1,7 @@
 BaseApp = require('rendr/shared/app')
 window.Cine = require 'config/cine' if typeof window != 'undefined'
 User = Cine.model('user')
+Account = Cine.model('account')
 handlebarsHelpers = Cine.lib('handlebars_helpers')
 isServer = typeof window is 'undefined'
 tracker = Cine.lib('tracker')
@@ -37,7 +38,7 @@ module.exports = class App extends BaseApp
   # assume a single account for now
   # will be able to be set later on
   currentAccount: ->
-    @currentUser.get('accounts')[0]
+    @theCA ||= new Account(@currentUser.get('accounts')[0], app: this)
 
   _setupTracker: ->
     @tracker.load()

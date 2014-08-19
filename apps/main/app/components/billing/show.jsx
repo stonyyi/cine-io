@@ -8,11 +8,10 @@ module.exports = React.createClass({
   displayName: 'BillingShow',
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin'), Cine.lib('has_nav')],
   getBackboneObjects: function(){
-    return this.props.app.currentUser;
+    return this.props.app.currentAccount();
   },
   render: function() {
-    var CardModule = this.props.app.currentUser.get('stripeCard') ? CurrentCreditCard : NewCreditCard;
-
+    var CardModule = this.props.app.currentAccount().get('stripeCard') ? CurrentCreditCard : NewCreditCard;
     return (
       <PageWrapper app={this.props.app}>
         <h1 className="bottom-margin-1">Billing Information</h1>

@@ -46,8 +46,8 @@ module.exports = React.createClass({
     }
     var stripeToken = response.id;
     var app = this.props.app;
-    app.currentUser.set('stripeToken', response.id)
-    app.currentUser.save(null, {
+    app.currentAccount().set('stripeToken', response.id)
+    app.currentAccount().save(null, {
       success: function(model, response, options){
         model.unset('stripeToken');
         model.store();
