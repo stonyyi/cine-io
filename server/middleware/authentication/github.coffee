@@ -89,7 +89,6 @@ success = (req, res)->
   redirectUrl = switch state.client
     when 'web' then '/'
     when 'iOS' then "cineioconsole://login?masterKey=#{req.user.masterKey}"
-  console.log("HERE")
   res.redirect(redirectUrl)
 
 module.exports = (app)->

@@ -4,6 +4,7 @@ User = Cine.server_model('user')
 createNewToken = Cine.middleware('authentication/remember_me').createNewToken
 ProjectCreate = Cine.api('projects/create')
 createNewAccount = Cine.server_lib('create_new_account')
+fullCurrentUserJSON = Cine.server_lib('full_current_user_json')
 
 createNewUser = (email, cleartextPassword, req, callback)->
   accountAttributes =
@@ -37,6 +38,7 @@ module.exports = (app) ->
   passport.use new LocalStrategy(passReqToCallback: true, strategyFunction)
 
   app.post '/login', passport.authenticate('local', failWithError: true, failureMessage: 'Incorrect email/password.'), issueRememberMeToken, (req, res)->
-    res.send(req.user.simpleCurrentUserJSON())
+    fullCurrentUserJSON req.user, (err, user)->
+      res.send(user)
 
   Cine.middleware('authentication/local/update_password', app)

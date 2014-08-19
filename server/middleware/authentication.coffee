@@ -1,5 +1,6 @@
 User = Cine.server_model('user')
 passport = require('passport')
+fullCurrentUserJSON = Cine.server_lib('full_current_user_json')
 
 module.exports = (app)->
   app.use passport.initialize()
@@ -17,8 +18,9 @@ module.exports = (app)->
     if req.user && !req.xhr
       User.findById req.user, (err, user)->
         return next() if err || !user
-        req.currentUser = user.simpleCurrentUserJSON()
-        next(err)
+        fullCurrentUserJSON user, (err, user)->
+          req.currentUser = user
+          next(err)
     else
       next()
 
