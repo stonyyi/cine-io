@@ -64,7 +64,6 @@ describe 'github auth', ->
               process.nextTick ->
                 done(err)
 
-
         it 'creates an account', (done)->
           User.findOne githubId: 135461, (err, user)->
             expect(err).to.be.null
@@ -106,16 +105,18 @@ describe 'github auth', ->
         it 'adds a project and default stream', (done)->
           User.findOne githubId: 135461, (err, user)=>
             expect(err).to.be.null
-            user.projects (err, projects)=>
+            Account.findById user._accounts[0], (err, account)=>
               expect(err).to.be.null
-              expect(projects).to.have.length(1)
-              project = projects[0]
-              expect(project.name).to.equal('First Project')
-              EdgecastStream.find _project: project._id, (err, streams)=>
+              account.projects (err, projects)=>
                 expect(err).to.be.null
-                expect(streams).to.have.length(1)
-                expect(streams[0]._id.toString()).to.equal(@stream.id.toString())
-                done()
+                expect(projects).to.have.length(1)
+                project = projects[0]
+                expect(project.name).to.equal('First Project')
+                EdgecastStream.find _project: project._id, (err, streams)=>
+                  expect(err).to.be.null
+                  expect(streams).to.have.length(1)
+                  expect(streams[0]._id.toString()).to.equal(@stream.id.toString())
+                  done()
 
         it 'sets a remember me token', (done)->
           remember_me = @res.headers['set-cookie'][0]
