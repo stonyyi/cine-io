@@ -1,3 +1,4 @@
+# TODO DEPRECATED: does way different things
 async = require('async')
 Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')

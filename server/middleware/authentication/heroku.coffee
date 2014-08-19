@@ -18,15 +18,15 @@ basic_auth = (req, res, next) ->
 
 sso_auth = (req, res, next) ->
   if req.params.length is 0
-    userId = req.param("id")
+    accountId = req.param("id")
   else
-    userId = req.params.id
-  console.log userId
+    accountId = req.params.id
+  console.log accountId
   console.log req.params
   console.log req.body
   console.log('email', req.param('email'))
   console.log('nav-data', req.param('nav-data'))
-  pre_token = userId + ":" + herokuConfig.ssoSalt + ":" + req.param("timestamp")
+  pre_token = accountId + ":" + herokuConfig.ssoSalt + ":" + req.param("timestamp")
   shasum = crypto.createHash("sha1")
   shasum.update pre_token
   token = shasum.digest("hex")
@@ -37,19 +37,11 @@ sso_auth = (req, res, next) ->
   return res.send "Timestamp Expired", 403 if parseInt(req.param("timestamp")) < time
 
   res.cookie "heroku-nav-data", req.param("nav-data")
-  findOrCreateResourcesFromHeroku.findUser userId, (err, user)->
-    return response.send err, 400 if err
-    return response.send "Not found", 404 unless user
+  findOrCreateResourcesFromHeroku.findUser accountId, req.param('email'), (err, user)->
+    return res.send err, 400 if err
+    return res.send "Not found", 404 unless user
 
-    loginUser = ->
-      req.login user, next
-
-    return loginUser() if user.email
-
-    user.email = req.param('email')
-    user.save (err, user)->
-      return response.send err, 400 if err
-      return loginUser()
+    req.login user, next
 
 module.exports = (app)->
 
@@ -58,14 +50,14 @@ module.exports = (app)->
     console.log "POSTING HEROKU RESOURCES", request.body
     herokuId = request.body.heroku_id
     plan = request.body.plan
-    findOrCreateResourcesFromHeroku.newAccount herokuId, plan, (err, user, project)->
-      console.log('created heroku account', err, user, project)
+    findOrCreateResourcesFromHeroku.newAccount herokuId, plan, (err, account, project)->
+      console.log('created heroku account', err, account, project)
       return response.send err, 400 if err
-      return response.send 'could not make user', 400 unless user
+      return response.send 'could not make account', 400 unless account
 
       resource =
-        id: user._id
-        plan: user.plan
+        id: account._id
+        plan: account.tempPlan
         config:
           CINE_IO_PUBLIC_KEY: project.publicKey
           CINE_IO_SECRET_KEY: project.secretKey
@@ -75,9 +67,9 @@ module.exports = (app)->
   app.put "/heroku/resources/:id", basic_auth, (request, response) ->
     console.log request.body
     console.log request.params
-    projectId = request.params.id
+    accountId = request.params.id
     plan = request.body.plan
-    findOrCreateResourcesFromHeroku.updatePlan projectId, plan, (err, project)->
+    findOrCreateResourcesFromHeroku.updatePlan accountId, plan, (err, project)->
       console.log('updated', err, project)
       return response.send err, 400 if err
       return response.send "Not found", 404 unless project
@@ -86,8 +78,8 @@ module.exports = (app)->
   # User removed us from heroku
   app["delete"] "/heroku/resources/:id", basic_auth, (request, response) ->
     console.log request.params
-    projectId = request.params.id
-    findOrCreateResourcesFromHeroku.deleteUser projectId, (err, project)->
+    accountId = request.params.id
+    findOrCreateResourcesFromHeroku.deleteAccount accountId, (err, project)->
       return response.send err, 400 if err
       return response.send "Not found", 404 unless project
       response.send "ok"

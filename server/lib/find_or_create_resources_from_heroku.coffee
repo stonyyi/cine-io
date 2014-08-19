@@ -1,9 +1,10 @@
 Project = Cine.server_model('project')
 User = Cine.server_model('user')
+Account = Cine.server_model('account')
 _ = require('underscore')
 addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 mailer = Cine.server_lib('mailer')
-deleteUser = Cine.server_lib('delete_user')
+deleteAccount = Cine.server_lib('delete_account')
 createNewAccount = Cine.server_lib('create_new_account')
 
 nameFromEmail = (herokuId)->
@@ -15,6 +16,7 @@ nameFromEmail = (herokuId)->
 exports.newAccount = (herokuId, plan, callback)->
   accountAttributes =
     herokuId: herokuId
+    name: nameFromEmail(herokuId)
     plan: plan
   projectAttributes =
     name: nameFromEmail(herokuId)
@@ -24,27 +26,55 @@ exports.newAccount = (herokuId, plan, callback)->
   createNewAccount accountAttributes, userAttributes, projectAttributes, (err, results)->
     return callback(err) if err
     mailer.admin.newUser(results.user, 'heroku')
-    callback(null, results.user, results.project)
+    callback(null, results.account, results.project)
 
 # callback(err, user)
-exports.findUser = (userId, callback)->
-  User.findById userId, callback
-
-setPlanAndEnsureNotDeleted = (user, plan, callback)->
-  user.deletedAt = undefined
-  user.plan = plan
-  user.save callback
-
-# callback(err, user)
-exports.updatePlan = (userId, plan, callback)->
-  exports.findUser userId, (err, user)->
+# This finds a user by email
+#
+exports.findUser = (accountId, userEmail, callback)->
+  User.findOne email: userEmail, (err, user)->
     return callback(err) if err
-    return callback('user not found') unless user
-    setPlanAndEnsureNotDeleted(user, plan, callback)
+
+    # return the user if the user already
+
+    if !user
+      # TODO DEPRECATED of setting the user plan
+      Account.findById accountId, (err, account)->
+        return callback(err) if err
+        user = new User email: userEmail, plan: account.tempPlan, name: account.name
+        user._accounts.push accountId
+        console.log("CREATING USER", user)
+        user.save callback
+    else
+      hasAccount = (userAccountId)->
+        userAccountId.toString() == accountId.toString()
+      return callback(null, user) if _.any user.accounts, hasAccount
+      user._accounts.push accountId
+      user.save callback
+
+# TODO DELETE USER PLAN CHANGE
+setPlanAndEnsureNotDeleted = (account, plan, callback)->
+  account.deletedAt = undefined
+  account.tempPlan = plan
+  account.save (err, account)->
+    return callback(err) if err
+    # TODO DEPRECATED ADDING PLAN
+    User.findOne _accounts: {$in: [account._id]}, (err, user)->
+      user.plan = plan
+      user.save (err, user)->
+        return callback(err) if err
+        callback(null, account)
 
 # callback(err, user)
-exports.deleteUser = (userId, callback)->
-  User.findById userId, (err, user)->
+exports.updatePlan = (accountId, plan, callback)->
+  Account.findOne accountId, (err, account)->
     return callback(err) if err
-    return callback('user not found') unless user
-    deleteUser(user, callback)
+    return callback('account not found') unless account
+    setPlanAndEnsureNotDeleted(account, plan, callback)
+
+# callback(err, user)
+exports.deleteAccount = (accountId, callback)->
+  Account.findById accountId, (err, account)->
+    return callback(err) if err
+    return callback('account not found') unless account
+    deleteAccount(account, callback)

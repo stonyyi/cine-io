@@ -1,5 +1,7 @@
 supertest = require('supertest')
 User = Cine.server_model('user')
+Account = Cine.server_model('account')
+Project = Cine.server_model('project')
 app = Cine.require('app').app
 herokuConfig = Cine.config('variables/heroku')
 _ = require('underscore')
@@ -29,8 +31,14 @@ describe 'heroku authentication', ->
   beforeEach ->
     @agent = supertest.agent(app)
 
+
   beforeEach (done)->
-    @user = new User(plan: 'free', _id: constantUserId)
+    @account = new Account(tempPlan: 'free', _id: constantUserId)
+    @account.save done
+
+  beforeEach (done)->
+    @user = new User(plan: @account.tempPlan)
+    @user._accounts.push(@account._id)
     @user.save done
 
   # User just added us on heroku
@@ -74,10 +82,11 @@ describe 'heroku authentication', ->
             expect(_.keys(response).sort()).to.deep.equal(['config', 'id', 'plan'])
             expect(response.plan).to.equal('startup')
             expect(_.keys(response.config).sort()).to.deep.equal(['CINE_IO_PUBLIC_KEY', 'CINE_IO_SECRET_KEY'])
-            User.findById response.id, (err, user)->
+            Account.findById response.id, (err, account)->
               expect(err).to.be.null
-              expect(user.email).to.be.undefined
-              user.projects (err, projects)->
+              expect(account.name).to.equal('app123')
+              expect(account.herokuId).to.equal('app123@heroku.com')
+              Project.find _account: account._id, (err, projects)->
                 expect(err).to.be.null
                 expect(projects).to.have.length(1)
                 expect(projects[0].publicKey).to.equal(response.config.CINE_IO_PUBLIC_KEY)
@@ -93,42 +102,47 @@ describe 'heroku authentication', ->
 
     it 'updates the plan', (done)->
       @agent
-        .put("/heroku/resources/#{@user._id}")
+        .put("/heroku/resources/#{@account._id}")
         .auth('test-username', 'test-password')
         .send(params)
         .expect(200)
         .end (err, res)=>
           expect(err).to.be.null
           expect(res.text).to.equal('ok')
-          User.findById @user._id, (err, user)->
+          Account.findById @account._id, (err, account)=>
             expect(err).to.be.null
-            expect(user.deletedAt).to.be.undefined
-            expect(user.plan).to.equal("enterprise")
-            done()
+            expect(account.deletedAt).to.be.undefined
+            expect(account.tempPlan).to.equal("enterprise")
+            # TODO DEPRECATED
+            User.findById @user._id, (err, user)->
+              expect(err).to.be.null
+              expect(user.deletedAt).to.be.undefined
+              expect(user.plan).to.equal("enterprise")
+              done()
 
 
   # User removed us from heroku
   describe "delete /heroku/resources/:id", ->
     requiresHerokuBasicAuth('delete', '/heroku/resources/123')
 
-    it 'updates the plan', (done)->
+    it 'deletes the resource', (done)->
       @agent
-        .delete("/heroku/resources/#{@user._id}")
+        .delete("/heroku/resources/#{@account._id}")
         .auth('test-username', 'test-password')
         .expect(200)
         .end (err, res)=>
           expect(err).to.be.null
           expect(res.text).to.equal('ok')
-          User.findById @user._id, (err, user)->
+          Account.findById @account._id, (err, account)->
             expect(err).to.be.null
-            expect(user.deletedAt).to.be.instanceOf(Date)
+            expect(account.deletedAt).to.be.instanceOf(Date)
             done()
 
 
   describe 'Heroku SSO', ->
-    generateSSOParams = (method, user)->
+    generateSSOParams = (method, account)->
       timestamp = (new Date).getTime()
-      pre_token = "#{user._id}:test-ssoSalt:#{timestamp}"
+      pre_token = "#{account._id}:test-ssoSalt:#{timestamp}"
 
       shasum = crypto.createHash("sha1")
       shasum.update pre_token
@@ -138,7 +152,7 @@ describe 'heroku authentication', ->
         timestamp: timestamp
         email: 'some email'
         "nav-data": 'some-nav-data-that-gets-set-to-a-cookie'
-      params.id = user._id if method == "post"
+      params.id = account._id if method == "post"
       params
 
     extractNavHeaderFromCookie = (cookie)->
@@ -146,7 +160,7 @@ describe 'heroku authentication', ->
 
     ssoCall = (method, url, done)->
       @agent[method](url)
-        .send(generateSSOParams(method, @user))
+        .send(generateSSOParams(method, @account))
         .expect(302)
         .end (err, res)=>
           console.log(err)
@@ -160,28 +174,39 @@ describe 'heroku authentication', ->
       requiresSSOToken method, url
 
       describe 'success', ->
-        beforeEach (done)->
-          ssoCall.call(this, method, url, done)
 
-        it "redirects to the homepage", ->
-          expect(@res.headers.location).to.equal('/')
+        describe 'with a user who already has that email', ->
+          beforeEach (done)->
+            @user.email = 'some email'
+            @user.save done
 
-        it 'adds email to the user', (done)->
-          User.findById @user._id, (err, user)->
-            expect(err).to.be.null
-            expect(user.email).to.equal('some email')
-            done()
+          beforeEach (done)->
+            ssoCall.call(this, method, url, done)
 
-        it "sets some the heroku-nav-data header", ->
-          herokuNavData = extractNavHeaderFromCookie(@res.headers['set-cookie'][0])
-          expect(herokuNavData).to.equal('some-nav-data-that-gets-set-to-a-cookie')
+          it "redirects to the homepage", ->
+            expect(@res.headers.location).to.equal('/')
 
-        it 'logs the user in', (done)->
-          @agent.get('/whoami').expect(200).end (err, res)=>
-            expect(err).to.be.null
-            currentUser = JSON.parse(res.text)
-            expect(currentUser.id.toString()).to.equal(@user._id.toString())
-            done()
+          it "sets some the heroku-nav-data header", ->
+            herokuNavData = extractNavHeaderFromCookie(@res.headers['set-cookie'][0])
+            expect(herokuNavData).to.equal('some-nav-data-that-gets-set-to-a-cookie')
+
+          it 'logs the user in', (done)->
+            @agent.get('/whoami').expect(200).end (err, res)=>
+              expect(err).to.be.null
+              currentUser = JSON.parse(res.text)
+              expect(currentUser.id.toString()).to.equal(@user._id.toString())
+              done()
+
+        describe 'with a new user to that account', ->
+          beforeEach (done)->
+            ssoCall.call(this, method, url, done)
+
+          it 'adds email to a new user', (done)->
+            User.findOne email: 'some email', (err, user)=>
+              expect(err).to.be.null
+              expect(user._accounts).to.have.length(1)
+              expect(user._accounts[0].toString()).to.equal(@account._id.toString())
+              done()
 
       describe 'verifying personal email', ->
         beforeEach (done)->
