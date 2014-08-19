@@ -18,7 +18,6 @@ module.exports = class PermissionManager
   check: (verb, object)->
     return false unless verb and object
     return false unless _.isArray(@permissions)
-    return true if _.findWhere(@permissions, objectName: 'site')
     return false if _.isString(object)
 
     # now check each object to see if it is in the permissions list

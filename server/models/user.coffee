@@ -6,7 +6,6 @@ Schema = mongoose.Schema
 BackboneUser = Cine.model('user')
 crypto = require('crypto')
 
-# special permission has objectName of 'site'
 Permission = new Schema
   objectId: mongoose.Schema.Types.ObjectId
   objectName: String
@@ -110,7 +109,7 @@ UserSchema.methods.assignHashedPasswordAndSalt = (cleartext_password, callback)-
 
 UserSchema.methods.simpleCurrentUserJSON = ->
   json = @toJSON()
-  result = _.pick(json, 'createdAt', 'name', 'email', 'masterKey', 'permissions', 'plan', 'githubId', '_accounts')
+  result = _.pick(json, 'isSiteAdmin', 'createdAt', 'name', 'email', 'masterKey', 'permissions', 'plan', 'githubId', '_accounts')
   result.id = json._id
   result.firstName = @firstName()
   result.lastName = @lastName()

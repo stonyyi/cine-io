@@ -33,10 +33,6 @@ describe 'PermissionManager', ->
     it 'requires permissions', ->
       expect(@p.check('a', 'b')).to.be.false
 
-    it 'short circuits if the user is an admin of the site', ->
-      @p.addPermission('site', 'admin')
-      expect(@p.check('a', 'b')).to.be.true
-
     it 'cannot test against a string', ->
       @p.addPermission('some', 'thing')
       expect(@p.check('some', 'thing')).to.be.false

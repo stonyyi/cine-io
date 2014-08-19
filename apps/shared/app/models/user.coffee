@@ -23,7 +23,6 @@ module.exports = class User extends Base
     return false unless verb and object
     permissions = @get('permissions')
     return false unless _.isArray(permissions)
-    return true if _.findWhere(permissions, objectName: 'site')
     return false if _.isString(object)
 
     # now check each object to see if it is in the permissions list

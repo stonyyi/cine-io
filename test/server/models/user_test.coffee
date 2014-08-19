@@ -94,7 +94,7 @@ describe 'User', ->
       u = new User(name: 'my name', email: 'my email', hashed_password: 'hash', password_salt: 'salt', plan: 'free', githubId: 123)
       u.save (err, user)->
         expect(err).to.be.null
-        keys = ['_accounts', 'createdAt', 'email', 'firstName', 'githubId', 'id', 'lastName', 'masterKey', 'name', 'permissions', 'plan', 'stripeCard']
+        keys = ['_accounts', 'createdAt', 'email', 'firstName', 'githubId', 'id', 'isSiteAdmin', 'lastName', 'masterKey', 'name', 'permissions', 'plan', 'stripeCard']
         jsonKeys = _.keys(u.simpleCurrentUserJSON()).sort()
         expect(jsonKeys).to.deep.equal(keys)
         done()

@@ -10,7 +10,7 @@ adminMaker = (name, callback)->
   userAttributes =
     email: "#{name}@cine.io"
     name: name
-    permissions: [{objectName: 'site'}]
+    isSiteAdmin: true
     cleartextPassword: 'cine'
   createNewAccount accountAttributes, userAttributes, (err, results)->
     return callback(err) if err

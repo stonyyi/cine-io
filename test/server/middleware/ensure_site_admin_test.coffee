@@ -43,7 +43,7 @@ describe 'EnsureSiteAdmin', ->
           done()
 
   it 'continues when the user is a site admin', (done)->
-    @user.permissions.push objectName: 'site'
+    @user.isSiteAdmin = true
     @user.save (err, user)=>
       expect(err).to.be.null
       login @agent, @user, 'old pass', =>
