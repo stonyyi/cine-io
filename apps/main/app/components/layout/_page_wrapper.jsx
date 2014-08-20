@@ -13,9 +13,9 @@ module.exports = React.createClass({
     return (
       <div id="page-layout">
         <div className='main-wrapper' className={this.canvasClasses()}>
+          <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
           <FlashHolder app={this.props.app} />
           <div className="inner-wrap">
-            <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
             <Header app={this.props.app} />
             <div className="container">
               {this.props.children}

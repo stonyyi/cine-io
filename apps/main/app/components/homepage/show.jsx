@@ -39,9 +39,9 @@ module.exports = React.createClass({
     }else{
       return (
         <div id='homepage-logged-out' className={this.canvasClasses()}>
+          <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
           <FlashHolder app={this.props.app}/>
           <div className="inner-wrap">
-            <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
             <HomeHero app={this.props.app} />
             <About />
             <Libraries />

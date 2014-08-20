@@ -63,6 +63,18 @@ button, .button {
   // border: 2px solid $primary-color;
 }
 
+.move-right{
+  .left-off-canvas-menu{
+    position: fixed;
+    -webkit-transform: translate3d(0%, 0, 0);
+    -moz-transform: translate3d(0%, 0, 0);
+    -ms-transform: translate3d(0%, 0, 0);
+    -o-transform: translate3d(0%, 0, 0);
+    transform: translate3d(0%, 0, 0);
+    transition: 500ms ease;
+  }
+}
+
 .left-off-canvas-menu{
   color: white;
   .close-link{
