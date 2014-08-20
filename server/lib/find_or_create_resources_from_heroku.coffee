@@ -21,8 +21,8 @@ exports.newAccount = (herokuId, plan, callback)->
     billingProviderName: 'heroku'
   projectAttributes =
     name: nameFromEmail(herokuId)
-  # TODO: DEPRECATED
   userAttributes =
+    email: herokuId
     name: nameFromEmail(herokuId)
   createNewAccount accountAttributes, userAttributes, projectAttributes, (err, results)->
     return callback(err) if err

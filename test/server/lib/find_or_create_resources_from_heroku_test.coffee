@@ -27,12 +27,11 @@ describe 'findOrCreateResourcesFromHeroku', ->
         findOrCreateResourcesFromHeroku.newAccount 'new-heroku-user@heroku.com', 'enterprise', (err, @account, @project)=>
           done(err)
 
-      # TODO DEPRECATED, no need to create user
       it 'creates a new user', (done)->
         User.findOne _accounts: {$in: [@account._id]}, (err, user)->
           console.log("FIND user")
           expect(err).to.be.null
-          expect(user.email).be.undefined
+          expect(user.email).be.equal('new-heroku-user@heroku.com')
           expect(user.name).to.equal("new-heroku-user")
           done()
 
