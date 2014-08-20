@@ -1,5 +1,5 @@
 # Usage
-# heroku run coffee script/account_usage_report.coffee compact humanize
+# heroku run --app=cine-io coffee script/account_usage_report.coffee compact humanize
 # coffee script/account_usage_report.coffee
 # coffee script/account_usage_report.coffee all # does every month
 # coffee script/account_usage_report.coffee 2014-01
