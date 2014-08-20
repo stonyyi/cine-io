@@ -12,12 +12,6 @@ module.exports = React.createClass({
   render: function() {
     return (
       <PageWrapper app={this.props.app}>
-          <div className="row">
-            <dl className="columns large-12">
-              <dt>Master Key</dt>
-              <dd>{this.props.app.currentUser.get('masterKey')}</dd>
-            </dl>
-          </div>
           <AccountForm app={this.props.app}/>
       </PageWrapper>
     );

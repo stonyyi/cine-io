@@ -51,6 +51,12 @@ module.exports = React.createClass({
     return (
       <PageWrapper app={this.props.app}>
         <h1 className="bottom-margin-1">Billing Information</h1>
+        <div className="row">
+          <dl className="columns large-12">
+            <dt>Master Key</dt>
+            <dd>{this.props.app.currentAccount().get('masterKey')}</dd>
+          </dl>
+        </div>
         <form onSubmit={this.updateAccount}>
           <div className="row">
             <div className="large-12 columns">
