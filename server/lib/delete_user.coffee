@@ -1,4 +1,3 @@
-# TODO DEPRECATED: does way different things
 async = require('async')
 
 module.exports = (user, callback)->

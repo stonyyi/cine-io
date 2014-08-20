@@ -52,7 +52,6 @@ exports.findUser = (accountId, userEmail, callback)->
       user._accounts.push accountId
       user.save callback
 
-# TODO DELETE USER PLAN CHANGE
 setPlanAndEnsureNotDeleted = (account, plan, callback)->
   account.deletedAt = undefined
   account.tempPlan = plan

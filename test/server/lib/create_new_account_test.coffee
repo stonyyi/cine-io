@@ -54,7 +54,7 @@ describe 'createNewAccount', ->
         expect(account.tempPlan).to.equal('starter')
         done()
 
-    # TODO: DEPRECATED
+    # TODO: DEPRECATED - need to wait until console app is updated
     it 'creates a masterKey that is the same as the user', ->
       expect(@results.account.masterKey).to.have.length(64)
       expect(@results.user.masterKey).to.have.length(64)
