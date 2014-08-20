@@ -1,39 +1,39 @@
 # https://github.com/HubSpot/humanize/blob/master/coffee/src/humanize.coffee
-TB = 1099511627776
-GB = 1073741824
-MB = 1048576
-KB = 1024
+TiB = 1099511627776
+GiB = 1073741824
+MiB = 1048576
+KiB = 1024
 
 module.exports = (filesize, thousand=',') ->
-  if filesize >= TB
-    sizeStr = formatNumber(filesize / TB, 2, thousand) + " TB"
-  else if filesize >= GB
-    sizeStr = formatNumber(filesize / GB, 2, thousand) + " GB"
-  else if filesize >= MB
-    sizeStr = formatNumber(filesize / MB, 2, thousand) + " MB"
-  else if filesize >= KB
-    sizeStr = formatNumber(filesize / KB, 0, thousand) + " KB"
+  if filesize >= TiB
+    sizeStr = formatNumber(filesize / TiB, 2, thousand) + " TiB"
+  else if filesize >= GiB
+    sizeStr = formatNumber(filesize / GiB, 2, thousand) + " GiB"
+  else if filesize >= MiB
+    sizeStr = formatNumber(filesize / MiB, 2, thousand) + " MiB"
+  else if filesize >= KiB
+    sizeStr = formatNumber(filesize / KiB, 0, thousand) + " KiB"
   else
     sizeStr = formatNumber(filesize, 0) + pluralize filesize, " byte"
 
   sizeStr
 
 module.exports.formatString = (filesize)->
-  if filesize >= TB
-    return "TB"
-  else if filesize >= GB
-    return "GB"
-  else if filesize >= MB
-    return "MB"
-  else if filesize >= KB
-    return "KB"
+  if filesize >= TiB
+    return "TiB"
+  else if filesize >= GiB
+    return "GiB"
+  else if filesize >= MiB
+    return "MiB"
+  else if filesize >= KiB
+    return "KiB"
   else
     return "byte"
 
-module.exports.TB = TB
-module.exports.GB = GB
-module.exports.MB = MB
-module.exports.KB = KB
+module.exports.TiB = TiB
+module.exports.GiB = GiB
+module.exports.MiB = MiB
+module.exports.KiB = KiB
 
 # Formats a number to a human-readable string.
 # Localize by overriding the precision, thousand and decimal arguments.

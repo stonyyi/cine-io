@@ -20,12 +20,12 @@ describe 'UsageReport', ->
 
   describe 'lowestPlanPerUsage', ->
     it 'returns the lowest plan', ->
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.MB * 10)).to.equal('starter')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GB - 100)).to.equal('starter')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GB + 100)).to.equal('solo')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GB * 20 - 100)).to.equal('solo')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GB * 150 - 100)).to.equal('startup')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TB - 100)).to.equal('enterprise')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.MiB * 10)).to.equal('starter')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB - 100)).to.equal('starter')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB + 100)).to.equal('solo')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 20 - 100)).to.equal('solo')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 150 - 100)).to.equal('startup')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB - 100)).to.equal('enterprise')
 
   describe 'lastThreeMonths', ->
     it 'is tested'

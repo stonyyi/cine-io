@@ -274,13 +274,18 @@ exports.Pricing = React.createClass({
               <i className="fa fa-2x fa-smile-o"></i>
 
               <div className="pitch">
-                <p>
-                  All plans include live-streaming <strong>to and from any
-                  device</strong> (web, iOS, Android), distribution via our
-                  global CDN (2,000 interconnected networks across 5
-                  continents), no ads of any kind, and email support from our
-                  developers.
-                </p>
+                <h4>All plans include:</h4>
+                <ul className="features">
+                  <li>HD live-streaming <strong>to and from any
+                  device</strong> (web, iOS, Android)</li>
+                  <li>archiving / recording of streams</li>
+                  <li>distribution via our <strong>global CDN</strong> (2,000
+                  interconnected networks across 5 continents)</li>
+                  <li><strong>no ads</strong> of any kind</li>
+                  <li><a href="http://cineio.uservoice.com">email</a> +
+                  <strong><a href="https://www.hipchat.com/gZCLRQ9Ih">live chat support</a></strong>
+                  &nbsp;from our developers</li>
+                </ul>
               </div>
 
               <div className="prices">
@@ -293,23 +298,27 @@ exports.Pricing = React.createClass({
                     </li>
                     <li className="description">Great for starting out.</li>
                     <li className="bullet-item">5 simultaneous streams</li>
-                    <li className="bullet-item">20GB transferred</li>
-                    <li className="bullet-item">$0.90 per additional GB</li>
+                    <li className="bullet-item">20 GiB transferred</li>
+                    <li className="bullet-item">5 GiB storage</li>
+                    <li className="bullet-item">$0.90 per additional GiB transferred</li>
+                    <li className="bullet-item">$0.90 per additional GiB storage</li>
                     <li className="cta-button"><a className="button radius" href="" onClick={this.getApiKey.bind(this, 'solo', 2)}>Select</a>
                     </li>
                   </ul>
                 </div>
                 <div className="plan">
                   <ul className="pricing-table">
-                    <li className="title">Startup</li>
+                    <li className="title">Basic</li>
                     <li className="price">
                       <span className="currency">$</span>
                       <span className="amount">100 / mo</span>
                     </li>
                     <li className="description">Affordable, with few limits.</li>
                     <li className="bullet-item">unlimited streams</li>
-                    <li className="bullet-item">150 GB transferred</li>
-                    <li className="bullet-item">$0.60 per additional GB</li>
+                    <li className="bullet-item">150 GiB transferred</li>
+                    <li className="bullet-item">25 GiB storage</li>
+                    <li className="bullet-item">$0.80 per additional GiB transferred</li>
+                    <li className="bullet-item">$0.80 per additional GiB storage</li>
                     <li className="cta-button">
                       <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'startup', 3)}>Select</a>
                     </li>
@@ -317,15 +326,17 @@ exports.Pricing = React.createClass({
                 </div>
                 <div className="plan">
                   <ul className="pricing-table">
-                    <li className="title">Enterprise</li>
+                    <li className="title">Pro</li>
                     <li className="price">
                       <span className="currency">$</span>
                       <span className="amount">500 / mo</span>
                     </li>
                     <li className="description">For heavy-lifting apps.</li>
                     <li className="bullet-item">unlimited streams</li>
-                    <li className="bullet-item">1 TB transferred</li>
-                    <li className="bullet-item">$0.30 per additional GB</li>
+                    <li className="bullet-item">1 TiB transferred</li>
+                    <li className="bullet-item">100 GB storage</li>
+                    <li className="bullet-item">$0.70 per additional GiB transferred</li>
+                    <li className="bullet-item">$0.70 per additional GiB storage</li>
                     <li className="cta-button">
                       <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'enterprise', 4)}>Select</a>
                     </li>
@@ -333,7 +344,13 @@ exports.Pricing = React.createClass({
                 </div>
               </div>
               <div className="postscript">
-                <div>Or, <a href="" onClick={this.getApiKey.bind(this, 'free', 1)}>try for free</a>.</div>
+                <div>
+                  <p>Or, <a href="" onClick={this.getApiKey.bind(this, 'free', 1)}>try for free</a>.</p>
+                </div>
+                <div>
+                  <p>Need more than our <strong>Professional</strong> plan offers?&nbsp;&nbsp;
+                  <a href="http://cineio.uservoice.com/">Contact us.</a></p>
+                </div>
               </div>
             </div>
           </div>
