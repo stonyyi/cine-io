@@ -36,10 +36,8 @@ exports.findUser = (accountId, userEmail, callback)->
   User.findOne email: userEmail, (err, user)->
     return callback(err) if err
 
-    # return the user if the user already
 
     if !user
-      # TODO DEPRECATED of setting the user plan
       Account.findById accountId, (err, account)->
         return callback(err) if err
         user = new User email: userEmail, plan: account.tempPlan, name: account.name
@@ -49,6 +47,7 @@ exports.findUser = (accountId, userEmail, callback)->
     else
       hasAccount = (userAccountId)->
         userAccountId.toString() == accountId.toString()
+      # return the user if the user already
       return callback(null, user) if _.any user.accounts, hasAccount
       user._accounts.push accountId
       user.save callback
