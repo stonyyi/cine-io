@@ -8,8 +8,8 @@ module.exports = class UsageReport extends Base
   idAttribute: 'masterKey'
   url: if isServer then "/usage-report?masterKey=:masterKey" else "/usage-report"
 
-  @maxUsagePerAccount: (user)->
-    switch user.get('plan')
+  @maxUsagePerAccount: (account)->
+    switch account.get('tempPlan')
       when 'free', 'starter', 'test' then humanizeBytes.GB
       when 'solo' then humanizeBytes.GB * 20
       when 'startup' then humanizeBytes.GB * 150

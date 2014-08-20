@@ -22,7 +22,7 @@ var UsageGraph = React.createClass({
     var ltm = UsageReport.lastThreeMonths(),
       model = this.props.model,
       data = [["Month", { role: 'annotation' }, "Usage", "Cap"]],
-      planUsageInBytes = UsageReport.maxUsagePerAccount(this.props.app.currentUser),
+      planUsageInBytes = UsageReport.maxUsagePerAccount(this.props.app.currentAccount()),
       formatString = humanizeBytes.formatString(planUsageInBytes),
       planUsage = planUsageInBytes / humanizeBytes[formatString];
 
