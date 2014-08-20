@@ -47,6 +47,7 @@ describe 'fullCurrentUserJson', ->
       expect(@userJson.name).to.equal('my name')
       expect(@userJson.email).to.equal('some email')
       expect(@userJson.accounts).to.have.length(2)
+      expect(@userJson._accounts).to.be.undefined
 
     it 'returns the accounts details', ->
       firstAccount = @userJson.accounts[0]

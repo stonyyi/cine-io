@@ -11,6 +11,7 @@ fullCurrentUserJson = (user, callback)->
     return callback(err, userJSON) if err
     async.map accounts, fullCurrentUserJson.accountJson, (err, accountsJson)->
       userJSON.accounts = accountsJson
+      delete userJSON._accounts
       callback(null, userJSON)
 
 fullCurrentUserJson.accountJson = (account, callback)->
