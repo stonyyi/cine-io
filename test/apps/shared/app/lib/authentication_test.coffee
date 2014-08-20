@@ -21,7 +21,7 @@ describe 'authentication', ->
       expect(ajaxArgs.type).to.equal('POST')
       expect(ajaxArgs.url).to.equal('/login')
       expect(ajaxArgs.data).to.equal('a=b')
-      ajaxArgs.success(id: 'some id', name: 'New logged in name', email: 'the email', permissions: 'the permissions')
+      ajaxArgs.success(id: 'some id', name: 'New logged in name', email: 'the email')
       expect(@app.currentUser.isLoggedIn()).to.be.true
       expect(@app.currentUser.attributes.name).to.equal('New logged in name')
 
@@ -31,13 +31,13 @@ describe 'authentication', ->
       expect(ajaxArgs.type).to.equal('POST')
       expect(ajaxArgs.url).to.equal('/login')
       expect(ajaxArgs.data).to.deep.equal('a=b')
-      ajaxArgs.success(id: 'some id', permissions: 'the permissions')
+      ajaxArgs.success(id: 'some id')
       expect(@app.currentUser.isLoggedIn()).to.be.false
 
     it 'takes a success callback', (done)->
       auth.login(@app, @form, success: done)
       ajaxArgs = @ajaxSpy.firstCall.args[0]
-      ajaxArgs.success(id: 'my id', name: 'New logged in name', email: 'the email', permissions: 'the permissions')
+      ajaxArgs.success(id: 'my id', name: 'New logged in name', email: 'the email')
 
     it 'takes an error callback', (done)->
       auth.login(@app, @form, error: (err)->
@@ -49,7 +49,7 @@ describe 'authentication', ->
 
   describe 'logout', ->
     beforeEach ->
-      @app.currentUser.set(id: 'some id', name: 'my Name', permissions: [])
+      @app.currentUser.set(id: 'some id', name: 'my Name')
       expect(@app.currentUser.isLoggedIn()).to.be.true
 
     it 'logs out the user', ->
@@ -80,14 +80,14 @@ describe 'authentication', ->
       expect(ajaxArgs.type).to.equal('POST')
       expect(ajaxArgs.url).to.equal('/api/1/-/update-account')
       expect(ajaxArgs.data).to.deep.equal('a=b')
-      ajaxArgs.success(id: 'my id', name: 'New logged in name', permissions: 'the permissions')
+      ajaxArgs.success(id: 'my id', name: 'New logged in name')
       expect(@app.currentUser.isLoggedIn()).to.be.true
       expect(@app.currentUser.attributes.name).to.equal('New logged in name')
 
     it 'takes a success callback', (done)->
       auth.updateAccount(@app, @form, success: done)
       ajaxArgs = @ajaxSpy.firstCall.args[0]
-      ajaxArgs.success(id: 'my id', name: 'New logged in name', permissions: 'the permissions')
+      ajaxArgs.success(id: 'my id', name: 'New logged in name')
 
     it 'takes an error callback', (done)->
       auth.updateAccount(@app, @form, error: (message)->

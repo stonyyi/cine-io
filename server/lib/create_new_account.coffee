@@ -28,22 +28,14 @@ addProjectToAccount = (account, user, projectAttributes, streamAttributes, callb
   project.save (err, project)->
     return callback(err) if err
 
-    # TODO REMOVE THIS, AFTER ACCOUNT MIGRATION IS DONE
-    addProjectToUser user, project, (err)->
-      return callback(err) if err
-
-      addNextStreamToProject project, name: streamAttributes.name, (err, stream)->
-        callback(err, stream: stream, project: project)
+    addNextStreamToProject project, name: streamAttributes.name, (err, stream)->
+      callback(err, stream: stream, project: project)
 
 # callback err, project: project, stream: stream
 addFirstProjectToAccount = (account, user, projectAttributes, streamAttributes, callback)->
   projectAttributes.name ||= "First Project"
   streamAttributes.name ||= "First Stream"
   addProjectToAccount account, user, projectAttributes, streamAttributes, callback
-
-addProjectToUser = (user, project, callback)->
-  user.permissions.push objectId: project._id, objectName: 'Project'
-  user.save callback
 
 # callback: err, {account: Account, user: User, project: Project, stream: Stream}
 module.exports = (accountAttributes, userAttributes, projectAttributes={}, streamAttributes={}, callback)->

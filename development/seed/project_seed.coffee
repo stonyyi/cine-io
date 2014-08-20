@@ -11,17 +11,9 @@ testStripeData =
 
 createProjectWithUsers = (accountsAndUsers, attributes, callback)->
     project = new Project attributes
+    project._account = _.sample(accountsAndUsers).account._id
     project.save (err)->
-      addPermission = (accountsAndUser, cb)->
-        accountsAndUser.user.permissions.push objectId: project._id, objectName: 'Project'
-        accountsAndUser.user.save (err, user)->
-          return cb(err) if err
-          project._account = accountsAndUser.account._id
-          project.save cb
-      accountAndUser = _.sample(accountsAndUsers)
-
-      addPermission accountAndUser, (err)->
-        callback(null, project)
+      callback(null, project)
 
 module.exports = (accountsAndUsers, cb)->
   console.log('creating projects')

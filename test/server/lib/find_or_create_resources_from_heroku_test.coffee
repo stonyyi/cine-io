@@ -10,13 +10,6 @@ requiresSeed = Cine.require 'test/helpers/requires_seed'
 
 describe 'findOrCreateResourcesFromHeroku', ->
 
-  addProjectToUser = (user, callback)->
-    project = new Project(name: "in test project")
-    project.save (err, project)->
-      return callback(err) if err
-      user.permissions.push objectId: project._id, objectName: 'Project'
-      user.save callback
-
   describe 'newAccount' , ->
 
     requiresSeed()
@@ -35,15 +28,12 @@ describe 'findOrCreateResourcesFromHeroku', ->
           done(err)
 
       # TODO DEPRECATED, no need to create user
-      it 'creates a new user with permissions on the project', (done)->
-        User.findOne _accounts: {$in: [@account._id]}, (err, user)=>
+      it 'creates a new user', (done)->
+        User.findOne _accounts: {$in: [@account._id]}, (err, user)->
           console.log("FIND user")
           expect(err).to.be.null
           expect(user.email).be.undefined
           expect(user.name).to.equal("new-heroku-user")
-          expect(user.permissions).to.have.length(1)
-          expect(user.permissions[0].objectId.toString()).to.equal(@project._id.toString())
-          expect(user.permissions[0].objectName).to.equal("Project")
           done()
 
       it 'creates a new account', ->

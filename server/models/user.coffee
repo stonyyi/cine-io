@@ -6,10 +6,6 @@ Schema = mongoose.Schema
 BackboneUser = Cine.model('user')
 crypto = require('crypto')
 
-Permission = new Schema
-  objectId: mongoose.Schema.Types.ObjectId
-  objectName: String
-
 StripeCard = new Schema
   stripeCardId: String
   last4: String
@@ -47,7 +43,6 @@ UserSchema = new Schema
   hashed_password: String
   password_salt: String
   # Other Info
-  permissions: [Permission]
   _referringUser:
     type: mongoose.Schema.Types.ObjectId
     ref: 'User'
@@ -102,7 +97,7 @@ UserSchema.methods.assignHashedPasswordAndSalt = (cleartext_password, callback)-
 
 UserSchema.methods.simpleCurrentUserJSON = ->
   json = @toJSON()
-  result = _.pick(json, 'isSiteAdmin', 'createdAt', 'name', 'email', 'masterKey', 'permissions', 'plan', 'githubId', '_accounts')
+  result = _.pick(json, 'isSiteAdmin', 'createdAt', 'name', 'email', 'masterKey', 'plan', 'githubId', '_accounts')
   result.id = json._id
   result.firstName = @firstName()
   result.lastName = @lastName()
