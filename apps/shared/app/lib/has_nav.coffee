@@ -16,10 +16,10 @@ exports.componentWillUnMount = ->
   @props.app.off('hide-login', @closeNav)
 
 exports.closeNav = ->
-  @setState(showingLeftNav: false)
+  @setState(showingLeftNav: false) if @isMounted()
 
 exports.openNav = ->
-  @setState(showingLeftNav: true)
+  @setState(showingLeftNav: true) if @isMounted()
 
 exports.toggleLeftNav = (e)->
   e.preventDefault()

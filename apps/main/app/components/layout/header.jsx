@@ -23,7 +23,7 @@ module.exports = React.createClass({
       "top-bar": true,
       "expanded": this.state.expanded
     });
-    console.log('rendering yo', topBarClasses);
+
     if (this.props.app.currentUser.isLoggedIn()) {
       return (
         <header>
