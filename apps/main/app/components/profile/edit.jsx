@@ -5,7 +5,7 @@ ProfileForm = Cine.component('profile/_profile_form');
 
 module.exports = React.createClass({
   displayName: 'ProfileEdit',
-  mixins: [Cine.lib('requires_app'), Cine.lib('has_nav')],
+  mixins: [Cine.lib('requires_app')],
   getBackboneObjects: function(){
     return this.props.model;
   },

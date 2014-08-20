@@ -4,7 +4,7 @@ PageWrapper = Cine.component('layout/_page_wrapper');
 
 module.exports = React.createClass({
   displayName: 'ErrorsUnauthorized',
-  mixins: [Cine.lib('requires_app'), Cine.lib('has_nav')],
+  mixins: [Cine.lib('requires_app')],
   showSignIn: function(e){
     e.preventDefault();
     this.props.app.trigger('show-login');

@@ -5,7 +5,7 @@ Static = Cine.component('shared/_static');
 
 module.exports = React.createClass({
   displayName: 'LegalShow',
-  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin'), Cine.lib('has_nav')],
+  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
 
   getInitialState: function(){
     return{};

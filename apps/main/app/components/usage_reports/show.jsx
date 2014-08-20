@@ -49,7 +49,7 @@ var UsageGraph = React.createClass({
 });
 module.exports = React.createClass({
   displayName: 'UsageReportsShow',
-  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin'), Cine.lib('has_nav')],
+  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
   getBackboneObjects: function(){
     return this.props.model;
   },

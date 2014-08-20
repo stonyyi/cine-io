@@ -10,7 +10,7 @@ CurrentCreditCard = Cine.component('account/_current_credit_card');
 
 module.exports = React.createClass({
   displayName: 'AccountShow',
-  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin'), Cine.lib('has_nav')],
+  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
   getBackboneObjects: function(){
     return this.props.app.currentAccount();
   },

@@ -5,7 +5,7 @@ authentication = Cine.lib('authentication');
 
 module.exports = React.createClass({
   displayName: 'PasswordChangeRequestsShow',
-  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin'), Cine.lib('has_nav')],
+  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
   getBackboneObjects: function(){
     return this.props.model;
   },
