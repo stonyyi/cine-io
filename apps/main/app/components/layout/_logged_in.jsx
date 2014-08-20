@@ -23,7 +23,7 @@ module.exports = React.createClass({
   render: function() {
     var
       name = this.props.app.currentUser.get('name'),
-      plan = this.props.app.currentUser.get('plan');
+      plan = this.props.app.currentAccount().get('tempPlan');
 
     return (
       <section className="top-bar-section">
