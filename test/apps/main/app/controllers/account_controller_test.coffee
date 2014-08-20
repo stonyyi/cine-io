@@ -1,13 +1,13 @@
-BillingController = Cine.controller 'billing'
+AccountController = Cine.controller 'account'
 ControllerTester = Cine.require('test/helpers/test_controller_action')
-test = ControllerTester(BillingController)
+test = ControllerTester(AccountController)
 
-describe 'BillingController', ->
+describe 'AccountController', ->
   beforeEach ->
-    BillingController.app = mainApp
+    AccountController.app = mainApp
 
   afterEach ->
-    delete BillingController.app
+    delete AccountController.app
 
   describe '#show', ->
     it 'requires a current user', (done)->

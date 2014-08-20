@@ -8,7 +8,7 @@ module.exports = (match) ->
 
   match "/profile", "profile#edit"
   match "/usage", "usage_reports#show"
-  match "/billing", "billing#show"
+  match "/account", "account#show"
   # For some reason this doesn't work.
   # match '/legal(/:id)', 'legal#show'
   match '/legal', 'legal#show'

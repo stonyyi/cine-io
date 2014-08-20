@@ -1,15 +1,15 @@
 /** @jsx React.DOM */
 var React = require('react'),
 PageWrapper = Cine.component('layout/_page_wrapper'),
-NewCreditCard = Cine.component('billing/_new_credit_card'),
+NewCreditCard = Cine.component('account/_new_credit_card'),
   User = Cine.model('user'),
   _ = require('underscore'),
   capitalize = Cine.lib('capitalize'),
 
-CurrentCreditCard = Cine.component('billing/_current_credit_card');
+CurrentCreditCard = Cine.component('account/_current_credit_card');
 
 module.exports = React.createClass({
-  displayName: 'BillingShow',
+  displayName: 'AccountShow',
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin'), Cine.lib('has_nav')],
   getBackboneObjects: function(){
     return this.props.app.currentAccount();
@@ -50,7 +50,7 @@ module.exports = React.createClass({
     var CardModule = this.props.app.currentAccount().get('stripeCard') ? CurrentCreditCard : NewCreditCard;
     return (
       <PageWrapper app={this.props.app}>
-        <h1 className="bottom-margin-1">Billing Information</h1>
+        <h1 className="bottom-margin-1">Account Information</h1>
         <div className="row">
           <dl className="columns large-12">
             <dt>Master Key</dt>
