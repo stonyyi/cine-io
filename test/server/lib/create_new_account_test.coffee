@@ -150,7 +150,12 @@ describe 'createNewAccount', ->
         @results = results
         done(err)
 
-    it 'adds the new account to the same user'
+    it 'adds the new account to the same user', (done)->
+      User.findById @results.user._id, (err, user)=>
+        expect(err).to.be.null
+        expect(user._accounts).to.have.length(1)
+        expect(user._accounts[0].toString()).to.equal(@results.account._id.toString())
+        done()
 
     # TODO: DEPRECATED
     it 'updates the plan of the existing user', (done)->

@@ -12,6 +12,7 @@ addUserToAccount = (account, userAttributes, callback)->
     if user
       return callback(null, user) if user.plan == userAttributes.plan
       # TODO DEPRECATED
+      user._accounts.push account._id
       user.plan = userAttributes.plan
       return user.save callback
     else
