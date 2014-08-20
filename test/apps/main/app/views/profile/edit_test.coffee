@@ -1,2 +1,2 @@
 basicView = Cine.require 'test/helpers/basic_view'
-basicView('account/edit')
+basicView('profile/edit')

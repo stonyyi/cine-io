@@ -6,7 +6,7 @@ module.exports = (match) ->
   match '/404',        'errors#not_found'
   match '/500',        'errors#server_error'
 
-  match "/account", "account#edit"
+  match "/profile", "profile#edit"
   match "/usage", "usage_reports#show"
   match "/billing", "billing#show"
   # For some reason this doesn't work.

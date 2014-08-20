@@ -1,13 +1,13 @@
-AccountController = Cine.controller 'account'
+ProfileController = Cine.controller 'profile'
 ControllerTester = Cine.require('test/helpers/test_controller_action')
-test = ControllerTester(AccountController)
+test = ControllerTester(ProfileController)
 
-describe 'AccountController', ->
+describe 'ProfileController', ->
   beforeEach ->
-    AccountController.app = mainApp
+    ProfileController.app = mainApp
 
   afterEach ->
-    delete AccountController.app
+    delete ProfileController.app
 
   describe '#edit', ->
     it 'requires a current user', (done)->

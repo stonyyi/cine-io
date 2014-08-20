@@ -35,7 +35,7 @@ module.exports = React.createClass({
             <a href="" onClick={this.doNothing}>{name}</a>
             <ul className="dropdown">
               <li><a href='/'>Home</a></li>
-              <li><a href='/account'>Account</a></li>
+              <li><a href='/profile'>Profile</a></li>
               <li><a href='/usage'>Usage</a></li>
               <li><a href='/billing'>Billing</a></li>
               <li><a href='' onClick={this.logout}>Sign Out</a></li>
