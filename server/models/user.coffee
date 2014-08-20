@@ -28,10 +28,6 @@ UserSchema = new Schema
   githubAccessToken:
     type: String
   githubData: mongoose.Schema.Types.Mixed
-  herokuId:
-    type: String
-    index: true
-    sparse: true
   hashed_password: String
   password_salt: String
   # Other Info

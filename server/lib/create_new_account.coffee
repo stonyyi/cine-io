@@ -47,8 +47,6 @@ module.exports = (accountAttributes, userAttributes, projectAttributes={}, strea
     callback = streamAttributes
     streamAttributes = {}
 
-  userAttributes.herokuId = accountAttributes.herokuId
-
   accountAttributes.tempPlan = accountAttributes.plan
   accountAttributes.billingEmail ||= userAttributes.email
   go = ->

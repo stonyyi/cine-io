@@ -60,13 +60,6 @@ describe 'createNewAccount', ->
       expect(@results.user.masterKey).to.have.length(64)
       expect(@results.account.masterKey).to.equal(@results.user.masterKey)
 
-    # TODO: DEPRECATED
-    it "adds a herokuId to the account when it's from heroku", (done)->
-      User.findById @results.user._id, (err, user)->
-        expect(err).to.be.null
-        expect(user.herokuId).to.equal('heroku-id-yo')
-        done()
-
     it "adds a herokuId to the account", (done)->
       Account.findById @results.account._id, (err, account)->
         expect(err).to.be.null
