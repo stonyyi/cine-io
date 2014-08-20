@@ -10,7 +10,7 @@ describe 'Users#Show', ->
     @account.save done
 
   beforeEach (done)->
-    @user = new User name: 'Mah name', email: 'mah@example.com', plan: @account.tempPlan
+    @user = new User name: 'Mah name', email: 'mah@example.com'
     @user._accounts.push @account._id
     @user.save done
 

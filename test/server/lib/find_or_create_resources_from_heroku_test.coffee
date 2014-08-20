@@ -77,27 +77,25 @@ describe 'findOrCreateResourcesFromHeroku', ->
       @account.save done
 
     beforeEach (done)->
-      @accountUser = new User(plan: 'test', email: 'some email')
+      @accountUser = new User(email: 'some email')
       @accountUser._accounts.push @account._id
       @accountUser.save done
 
     beforeEach (done)->
-      @secondUser = new User(plan: 'test', email: 'second email')
+      @secondUser = new User(email: 'second email')
       @secondUser.save done
 
 
-    it 'returns a user who is already part of the plan', (done)->
+    it 'returns a user who is already part of the account', (done)->
       findOrCreateResourcesFromHeroku.findUser @account._id, 'some email', (err, user)=>
         expect(err).to.be.null
         expect(user._id.toString()).to.equal(@accountUser._id.toString())
-        expect(user.plan).to.equal("test")
         done()
 
     it 'adds a user to an account', (done)->
       findOrCreateResourcesFromHeroku.findUser @account._id, 'second email', (err, user)=>
         expect(err).to.be.null
         expect(user._id.toString()).to.equal(@secondUser._id.toString())
-        expect(user.plan).to.equal("test")
         done()
 
     it 'creates a new user and adds them to the account', (done)->
@@ -107,7 +105,6 @@ describe 'findOrCreateResourcesFromHeroku', ->
         expect(user._id.toString()).not.to.equal(@secondUser._id.toString())
         expect(user.email).to.equal('other email')
         expect(user.name).to.equal('the account name')
-        expect(user.plan).to.equal("test")
         done()
 
   describe 'updatePlan', ->
@@ -116,25 +113,17 @@ describe 'findOrCreateResourcesFromHeroku', ->
       @account = new Account(tempPlan: 'test')
       @account.save done
 
-    beforeEach (done)->
-      @user = new User(plan: 'test')
-      @user._accounts.push @account._id
-      @user.save done
-
     it "updates the account's plan", (done)->
       findOrCreateResourcesFromHeroku.updatePlan @account._id, "startup", (err, account)=>
         expect(err).to.be.null
         expect(account._id.toString()).to.equal(@account._id.toString())
         expect(account.tempPlan).to.equal("startup")
-        Account.findById @account._id, (err, accountFromDb)=>
+        Account.findById @account._id, (err, accountFromDb)->
           expect(err).to.be.null
           expect(accountFromDb.tempPlan).to.equal('startup')
-          User.findById @user._id, (err, userFromDb)->
-            expect(err).to.be.null
-            expect(userFromDb.plan).to.equal('startup')
-            done()
+          done()
 
-    it "undeletes a user", (done)->
+    it "undeletes an account", (done)->
       @account.deletedAt = new Date
       @account.save (err, account)=>
         expect(err).to.be.null

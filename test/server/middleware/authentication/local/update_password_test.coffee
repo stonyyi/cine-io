@@ -55,7 +55,7 @@ describe 'update password', ->
 
   describe 'success states', ->
     beforeEach (done)->
-      @user = new User(email: 'some email', plan: 'free')
+      @user = new User(email: 'some email')
       @user.assignHashedPasswordAndSalt 'old pass', (err)=>
         @user.save(done)
 

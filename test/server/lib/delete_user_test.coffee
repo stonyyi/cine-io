@@ -4,7 +4,7 @@ User = Cine.server_model('user')
 describe 'deleteUser', ->
 
   beforeEach (done)->
-    @user = new User(plan: 'test')
+    @user = new User()
     @user.save done
 
   beforeEach (done)->

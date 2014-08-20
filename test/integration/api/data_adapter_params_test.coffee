@@ -14,7 +14,7 @@ describe 'data adapter params', ->
     @agent = supertest.agent(app)
 
   beforeEach (done)->
-    @user = new User(email: 'the email', plan: 'enterprise')
+    @user = new User(email: 'the email')
     @user.assignHashedPasswordAndSalt 'the pass', (err)=>
       @user.save(done)
 

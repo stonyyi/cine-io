@@ -49,7 +49,7 @@ tracker.logIn = (currentUser)->
     tracker.userSignup()
 
 updateMixpanelPerson = (currentUser)->
-  data = Plan: currentUser.get('plan'), $email: currentUser.get('email'), $name: currentUser.get('name')
+  data = $email: currentUser.get('email'), $name: currentUser.get('name')
   console.log('setting mixpanel data', data)
   tracker.mixpanel.people.set(data)
 

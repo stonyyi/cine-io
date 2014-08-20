@@ -5,7 +5,7 @@ expectSentryLog = Cine.require('test/helpers/expect_sentry_log')
 
 describe 'login', ->
   beforeEach (done)->
-    @user = new User(email: 'the email', plan: 'enterprise')
+    @user = new User(email: 'the email')
     @user.assignHashedPasswordAndSalt 'the pass', (err)=>
       @user.save(done)
 

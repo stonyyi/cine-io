@@ -181,7 +181,7 @@ describe 'github auth', ->
         @profileDataNock = requireFixture('nock/github_oauth_user_response_with_email')()
 
       beforeEach (done)->
-        @user = new User(plan: 'startup', githubId: 135461, email: 'orig email', name: 'my name')
+        @user = new User(githubId: 135461, email: 'orig email', name: 'my name')
         @user.save done
 
       beforeEach (done)->

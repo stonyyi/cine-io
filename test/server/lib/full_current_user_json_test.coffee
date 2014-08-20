@@ -17,7 +17,7 @@ describe 'fullCurrentUserJson', ->
     @account2.save done
 
   beforeEach (done)->
-    @user = new User(name: 'my name', email: 'some email', plan: @account.tempPlan)
+    @user = new User(name: 'my name', email: 'some email')
     @user.save done
 
   describe 'without accounts', ->

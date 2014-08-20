@@ -9,13 +9,13 @@ describe 'UsageReport', ->
   describe 'maxUsagePerAccount', ->
     it 'returns the max amount', ->
       account = new Account()
-      account.attributes.plan = 'free'
+      account.attributes.tempPlan = 'free'
       expect(UsageReport.maxUsagePerAccount(account)).to.equal(1073741824)
-      account.attributes.plan = 'solo'
+      account.attributes.tempPlan = 'solo'
       expect(UsageReport.maxUsagePerAccount(account)).to.equal(21474836480)
-      account.attributes.plan = 'startup'
+      account.attributes.tempPlan = 'startup'
       expect(UsageReport.maxUsagePerAccount(account)).to.equal(161061273600)
-      account.attributes.plan = 'enterprise'
+      account.attributes.tempPlan = 'enterprise'
       expect(UsageReport.maxUsagePerAccount(account)).to.equal(1099511627776)
 
   describe 'lowestPlanPerUsage', ->

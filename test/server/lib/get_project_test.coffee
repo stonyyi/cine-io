@@ -14,7 +14,7 @@ describe 'getProject', ->
     @account.save done
 
   beforeEach (done)->
-    @user = new User(name: 'the user', email: 'some email', plan: 'free')
+    @user = new User(name: 'the user', email: 'some email')
     @user.save done
 
   describe 'failure', ->

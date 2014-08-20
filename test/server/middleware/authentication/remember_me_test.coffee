@@ -49,7 +49,7 @@ describe 'RememberMe', ->
 
   describe 'createNewToken', ->
     it 'should return a new token for the user id', (done)->
-      user = new User plan: 'free'
+      user = new User
       RememberMe.createNewToken user, (err, token)->
         expect(err).to.be.null
         expect(token.length).to.equal(64)

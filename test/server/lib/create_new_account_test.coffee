@@ -14,7 +14,7 @@ describe 'createNewAccount', ->
   requiresSeed()
 
   beforeEach ->
-    @accountAttributes = name: "the new account name", plan: 'starter', herokuId: 'heroku-id-yo', billingProviderName: 'heroku'
+    @accountAttributes = name: "the new account name", herokuId: 'heroku-id-yo', billingProviderName: 'heroku', plan: 'starter'
     @userAttributes = email: "my-email", name: 'user name'
     @projectAttributes = name: 'this project'
     @streamAttributes = name: 'this stream'
@@ -45,13 +45,6 @@ describe 'createNewAccount', ->
         expect(err).to.be.null
         expect(user.name).to.equal("user name")
         expect(user.email).to.equal("my-email")
-        done()
-
-    # TODO: DEPRECATED
-    it 'adds a plan to the user', (done)->
-      User.findById @results.user._id, (err, user)->
-        expect(err).to.be.null
-        expect(user.plan).to.equal('starter')
         done()
 
     # TODO: DEPRECATED
@@ -142,7 +135,7 @@ describe 'createNewAccount', ->
   describe 'with an existing user', ->
 
     beforeEach (done)->
-      @user = new User(email: "my-email", name: 'user name', plan: 'enterprise')
+      @user = new User(email: "my-email", name: 'user name')
       @user.save done
 
     beforeEach (done)->
@@ -155,12 +148,4 @@ describe 'createNewAccount', ->
         expect(err).to.be.null
         expect(user._accounts).to.have.length(1)
         expect(user._accounts[0].toString()).to.equal(@results.account._id.toString())
-        done()
-
-    # TODO: DEPRECATED
-    it 'updates the plan of the existing user', (done)->
-      expect(@results.user.plan).to.equal('starter')
-      User.findById @results.user._id, (err, user)->
-        expect(err).to.be.null
-        expect(user.plan).to.equal('starter')
         done()

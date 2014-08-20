@@ -22,7 +22,7 @@ describe 'PasswordChangeRequests#Create', ->
   it "creates a password change request and does NOT return it", (done)->
     sinon.stub(mailer, "forgotPassword")
 
-    u = new User name: 'Mah name', email: 'thomas@cine.io', plan: 'startup'
+    u = new User name: 'Mah name', email: 'thomas@cine.io'
     u.save (err)->
       expect(err).to.equal(null)
       params = {email: 'thomas@cine.io'}

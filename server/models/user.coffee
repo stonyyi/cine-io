@@ -45,9 +45,6 @@ UserSchema = new Schema
     type: String
     default: ''
     trim: true
-  plan:
-    type: String
-    required: true
   deletedAt:
     type: Date
   masterKey:
@@ -86,26 +83,11 @@ UserSchema.methods.assignHashedPasswordAndSalt = (cleartext_password, callback)-
 
 UserSchema.methods.simpleCurrentUserJSON = ->
   json = @toJSON()
-  result = _.pick(json, 'isSiteAdmin', 'createdAt', 'name', 'email', 'masterKey', 'plan', 'githubId', '_accounts')
+  result = _.pick(json, 'isSiteAdmin', 'createdAt', 'name', 'email', 'masterKey', 'githubId', '_accounts')
   result.id = json._id
   result.firstName = @firstName()
   result.lastName = @lastName()
   result
-
-UserSchema.methods.streamLimit = ->
-  switch @plan
-    when 'free', 'starter' then 1
-    when 'solo' then 5
-    when 'startup', 'enterprise', 'test' then Infinity
-    else throw new Error("Don't know this plan")
-
-herokuSpecificPlans = ['test', 'starter', 'foo']
-
-planRegex = new RegExp BackboneUser.plans.concat(herokuSpecificPlans).join('|')
-UserSchema.path('plan').validate ((value)->
-  planRegex.test value
-), 'Invalid plan'
-
 
 UserSchema.pre 'save', (next)->
   return next() if @masterKey

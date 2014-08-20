@@ -7,7 +7,7 @@ PasswordChangeRequest = Cine.server_model('password_change_request')
 describe 'accountMailer', ->
 
   beforeEach (done)->
-    @user = new User(name: 'my name', email: 'my email', plan: 'startup')
+    @user = new User(name: 'my name', email: 'my email')
     @user.save done
 
   beforeEach ->

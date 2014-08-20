@@ -59,12 +59,7 @@ setPlanAndEnsureNotDeleted = (account, plan, callback)->
   account.tempPlan = plan
   account.save (err, account)->
     return callback(err) if err
-    # TODO DEPRECATED ADDING PLAN
-    User.findOne _accounts: {$in: [account._id]}, (err, user)->
-      user.plan = plan
-      user.save (err, user)->
-        return callback(err) if err
-        callback(null, account)
+    callback(null, account)
 
 # callback(err, user)
 exports.updatePlan = (accountId, plan, callback)->

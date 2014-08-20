@@ -37,7 +37,7 @@ describe 'heroku authentication', ->
     @account.save done
 
   beforeEach (done)->
-    @user = new User(plan: @account.tempPlan)
+    @user = new User
     @user._accounts.push(@account._id)
     @user.save done
 
@@ -109,16 +109,11 @@ describe 'heroku authentication', ->
         .end (err, res)=>
           expect(err).to.be.null
           expect(res.text).to.equal('ok')
-          Account.findById @account._id, (err, account)=>
+          Account.findById @account._id, (err, account)->
             expect(err).to.be.null
             expect(account.deletedAt).to.be.undefined
             expect(account.tempPlan).to.equal("enterprise")
-            # TODO DEPRECATED
-            User.findById @user._id, (err, user)->
-              expect(err).to.be.null
-              expect(user.deletedAt).to.be.undefined
-              expect(user.plan).to.equal("enterprise")
-              done()
+            done()
 
 
   # User removed us from heroku

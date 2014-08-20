@@ -16,7 +16,7 @@ describe 'EnsureSiteAdmin', ->
     @agent = supertest.agent(app)
 
   beforeEach (done)->
-    @user = new User(email: 'some email', plan: 'startup')
+    @user = new User(email: 'some email')
     @user.assignHashedPasswordAndSalt 'old pass', (err)=>
       @user.save(done)
 

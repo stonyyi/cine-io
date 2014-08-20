@@ -11,7 +11,6 @@ Create = (params, callback)->
 addProjectToAccountAndSave = (account, params, callback)->
   project = new Project
     name: params.name
-    plan: params.plan
     _account: account._id
   project.save (err, project)->
     return callback(err, null, status: 400) if err

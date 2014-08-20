@@ -6,7 +6,7 @@ describe 'Project', ->
   modelTimestamps(Project, name: 'hey')
 
   beforeEach (done)->
-    @project = new Project(name: 'a', streamsCount: 12, plan: 'free')
+    @project = new Project(name: 'a', streamsCount: 12)
     @project.save done
 
   beforeEach ->
@@ -14,14 +14,14 @@ describe 'Project', ->
 
   describe 'publicKey', ->
     it 'has a unique publicKey generated on save', (done)->
-      project = new Project(name: 'some name', plan: 'free')
+      project = new Project(name: 'some name')
       project.save (err)->
         expect(err).to.be.null
         expect(project.publicKey.length).to.equal(32)
         done()
 
     it 'will not override the publicKey on future saves', (done)->
-      project = new Project(name: 'some name', plan: 'free')
+      project = new Project(name: 'some name')
       project.save (err)->
         expect(err).to.be.null
         publicKey = project.publicKey
@@ -32,14 +32,14 @@ describe 'Project', ->
 
   describe 'secretKey', ->
     it 'has a unique secretKey generated on save', (done)->
-      project = new Project(name: 'some name', plan: 'free')
+      project = new Project(name: 'some name')
       project.save (err)->
         expect(err).to.be.null
         expect(project.secretKey.length).to.equal(32)
         done()
 
     it 'will not override secretKey on future saves', (done)->
-      project = new Project(name: 'some name', plan: 'free')
+      project = new Project(name: 'some name')
       project.save (err)->
         expect(err).to.be.null
         secretKey = project.secretKey

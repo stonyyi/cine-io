@@ -87,10 +87,10 @@ describe 'tracker', ->
 
 
       it 'updates the mixpanel person', ->
-        c = new User(plan: 'test', email: 'the email', name: 'the name', createdAt: new Date, id: '123')
+        c = new User(email: 'the email', name: 'the name', createdAt: new Date, id: '123')
         tracker.logIn(c)
         expect(mixpanel.people.set.calledOnce).to.be.true
-        expect(mixpanel.people.set.firstCall.args).to.deep.equal([{Plan: 'test', $email: 'the email', $name: 'the name'}])
+        expect(mixpanel.people.set.firstCall.args).to.deep.equal([{$email: 'the email', $name: 'the name'}])
 
     describe '#logOut', ->
       it 'clears the mixpanel cookie if there is one', ->

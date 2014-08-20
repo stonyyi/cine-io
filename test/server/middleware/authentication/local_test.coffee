@@ -20,7 +20,7 @@ describe 'local authentication', ->
 
   describe 'existing user', ->
     beforeEach (done)->
-      @user = new User(email: 'the email', plan: 'enterprise')
+      @user = new User(email: 'the email')
       @user.assignHashedPasswordAndSalt 'the pass', (err)=>
         @user.save(done)
 
@@ -29,14 +29,6 @@ describe 'local authentication', ->
         response = JSON.parse(res.text)
         expect(response.email).to.equal('the email')
         done(err)
-
-    it 'does not override the plan', (done)->
-      login @agent, @user, 'the pass', 'startup', (err, res)->
-        response = JSON.parse(res.text)
-        expect(response.plan).to.equal('enterprise')
-        User.findById response.id, (err, user)->
-          expect(user.plan).to.equal('enterprise')
-          done(err)
 
     it 'logs in the user', (done)->
       login @agent, @user, 'the pass', (err, res)=>
@@ -86,7 +78,6 @@ describe 'local authentication', ->
       login @agent, 'new email', 'new pass', 'solo', (err, res)->
         response = JSON.parse(res.text)
         expect(response.email).to.equal('new email')
-        expect(response.plan).to.equal('solo')
         done(err)
 
     it 'creates a new user', (done)->
@@ -128,13 +119,15 @@ describe 'local authentication', ->
           expect(user.password_salt).to.be.ok
           done(err)
 
-    it 'gives that user a plan', (done)->
+    it 'gives that account a plan', (done)->
       login @agent, 'new email', 'new pass', 'startup', (err, res)->
         response = JSON.parse(res.text)
-        expect(response.plan).to.equal('startup')
         User.findById response.id, (err, user)->
-          expect(user.plan).to.equal('startup')
-          done(err)
+          expect(err).to.be.null
+          Account.findById user._accounts[0], (err, account)->
+            expect(err).to.be.null
+            expect(account.tempPlan).to.equal('startup')
+            done()
 
     it 'adds a project and a new stream to that user', (done)->
       login @agent, 'new email', 'new pass', 'free', (err, res)=>

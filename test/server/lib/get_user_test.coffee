@@ -5,7 +5,7 @@ _ = require('underscore')
 describe 'getUser', ->
 
   beforeEach (done)->
-    @user = new User(plan: 'solo')
+    @user = new User
     @user.save done
 
   it 'requires a sessionUserId or a masterKey', (done)->

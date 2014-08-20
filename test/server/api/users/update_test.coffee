@@ -5,11 +5,11 @@ assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 describe 'Users#update', ->
 
   beforeEach (done)->
-    @user = new User name: 'Mah name', email: 'mah email', plan: 'free'
+    @user = new User name: 'Mah name', email: 'mah email'
     @user.save done
 
   beforeEach (done)->
-    @user2 = new User name: 'Second name', email: 'second email', plan: 'free'
+    @user2 = new User name: 'Second name', email: 'second email'
     @user2.save done
 
   it 'requires the user be logged in', (done)->

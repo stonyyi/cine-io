@@ -6,14 +6,13 @@ _ = require('underscore')
 addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 
 # callback(err, user)
+
+
 addUserToAccount = (account, userAttributes, callback)->
   User.findOne email: userAttributes.email, (err, user)->
     return callback(err) if err
     if user
-      return callback(null, user) if user.plan == userAttributes.plan
-      # TODO DEPRECATED
       user._accounts.push account._id
-      user.plan = userAttributes.plan
       return user.save callback
     else
       user = new User(userAttributes)
@@ -48,7 +47,6 @@ module.exports = (accountAttributes, userAttributes, projectAttributes={}, strea
     callback = streamAttributes
     streamAttributes = {}
 
-  userAttributes.plan = accountAttributes.plan
   userAttributes.herokuId = accountAttributes.herokuId
 
   accountAttributes.tempPlan = accountAttributes.plan
