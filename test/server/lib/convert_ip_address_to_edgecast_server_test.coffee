@@ -6,7 +6,7 @@ describe 'convertIpAddressToEdgecastServer', ->
     edgecastServer = convertIpAddressToEdgecastServer sfIp
     expect(edgecastServer.code).to.equal('lax')
 
-  it 'converts a Berlin IP to lax', ->
+  it 'converts a Berlin IP to fra', ->
     sfIp = "81.169.145.154"
     edgecastServer = convertIpAddressToEdgecastServer sfIp
     expect(edgecastServer.code).to.equal('fra')
