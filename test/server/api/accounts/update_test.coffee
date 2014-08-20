@@ -6,14 +6,54 @@ describe 'Accounts#update', ->
 
   testApi.requiresMasterKey UpdateAccount
 
+  beforeEach (done)->
+    @account = new Account(tempPlan: 'enterprise', billingEmail: 'the email', name: 'Chillin')
+    @account.save done
+
+  it "updates the account fields", (done)->
+    params = {masterKey: @account.masterKey, name: 'New Name', tempPlan: 'starter'}
+    callback = (err, response)=>
+      expect(err).to.equal(null)
+      expect(response.name).to.equal('New Name')
+      expect(response.tempPlan).to.equal('starter')
+      Account.findById @account._id, (err, account)->
+        expect(account.name).to.equal('New Name')
+        expect(account.tempPlan).to.equal('starter')
+        done()
+
+    UpdateAccount params, callback
+
+  describe "won't overwrite with blank values", ->
+    it "won't overwrite with blank name", (done)->
+      params = {masterKey: @account.masterKey, name: '', tempPlan: 'starter'}
+      callback = (err, response)=>
+        expect(err).to.equal(null)
+        expect(response.name).to.equal('Chillin')
+        expect(response.tempPlan).to.equal('starter')
+        Account.findById @account._id, (err, account)->
+          expect(account.name).to.equal('Chillin')
+          expect(account.tempPlan).to.equal('starter')
+          done()
+
+      UpdateAccount params, callback
+
+    it "won't overwrite with blank tempPlan", (done)->
+      params = {masterKey: @account.masterKey, name: 'New Name', tempPlan: ''}
+      callback = (err, response)=>
+        expect(err).to.equal(null)
+        expect(response.name).to.equal('New Name')
+        expect(response.tempPlan).to.equal('enterprise')
+        Account.findById @account._id, (err, account)->
+          expect(account.name).to.equal('New Name')
+          expect(account.tempPlan).to.equal('enterprise')
+          done()
+
+      UpdateAccount params, callback
+
   describe 'adding a credit card', ->
     beforeEach ->
       addCustomerNock = requireFixture('nock/stripe_create_customer_success')()
       createCardNock = requireFixture('nock/stripe_create_card_for_customer_success')()
-
-    beforeEach (done)->
-      @account = new Account(tempPlan: 'enterprise', billingEmail: 'the email', name: 'Chillin')
-      @account.save done
 
     assertEmailSent.admin 'cardAdded'
 
@@ -42,7 +82,6 @@ describe 'Accounts#update', ->
 
   describe 'deleting a credit card', ->
     beforeEach (done)->
-      @account = new Account(tempPlan: 'enterprise', billingEmail: 'the email', name: 'Chillin')
       @account.stripeCustomer.cards.push(stripeCardId: 'card_102gkI2AL5avr9E4geO0PpkC')
       @account.save done
 

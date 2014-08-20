@@ -13,7 +13,7 @@ describe 'fullCurrentUserJson', ->
     @account.save done
 
   beforeEach (done)->
-    @account2 = new Account(name: 'second account', tempPlan: 'solo', masterKey: '2mkey')
+    @account2 = new Account(name: 'second account', tempPlan: 'starter', masterKey: '2mkey')
     @account2.save done
 
   beforeEach (done)->
@@ -53,10 +53,12 @@ describe 'fullCurrentUserJson', ->
       expect(firstAccount.id.toString()).to.equal(@account._id.toString())
       expect(firstAccount.name).to.equal('account name')
       expect(firstAccount.masterKey).to.equal('1mkey')
+      expect(firstAccount.tempPlan).to.equal('solo')
       secondAccount = @userJson.accounts[1]
       expect(secondAccount.id.toString()).to.equal(@account2._id.toString())
       expect(secondAccount.name).to.equal('second account')
       expect(secondAccount.masterKey).to.equal('2mkey')
+      expect(secondAccount.tempPlan).to.equal('starter')
 
     it 'returns the accounts stripe details', ->
       firstAccount = @userJson.accounts[0]

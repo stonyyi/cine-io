@@ -18,6 +18,7 @@ fullCurrentUserJson.accountJson = (account, callback)->
     id: account._id
     name: account.name
     masterKey: account.masterKey
+    tempPlan: account.tempPlan
   stripeCards = []
   _.each account.stripeCustomer.cards, (card)->
     return if card.deletedAt?
