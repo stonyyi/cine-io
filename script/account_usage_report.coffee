@@ -1,29 +1,29 @@
 # Usage
-# heroku run coffee script/user_usage_report.coffee compact humanize
-# coffee script/user_usage_report.coffee
-# coffee script/user_usage_report.coffee all # does every month
-# coffee script/user_usage_report.coffee 2014-01
-# coffee script/user_usage_report.coffee humanize
-# coffee script/user_usage_report.coffee compact # removes 0 bytes users
-# coffee script/user_usage_report.coffee all humanize
-# coffee script/user_usage_report.coffee 2014-01 humanize
-# coffee script/user_usage_report.coffee 2014-01 compact
-# coffee script/user_usage_report.coffee all compact
-# coffee script/user_usage_report.coffee humanize compact
-# coffee script/user_usage_report.coffee all humanize compact
-# coffee script/user_usage_report.coffee 2014-01 humanize compact
+# heroku run coffee script/account_usage_report.coffee compact humanize
+# coffee script/account_usage_report.coffee
+# coffee script/account_usage_report.coffee all # does every month
+# coffee script/account_usage_report.coffee 2014-01
+# coffee script/account_usage_report.coffee humanize
+# coffee script/account_usage_report.coffee compact # removes 0 bytes accounts
+# coffee script/account_usage_report.coffee all humanize
+# coffee script/account_usage_report.coffee 2014-01 humanize
+# coffee script/account_usage_report.coffee 2014-01 compact
+# coffee script/account_usage_report.coffee all compact
+# coffee script/account_usage_report.coffee humanize compact
+# coffee script/account_usage_report.coffee all humanize compact
+# coffee script/account_usage_report.coffee 2014-01 humanize compact
 
 environment = require('../config/environment')
 Cine = require '../config/cine'
 require "mongoose-querystream-worker"
 moment = require('moment')
-User = Cine.server_model('user')
+Account = Cine.server_model('account')
 CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 humanizeBytes = Cine.lib('humanize_bytes')
 
 _ = require('underscore')
 
-callbackFunction = (user, callback)->
+callbackFunction = (account, callback)->
   return (err, collectedBytes)->
     if err
       console.log("ERROR CALCULATING USAGE", err)
@@ -32,21 +32,21 @@ callbackFunction = (user, callback)->
     return callback() if shouldCompact && collectedBytes == 0
 
     byteString = if shouldHumanize then humanizeBytes(collectedBytes) else "#{collectedBytes} bytes"
-    console.log("Total account usage for", user._id, user.email, byteString)
+    console.log("Total account usage for", account._id, account.billingEmail || account.herokuId, byteString)
     callback()
 
-calculateMonthlyUsage = (user, callback)->
-  CalculateAccountUsage.byMonth user, thisMonth, callbackFunction(user, callback)
+calculateMonthlyUsage = (account, callback)->
+  CalculateAccountUsage.byMonth account, thisMonth, callbackFunction(account, callback)
 
-calculateTotalUsage = (user, callback)->
-  CalculateAccountUsage.total user, callbackFunction(user, callback)
+calculateTotalUsage = (account, callback)->
+  CalculateAccountUsage.total account, callbackFunction(account, callback)
 
 endFunction = (err)->
   console.log('ending')
   console.log("ending err", err) if err
   process.exit(0)
 
-scope = User.find()
+scope = Account.find()
 
 dateString = process.argv[2]
 shouldHumanize = _.any(process.argv, (arg)-> arg == 'humanize')
@@ -70,7 +70,7 @@ switch dateString
 switch type
   when 'all'
     workFunction = calculateTotalUsage
-    console.log("Calculating all user bandwidth.")
+    console.log("Calculating all account bandwidth.")
   when 'monthly'
     workFunction = calculateMonthlyUsage
     console.log("Calculating for month of #{moment(thisMonth).format("MMM YYYY")}.")
