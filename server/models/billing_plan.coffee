@@ -7,16 +7,16 @@ BillingPlanSchema  = new mongoose.Schema
     type: Number # in USD
   broadcast:
     transferLimit:
-      type: Number #in GB
+      type: Number #in GiB
     transferOverage:
-      type: Number #in GB
+      type: Number #in GiB
     streamLimit:
       type: Number #integer
   cdn:
     storageLimit:
-      type: Number #in GB
+      type: Number #in GiB
     storageOverage:
-      type: Number #in GB
+      type: Number #in GiB
   _billingProvider:
     type: mongoose.Schema.Types.ObjectId
     ref: 'BillingProvider'
