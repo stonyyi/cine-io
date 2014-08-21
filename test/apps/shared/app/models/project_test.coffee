@@ -3,8 +3,10 @@ basicModel('project', urlAttributes: ['publicKey'])
 Project = Cine.model('project')
 
 describe 'Project', ->
+
   describe 'getStreams', ->
     it 'is tested'
+
   describe 'updatedAt', ->
     it 'returns a date', ->
       u = new Project(updatedAt: (new Date).toISOString())
