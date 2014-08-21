@@ -42,15 +42,13 @@ AccountSchema.methods.streamLimit = ->
   switch @tempPlan
     when 'free', 'starter' then 1
     when 'solo' then 5
-    when 'startup', 'enterprise' then Infinity
     when 'basic', 'pro', 'test' then Infinity
     else throw new Error("Don't know this plan")
 
-legacyPlans = ['startup', 'enterprise']
 
 herokuSpecificPlans = ['test', 'starter', 'foo']
 
-planRegex = new RegExp BackboneAccount.plans.concat(herokuSpecificPlans).concat(legacyPlans).join('|')
+planRegex = new RegExp BackboneAccount.plans.concat(herokuSpecificPlans).join('|')
 AccountSchema.path('tempPlan').validate ((value)->
   planRegex.test value
 ), 'Invalid plan'
