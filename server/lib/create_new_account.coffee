@@ -48,6 +48,7 @@ module.exports = (accountAttributes, userAttributes, projectAttributes={}, strea
     streamAttributes = {}
 
   accountAttributes.tempPlan = accountAttributes.plan
+  accountAttributes.name ||= userAttributes.name
   accountAttributes.billingEmail ||= userAttributes.email
   go = ->
     account = new Account(accountAttributes)

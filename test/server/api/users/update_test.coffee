@@ -1,3 +1,4 @@
+Account = Cine.server_model('account')
 User = Cine.server_model('user')
 UpdateUser = testApi Cine.api('users/update')
 assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
@@ -5,7 +6,12 @@ assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 describe 'Users#update', ->
 
   beforeEach (done)->
+    @account = new Account tempPlan: 'solo'
+    @account.save done
+
+  beforeEach (done)->
     @user = new User name: 'Mah name', email: 'mah email'
+    @user._accounts.push @account.id
     @user.save done
 
   beforeEach (done)->
@@ -79,9 +85,20 @@ describe 'Users#update', ->
 
         UpdateUser params, session, callback
 
-  describe 'sending the welcome email', ->
+  describe 'completedsignup', ->
     assertEmailSent 'welcomeEmail'
     assertEmailSent.admin 'newUser'
+
+    it 'updates the account name', (done)->
+      params = {id: @user._id, name: 'My Name', completedsignup: 'local'}
+      session = {user: @user}
+      expect(@account.name).to.be.undefined
+      callback = (err, response)=>
+        Account.findById @account._id, (err, account)->
+          expect(account.name).to.equal('My Name')
+          done()
+
+      UpdateUser params, session, callback
 
     it 'sends a welcome email', (done)->
       params = {id: @user._id, name: 'My Name', completedsignup: 'local'}
