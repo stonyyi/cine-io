@@ -4,6 +4,10 @@ Account = Cine.model('account')
 
 describe 'Account', ->
 
+  describe '.plans', ->
+    it 'has plans', ->
+      expect(Account.plans).to.deep.equal(['free', 'solo', 'startup', 'enterprise'])
+
   describe '#isHeroku', ->
     it 'is true with a herokuId', ->
       account = new Account(herokuId: 'the id')

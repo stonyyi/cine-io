@@ -1,6 +1,6 @@
 mongoose = require 'mongoose'
 crypto = require('crypto')
-BackboneUser = Cine.model('user')
+BackboneAccount = Cine.model('account')
 
 StripeCard = new mongoose.Schema
   stripeCardId: String
@@ -47,7 +47,7 @@ AccountSchema.methods.streamLimit = ->
 
 herokuSpecificPlans = ['test', 'starter', 'foo']
 
-planRegex = new RegExp BackboneUser.plans.concat(herokuSpecificPlans).join('|')
+planRegex = new RegExp BackboneAccount.plans.concat(herokuSpecificPlans).join('|')
 AccountSchema.path('tempPlan').validate ((value)->
   planRegex.test value
 ), 'Invalid plan'

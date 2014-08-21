@@ -2,14 +2,14 @@ Account = Cine.server_model('account')
 _ = require('underscore')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
 Project = Cine.server_model('project')
-BackboneUser = Cine.model('user')
+BackboneAccount = Cine.model('account')
 
 describe 'Account', ->
   modelTimestamps(Account, tempPlan: 'enterprise')
 
   describe 'validations', ->
     describe 'plan', ->
-      _.each BackboneUser.plans, (plan)->
+      _.each BackboneAccount.plans, (plan)->
         it "can be #{plan}", (done)->
           user = new Account(name: 'some name', tempPlan: plan)
           user.save (err, member)->

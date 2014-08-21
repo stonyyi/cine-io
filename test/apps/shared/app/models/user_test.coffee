@@ -11,9 +11,6 @@ describe 'User', ->
     it 'is false for users without an id', ->
       expect((new User).isLoggedIn()).to.be.false
 
-  it 'has plans', ->
-    expect(User.plans).to.deep.equal(['free', 'solo', 'startup', 'enterprise'])
-
   describe 'createdAt', ->
     it 'returns a date', ->
       u = new User(createdAt: (new Date).toISOString())

@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react'),
 PageWrapper = Cine.component('layout/_page_wrapper'),
-  User = Cine.model('user'),
+  Account = Cine.model('account'),
   _ = require('underscore'),
   capitalize = Cine.lib('capitalize');
 
@@ -40,7 +40,7 @@ module.exports = React.createClass({
     });
   },
   render: function() {
-    var planOptions = _.map(User.plans, function(plan) {
+    var planOptions = _.map(Account.plans, function(plan) {
       return (<option key={plan} value={plan}>{capitalize(plan)}</option>);
     });
 
