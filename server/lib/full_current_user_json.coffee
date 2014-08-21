@@ -18,6 +18,7 @@ fullCurrentUserJson.accountJson = (account, callback)->
   returnJson =
     id: account._id
     name: account.name
+    herokuId: account.herokuId
     masterKey: account.masterKey
     tempPlan: account.tempPlan
   stripeCards = []

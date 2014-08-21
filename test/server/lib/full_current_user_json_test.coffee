@@ -9,7 +9,7 @@ describe 'fullCurrentUserJson', ->
       {stripeCardId: '123', last4: 'the last 4', brand: 'visa', exp_month: '01', exp_year: '2013'},
       {stripeCardId: '456', last4: 'these last 4', brand: 'master', exp_month: '12', exp_year: '2014'}
     ]
-    @account = new Account(name: 'account name', tempPlan: 'solo', masterKey: '1mkey', stripeCustomer: {stripeCustomerId: 'cus_2ghmxawfvEwXkw', cards: cards})
+    @account = new Account(name: 'account name', tempPlan: 'solo', herokuId: 'my heroku id', masterKey: '1mkey', stripeCustomer: {stripeCustomerId: 'cus_2ghmxawfvEwXkw', cards: cards})
     @account.save done
 
   beforeEach (done)->
@@ -55,11 +55,13 @@ describe 'fullCurrentUserJson', ->
       expect(firstAccount.name).to.equal('account name')
       expect(firstAccount.masterKey).to.equal('1mkey')
       expect(firstAccount.tempPlan).to.equal('solo')
+      expect(firstAccount.herokuId).to.equal('my heroku id')
       secondAccount = @userJson.accounts[1]
       expect(secondAccount.id.toString()).to.equal(@account2._id.toString())
       expect(secondAccount.name).to.equal('second account')
       expect(secondAccount.masterKey).to.equal('2mkey')
       expect(secondAccount.tempPlan).to.equal('starter')
+      expect(secondAccount.herokuId).to.be.undefined
 
     it 'returns the accounts stripe details', ->
       firstAccount = @userJson.accounts[0]
