@@ -105,6 +105,14 @@ Additional API endpoints may be found at: [cine.io/docs](cine.io/docs).
 
 ## Using with Rails
 
+>callout
+>We’ve built a small Ruby Sinatra example. <br>
+><a class="github-source-code" href="https://github.com/cine-io/cineio-sinatra-example-app">Source code</a> or
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/cine-io/cineio-sinatra-example-app)
+
+
+### Integrate with your Ruby app
+
 Ruby on Rails applications may to add the following entry into their `Gemfile` specifying the cine.io client library.
 
 ```ruby
@@ -127,6 +135,13 @@ client = CineIo::Client.new(secretKey: ENV['CINE_IO_SECRET_KEY'])
 Additional examples can be found at the [repository's homepage](https://github.com/cine-io/cineio-ruby).
 
 ## Using with Node.js
+
+>callout
+>We’ve built a small Node.js Express example. <br>
+><a class="github-source-code" href="https://github.com/cine-io/cineio-node-example-app">Source code</a> or
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/cine-io/cineio-node-example-app)
+
+### Integrate with your Node app
 
 The npm package may be installed with the following command.
 
