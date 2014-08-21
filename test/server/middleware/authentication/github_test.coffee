@@ -252,6 +252,6 @@ describe 'github auth', ->
           expect(err).to.be.null
           currentUser = JSON.parse(res.text)
           expect(currentUser.masterKey).to.have.length(64)
-          expect(@res.headers.location).to.equal("cineioconsole://login?masterKey=#{currentUser.masterKey}")
-          expect(@res.text).to.equal("Moved Temporarily. Redirecting to cineioconsole://login?masterKey=#{currentUser.masterKey}")
+          expect(@res.headers.location).to.equal("cineioconsole://login?masterKey=#{currentUser.masterKey}&userToken=#{currentUser.masterKey}")
+          expect(@res.text).to.equal("Moved Temporarily. Redirecting to cineioconsole://login?masterKey=#{currentUser.masterKey}&userToken=#{currentUser.masterKey}")
           done()

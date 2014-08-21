@@ -88,7 +88,7 @@ success = (req, res)->
   state = JSON.parse(req.query.state)
   redirectUrl = switch state.client
     when 'web' then '/'
-    when 'iOS' then "cineioconsole://login?masterKey=#{req.user.masterKey}"
+    when 'iOS' then "cineioconsole://login?masterKey=#{req.user.masterKey}&userToken=#{req.user.masterKey}"
   res.redirect(redirectUrl)
 
 module.exports = (app)->
