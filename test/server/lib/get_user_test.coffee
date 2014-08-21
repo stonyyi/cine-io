@@ -22,13 +22,19 @@ describe 'getUser', ->
       expect(user._id.toString()).to.equal(@user._id.toString())
       done()
 
-  it 'can take a master token', (done)->
+  it 'can take a masterKey', (done)->
     getUser masterKey: @user.masterKey, (err, user, options)=>
       expect(err).to.be.null
       expect(options).to.be.undefined
       expect(user._id.toString()).to.equal(@user._id.toString())
       done()
 
+  it 'can take a userToken', (done)->
+    getUser userToken: @user.masterKey, (err, user, options)=>
+      expect(err).to.be.null
+      expect(options).to.be.undefined
+      expect(user._id.toString()).to.equal(@user._id.toString())
+      done()
 
   it 'returns 404 when not found', (done)->
     getUser sessionUserId: (new User)._id, (err, user, options)->
