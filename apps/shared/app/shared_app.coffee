@@ -39,13 +39,23 @@ module.exports = class App extends BaseApp
   # assume a single account for now
   # will be able to be set later on
   currentAccount: ->
-    @theCA ||= new Account(@currentUser.get('accounts')[0], app: this)
+    @_currentAccount ||= @currentUser.accounts().first()
+
+  changeAccount: (account)->
+    @_currentAccount = account
+    @router.currentView.render()
+    @_setupHerokuBoomerangBanner()
 
   _setupHerokuBoomerangBanner: ->
     return if typeof Boomerang is undefined
-    return if !@currentAccount().isHeroku()
+    return if !@currentUser.isLoggedIn()
+    return @_removeBoomerang() if !@currentAccount().isHeroku()
     Boomerang.init({app: @currentAccount().get('herokuId'), addon: 'cine'})
-    $(document.getElementById('heroku-boomerang')).prependTo($('body'))
+    $('#heroku-boomerang').prependTo($('body'))
+
+  _removeBoomerang: ->
+    debugger
+    $('#heroku-boomerang').remove()
 
   _setupTracker: ->
     @tracker.load()

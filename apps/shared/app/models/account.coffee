@@ -1,5 +1,6 @@
 Base = Cine.model('base')
 isServer = typeof window is 'undefined'
+capitalize = Cine.lib('capitalize')
 
 module.exports = class Account extends Base
   @id: 'Account'
@@ -9,3 +10,11 @@ module.exports = class Account extends Base
 
   isHeroku: ->
     !!@get('herokuId')
+
+  @include Cine.lib('date_value')
+
+  createdAt: ->
+    @_dateValue('createdAt')
+
+  displayName: ->
+    @get('name') || capitalize(@get('tempPlan'))

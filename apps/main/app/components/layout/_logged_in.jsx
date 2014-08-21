@@ -1,8 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react'),
   authentication = Cine.lib('authentication'),
-  capitalize = Cine.lib('capitalize');
-
+  _ = require('underscore');
 module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
 
@@ -20,17 +19,47 @@ module.exports = React.createClass({
   doNothing: function(e){
     e.preventDefault();
   },
+  changeAccount: function(account, e){
+    e.preventDefault();
+    this.props.app.changeAccount(account);
+  },
   render: function() {
     var
+      self = this,
       name = this.props.app.currentUser.get('name'),
-      plan = this.props.app.currentAccount().get('tempPlan');
+      currentAccount = this.props.app.currentAccount(),
+      plan = currentAccount.get('tempPlan'),
+      accounts = this.props.app.currentUser.accounts(),
+      accountDropDown;
+    if (accounts.length > 1){
+      var accountList =  _.map(accounts.without(currentAccount), function(account) {
+        return (
+          <li key={account.get('id')}>
+            <a href="" onClick={self.changeAccount.bind(self, account)}>{account.displayName()}</a>
+          </li>
+        );
+      });
+
+      accountDropDown = (
+        <li className="has-dropdown not-click">
+          <a href="" onClick={this.doNothing}>{currentAccount.displayName()}</a>
+          <ul className="dropdown">
+            {accountList}
+          </ul>
+        </li>
+      );
+    }else{
+      accountDropDown = (
+        <li className='has-form'>
+          <span className='plan-name'>{currentAccount.displayName()}</span>
+        </li>
+      );
+    }
 
     return (
       <section className="top-bar-section">
         <ul className="right">
-          <li className='has-form'>
-            <span className='plan-name'>{capitalize(plan)}</span>
-          </li>
+          {accountDropDown}
           <li className="has-dropdown not-click">
             <a href="" onClick={this.doNothing}>{name}</a>
             <ul className="dropdown">

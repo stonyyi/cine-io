@@ -1,6 +1,6 @@
-Base = Cine.model('base')
 _ = require('underscore')
-
+Base = Cine.model('base')
+Accounts = Cine.collection('accounts')
 module.exports = class User extends Base
   @id: 'User'
   url: '/user'
@@ -17,3 +17,6 @@ module.exports = class User extends Base
     twoMinutesAgo = new Date
     twoMinutesAgo.setMinutes(twoMinutesAgo.getMinutes() - 2)
     @createdAt() > twoMinutesAgo
+
+  accounts: ->
+    @_accounts ||= new Accounts(@get('accounts'), app: @app)
