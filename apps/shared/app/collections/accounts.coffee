@@ -4,7 +4,7 @@ Base = Cine.collection('base')
 module.exports = class Accounts extends Base
   @id: 'Accounts'
   model: Account
-  url: '/projects'
+  url: '/accounts'
 
   comparator: (model1, model2)->
     created1 = model1.createdAt()
