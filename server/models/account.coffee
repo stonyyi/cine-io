@@ -46,9 +46,12 @@ AccountSchema.methods.streamLimit = ->
     else throw new Error("Don't know this plan")
 
 
-herokuSpecificPlans = ['test', 'starter', 'foo']
+herokuBetaPlans = ['test', 'foo']
+herokuPlans = ['starter']
 
-planRegex = new RegExp BackboneAccount.plans.concat(herokuSpecificPlans).join('|')
+allPlans = BackboneAccount.plans.concat(herokuBetaPlans).concat(herokuPlans)
+
+planRegex = new RegExp allPlans.join('|')
 AccountSchema.path('tempPlan').validate ((value)->
   planRegex.test value
 ), 'Invalid plan'
