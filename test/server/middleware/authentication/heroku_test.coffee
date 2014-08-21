@@ -63,7 +63,7 @@ describe 'heroku authentication', ->
   describe "post /heroku/resources", ->
     params =
       heroku_id: 'app123@heroku.com'
-      plan: 'startup'
+      plan: 'solo'
     requiresHerokuBasicAuth('post', '/heroku/resources', params)
 
     describe "success", ->
@@ -80,7 +80,7 @@ describe 'heroku authentication', ->
             expect(err).to.be.null
             response = JSON.parse(res.text)
             expect(_.keys(response).sort()).to.deep.equal(['config', 'id', 'plan'])
-            expect(response.plan).to.equal('startup')
+            expect(response.plan).to.equal('solo')
             expect(_.keys(response.config).sort()).to.deep.equal(['CINE_IO_PUBLIC_KEY', 'CINE_IO_SECRET_KEY'])
             Account.findById response.id, (err, account)->
               expect(err).to.be.null
@@ -96,7 +96,7 @@ describe 'heroku authentication', ->
   # User changed plan on heroku
   describe "put /heroku/resources/:id", ->
     params =
-      plan: 'enterprise'
+      plan: 'pro'
 
     requiresHerokuBasicAuth('put', '/heroku/resources/123')
 
@@ -112,7 +112,7 @@ describe 'heroku authentication', ->
           Account.findById @account._id, (err, account)->
             expect(err).to.be.null
             expect(account.deletedAt).to.be.undefined
-            expect(account.tempPlan).to.equal("enterprise")
+            expect(account.tempPlan).to.equal("pro")
             done()
 
 

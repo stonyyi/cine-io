@@ -60,9 +60,9 @@ describe 'addNextStreamToProject', ->
           expect(stream._id.toString()).to.equal(@stream._id.toString())
           done()
 
-  describe 'enterprise plan', ->
+  describe 'pro plan', ->
     beforeEach (done)->
-      @account.tempPlan = 'enterprise'
+      @account.tempPlan = 'pro'
       @account.save done
 
     beforeEach (done)->

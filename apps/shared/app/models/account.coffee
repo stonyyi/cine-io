@@ -5,7 +5,7 @@ module.exports = class Account extends Base
   @id: 'Account'
   url: if isServer then "/account?masterKey=:masterKey" else "/account"
   idAttribute: 'masterKey'
-  @plans: ['free', 'solo', 'startup', 'enterprise']
+  @plans: ['free', 'solo', 'basic', 'pro']
 
   isHeroku: ->
     !!@get('herokuId')

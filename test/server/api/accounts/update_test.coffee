@@ -7,7 +7,7 @@ describe 'Accounts#update', ->
   testApi.requiresMasterKey UpdateAccount
 
   beforeEach (done)->
-    @account = new Account(tempPlan: 'enterprise', billingEmail: 'the email', name: 'Chillin')
+    @account = new Account(tempPlan: 'pro', billingEmail: 'the email', name: 'Chillin')
     @account.save done
 
   it "updates the account fields", (done)->
@@ -42,10 +42,10 @@ describe 'Accounts#update', ->
       callback = (err, response)=>
         expect(err).to.equal(null)
         expect(response.name).to.equal('New Name')
-        expect(response.tempPlan).to.equal('enterprise')
+        expect(response.tempPlan).to.equal('pro')
         Account.findById @account._id, (err, account)->
           expect(account.name).to.equal('New Name')
-          expect(account.tempPlan).to.equal('enterprise')
+          expect(account.tempPlan).to.equal('pro')
           done()
 
       UpdateAccount params, callback

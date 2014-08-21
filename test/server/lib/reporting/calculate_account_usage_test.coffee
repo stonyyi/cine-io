@@ -7,7 +7,7 @@ CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 describe 'CalculateAccountUsage', ->
 
   beforeEach (done)->
-    @account = new Account(name: 'dat account', tempPlan: 'startup')
+    @account = new Account(name: 'dat account', tempPlan: 'basic')
     @account.save done
   beforeEach (done)->
     @project1 = new Project(name: 'project1', _account: @account._id)

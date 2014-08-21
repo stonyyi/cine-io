@@ -5,7 +5,7 @@ Project = Cine.server_model('project')
 BackboneAccount = Cine.model('account')
 
 describe 'Account', ->
-  modelTimestamps(Account, tempPlan: 'enterprise')
+  modelTimestamps(Account, tempPlan: 'pro')
 
   describe 'validations', ->
     describe 'plan', ->
@@ -67,9 +67,9 @@ describe 'Account', ->
     it 'is 5 for solo', ->
       testPlan('solo', 5)
 
-    it 'is Infinite for startup, enterprise, test', ->
-      testPlan('startup', Infinity)
-      testPlan('enterprise', Infinity)
+    it 'is Infinite for basic, pro, test', ->
+      testPlan('basic', Infinity)
+      testPlan('pro', Infinity)
       testPlan('test', Infinity)
 
   describe '#projects', ->

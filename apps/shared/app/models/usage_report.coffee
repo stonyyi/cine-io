@@ -12,15 +12,15 @@ module.exports = class UsageReport extends Base
     switch account.get('tempPlan')
       when 'free', 'starter', 'test' then humanizeBytes.GiB
       when 'solo' then humanizeBytes.GiB * 20
-      when 'startup' then humanizeBytes.GiB * 150
-      when 'enterprise' then humanizeBytes.TiB
+      when 'basic' then humanizeBytes.GiB * 150
+      when 'pro' then humanizeBytes.TiB
 
   @lowestPlanPerUsage: (bytes)->
     switch
       when bytes <= humanizeBytes.GiB then 'starter'
       when bytes <= humanizeBytes.GiB * 20 then 'solo'
-      when bytes <= humanizeBytes.GiB * 150 then 'startup'
-      else 'enterprise'
+      when bytes <= humanizeBytes.GiB * 150 then 'basic'
+      else 'pro'
 
   @lastThreeMonths: ->
     thisMonth = new Date

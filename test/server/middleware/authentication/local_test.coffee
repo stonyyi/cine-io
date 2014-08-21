@@ -120,13 +120,13 @@ describe 'local authentication', ->
           done(err)
 
     it 'gives that account a plan', (done)->
-      login @agent, 'new email', 'new pass', 'startup', (err, res)->
+      login @agent, 'new email', 'new pass', 'basic', (err, res)->
         response = JSON.parse(res.text)
         User.findById response.id, (err, user)->
           expect(err).to.be.null
           Account.findById user._accounts[0], (err, account)->
             expect(err).to.be.null
-            expect(account.tempPlan).to.equal('startup')
+            expect(account.tempPlan).to.equal('basic')
             done()
 
     it 'adds a project and a new stream to that user', (done)->

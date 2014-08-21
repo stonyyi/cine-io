@@ -5,7 +5,7 @@
 # login agent, email, password, plan, (err, res)->
 # login agent, User, password, plan, (err, res)->
 User = Cine.server_model('user')
-fakeData = username: "test@dummy.com", password: "spinach", plan: "startup"
+fakeData = username: "test@dummy.com", password: "spinach", plan: "basic"
 module.exports = (agent, email, password, plan, callback)->
   email = email.email if email instanceof User #when email is a user
 

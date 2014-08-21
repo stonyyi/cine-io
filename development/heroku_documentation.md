@@ -202,9 +202,9 @@ You can migrate your plan at any time. Carefully monitor your bandwidth to ensur
 Use the `heroku addons:upgrade` command to migrate to a new plan.
 
 ```term
-$ heroku addons:upgrade cine:startup
------> Upgrading cine:startup to sharp-mountain-4005... done, v18 ($20/mo)
-       Your plan has been updated to: cine:startup
+$ heroku addons:upgrade cine:solo
+-----> Upgrading cine:solo to sharp-mountain-4005... done, v18 ($20/mo)
+       Your plan has been updated to: cine:solo
 ```
 
 ## Removing the add-on

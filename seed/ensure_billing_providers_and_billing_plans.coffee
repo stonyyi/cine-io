@@ -15,8 +15,8 @@ plans =
     {name: 'free', providerName: 'cine.io'}
     {name: 'starter', providerName: 'cine.io'}
     {name: 'solo', providerName: 'cine.io'}
-    {name: 'startup', providerName: 'cine.io'}
-    {name: 'enterprise', providerName: 'cine.io'}
+    {name: 'basic', providerName: 'cine.io'}
+    {name: 'pro', providerName: 'cine.io'}
     # heroku
     {name: 'test', providerName: 'heroku'}
   ]

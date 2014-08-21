@@ -22,11 +22,11 @@ describe 'github auth', ->
 
     it 'redirects to github', (done)->
       @agent
-        .get('/auth/github?plan=startup&client=web')
+        .get('/auth/github?plan=basic&client=web')
         .expect(302)
         .end (err, res)->
-          expect(res.headers.location).to.equal("https://github.com/login/oauth/authorize?response_type=code&redirect_uri=&scope=user%3Aemail&state=%7B%22plan%22%3A%22startup%22%2C%22client%22%3A%22web%22%7D&client_id=0970d704f4137ab1e8a1")
-          expect(res.text).to.equal("Moved Temporarily. Redirecting to https://github.com/login/oauth/authorize?response_type=code&redirect_uri=&scope=user%253Aemail&state=%257B%2522plan%2522%253A%2522startup%2522%252C%2522client%2522%253A%2522web%2522%257D&client_id=0970d704f4137ab1e8a1")
+          expect(res.headers.location).to.equal("https://github.com/login/oauth/authorize?response_type=code&redirect_uri=&scope=user%3Aemail&state=%7B%22plan%22%3A%22basic%22%2C%22client%22%3A%22web%22%7D&client_id=0970d704f4137ab1e8a1")
+          expect(res.text).to.equal("Moved Temporarily. Redirecting to https://github.com/login/oauth/authorize?response_type=code&redirect_uri=&scope=user%253Aemail&state=%257B%2522plan%2522%253A%2522basic%2522%252C%2522client%2522%253A%2522web%2522%257D&client_id=0970d704f4137ab1e8a1")
           done(err)
 
   describe '/auth/github/callback', ->
@@ -56,7 +56,7 @@ describe 'github auth', ->
 
         beforeEach (done)->
           @agent
-            .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"startup"%2C"client"%3A"web"%7D')
+            .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"basic"%2C"client"%3A"web"%7D')
             .expect(302)
             .end (err, res)=>
               @agent.saveCookies(res)
@@ -70,7 +70,7 @@ describe 'github auth', ->
             expect(user._accounts).to.have.length(1)
             Account.findById user._accounts[0], (err, account)->
               expect(err).to.be.null
-              expect(account.tempPlan).to.equal('startup')
+              expect(account.tempPlan).to.equal('basic')
               done()
 
         it 'adds the correct billing provider', (done)->
@@ -136,7 +136,7 @@ describe 'github auth', ->
 
         beforeEach (done)->
           @agent
-            .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"startup"%2C"client"%3A"web"%7D')
+            .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"basic"%2C"client"%3A"web"%7D')
             .expect(302)
             .end (err, res)=>
               @agent.saveCookies(res)
@@ -161,7 +161,7 @@ describe 'github auth', ->
 
         beforeEach (done)->
           @agent
-            .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"startup"%2C"client"%3A"web"%7D')
+            .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"basic"%2C"client"%3A"web"%7D')
             .expect(302)
             .end (err, res)=>
               @agent.saveCookies(res)
@@ -186,7 +186,7 @@ describe 'github auth', ->
 
       beforeEach (done)->
         @agent
-          .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"startup"%2C"client"%3A"web"%7D')
+          .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"basic"%2C"client"%3A"web"%7D')
           .expect(302)
           .end (err, res)=>
             @agent.saveCookies(res)
@@ -239,7 +239,7 @@ describe 'github auth', ->
 
       beforeEach (done)->
         @agent
-          .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"startup"%2C"client"%3A"iOS"%7D')
+          .get('/auth/github/callback?code=f82d92e61bf7f1605066&state=%7B"plan"%3A"basic"%2C"client"%3A"iOS"%7D')
           .expect(302)
           .end (err, res)=>
             @agent.saveCookies(res)

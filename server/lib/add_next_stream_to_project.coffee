@@ -5,9 +5,6 @@ createNewStreamInEdgecast = Cine.server_lib('create_new_stream_in_edgecast')
 Account = Cine.server_model('account')
 noop = ->
 
-infinitePlan = (plan)->
-  plan in ['startup', 'enterprise', 'test']
-
 returnExistingStream = (project, callback)->
   # _.random is inclusive, so if there are 5 allocated streams
   # we want 0,1,2,3,4 not 0,1,2,3,4,5

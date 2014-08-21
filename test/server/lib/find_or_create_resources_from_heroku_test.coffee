@@ -17,14 +17,14 @@ describe 'findOrCreateResourcesFromHeroku', ->
     assertEmailSent.admin "newUser"
 
     it 'sends a welcome email', (done)->
-      findOrCreateResourcesFromHeroku.newAccount 'new-heroku-user@heroku.com', 'enterprise', (err, @user, @project)=>
+      findOrCreateResourcesFromHeroku.newAccount 'new-heroku-user@heroku.com', 'pro', (err, @user, @project)=>
         expect(@mailerSpies[0].firstCall.args[0].name).to.equal("new-heroku-user")
         expect(@mailerSpies[0].firstCall.args[1]).to.equal("heroku")
         done(err)
 
     describe "without a new stream", ->
       beforeEach (done)->
-        findOrCreateResourcesFromHeroku.newAccount 'new-heroku-user@heroku.com', 'enterprise', (err, @account, @project)=>
+        findOrCreateResourcesFromHeroku.newAccount 'new-heroku-user@heroku.com', 'pro', (err, @account, @project)=>
           done(err)
 
       it 'creates a new user', (done)->
@@ -58,7 +58,7 @@ describe 'findOrCreateResourcesFromHeroku', ->
         @stream = new EdgecastStream(streamName: 'name1')
         @stream.save(done)
       beforeEach (done)->
-        findOrCreateResourcesFromHeroku.newAccount 'new-heroku-user@heroku.com', 'enterprise', (err, @user, @project)=>
+        findOrCreateResourcesFromHeroku.newAccount 'new-heroku-user@heroku.com', 'pro', (err, @user, @project)=>
           done(err)
 
       it 'adds a stream to that project', (done)->
@@ -113,13 +113,13 @@ describe 'findOrCreateResourcesFromHeroku', ->
       @account.save done
 
     it "updates the account's plan", (done)->
-      findOrCreateResourcesFromHeroku.updatePlan @account._id, "startup", (err, account)=>
+      findOrCreateResourcesFromHeroku.updatePlan @account._id, "basic", (err, account)=>
         expect(err).to.be.null
         expect(account._id.toString()).to.equal(@account._id.toString())
-        expect(account.tempPlan).to.equal("startup")
+        expect(account.tempPlan).to.equal("basic")
         Account.findById @account._id, (err, accountFromDb)->
           expect(err).to.be.null
-          expect(accountFromDb.tempPlan).to.equal('startup')
+          expect(accountFromDb.tempPlan).to.equal('basic')
           done()
 
     it "undeletes an account", (done)->
@@ -127,7 +127,7 @@ describe 'findOrCreateResourcesFromHeroku', ->
       @account.save (err, account)=>
         expect(err).to.be.null
         expect(account.deletedAt).to.be.instanceOf(Date)
-        findOrCreateResourcesFromHeroku.updatePlan @account._id, "startup", (err, account)=>
+        findOrCreateResourcesFromHeroku.updatePlan @account._id, "basic", (err, account)=>
           expect(err).to.be.null
           expect(account._id.toString()).to.equal(@account._id.toString())
           expect(account.deletedAt).to.be.undefined

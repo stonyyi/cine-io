@@ -320,7 +320,7 @@ exports.Pricing = React.createClass({
                     <li className="bullet-item">$0.80 per additional GiB transferred</li>
                     <li className="bullet-item">$0.80 per additional GiB storage</li>
                     <li className="cta-button">
-                      <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'startup', 3)}>Select</a>
+                      <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'basic', 3)}>Select</a>
                     </li>
                   </ul>
                 </div>
@@ -338,7 +338,7 @@ exports.Pricing = React.createClass({
                     <li className="bullet-item">$0.70 per additional GiB transferred</li>
                     <li className="bullet-item">$0.70 per additional GiB storage</li>
                     <li className="cta-button">
-                      <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'enterprise', 4)}>Select</a>
+                      <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'pro', 4)}>Select</a>
                     </li>
                   </ul>
                 </div>
