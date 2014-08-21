@@ -54,7 +54,6 @@ module.exports = class App extends BaseApp
     $('#heroku-boomerang').prependTo($('body'))
 
   _removeBoomerang: ->
-    debugger
     $('#heroku-boomerang').remove()
 
   _setupTracker: ->
