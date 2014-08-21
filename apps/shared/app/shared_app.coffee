@@ -43,7 +43,7 @@ module.exports = class App extends BaseApp
 
   _setupHerokuBoomerangBanner: ->
     return if typeof Boomerang is undefined
-    return if !@currentAccount.isHeroku()
+    return if !@currentAccount().isHeroku()
     Boomerang.init({app: @currentAccount().get('herokuId'), addon: 'cine'})
 
   _setupTracker: ->
