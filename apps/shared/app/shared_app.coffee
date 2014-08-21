@@ -21,6 +21,7 @@ module.exports = class App extends BaseApp
   start: ->
     @_setupRouterListeners()
     @_setupTracker()
+    @_setupHerokuBoomerangBanner()
     BaseApp.prototype.start.call(this)
 
   _setupRouterListeners: ->
@@ -39,6 +40,11 @@ module.exports = class App extends BaseApp
   # will be able to be set later on
   currentAccount: ->
     @theCA ||= new Account(@currentUser.get('accounts')[0], app: this)
+
+  _setupHerokuBoomerangBanner: ->
+    return if typeof Boomerang is undefined
+    return if !@currentAccount.isHeroku()
+    Boomerang.init({app: @currentAccount().get('herokuId'), addon: 'cine'})
 
   _setupTracker: ->
     @tracker.load()
