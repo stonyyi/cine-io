@@ -21,12 +21,10 @@ exports.newAccount = (herokuId, plan, callback)->
     billingProviderName: 'heroku'
   projectAttributes =
     name: nameFromEmail(herokuId)
-  userAttributes =
-    email: herokuId
-    name: nameFromEmail(herokuId)
+  userAttributes = {}
   createNewAccount accountAttributes, userAttributes, projectAttributes, (err, results)->
     return callback(err) if err
-    mailer.admin.newUser(results.user, 'heroku')
+    mailer.admin.newUser(results.account, 'heroku')
     callback(null, results.account, results.project)
 
 # callback(err, user)
@@ -40,9 +38,8 @@ exports.findUser = (accountId, userEmail, callback)->
     if !user
       Account.findById accountId, (err, account)->
         return callback(err) if err
-        user = new User email: userEmail, plan: account.tempPlan, name: account.name
+        user = new User email: userEmail, name: account.name
         user._accounts.push accountId
-        console.log("CREATING USER", user)
         user.save callback
     else
       hasAccount = (userAccountId)->

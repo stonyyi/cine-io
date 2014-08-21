@@ -101,6 +101,18 @@ describe 'createNewAccount', ->
         expect(stream._id.toString()).to.equal(@stream._id.toString())
         done()
 
+  describe 'without an email', ->
+    beforeEach ->
+      delete @userAttributes.email
+
+    beforeEach (done)->
+      createNewAccount @accountAttributes, @userAttributes, @projectAttributes, @streamAttributes, (err, results)=>
+        @results = results
+        done(err)
+
+    it 'does not create a user without an email', ->
+      expect(@results.user).to.be.undefined
+
   describe 'with a password', ->
     beforeEach ->
       @userAttributes.cleartextPassword = 'my password'
