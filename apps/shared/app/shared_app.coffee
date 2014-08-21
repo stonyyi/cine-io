@@ -1,10 +1,13 @@
 BaseApp = require('rendr/shared/app')
 window.Cine = require 'config/cine' if typeof window != 'undefined'
+qs = require('qs')
+isServer = typeof window is 'undefined'
+
 User = Cine.model('user')
 Account = Cine.model('account')
 handlebarsHelpers = Cine.lib('handlebars_helpers')
-isServer = typeof window is 'undefined'
 tracker = Cine.lib('tracker')
+parseUri = Cine.lib('parse_uri')
 
 module.exports = class App extends BaseApp
   @flashKinds = ['success', 'warning', 'info', 'alert']
@@ -39,12 +42,15 @@ module.exports = class App extends BaseApp
   # assume a single account for now
   # will be able to be set later on
   currentAccount: ->
-    @_currentAccount ||= @currentUser.accounts().first()
+    @_currentAccount ||= @_fetchFirstAccount()
 
   changeAccount: (account)->
     @_currentAccount = account
     @router.currentView.rerender()
     @_setupHerokuBoomerangBanner()
+
+  flash: (message, kind)->
+    @trigger(@constructor.flashEvent, message: message, kind: kind)
 
   _setupHerokuBoomerangBanner: ->
     return if typeof Boomerang is undefined
@@ -65,5 +71,10 @@ module.exports = class App extends BaseApp
       delete @_currentAccount
       tracker.logOut()
 
-  flash: (message, kind)->
-    @trigger(@constructor.flashEvent, message: message, kind: kind)
+  _fetchFirstAccount: ->
+    if isServer
+      initialAccountId = @req.param('accountId')
+    else
+      initialAccountId = qs.parse(parseUri(window.location).query).accountId
+    accounts = @currentUser.accounts()
+    accounts.findWhere(id: initialAccountId) || accounts.first()

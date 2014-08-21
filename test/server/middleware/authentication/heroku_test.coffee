@@ -10,7 +10,7 @@ crypto = require("crypto")
 mongoose = require('mongoose')
 
 describe 'heroku authentication', ->
-  constantUserId = mongoose.Types.ObjectId()
+  constantAccountId = mongoose.Types.ObjectId()
 
   beforeEach ->
     @oldssoSalt = herokuConfig.ssoSalt
@@ -33,7 +33,7 @@ describe 'heroku authentication', ->
 
 
   beforeEach (done)->
-    @account = new Account(tempPlan: 'free', _id: constantUserId)
+    @account = new Account(tempPlan: 'free', _id: constantAccountId)
     @account.save done
 
   beforeEach (done)->
@@ -179,7 +179,7 @@ describe 'heroku authentication', ->
             ssoCall.call(this, method, url, done)
 
           it "redirects to the homepage", ->
-            expect(@res.headers.location).to.equal('/')
+            expect(@res.headers.location).to.equal("/?accountId=#{constantAccountId}")
 
           it "sets some the heroku-nav-data header", ->
             herokuNavData = extractNavHeaderFromCookie(@res.headers['set-cookie'][0])
@@ -219,7 +219,7 @@ describe 'heroku authentication', ->
 
 
     describe "get /heroku/resources/:id", ->
-      ssoTests('get', "/heroku/resources/#{constantUserId}")
+      ssoTests('get', "/heroku/resources/#{constantAccountId}")
 
     # definitely sso login
     describe "post /heroku/sso", ->

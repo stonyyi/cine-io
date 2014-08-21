@@ -4,6 +4,7 @@ crypto = require("crypto")
 resources = []
 herokuConfig = Cine.config('variables/heroku')
 findOrCreateResourcesFromHeroku = Cine.server_lib('find_or_create_resources_from_heroku')
+qs = require('qs')
 
 basic_auth = (req, res, next) ->
   if req.headers.authorization and req.headers.authorization.search("Basic ") is 0
@@ -42,6 +43,9 @@ sso_auth = (req, res, next) ->
     return res.send "Not found", 404 unless user
 
     req.login user, next
+
+successSSO = (req, res) ->
+  res.redirect "/?#{qs.stringify(accountId: req.param("id"))}"
 
 module.exports = (app)->
 
@@ -85,9 +89,7 @@ module.exports = (app)->
       response.send "ok"
 
   # ??? - maybe SSO login
-  app.get "/heroku/resources/:id", sso_auth, (request, response) ->
-    response.redirect "/"
+  app.get "/heroku/resources/:id", sso_auth, successSSO
 
   # definitely sso login
-  app.post "/heroku/sso", sso_auth, (request, response) ->
-    response.redirect "/"
+  app.post "/heroku/sso", sso_auth, successSSO
