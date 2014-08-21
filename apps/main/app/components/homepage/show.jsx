@@ -19,11 +19,6 @@ module.exports = React.createClass({
   displayName: 'HomepageShow',
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin'), Cine.lib('has_nav')],
 
-  getInitialState: function(){
-    return{
-      projects: new Projects([], {app: this.props.app})
-    };
-  },
   getBackboneObjects: function(){
     return this.props.app.currentUser;
   },
@@ -32,7 +27,7 @@ module.exports = React.createClass({
     if (this.props.app.currentUser.isLoggedIn()) {
       return (
         <PageWrapper app={this.props.app}>
-          <LoggedIn app={this.props.app} collection={this.state.projects} masterKey={this.props.app.currentAccount().get('masterKey')}/>
+          <LoggedIn app={this.props.app} masterKey={this.props.app.currentAccount().get('masterKey')}/>
         </PageWrapper>
       );
 

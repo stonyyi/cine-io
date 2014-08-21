@@ -11,17 +11,29 @@ module.exports = React.createClass({
   displayName: 'LoggedIn',
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
   propTypes: {
-    collection: React.PropTypes.instanceOf(Projects).isRequired,
     masterKey: React.PropTypes.string.isRequired
   },
   getInitialState: function(){
-    return {selectedProjectId: null, showingNewProject: false, };
+    var projects = {}
+    projects[this.props.masterKey] = this._createNewProject(this.props.masterKey);
+    return {
+      selectedProjectId: null, showingNewProject: false, projects: projects};
   },
-  componentDidMount: function() {
-    this.props.collection.fetch({ data: { masterKey: this.props.masterKey} });
+  componentWillReceiveProps: function(nextProps){
+    // allow the focus to be hijacked when not showing
+    if (this.state.projects[nextProps.masterKey]) { return; }
+    var newProjects = this._createNewProject(nextProps.masterKey);
+    this.state.projects[nextProps.masterKey] = newProjects;
+    this.listenToBackboneChangeEvents(newProjects);
+    this.setState({projects: this.state.projects});
+  },
+  _createNewProject: function(masterKey){
+    var newProjects = new Projects([], {app: this.props.app});
+    newProjects.fetch({ data: { masterKey: masterKey} });
+    return newProjects;
   },
   getBackboneObjects: function(){
-    return this.props.collection;
+    return this.getCurrentCollection();
   },
   showCreateNewProject: function(e){
     e.preventDefault();
@@ -30,25 +42,28 @@ module.exports = React.createClass({
   selectProject: function(project){
     this.setState({selectedProjectId: project.id});
   },
+  getCurrentCollection: function(){
+    return this.state.projects[this.props.masterKey];
+  },
   addProject: function(project){
     this.setState({showingNewProject: false});
-    this.props.collection.add(project);
+    this.getCurrentCollection().add(project);
     this.selectProject(project);
   },
   render: function() {
     var selectedProjectId = this.state.selectedProjectId;
     // if something is selected and but it doesn't exist in the collection, remove it.
-    if (selectedProjectId && !this.props.collection.get(selectedProjectId)){
+    if (selectedProjectId && !this.getCurrentCollection().get(selectedProjectId)){
       selectedProjectId = null;
     }
     // if nothing is selected, and we have a project, default select the first item
-    if(!selectedProjectId && this.props.collection.length > 0){
-      selectedProjectId = this.props.collection.models[0].id;
+    if(!selectedProjectId && this.getCurrentCollection().length > 0){
+      selectedProjectId = this.getCurrentCollection().models[0].id;
     }
     var
       streamsPanel = '',
       newProject = '',
-      listItems = this.props.collection.map(function(model) {
+      listItems = this.getCurrentCollection().map(function(model) {
         var selected = model.id === selectedProjectId;
         return (<ListItem key={model.cid} model={model} selected={selected}/>);
       });
@@ -64,7 +79,7 @@ module.exports = React.createClass({
       newProject = (<NewProject app={this.props.app} masterKey={this.props.masterKey}/>);
     }
     if (selectedProjectId){
-      var selectedProject = this.props.collection.get(selectedProjectId);
+      var selectedProject = this.getCurrentCollection().get(selectedProjectId);
       streamsPanel = (<ProjectStreamsWrapper app={this.props.app} model={selectedProject} />);
     }
     return (

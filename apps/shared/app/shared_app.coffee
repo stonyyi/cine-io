@@ -43,7 +43,7 @@ module.exports = class App extends BaseApp
 
   changeAccount: (account)->
     @_currentAccount = account
-    @router.currentView.render()
+    @router.currentView.rerender()
     @_setupHerokuBoomerangBanner()
 
   _setupHerokuBoomerangBanner: ->

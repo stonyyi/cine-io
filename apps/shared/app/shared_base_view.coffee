@@ -9,10 +9,16 @@ ReactView = RendrView.extend
     React.renderComponentToString @_renderComponent()
 
   postRender: ->
+    @_renderReact()
+
+  rerender: ->
+    @_renderReact()
+
+  _renderReact: ->
     React.renderComponent @_renderComponent(), @el
 
   _renderComponent: ->
-    @Component @_renderOptions()
+    @renderedComponent = @Component @_renderOptions()
 
   _renderOptions: ->
     options = app: @app, options: @options
