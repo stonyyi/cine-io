@@ -98,5 +98,5 @@ doLogin = (app, data)->
   app.currentUser.set(data)
   app.currentUser.trigger('login')
 doLogout = (app)->
-  app.currentUser.clear()
+  app.currentUser.logout()
   app.currentUser.trigger('logout')

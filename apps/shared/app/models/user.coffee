@@ -8,6 +8,10 @@ module.exports = class User extends Base
   isLoggedIn: ->
     @id?
 
+  logout: ->
+    delete @_accounts
+    @clear()
+
   @include Cine.lib('date_value')
 
   createdAt: ->
