@@ -62,7 +62,7 @@ module.exports = class App extends BaseApp
       tracker.logIn(@currentUser)
     tracker.logIn(@currentUser) if @currentUser.isLoggedIn()
     @currentUser.on 'logout', =>
-      delete @theCA
+      delete @_currentAccount
       tracker.logOut()
 
   flash: (message, kind)->
