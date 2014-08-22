@@ -22,7 +22,11 @@ AccountSchema = new mongoose.Schema
   # TODO: DEPRECATED
   tempPlan:
     type: String
+    required: true
   # links to config
+  _billingProvider:
+    type: mongoose.Schema.Types.ObjectId
+    ref: 'BillingProvider'
   billingProvider:
     type: String
   plans:[
