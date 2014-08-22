@@ -89,10 +89,14 @@ describe 'Account', ->
       @notOwnedProject = new Project(name: "in test project3")
       @notOwnedProject.save done
 
+    sortedIds = (ary)->
+      _.chain(ary).pluck('id').invoke('toString').value().sort()
+
     it 'returns the projects', (done)->
       @account.projects (err, projects)=>
         expect(err).to.be.null
         expect(projects).to.have.length(2)
-        expect(projects[0]._id.toString()).to.equal(@ownedProject1._id.toString())
-        expect(projects[1]._id.toString()).to.equal(@ownedProject2._id.toString())
+        actualIds = sortedIds(projects)
+        expectedIds = sortedIds([@ownedProject1, @ownedProject2])
+        expect(actualIds).to.deep.equal(expectedIds)
         done()
