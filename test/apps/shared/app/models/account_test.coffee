@@ -16,3 +16,12 @@ describe 'Account', ->
     it 'is false without heroku', ->
       account = new Account(provider: "cine.io")
       expect(account.isHeroku()).to.be.false
+
+  describe '#isAppdirect', ->
+    it 'is true with appdirect', ->
+      account = new Account(provider: 'appdirect')
+      expect(account.isAppdirect()).to.be.true
+
+    it 'is false without appdirect', ->
+      account = new Account(provider: 'cine.io')
+      expect(account.isAppdirect()).to.be.false

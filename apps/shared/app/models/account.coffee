@@ -11,6 +11,9 @@ module.exports = class Account extends Base
   isHeroku: ->
     @get('provider') == 'heroku'
 
+  isAppdirect: ->
+    @get('provider') == 'appdirect'
+
   @include Cine.lib('date_value')
 
   createdAt: ->

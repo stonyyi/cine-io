@@ -29,7 +29,7 @@ module.exports = React.createClass({
       name = this.props.app.currentUser.get('name'),
       currentAccount = this.props.app.currentAccount(),
       accounts = this.props.app.currentUser.accounts(),
-      accountDropDown;
+      accountDropDown, additionalListItems;
     if (accounts.length > 1){
       var accountList =  _.map(accounts.without(currentAccount), function(account) {
         return (
@@ -55,6 +55,17 @@ module.exports = React.createClass({
       );
     }
 
+    if (currentAccount.isAppdirect()){
+      var
+        billingUrl = currentAccount.get('appdirect').baseUrl+"/account/apps/",
+        userUrl = currentAccount.get('appdirect').baseUrl+"/account/assign/";
+      additionalListItems = [(
+        <li><a href={billingUrl} target="_blank">Billing Information</a></li>
+      ), (
+        <li><a href={userUrl} target="_blank">User Management</a></li>
+      )];
+    }
+
     return (
       <section className="top-bar-section">
         <ul className="right">
@@ -63,6 +74,7 @@ module.exports = React.createClass({
             <a href="" onClick={this.doNothing}>{name}</a>
             <ul className="dropdown">
               <li><a href='/'>Home</a></li>
+              {additionalListItems}
               <li><a href='/profile'>Profile</a></li>
               <li><a href='/account'>Account</a></li>
               <li><a href='/usage'>Usage</a></li>
