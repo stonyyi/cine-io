@@ -38,7 +38,7 @@ createNewUser = (profile, plan, accessToken, callback)->
   saveUser = ->
     accountAttributes =
       plan: plan
-      billingProviderName: 'cine.io'
+      billingProvider: 'cine.io'
     userAttributes =
       githubId: profile.id
       email: email

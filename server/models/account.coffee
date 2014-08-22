@@ -40,13 +40,18 @@ AccountSchema = new mongoose.Schema
 
 AccountSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
-AccountSchema.methods.streamLimit = ->
-  switch @tempPlan
+streamLimitForPlan = (planName)->
+  switch planName
     when 'free', 'starter' then 1
     when 'solo' then 5
     when 'basic', 'pro', 'test' then Infinity
     else throw new Error("Don't know this plan")
 
+aggregatePlanCount = (aggr, planName)->
+  aggr + streamLimitForPlan(planName)
+
+AccountSchema.methods.streamLimit = ->
+  _.inject @plans, aggregatePlanCount, 0
 
 herokuBetaPlans = ['test', 'foo']
 herokuPlans = ['starter']
@@ -54,9 +59,16 @@ herokuPlans = ['starter']
 allPlans = BackboneAccount.plans.concat(herokuBetaPlans).concat(herokuPlans)
 
 planRegex = new RegExp allPlans.join('|')
-AccountSchema.path('tempPlan').validate ((value)->
-  planRegex.test value
+# AccountSchema.path('tempPlan').validate ((value)->
+#   planRegex.test value
+# ), 'Invalid plan'
+
+allProvidersRegex = new RegExp _.keys(ProvidersAndPlans).join('|')
+
+AccountSchema.path('billingProvider').validate ((value)->
+  allProvidersRegex.test value
 ), 'Invalid plan'
+
 
 AccountSchema.pre 'save', (next)->
   return next() if @masterKey

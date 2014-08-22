@@ -5,7 +5,7 @@ describe 'ShowUsageReports', ->
   testApi.requiresMasterKey ShowUsageReports
 
   beforeEach (done)->
-    @account = new Account masterKey: 'dat mk', tempPlan: 'free'
+    @account = new Account masterKey: 'dat mk', plans: ['free']
     @account.save done
 
   it 'calculates a usage report', (done)->

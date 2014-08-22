@@ -5,7 +5,7 @@ _ = require('underscore')
 describe 'getAccount', ->
 
   beforeEach (done)->
-    @account = new Account(tempPlan: 'solo')
+    @account = new Account(plans: ['solo'])
     @account.save done
 
   it 'requires a masterKey', (done)->

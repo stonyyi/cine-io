@@ -61,7 +61,7 @@ module.exports = (app)->
 
       resource =
         id: account._id
-        plan: account.tempPlan
+        plan: account.plans[0]
         config:
           CINE_IO_PUBLIC_KEY: project.publicKey
           CINE_IO_SECRET_KEY: project.secretKey

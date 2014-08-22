@@ -3,50 +3,43 @@ _ = require('underscore')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
 Project = Cine.server_model('project')
 BackboneAccount = Cine.model('account')
+ProvidersAndPlans = Cine.config('providers_and_plans')
 
 describe 'Account', ->
-  modelTimestamps(Account, tempPlan: 'pro')
+  modelTimestamps(Account, plans: ['pro'])
 
   describe 'validations', ->
-    describe 'plan', ->
-      _.each BackboneAccount.plans, (plan)->
-        it "can be #{plan}", (done)->
-          user = new Account(name: 'some name', tempPlan: plan)
-          user.save (err, member)->
+    describe 'billingProvider', ->
+      _.each _.keys(ProvidersAndPlans), (billingProvider)->
+        it "can accept #{billingProvider}", (done)->
+          account = new Account(billingProvider: billingProvider)
+          account.save (err, member)->
             done(err)
 
-      it 'can be test', (done)->
-        user = new Account(name: 'some name', tempPlan: 'test')
-        user.save (err, member)->
-          done(err)
-
-      it 'can be starter', (done)->
-        user = new Account(name: 'some name', tempPlan: 'starter')
-        user.save (err, member)->
-          done(err)
-
       it 'cannot be anything else', (done)->
-        user = new Account(name: 'some name', tempPlan: 'something else')
-        user.save (err, member)->
+        account = new Account(name: 'some name', billingProvider: 'NOT A PROVIDER')
+        account.save (err, member)->
           expect(err).not.to.be.null
           done()
 
-      it 'cannot be null', (done)->
-        user = new Account(name: 'some name')
-        user.save (err, member)->
+      xit 'cannot be null', (done)->
+        account = new Account
+        account.save (err, member)->
           expect(err).not.to.be.null
           done()
+
+    describe 'plans', ->
 
   describe 'masterKey', ->
     it 'has a unique masterKey generated on save', (done)->
-      account = new Account(name: 'some name', tempPlan: 'test')
+      account = new Account(name: 'some name', plans: ['test'])
       account.save (err)->
         expect(err).to.be.null
         expect(account.masterKey.length).to.equal(64)
         done()
 
     it 'will not override the masterKey on future saves', (done)->
-      account = new Account(name: 'some name', tempPlan: 'test')
+      account = new Account(name: 'some name', plans: ['test'])
       account.save (err)->
         expect(err).to.be.null
         masterKey = account.masterKey
@@ -56,8 +49,9 @@ describe 'Account', ->
           done(err)
 
   describe 'streamLimit', ->
-    testPlan = (planName, limit)->
-      account = new Account(tempPlan: planName)
+    testPlan = (plan, limit)->
+      account = new Account(plans: [plan])
+
       expect(account.streamLimit()).to.equal(limit)
 
     it 'is 1 for free and starter', ->
@@ -75,7 +69,7 @@ describe 'Account', ->
   describe '#projects', ->
 
     beforeEach (done)->
-      @account = new Account(tempPlan: 'test')
+      @account = new Account(plans: ['test'])
       @account.save done
 
     beforeEach (done)->

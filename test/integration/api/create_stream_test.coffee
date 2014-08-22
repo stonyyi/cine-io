@@ -10,7 +10,7 @@ login = Cine.require 'test/helpers/login_helper'
 describe 'create stream', ->
 
   beforeEach (done)->
-    @account = new Account(tempPlan: 'free')
+    @account = new Account(plans: ['free'])
     @account.save done
 
   beforeEach (done)->

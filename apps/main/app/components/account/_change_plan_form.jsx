@@ -13,10 +13,10 @@ module.exports = React.createClass({
   },
   getInitialState: function(){
     var currentAccount = this.props.app.currentAccount();
-    return {tempPlan: currentAccount.get('tempPlan'), initialTempPlan: currentAccount.get('tempPlan')};
+    return {plan: currentAccount.firstPlan(), initialPlan: currentAccount.firstPlan()};
   },
   changePlan: function(event) {
-    this.setState({tempPlan: event.target.value});
+    this.setState({plan: event.target.value});
   },
   updateSuccess: function(){
     if (this.state.plan != this.state.initialPlan){
@@ -28,7 +28,7 @@ module.exports = React.createClass({
     e.preventDefault();
     var self = this;
       ca = self.props.app.currentAccount();
-    ca.set({tempPlan: this.state.tempPlan})
+    ca.set({plans: [this.state.plan]})
     ca.save(null,{
       success: function(model, response, options){
         self.updateSuccess()
@@ -49,7 +49,7 @@ module.exports = React.createClass({
         <div className="row">
           <div className="large-12 columns">
             <label>Plan
-              <select value={this.state.tempPlan} onChange={this.changePlan} name='plan'>
+              <select value={this.state.plan} onChange={this.changePlan} name='plan'>
                 {planOptions}
               </select>
             </label>

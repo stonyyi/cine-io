@@ -1,18 +1,14 @@
 Project = Cine.server_model('project')
 Account = Cine.server_model('account')
 User = Cine.server_model('user')
-BillingProvider = Cine.server_model('billing_provider')
 findOrCreateResourcesFromHeroku = Cine.server_lib('find_or_create_resources_from_heroku')
 EdgecastStream = Cine.server_model('edgecast_stream')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
-requiresSeed = Cine.require 'test/helpers/requires_seed'
 
 describe 'findOrCreateResourcesFromHeroku', ->
 
   describe 'newAccount' , ->
-
-    requiresSeed()
 
     assertEmailSent.admin "newUser"
 
@@ -43,11 +39,8 @@ describe 'findOrCreateResourcesFromHeroku', ->
         expect(@project.streamsCount).to.equal(0)
         expect(@project._account.toString()).to.equal(@account._id.toString())
 
-      it 'adds the correct billingProvider', (done)->
-        BillingProvider.findById @account._billingProvider, (err, provider)->
-          expect(err).to.be.null
-          expect(provider.name).to.equal('heroku')
-          done()
+      it 'adds the correct billingProvider', ->
+        expect(@account.billingProvider).to.equal('heroku')
 
     describe 'with a new stream', ->
       stubEdgecast()
@@ -70,7 +63,7 @@ describe 'findOrCreateResourcesFromHeroku', ->
   describe 'findUser', ->
 
     beforeEach (done)->
-      @account = new Account(tempPlan: 'test', name: 'the account name')
+      @account = new Account(plans: ['test'], name: 'the account name')
       @account.save done
 
     beforeEach (done)->
@@ -107,17 +100,19 @@ describe 'findOrCreateResourcesFromHeroku', ->
   describe 'updatePlan', ->
 
     beforeEach (done)->
-      @account = new Account(tempPlan: 'test')
+      @account = new Account(plans: ['test'])
       @account.save done
 
     it "updates the account's plan", (done)->
       findOrCreateResourcesFromHeroku.updatePlan @account._id, "basic", (err, account)=>
         expect(err).to.be.null
         expect(account._id.toString()).to.equal(@account._id.toString())
-        expect(account.tempPlan).to.equal("basic")
+        expect(account.plans).have.length(1)
+        expect(account.plans[0]).to.equal("basic")
         Account.findById @account._id, (err, accountFromDb)->
           expect(err).to.be.null
-          expect(accountFromDb.tempPlan).to.equal('basic')
+          expect(accountFromDb.plans).have.length(1)
+          expect(accountFromDb.plans[0]).to.equal('basic')
           done()
 
     it "undeletes an account", (done)->
@@ -134,7 +129,7 @@ describe 'findOrCreateResourcesFromHeroku', ->
   describe 'deleteAccount', ->
 
     beforeEach (done)->
-      @account = new Account(tempPlan: 'test')
+      @account = new Account(plans: ['test'])
       @account.save done
 
     it "adds deletedAt to an account", (done)->

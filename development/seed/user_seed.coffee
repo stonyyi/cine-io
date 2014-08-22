@@ -6,7 +6,7 @@ createNewAccount = Cine.server_lib('create_new_account')
 adminMaker = (name, callback)->
   accountAttributes =
     plan: 'pro'
-    billingProviderName: 'cine.io'
+    billingProvider: 'cine.io'
   userAttributes =
     email: "#{name}@cine.io"
     name: name

@@ -28,7 +28,6 @@ module.exports = React.createClass({
       self = this,
       name = this.props.app.currentUser.get('name'),
       currentAccount = this.props.app.currentAccount(),
-      plan = currentAccount.get('tempPlan'),
       accounts = this.props.app.currentUser.accounts(),
       accountDropDown;
     if (accounts.length > 1){

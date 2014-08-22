@@ -20,7 +20,7 @@ fullCurrentUserJson.accountJson = (account, callback)->
     name: account.name
     herokuId: account.herokuId
     masterKey: account.masterKey
-    tempPlan: account.tempPlan
+    plans: account.plans
   stripeCards = []
   _.each account.stripeCustomer.cards, (card)->
     return if card.deletedAt?

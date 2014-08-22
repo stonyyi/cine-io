@@ -7,45 +7,51 @@ describe 'Accounts#update', ->
   testApi.requiresMasterKey UpdateAccount
 
   beforeEach (done)->
-    @account = new Account(tempPlan: 'pro', billingEmail: 'the email', name: 'Chillin')
+    @account = new Account(plans: ['pro'], billingEmail: 'the email', name: 'Chillin')
     @account.save done
 
   it "updates the account fields", (done)->
-    params = {masterKey: @account.masterKey, name: 'New Name', tempPlan: 'starter'}
+    params = {masterKey: @account.masterKey, name: 'New Name', plans: ['starter']}
     callback = (err, response)=>
       expect(err).to.equal(null)
       expect(response.name).to.equal('New Name')
-      expect(response.tempPlan).to.equal('starter')
+      expect(response.plans).to.have.length(1)
+      expect(response.plans[0]).to.equal('starter')
       Account.findById @account._id, (err, account)->
         expect(account.name).to.equal('New Name')
-        expect(account.tempPlan).to.equal('starter')
+        expect(account.plans).to.have.length(1)
+        expect(account.plans[0]).to.equal('starter')
         done()
 
     UpdateAccount params, callback
 
   describe "won't overwrite with blank values", ->
     it "won't overwrite with blank name", (done)->
-      params = {masterKey: @account.masterKey, name: '', tempPlan: 'starter'}
+      params = {masterKey: @account.masterKey, name: '', plans: ['starter']}
       callback = (err, response)=>
         expect(err).to.equal(null)
         expect(response.name).to.equal('Chillin')
-        expect(response.tempPlan).to.equal('starter')
+        expect(response.plans).to.have.length(1)
+        expect(response.plans[0]).to.equal('starter')
         Account.findById @account._id, (err, account)->
           expect(account.name).to.equal('Chillin')
-          expect(account.tempPlan).to.equal('starter')
+          expect(account.plans).to.have.length(1)
+          expect(account.plans[0]).to.equal('starter')
           done()
 
       UpdateAccount params, callback
 
-    it "won't overwrite with blank tempPlan", (done)->
-      params = {masterKey: @account.masterKey, name: 'New Name', tempPlan: ''}
+    it "won't overwrite with blank plans", (done)->
+      params = {masterKey: @account.masterKey, name: 'New Name', plans: ''}
       callback = (err, response)=>
         expect(err).to.equal(null)
         expect(response.name).to.equal('New Name')
-        expect(response.tempPlan).to.equal('pro')
+        expect(response.plans).to.have.length(1)
+        expect(response.plans[0]).to.equal('pro')
         Account.findById @account._id, (err, account)->
           expect(account.name).to.equal('New Name')
-          expect(account.tempPlan).to.equal('pro')
+          expect(account.plans).to.have.length(1)
+          expect(account.plans[0]).to.equal('pro')
           done()
 
       UpdateAccount params, callback

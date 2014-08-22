@@ -18,7 +18,7 @@ exports.newAccount = (herokuId, plan, callback)->
     herokuId: herokuId
     name: nameFromEmail(herokuId)
     plan: plan
-    billingProviderName: 'heroku'
+    billingProvider: 'heroku'
   projectAttributes =
     name: nameFromEmail(herokuId)
   userAttributes = {}
@@ -33,7 +33,6 @@ exports.newAccount = (herokuId, plan, callback)->
 exports.findUser = (accountId, userEmail, callback)->
   User.findOne email: userEmail, (err, user)->
     return callback(err) if err
-
 
     if !user
       Account.findById accountId, (err, account)->
@@ -51,7 +50,7 @@ exports.findUser = (accountId, userEmail, callback)->
 
 setPlanAndEnsureNotDeleted = (account, plan, callback)->
   account.deletedAt = undefined
-  account.tempPlan = plan
+  account.plans = [plan]
   account.save (err, account)->
     return callback(err) if err
     callback(null, account)

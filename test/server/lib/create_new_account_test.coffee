@@ -2,19 +2,15 @@ Account = Cine.server_model("account")
 EdgecastStream = Cine.server_model("edgecast_stream")
 User = Cine.server_model("user")
 Project = Cine.server_model("project")
-BillingProvider = Cine.server_model('billing_provider')
 _ = require('underscore')
 addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 createNewAccount = Cine.server_lib('create_new_account')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
-requiresSeed = Cine.require 'test/helpers/requires_seed'
 
 describe 'createNewAccount', ->
 
-  requiresSeed()
-
   beforeEach ->
-    @accountAttributes = name: "the new account name", herokuId: 'heroku-id-yo', billingProviderName: 'heroku', plan: 'starter'
+    @accountAttributes = name: "the new account name", herokuId: 'heroku-id-yo', billingProvider: 'heroku', plan: 'starter'
     @userAttributes = email: "my-email", name: 'user name'
     @projectAttributes = name: 'this project'
     @streamAttributes = name: 'this stream'
@@ -33,11 +29,13 @@ describe 'createNewAccount', ->
         expect(account.billingEmail).to.equal("my-email")
         done()
 
-    it 'links the provider', (done)->
-      BillingProvider.findById @results.account._billingProvider, (err, provider)->
-        expect(err).to.be.null
-        expect(provider.name).to.equal('heroku')
-        done()
+    it 'links the provider', ->
+      expect(@results.account.billingProvider).to.equal('heroku')
+
+    it 'adds the plan', ->
+      # doing a deep equal of a mongo array vs js array doesn't work
+      expect(@results.account.plans).to.have.length(1)
+      expect(@results.account.plans[0]).to.equal('starter')
 
     it 'creates a user', (done)->
       expect(@results.user.name).to.equal("user name")
@@ -45,13 +43,6 @@ describe 'createNewAccount', ->
         expect(err).to.be.null
         expect(user.name).to.equal("user name")
         expect(user.email).to.equal("my-email")
-        done()
-
-    # TODO: DEPRECATED
-    it 'adds a tempPlan to the account', (done)->
-      Account.findById @results.account._id, (err, account)->
-        expect(err).to.be.null
-        expect(account.tempPlan).to.equal('starter')
         done()
 
     # TODO: DEPRECATED - need to wait until console app is updated
@@ -79,9 +70,6 @@ describe 'createNewAccount', ->
         expect(err).to.be.null
         expect(stream).to.be.null
         done()
-
-    it 'adds a plan to the account'
-    it 'adds a billing source to the account'
 
   describe 'with a stream', ->
     beforeEach (done)->

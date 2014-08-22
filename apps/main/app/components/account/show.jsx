@@ -19,7 +19,7 @@ module.exports = React.createClass({
     if (ca.get('herokuId')){
       changePlan = (
         <div>
-          <span>Current plan: {ca.get('tempPlan')}. {" "}</span>
+          <span>Current plan: {ca.firstPlan()}. {" "}</span>
           <a href="https://addons.heroku.com/cine">Change plan on Heroku</a>
         </div>
       );

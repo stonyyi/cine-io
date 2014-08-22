@@ -10,7 +10,7 @@ describe 'Projects#Create', ->
   testApi.requiresMasterKey Create
 
   beforeEach (done)->
-    @account = new Account(tempPlan: 'free', masterKey: 'mk1')
+    @account = new Account(plans: ['free'], masterKey: 'mk1')
     @account.save done
 
   describe 'success', ->

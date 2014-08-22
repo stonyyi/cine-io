@@ -33,7 +33,7 @@ describe 'heroku authentication', ->
 
 
   beforeEach (done)->
-    @account = new Account(tempPlan: 'free', _id: constantAccountId)
+    @account = new Account(plans: ['free'], _id: constantAccountId)
     @account.save done
 
   beforeEach (done)->
@@ -112,7 +112,8 @@ describe 'heroku authentication', ->
           Account.findById @account._id, (err, account)->
             expect(err).to.be.null
             expect(account.deletedAt).to.be.undefined
-            expect(account.tempPlan).to.equal("pro")
+            expect(account.plans).to.have.length(1)
+            expect(account.plans[0]).to.equal("pro")
             done()
 
 

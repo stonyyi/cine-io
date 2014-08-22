@@ -10,7 +10,7 @@ describe 'getProject', ->
     @project.save done
 
   beforeEach (done)->
-    @account = new Account(name: 'my account', tempPlan: 'free')
+    @account = new Account(name: 'my account', plans: ['free'])
     @account.save done
 
   beforeEach (done)->

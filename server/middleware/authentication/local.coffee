@@ -9,7 +9,7 @@ fullCurrentUserJSON = Cine.server_lib('full_current_user_json')
 createNewUser = (email, cleartextPassword, req, callback)->
   accountAttributes =
     plan: req.body.plan
-    billingProviderName: 'cine.io'
+    billingProvider: 'cine.io'
   userAttributes =
     email: email
     cleartextPassword: cleartextPassword

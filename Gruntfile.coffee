@@ -169,17 +169,6 @@ module.exports = (grunt) ->
     console.log command
     sh.run command
 
-  grunt.registerTask "seed", ->
-    done = @async()
-    grunt.util.spawn
-      cmd: "coffee"
-      args: ["seed/index.coffee"]
-      opts:
-        stdio: "inherit"
-    , (err, result)->
-
-      done()
-
   grunt.registerTask "development:prepare", ->
     done = @async()
     grunt.util.spawn

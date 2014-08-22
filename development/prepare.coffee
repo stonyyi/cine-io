@@ -41,7 +41,5 @@ done = (err)->
   process.exit()
 
 resetMongo ->
-  Cine.require('seed') (err)->
-    done(err) if err
-    prepare (err)->
-      done(err)
+  prepare (err)->
+    done(err)

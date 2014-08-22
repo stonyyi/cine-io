@@ -7,7 +7,7 @@ describe 'AddCardToAccountFromStripeToken', ->
 
     it 'creates a card object on the account', (done)->
       stripeSuccess = requireFixture('nock/stripe_create_card_for_customer_success')()
-      account = new Account(tempPlan: 'pro', billingEmail: 'the email', stripeCustomer: {stripeCustomerId: 'cus_2ghmxawfvEwXkw'})
+      account = new Account(plans: ['pro'], billingEmail: 'the email', stripeCustomer: {stripeCustomerId: 'cus_2ghmxawfvEwXkw'})
       caller = new AddCardToAccountFromStripeToken(account, 'tok_102gkI2AL5avr9E4wef0ysJa')
       caller.add (err, account, card)->
         expect(err).to.equal(null)

@@ -7,7 +7,7 @@ exports.cardAdded = (account, callback=noop)->
   options =
     billingEmail: account.billingEmail
     _id: account._id
-    tempPlan: account.tempPlan
+    plans: account.plans
   mailOptions =
     subject: '[KPI] Credit Card added'
     content: """

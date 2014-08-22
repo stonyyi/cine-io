@@ -3,17 +3,23 @@ isServer = typeof window is 'undefined'
 humanizeBytes = Cine.lib('humanize_bytes')
 _ = require('underscore')
 
+maxUsagePerPlan = (plan)->
+  switch plan
+    when 'free', 'starter', 'test' then humanizeBytes.GiB
+    when 'solo' then humanizeBytes.GiB * 20
+    when 'basic' then humanizeBytes.GiB * 150
+    when 'pro' then humanizeBytes.TiB
+
+usagePerPlanAggregator = (accum, plan)->
+  accum + maxUsagePerPlan(plan)
+
 module.exports = class UsageReport extends Base
   @id: 'UsageReport'
   idAttribute: 'masterKey'
   url: if isServer then "/usage-report?masterKey=:masterKey" else "/usage-report"
 
   @maxUsagePerAccount: (account)->
-    switch account.get('tempPlan')
-      when 'free', 'starter', 'test' then humanizeBytes.GiB
-      when 'solo' then humanizeBytes.GiB * 20
-      when 'basic' then humanizeBytes.GiB * 150
-      when 'pro' then humanizeBytes.TiB
+    _.inject account.get('plans'), usagePerPlanAggregator, 0
 
   @lowestPlanPerUsage: (bytes)->
     switch

@@ -1,6 +1,5 @@
 supertest = require('supertest')
 User = Cine.server_model('user')
-BillingProvider = Cine.server_model('billing_provider')
 Account = Cine.server_model('account')
 app = Cine.require('app').app
 _ = require('underscore')
@@ -8,7 +7,6 @@ assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 EdgecastStream = Cine.server_model('edgecast_stream')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 RememberMeToken = Cine.server_model('remember_me_token')
-requiresSeed = Cine.require 'test/helpers/requires_seed'
 
 describe 'github auth', ->
 
@@ -42,8 +40,6 @@ describe 'github auth', ->
       assertEmailSent 'welcomeEmail'
       assertEmailSent.admin 'newUser'
 
-      requiresSeed()
-
       beforeEach (done)->
         @stream = new EdgecastStream(streamName: 'name1')
         @stream.save(done)
@@ -70,7 +66,8 @@ describe 'github auth', ->
             expect(user._accounts).to.have.length(1)
             Account.findById user._accounts[0], (err, account)->
               expect(err).to.be.null
-              expect(account.tempPlan).to.equal('basic')
+              expect(account.plans).to.have.length(1)
+              expect(account.plans[0]).to.equal('basic')
               done()
 
         it 'adds the correct billing provider', (done)->
@@ -79,10 +76,8 @@ describe 'github auth', ->
             expect(user._accounts).to.have.length(1)
             Account.findById user._accounts[0], (err, account)->
               expect(err).to.be.null
-              BillingProvider.findById account._billingProvider, (err, provider)->
-                expect(err).to.be.null
-                expect(provider.name).to.equal('cine.io')
-                done()
+              expect(account.billingProvider).to.equal('cine.io')
+              done()
 
         it 'redirects to the homepage', ->
           expect(@res.headers.location).to.equal("/")

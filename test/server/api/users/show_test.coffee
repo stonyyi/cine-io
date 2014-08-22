@@ -6,7 +6,7 @@ describe 'Users#Show', ->
   testApi.requresLoggedIn Show
 
   beforeEach (done)->
-    @account = new Account(name: 'account name yo', tempPlan: 'free')
+    @account = new Account(name: 'account name yo', plans: ['free'])
     @account.save done
 
   beforeEach (done)->

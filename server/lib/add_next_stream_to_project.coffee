@@ -26,7 +26,7 @@ ensureAccountCanAddAnotherStream = (project, callback)->
   Account.findById project._account, (err, account)->
     return callback(err || 'no account for project') if err || !account
     # if the account has no plan, return an error
-    return callback('account not on a plan') unless account.tempPlan
+    return callback('account not on a plan') unless account.plans.length > 0
     # if the account is on an infinite plan, just return true
     return callback(null, true) if account.streamLimit() == Infinity
     checkAllOtherProjects(account, callback)
