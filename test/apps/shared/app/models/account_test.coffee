@@ -9,10 +9,10 @@ describe 'Account', ->
       expect(Account.plans).to.deep.equal(['free', 'solo', 'basic', 'pro'])
 
   describe '#isHeroku', ->
-    it 'is true with a herokuId', ->
-      account = new Account(herokuId: 'the id')
+    it 'is true with heroku', ->
+      account = new Account(provider: "heroku")
       expect(account.isHeroku()).to.be.true
 
-    it 'is false without a herokuId', ->
-      account = new Account(herokuId: null)
+    it 'is false without heroku', ->
+      account = new Account(provider: "cine.io")
       expect(account.isHeroku()).to.be.false

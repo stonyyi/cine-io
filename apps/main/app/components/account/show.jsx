@@ -16,7 +16,7 @@ module.exports = React.createClass({
       ca = this.props.app.currentAccount(),
       CardModule = ca.get('stripeCard') ? CurrentCreditCard : NewCreditCard,
       changePlan;
-    if (ca.get('herokuId')){
+    if (ca.isHeroku()){
       changePlan = (
         <div>
           <span>Current plan: {ca.firstPlan()}. {" "}</span>

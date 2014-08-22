@@ -9,7 +9,7 @@ module.exports = class Account extends Base
   @plans: ['free', 'solo', 'basic', 'pro']
 
   isHeroku: ->
-    !!@get('herokuId')
+    @get('provider') == 'heroku'
 
   @include Cine.lib('date_value')
 
