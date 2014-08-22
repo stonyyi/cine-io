@@ -1,5 +1,5 @@
 module.exports =
-  cine:
+  'cine.io':
     url: 'https://www.cine.io'
     plans:
       free: {}
