@@ -140,6 +140,10 @@ button, .button {
     @include grid-column(8, true, true, 2);
   }
 
+  .wide-container {
+    @include grid-column(12);
+  }
+
 }
 
 header {
