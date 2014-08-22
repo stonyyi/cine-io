@@ -29,6 +29,9 @@ fullCurrentUserJson.accountJson = (account, callback)->
     newCard.id = card._id
     stripeCards.push(newCard)
   returnJson.stripeCard = stripeCards[0]
+  if account.billingProvider == 'appdirect'
+    returnJson.appdirect =
+      baseUrl: account.appdirectData.marketplace.baseUrl
 
   callback(null, returnJson)
 
