@@ -54,8 +54,9 @@ module.exports = class App extends BaseApp
 
   _setupHerokuBoomerangBanner: ->
     return if typeof Boomerang is undefined
+    @_removeBoomerang()
     return if !@currentUser.isLoggedIn()
-    return @_removeBoomerang() if !@currentAccount().isHeroku()
+    return if !@currentAccount().isHeroku()
     Boomerang.init({app: @currentAccount().get('herokuId'), addon: 'cine'})
     $('#heroku-boomerang').prependTo($('body'))
 
