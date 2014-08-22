@@ -1,6 +1,8 @@
 mongoose = require 'mongoose'
 crypto = require('crypto')
 BackboneAccount = Cine.model('account')
+ProvidersAndPlans = Cine.config('providers_and_plans')
+_ = require("underscore")
 
 StripeCard = new mongoose.Schema
   stripeCardId: String
@@ -20,12 +22,12 @@ AccountSchema = new mongoose.Schema
   # TODO: DEPRECATED
   tempPlan:
     type: String
-    required: true
-  _billingProvider:
-    type: mongoose.Schema.Types.ObjectId
-    ref: 'BillingProvider'
-  _plans:
-    [type: mongoose.Schema.Types.ObjectId, ref: 'BillingPlan']
+  # links to config
+  billingProvider:
+    type: String
+  plans:[
+    type: String
+  ]
   stripeCustomer:
     stripeCustomerId: String
     cards: [StripeCard]
