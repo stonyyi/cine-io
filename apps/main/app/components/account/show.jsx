@@ -20,7 +20,15 @@ module.exports = React.createClass({
       changePlan = (
         <div>
           <span>Current plan: {ca.firstPlan()}. {" "}</span>
-          <a href="https://addons.heroku.com/cine">Change plan on Heroku</a>
+          <a target="_blank" href="https://addons.heroku.com/cine">Change plan on Heroku</a>
+        </div>
+      );
+    }else if (ca.isAppdirect()){
+      var appdirectUrl = ca.get('appdirect').baseUrl+"/account/apps/";
+      changePlan = (
+        <div>
+          <span>Current plan: {ca.firstPlan()}. {" "}</span>
+          <a target="_blank" href={appdirectUrl}>Change plan on Appdirect</a>
         </div>
       );
     }else{
