@@ -4,6 +4,7 @@ Project = Cine.server_model("project")
 BillingProvider = Cine.server_model('billing_provider')
 _ = require('underscore')
 addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
+_str = require('underscore.string')
 
 # callback(err, user)
 addUserToAccount = (account, userAttributes, callback)->
@@ -45,6 +46,9 @@ module.exports = (accountAttributes, userAttributes, projectAttributes={}, strea
   else if _.isFunction(streamAttributes)
     callback = streamAttributes
     streamAttributes = {}
+
+  # trim any whitespace
+  userAttributes.email = _str.trim(userAttributes.email)
 
   accountAttributes.tempPlan = accountAttributes.plan
   accountAttributes.name ||= userAttributes.name

@@ -139,6 +139,9 @@ describe 'createNewAccount', ->
 
   describe 'with an existing user', ->
 
+    beforeEach ->
+      @userAttributes.email = '  my-email  '
+
     beforeEach (done)->
       @user = new User(email: "my-email", name: 'user name')
       @user.save done
@@ -153,4 +156,10 @@ describe 'createNewAccount', ->
         expect(err).to.be.null
         expect(user._accounts).to.have.length(1)
         expect(user._accounts[0].toString()).to.equal(@results.account._id.toString())
+        done()
+
+    it 'does not create a new user', (done)->
+      User.count (err, count)->
+        expect(err).to.be.null
+        expect(count).to.equal(1)
         done()
