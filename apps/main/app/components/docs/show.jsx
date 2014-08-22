@@ -9,12 +9,6 @@ module.exports = React.createClass({
   getBackboneObjects: function(){
     return this.props.model;
   },
-  componentDidMount: function(){
-    Prism.highlightAll();
-  },
-  componentDidUpdate: function(){
-    Prism.highlightAll();
-  },
   render: function() {
     return (
       <PageWrapper app={this.props.app} wide="true">

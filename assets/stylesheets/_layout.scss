@@ -204,3 +204,39 @@ footer {
 nav h1.brand {
   width: 120px;
 }
+
+.static-document {
+  .resource-panel {
+    @include panel(
+      $bg:white,
+      $padding:1em,
+      $adjust:true
+    );
+  }
+
+  pre {
+    code {
+      @include panel(
+        $padding:1em,
+        $adjust:true
+      );
+    }
+  }
+
+  h5 {
+    font-size: 0.9em;
+    text-transform: uppercase;
+  }
+
+  ul {
+    dl {
+      margin-left: 4em;
+      dt {
+        @include grid-column(1);
+      }
+      dd {
+        @include grid-column(11);
+      }
+    }
+  }
+}
