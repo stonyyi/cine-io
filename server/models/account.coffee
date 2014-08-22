@@ -19,9 +19,6 @@ AccountSchema = new mongoose.Schema
     type: String
   masterKey:
     type: String
-  # TODO: DEPRECATED
-  tempPlan:
-    type: String
   # links to config
   billingProvider:
     type: String
@@ -59,9 +56,6 @@ herokuPlans = ['starter']
 allPlans = BackboneAccount.plans.concat(herokuBetaPlans).concat(herokuPlans)
 
 planRegex = new RegExp allPlans.join('|')
-# AccountSchema.path('tempPlan').validate ((value)->
-#   planRegex.test value
-# ), 'Invalid plan'
 
 allProvidersRegex = new RegExp _.keys(ProvidersAndPlans).join('|')
 
