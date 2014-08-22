@@ -49,8 +49,9 @@ describe 'Account', ->
           done(err)
 
   describe 'streamLimit', ->
-    testPlan = (plan, limit)->
-      account = new Account(plans: [plan])
+    testPlan = (plans..., limit)->
+      plans = [plans] unless _.isArray(plans)
+      account = new Account(plans: plans)
 
       expect(account.streamLimit()).to.equal(limit)
 
@@ -60,6 +61,12 @@ describe 'Account', ->
 
     it 'is 5 for solo', ->
       testPlan('solo', 5)
+
+    it 'is 3 for free, free, and free', ->
+      testPlan('free', 'free', 'free', 3)
+
+    it 'is 6 for solo and free', ->
+      testPlan('solo', 'free', 6)
 
     it 'is Infinite for basic, pro, test', ->
       testPlan('basic', Infinity)
