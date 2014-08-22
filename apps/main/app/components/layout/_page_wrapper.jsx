@@ -12,7 +12,7 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div id="page-layout">
-        <div className='main-wrapper' className={this.canvasClasses()}>
+        <div className={this.canvasClasses('main-wrapper')}>
           <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
           <FlashHolder app={this.props.app} />
           <div className="inner-wrap">
