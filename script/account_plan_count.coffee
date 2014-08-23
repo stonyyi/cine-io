@@ -15,10 +15,17 @@ endFunction = (err, aggregate)->
     process.exit(1)
   process.exit(0)
 
-Account.aggregate({$group: {_id: {tempPlan: "$tempPlan"}, planCount: {$sum: 1}} }).exec (err, aggregate)->
+
+aggregateQuery = [
+  {$unwind: "$plans"},
+  {$group: {_id: "$plans", planCount: {$sum: 1}}}
+]
+
+Account.aggregate(aggregateQuery).exec (err, aggregate)->
   return endFunction(err) if err
+
   planToCount = (accum, aggrResult)->
-    accum[aggrResult._id.tempPlan] = aggrResult.planCount
+    accum[aggrResult._id] = aggrResult.planCount
     accum
   result = _.reduce aggregate, planToCount, {}
   console.log("Plan count", result)
