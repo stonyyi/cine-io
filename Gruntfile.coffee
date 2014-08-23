@@ -99,6 +99,10 @@ module.exports = (grunt) ->
         files: ["apps/main/app/**/*.coffee", "apps/admin/app/**/*.coffee"]
         tasks: ["rendr_stitch"]
 
+      aglio:
+        files: ["development/docs/**/*.jade", "development/docs/**/*.md"]
+        tasks: ["aglio"]
+
     react:
       dynamic_mappings:
         files: [
@@ -133,17 +137,14 @@ module.exports = (grunt) ->
         files:
           "public/compiled/cineio.js": ["public/compiled/cineio-dev.js"]
           "public/compiled/mergedAssets.js": ["public/compiled/mergedAssets.js"]
-    markdown:
+
+    aglio:
       docs:
-        options:
-          template: 'development/docs/empty_template.jst'
-        files: [
-          {
-            src: 'development/docs/main.md'
-            dest: 'server/static_documents/docs/main'
-            ext: ''
-          }
-        ]
+        files:
+          "server/static_documents/docs/main": ["development/docs/main.md"]
+        theme: "development/docs/blueprint-docs"
+        seperator: "\n"
+
 
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-sass"
@@ -158,7 +159,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-react'
   grunt.loadNpmTasks('grunt-rendr-stitch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-markdown');
+  grunt.loadNpmTasks('grunt-aglio');
 
 
   grunt.registerTask "test", (file) ->

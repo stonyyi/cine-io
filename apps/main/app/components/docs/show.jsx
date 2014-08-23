@@ -9,15 +9,9 @@ module.exports = React.createClass({
   getBackboneObjects: function(){
     return this.props.model;
   },
-  componentDidMount: function(){
-    Prism.highlightAll();
-  },
-  componentDidUpdate: function(){
-    Prism.highlightAll();
-  },
   render: function() {
     return (
-      <PageWrapper app={this.props.app}>
+      <PageWrapper app={this.props.app} wide="true">
         <Static document={this.props.model.get('document')} />
       </PageWrapper>
     );

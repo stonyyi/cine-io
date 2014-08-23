@@ -10,6 +10,19 @@ module.exports = React.createClass({
   displayName: 'PageWrapper',
   mixins: [Cine.lib('requires_app'), Cine.lib('has_nav')],
   render: function() {
+    var wide = this.props.wide || false
+      , children = wide ?
+        (
+          <div className="wide-container">
+            {this.props.children}
+          </div>
+        ) :
+        (
+          <div className="container">
+            {this.props.children}
+          </div>
+        )
+
     return (
       <div id="page-layout">
         <div className={this.canvasClasses('main-wrapper')}>
@@ -17,9 +30,7 @@ module.exports = React.createClass({
           <FlashHolder app={this.props.app} />
           <div className="inner-wrap">
             <Header app={this.props.app} />
-            <div className="container">
-              {this.props.children}
-            </div>
+            {children}
           </div>
           <div className='push'/>
         </div>
