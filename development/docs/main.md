@@ -1,44 +1,61 @@
-# Documentation for [cine.io](https://www.cine.io) API.
+FORMAT: 1A
+HOST: https://www.cine.io/api/1/-
 
-## About cine.io
+# cine.io API
 
-Cine.io is an api driven live video-streaming platform. Developers can quickly setup a live streaming app using our global live streaming cdn. Cine.io was designed for immediate usage, getting you setup in your own app in just a few minutes.
+Cine.io is an API-driven live video-streaming platform. Developers can quickly
+setup a live streaming app using our global live streaming CDN. Cine.io was
+designed for immediate usage, getting you setup in your own app in just a few
+minutes.
 
-## Getting started
+## Getting Started
 
-Start off by creating an account at [cine.io](https://www.cine.io) or through the heroku addon marketplace. We will automatically create you a project with a default name of "Development". You can change your project names at any time. You can create as many projects as you like. Each project will provide you with a unique "Public key" and a "Secret key". A common usage is to create a different project for your Development and Production environment (perhaps also staging, canary environments, etc.).
+Start off by creating an account at [cine.io](https://www.cine.io) or through
+the heroku addon marketplace. We will automatically create you a project with
+a default name of "Development". You can change your project names at any
+time. You can create as many projects as you like. Each project will provide
+you with a unique "Public key" and a "Secret key". A common usage is to create
+a different project for your Development and Production environment (perhaps
+also staging, canary environments, etc.).
 
-Now you have your public and secret keys, let's review a typical life cycle.
+Now you have your account `masterKey` as well as your project `publicKey` and
+`secretKey`. Let's review a typical life cycle.
 
-## Common request life cycle
+## Common Request Life Cycle
 
-### 1. Create a live stream
-*Location: Web Server*
+1. Create a live stream
+2. Publish a live stream
+3. Play a live stream
 
-Every project starts off with 1 live stream. Most likely you'll want to have more than 1 unique live stream.
+### Create a live stream
 
-Requests normally start off by *creating a live stream*. This live stream is unique to your project. You'll get a response back containing a few fields. The most important fields to save in your database is `id`, and `password`. You'll need these fields to play and publish your live stream. You can always fetch the other fields again by issuing a get request to the stream/show endpoint.
+Every project starts off with 1 live stream. Most likely you'll want to have
+more than 1 unique live stream.
 
-End point:
+Requests normally start off by *creating a live stream*. This live stream is
+unique to your project. You'll get a response back containing a few fields.
+The most important fields to save in your database is `id`, and `password`.
+You'll need these fields to play and publish your live stream. You can always
+fetch the other fields again by issuing a get request to the `stream/show`
+endpoint.
 
-* method: POST
-* url: /api/1/-/stream
-* response format: JSON
-* parameters:
-  * secretKey: CINE_IO_SECRET_KEY
-  * name (optional): any text to help you identify your stream
-  * record (true|false): record each session of the live stream for later viewing, defaults to false
+Look at the API docs for [POST /stream](#stream-stream-post) to learn how to
+create a stream.
 
-Example: `curl -X POST --data "secretKey=MY_SECRET_KEY&name=first%20stream&record=true" https://www.cine.io/api/1/-/stream`
+### Publish a live stream
 
-### 2. Publish a live stream
-*Location: Client*
+Now you've saved your stream `id` and stream `password`. Using the [JS
+SDK](https://github.com/cine-io/js-sdk), you'll need to pass you project's
+`publicKey` to the client. If your specific user has permission in your
+application to publish to this stream, then you'll need to send along the
+stream `id` and stream `password` to your web client. For example, this
+endpoint would be useful if you are building a "virtual classroom" and the
+current logged-in user has a "teacher" role.
 
-Now you've saved your stream `id` and stream `password`. Using the [JS SDK](https://github.com/cine-io/js-sdk), you'll need to pass you project's *public key* to the client. If your specific user has permission in your application to publish to this stream, then you'll need to send along the stream `id` and stream `password` to your web client. For example, this endpoint would be useful if you are building a "virtual classroom" and the current logged-in user has a "teacher" role.
-
-Publishing a live-stream requires that the logged-in user have Adobe Flash installed and enabled in her browser. The JS SDK will automatically download the correct SWF file and launch it in the user's browser when `start()` is called on the publisher.
-
-Example:
+Publishing a live-stream requires that the logged-in user have Adobe Flash
+installed and enabled in her browser. The JS SDK will automatically download
+the correct SWF file and launch it in the user's browser when `start()` is
+called on the publisher.
 
 ```javascript
 var streamId = '<STREAM_ID>'
@@ -52,14 +69,21 @@ var publisher = CineIO.publish(
 publisher.start();
 ```
 
-### 3. Play a live stream
-*Location: Client*
 
-Using the [JS SDK](https://github.com/cine-io/js-sdk), you'll need to pass you project's *public key* to the client. To play a stream using the JS SDK, you only need to send out the stream `id`. Only serve the stream `id` to users who have permission to view a stream. For example, in our aforementioned "virtual classroom" application, this endpoint would be useful when the current logged-in user has a "student" role.
+### Play a live stream
 
-Playing a live stream will launch the branded, open-source version of [JWPlayer](http://www.jwplayer.com/). If you have your own JWPlayer license, you can send it as one of the options (key: `jwPlayerKey`) to the `init()` function. Mobile devices will use native `<video>` elements rather than JWPlayer; this happens automatically.
+Using the [JS SDK](https://github.com/cine-io/js-sdk), you'll need to pass you
+project's *public key* to the client. To play a stream using the JS SDK, you
+only need to send out the stream `id`. Only serve the stream `id` to users who
+have permission to view a stream. For example, in our aforementioned "virtual
+classroom" application, this endpoint would be useful when the current logged-
+in user has a "student" role.
 
-Example:
+Playing a live stream will launch the branded, open-source version of
+[JWPlayer](http://www.jwplayer.com/). If you have your own JWPlayer license,
+you can send it as one of the options (key: `jwPlayerKey`) to the `init()`
+function. Mobile devices will use native `<video>` elements rather than
+JWPlayer; this happens automatically.
 
 ```javascript
 var streamId = '<STREAM_ID>'
@@ -68,162 +92,336 @@ var streamId = '<STREAM_ID>'
 CineIO.play(streamId, domId);
 ```
 
-## Additional end points
 
-### Get a live stream
-*Location: Web Server*
+## Resources
 
-After you have created a live stream you can always fetch the information again. This will return the same fields as the create endpoint.
+The cine.io API is comprised of three main resource types:
 
-End point:
-
-* method: GET
-* url: /api/1/-/stream
-* response format: JSON
-* parameters:
- * secretKey: CINE_IO_SECRET_KEY
- * id: stream id
-
-Example: `curl "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId"`
-
-### Get all of your streams
-*Location: Web Server*
-
-You can fetch all of your streams via an api endpoint. Currently pagination is not supported.
-
-End point:
-
-* method: GET
-* url: /api/1/-/streams
-* response format: JSON
-* parameters:
- * secretKey: CINE_IO_SECRET_KEY
-
-Example: `curl https://www.cine.io/api/1/-/streams?secretKey=MY_SECRET_KEY`
-
-### Update a live stream
-*Location: Web Server*
-
-This will update the stream details.
-
-End point:
-
-* method: PUT
-* url: /api/1/-/stream
-* response format: JSON
-* parameters:
- * secretKey: CINE_IO_SECRET_KEY
- * id: stream id
- * name: any text to help you identify your stream
- * record (true|false):  (changing a live stream from true to false will not delete old recordings)
-
-Example: `curl -X PUT "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId&name=new%20name"`
-
-### Delete a live stream
-*Location: Web Server*
-
-This will delete the stream. Publishing and playing will no longer be available.
-
-End point:
-
-* method: DELETE
-* url: /api/1/-/stream
-* response format: JSON
-* parameters:
- * secretKey: CINE_IO_SECRET_KEY
- * id: stream id
-
-Example: `curl -X DELETE "https://www.cine.io/api/1/-/stream?secretKey=MY_SECRET_KEY&id=streamId"`
+- Project: a project has one or more associated streams
+- Stream: a stream contains all of the data necessary to publish and consume live video
+- Recording: streams support the ability to be recorded
 
 
-### Get the recordings of a live stream
-*Location: Client or Web Server*
+# Group Project
 
-This endpoint fetches all of the recordings of a single live stream. A new recording file is created for each live streaming session.
+Each account can have one or more associated projects. A project has one or
+more associated streams. The project resource exists for the convenience of
+organizing your streams.
 
-End point:
+## Projects [/projects]
 
-* method: GET
-* url: /api/1/-/stream/recordings
-* response format: JSON
-* parameters:
- * publicKey: CINE_IO_PUBLIC_KEY
- * id: stream id
+### Get Projects [GET]
 
-Example: `curl "https://www.cine.io/api/1/-/stream/recordings?publicKey=MY_PUBLIC_KEY&id=streamId"`
+Return a list of all projects associated with the passed-in account `masterKey`.
 
-### Delete a recording of a live stream
-*Location: Client or Web Server*
+##### Example
+```bash
+curl -X GET "https://www.cine.io/api/1/-/projects?masterKey=ACCOUNT_MASTER_KEY"
+```
 
-This endpoint permanently deletes a stream recording.
++ Parameters
 
-End point:
+    + masterKey (required, string `abcd1234abcd1234abcd1234abcd1234`) ... The `masterKey` associated with the account
 
-* method: DELETE
-* url: /api/1/-/stream/recording
-* response format: JSON
-* parameters:
- * publicKey: CINE_IO_SECRET_KEY
- * id: stream id
- * name: the recording name
++ Response 200 (application/json)
 
-Example: `curl -X DELETE "https://www.cine.io/api/1/-/stream/recording?secretKey=MY_SECRET_KEY&id=streamId&name=RECORDING_NAME"`
+    + Body
 
-### Get the project details
-*Location: Web Server*
+        [
+           {
+              "streamsCount" : 3,
+              "updatedAt" : "2014-08-22T02:29:23.552Z",
+              "name" : "My Project",
+              "id" : "abcd1234abcd1234abcd1234abcd1234",
+              "publicKey" : "abcd1234abcd1234abcd1234abcd1234",
+              "secretKey" : "abcd1234abcd1234abcd1234abcd1234"
+           }
+        ]
 
-You can fetch your project details via api.
+## Project [/project]
 
-End point:
+### Get Project [GET]
 
-* method: GET
-* url: /api/1/-/project
-* response format: JSON
-* parameters:
- * secretKey: CINE_IO_SECRET_KEY
+Return the full information for the project associated with the passed-in
+project `secretKey`.
 
-Example: `curl https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY`
+##### Example
+```bash
+curl -X GET "https://www.cine.io/api/1/-/project?secretKey=PROJECT_SECRET_KEY"
+```
 
-### Update the project
-*Location: Web Server*
++ Parameters
 
-This will update the project details. Currently only `name` is supported.
+    + secretKey (required, string `abcd1234abcd1234abcd1234abcd1234`) ... The `secretKey` associated with the project
 
-End point:
++ Response 200 (application/json)
 
-* method: PUT
-* url: /api/1/-/project
-* response format: JSON
-* parameters:
- * secretKey: CINE_IO_SECRET_KEY
- * name: a new project name string
+    + Body
 
-Example: `curl -X PUT https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY&name=new%20name`
+       {
+          "streamsCount" : 3,
+          "updatedAt" : "2014-08-22T02:29:23.552Z",
+          "name" : "My Project",
+          "id" : "abcd1234abcd1234abcd1234abcd1234",
+          "publicKey" : "abcd1234abcd1234abcd1234abcd1234",
+          "secretKey" : "abcd1234abcd1234abcd1234abcd1234"
+       }
 
-### Delete the project
-*Location: Web Server*
 
-This will delete the entire project. Publishing and playing to all associated streams will no longer be available.
+# Group Stream
 
-End point:
+## Streams [/streams]
 
-* method: DELETE
-* url: /api/1/-/project
-* response format: JSON
-* parameters:
- * secretKey: CINE_IO_SECRET_KEY
+### Get Streams [GET]
 
-Example: `curl -X DELETE https://www.cine.io/api/1/-/project?secretKey=MY_SECRET_KEY`
+Return the list of streams associated with the passed-in project `secretKey`.
 
-### health
-*Location: Web Server*
+##### Example
+```bash
+curl -X GET "https://www.cine.io/api/1/-/streams?secretKey=PROJECT_SECRET_KEY"
+```
 
-This is a simple API health check.
++ Parameters
 
-End point:
+    + secretKey (required, string `abcd1234abcd1234abcd1234abcd1234`) ... The `secretKey` associated with the project
 
-* method: GET
-* response format: JSON
-* url: /api/1/-/health
++ Response 200 (application/json)
 
-Example: `curl https://www.cine.io/api/1/-/health`
+    + Body
+
+        [
+           {
+              "name" : "Stream 1",
+              "play" : {
+                 "rtmp" : "rtmp://fml.cine.io/20C45E/cines/abc123?adbe-live-event=abc123",
+                 "hls" : "http://hls.cine.io/cines/abc123/abc123.m3u8"
+              },
+              "publish" : {
+                 "stream" : "abc123?pass&amp;adbe-live-event=abc123",
+                 "url" : "rtmp://stream.lax.cine.io/20C45E/cines"
+              },
+              "password" : "pass",
+              "record" : true,
+              "expiration" : "2034-08-16T00:00:00.000Z",
+              "assignedAt" : "2014-08-18T19:38:05.076Z",
+              "id" : "abcd1234abcd1234abcd1234",
+              "streamName" : "abc123"
+           },
+           {
+              "name" : "Stream 2",
+              "play" : {
+                 "rtmp" : "rtmp://fml.cine.io/20C45E/cines/zyx987?adbe-live-event=zyx987",
+                 "hls" : "http://hls.cine.io/cines/zyx987/zyx987.m3u8"
+              },
+              "publish" : {
+                 "stream" : "zyx987?pass&amp;adbe-live-event=zyx987",
+                 "url" : "rtmp://stream.lax.cine.io/20C45E/cines"
+              },
+              "password" : "pass",
+              "record" : true,
+              "expiration" : "2034-05-21T00:00:00.000Z",
+              "assignedAt" : "2014-06-02T23:22:32.928Z",
+              "id" : "abcd1234abcd1234abcd1234",
+              "streamName" : "zyx987"
+           }
+        ]
+
+## Stream [/stream]
+
+### Get Stream [GET]
+
+Get detailed information about a particular stream
+
+##### Example
+```bash
+curl -X GET "https://www.cine.io/api/1/-/stream?secretKey=PROJECT_SECRET_KEY&id=STREAM_ID"
+```
+
++ Parameters
+
+    + secretKey (required, string `abcd1234abcd1234abcd1234abcd1234`) ... The `secretKey` associated with the project
+    + id (required, string `abcd1234abcd1234abcd1234`) ... The `id` associated with the given stream
+
++ Response 200 (application/json)
+
+    + Body
+
+        {
+           "name" : "my stream name",
+           "play" : {
+              "rtmp" : "rtmp://fml.cine.io/20C45E/cines/abc123?adbe-live-event=abc123",
+              "hls" : "http://hls.cine.io/cines/abc123/abc123.m3u8"
+           },
+           "publish" : {
+              "stream" : "abc123?pass&amp;adbe-live-event=abc123",
+              "url" : "rtmp://stream.lax.cine.io/20C45E/cines"
+           },
+           "password" : "pass",
+           "record" : true,
+           "expiration" : "2034-08-22T00:00:00.000Z",
+           "assignedAt" : "2014-08-22T23:54:21.453Z",
+           "id" : "abcd1234abcd1234abcd1234",
+           "streamName" : "abc123"
+        }
+
+
+### Create Stream [POST]
+
+Return the list of streams associated with the passed-in project `secretKey`.
+
+##### Example
+```bash
+curl -X POST \
+     --data "secretKey=abcd1234abcd1234abcd1234abcd1234&name=my+stream+name&record=true" \
+     "https://www.cine.io/api/1/-/stream"
+```
+
++ Parameters
+
+    + secretKey (required, string `abcd1234abcd1234abcd1234abcd1234`) ... The `secretKey` associated with the project
+    + name (optional, string `my stream name`) ... Any text to help you identify your stream
+    + record (optional, boolean `true`) ... Whether or not you want to record your stream
+
++ Response 200 (application/json)
+
+    + Body
+
+        {
+           "name" : "my stream name",
+           "play" : {
+              "rtmp" : "rtmp://fml.cine.io/20C45E/cines/abc123?adbe-live-event=abc123",
+              "hls" : "http://hls.cine.io/cines/abc123/abc123.m3u8"
+           },
+           "publish" : {
+              "stream" : "abc123?pass&amp;adbe-live-event=abc123",
+              "url" : "rtmp://stream.lax.cine.io/20C45E/cines"
+           },
+           "password" : "pass",
+           "record" : true,
+           "expiration" : "2034-08-22T00:00:00.000Z",
+           "assignedAt" : "2014-08-22T23:54:21.453Z",
+           "id" : "abcd1234abcd1234abcd1234",
+           "streamName" : "abc123"
+        }
+
+### Update Stream [PUT]
+
+Update the information about a given stream.
+
+##### Example
+```bash
+curl -X PUT \
+     --data "secretKey=abcd1234abcd1234abcd1234abcd1234&name=my+new+stream+name&record=false" \
+     "https://www.cine.io/api/1/-/stream"
+```
+
++ Parameters
+
+    + secretKey (required, string `abcd1234abcd1234abcd1234abcd1234`) ... The `secretKey` associated with the project
+    + id (required, string `abcd1234abcd1234abcd1234`) ... The `id` associated with the given stream
+    + name (optional, string `my stream name`) ... Any text to help you identify your stream
+    + record (optional, boolean `true`) ... Whether or not you want to record your stream
+
++ Response 200 (application/json)
+
+    + Body
+
+        {
+           "name" : "my new stream name",
+           "play" : {
+              "rtmp" : "rtmp://fml.cine.io/20C45E/cines/abc123?adbe-live-event=abc123",
+              "hls" : "http://hls.cine.io/cines/abc123/abc123.m3u8"
+           },
+           "publish" : {
+              "stream" : "abc123?pass&amp;adbe-live-event=abc123",
+              "url" : "rtmp://stream.lax.cine.io/20C45E/cines"
+           },
+           "password" : "pass",
+           "record" : false,
+           "expiration" : "2034-08-22T00:00:00.000Z",
+           "assignedAt" : "2014-08-22T23:54:21.453Z",
+           "id" : "abcd1234abcd1234abcd1234",
+           "streamName" : "abc123"
+        }
+
+
+### Delete Stream [DELETE]
+
+Delete a stream.
+
+##### Example
+```bash
+curl -X DELETE "https://www.cine.io/api/1/-/stream?secretKey=PROJECT_SECRET_KEY&id=STREAM_ID"
+```
+
++ Parameters
+
+    + secretKey (required, string `abcd1234abcd1234abcd1234abcd1234`) ... The `secretKey` associated with the project
+    + id (required, string `abcd1234abcd1234abcd1234`) ... The `id` associated with the given stream
+
++ Response 200 (application/json)
+
+    + Body
+
+        {
+           "updatedAt" : "2014-08-23T00:14:19.531Z",
+           "deletedAt" : "2014-08-23T00:14:19.526Z",
+           "name" : "my stream",
+           "id" : "abcd1234abcd1234abcd1234"
+        }
+
+# Group Recording
+
+## Recordings [/stream/recordings]
+
+### Get Recordings for a Stream [GET]
+
+Get the list of recordings associated with a stream.
+
+##### Example
+```bash
+curl -X GET "https://www.cine.io/api/1/-/stream?secretKey=PROJECT_SECRET_KEY&id=STREAM_ID"
+```
+
++ Parameters
+
+    + secretKey (required, string `abcd1234abcd1234abcd1234abcd1234`) ... The `secretKey` associated with the project
+    + id (required, string `abcd1234abcd1234abcd1234`) ... The `id` associated with the given stream
+
++ Response 200 (application/json)
+
+    + Body
+
+        [
+           {
+              "date" : "2014-08-18T21:45:00.000Z",
+              "url" : "http://vod.cine.io/cines/bdf20265f4d796452ea264002d26a7c1/abc123.mp4",
+              "name" : "abc123.mp4",
+              "size" : 202623953
+           }
+        ]
+
+## Recording [/stream/recording]
+
+### Delete a Recording [DELETE]
+
+Delete one of the recordings associated with a stream.
+
+##### Example
+```bash
+curl -X GET "https://www.cine.io/api/1/-/stream?secretKey=PROJECT_SECRET_KEY&id=STREAM_ID&name=RECORDING_NAME"
+```
+
++ Parameters
+
+    + secretKey (required, string `abcd1234abcd1234abcd1234abcd1234`) ... The `secretKey` associated with the project
+    + id (required, string `abcd1234abcd1234abcd1234`) ... The `id` associated with the given stream
+    + name (required, string `abc123`) ... The `name` of the recording
+
++ Response 200 (application/json)
+
+    + Body
+
+        {
+           "deletedAt" : "2014-08-23T00:24:20.402Z"
+        }
