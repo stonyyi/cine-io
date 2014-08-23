@@ -232,10 +232,10 @@ nav h1.brand {
     dl {
       margin-left: 4em;
       dt {
-        @include grid-column(1);
+        @include grid-column(2);
       }
       dd {
-        @include grid-column(11);
+        @include grid-column(10);
       }
     }
   }

@@ -20,7 +20,7 @@ mixin Nav(multipage, collapsible)
                       li
                         a(href="##{multipage ? 'page:' + slug(resourceGroup.name) + ',header:' : ''}#{slug(resourceGroup.name)}-#{slug(resource.name)}-#{slug(action.method)}")
                           +Icon(action.method)
-                          &nbsp;
+                          | &nbsp;
                           = action.name || action.method + ' ' + resource.uriTemplate
       each meta in api.metadata
         if meta.name == 'HOST'
@@ -101,8 +101,6 @@ mixin ResourceGroup(resourceGroup, getButtonClass, multipage)
     h3(id="#{slug(resourceGroup.name)}")
       = resourceGroup.name || 'Resource Group'
       | &nbsp;
-      a(href="##{multipage ? 'page:' : ''}#{slug(resourceGroup.name)}")
-        i.fa.fa-link
     if resourceGroup.description
       != markdown(resourceGroup.description)
     each resource in resourceGroup.resources
@@ -122,8 +120,9 @@ mixin ResourceGroup(resourceGroup, getButtonClass, multipage)
             a(href="##{(multipage ? 'page:' + slug(resourceGroup.name) + ',header:' : '')}#{slug(resourceGroup.name)}-#{slug(resource.name)}-#{slug(action.method)}")
               = action.method
           div(style="overflow:hidden")
-            &nbsp;
-            code= resource.uriTemplate
+            | &nbsp;
+            code
+              = resource.uriTemplate
           if action.description
             div!= markdown(action.description)
 
