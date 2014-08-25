@@ -4,7 +4,6 @@ makeAppdirectRequest = Cine.server_lib('appdirect/make_appdirect_request')
 sendAppdirectResponse = Cine.server_lib('appdirect/send_appdirect_response')
 createNewAccount = Cine.server_lib('create_new_account')
 
-
 accountAttributesFromJson = (jsonResponse)->
   payload = jsonResponse.payload
   attributes =
@@ -19,6 +18,7 @@ userAttributesFromJson = (jsonResponse)->
     email: userAttributes.email
     name: "#{userAttributes.firstName} #{userAttributes.lastName}"
     appdirectUUID: userAttributes.uuid
+    appdirectData: userAttributes
   return attributes
 
 createSubscription = (req, res)->

@@ -118,6 +118,8 @@ describe 'AppDirect/Subscription/Create', ->
           expect(err).to.be.null
           expect(user.name).to.equal("Thomas Shafer")
           expect(user.appdirectUUID).to.equal("5524eea2-00df-4a81-a4a9-57223a1fc5e6")
+          expect(user.appdirectData.firstName).to.equal("Thomas")
+          expect(user.appdirectData.lastName).to.equal("Shafer")
           done()
 
       it 'returns success and the correct identifier', (done)->

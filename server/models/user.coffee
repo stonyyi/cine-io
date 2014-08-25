@@ -34,6 +34,7 @@ UserSchema = new Schema
   #appdirect login
   appdirectUUID:
     type: String
+  appdirectData: mongoose.Schema.Types.Mixed
   # Other Info
   _referringUser:
     type: mongoose.Schema.Types.ObjectId
