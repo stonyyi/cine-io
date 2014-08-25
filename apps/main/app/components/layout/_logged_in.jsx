@@ -47,12 +47,6 @@ module.exports = React.createClass({
           </ul>
         </li>
       );
-    }else{
-      accountDropDown = (
-        <li className='has-form'>
-          <span className='plan-name'>{currentAccount.displayName()}</span>
-        </li>
-      );
     }
 
     if (currentAccount.isAppdirect()){
