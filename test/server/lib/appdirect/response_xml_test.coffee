@@ -43,6 +43,16 @@ describe 'responseXML', ->
       response = responseXML.accountDoesNotExist('some-account-id')
       expect(response).to.equal("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<result>\n  <success>false</success>\n  <errorCode>ACCOUNT_NOT_FOUND</errorCode>\n  <message>The account some-account-id does not exist.</message>\n</result>")
 
+  describe '.userAssigned', ->
+    it 'creates xml', ->
+      response = responseXML.userAssigned()
+      expect(response).to.equal("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<result>\n  <success>true</success>\n</result>")
+
+  describe '.userUnAssigned', ->
+    it 'creates xml', ->
+      response = responseXML.userUnAssigned()
+      expect(response).to.equal("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<result>\n  <success>true</success>\n  <message>User unassigned successfully.</message>\n</result>")
+
   describe '.accountCreated', ->
     it 'creates xml', ->
       account = new Account(billingEmail: 'this email', plans: ['starter'])

@@ -40,6 +40,12 @@ responseXML.userDoesNotExist = (email)->
 responseXML.accountDoesNotExist = (userId)->
   responseXML(success: false, errorCode: 'ACCOUNT_NOT_FOUND', message: "The account #{userId} does not exist.")
 
+responseXML.userAssigned = ->
+  responseXML(success: true)
+
+responseXML.userUnAssigned = ->
+  responseXML(success: true, message: 'User unassigned successfully.')
+
 responseXML.accountCreated = (account)->
   responseXML(success: true, accountIdentifier: account._id.toString(), message: "The account for #{account.billingEmail} was created.")
 
