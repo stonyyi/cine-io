@@ -113,10 +113,85 @@ describe 'AppDirect/Subscription/Notice', ->
             done()
 
       describe 'Reactivate', ->
-        it 'is tested'
 
-      describe 'Cancel', ->
-        it 'is tested'
+        beforeEach (done)->
+          @account.deletedAt = new Date
+          @account.save done
+
+        beforeEach ->
+          @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_notice_reactivate_success')(@account._id)
+
+        beforeEach (done)->
+          getAppdirectUrl.call(this, done)
+
+        it 'returns success', ->
+          expect(@res.statusCode).to.equal(200)
+          expect(@res.headers['content-type']).to.equal('text/xml')
+
+        it 'sends the oauth headers to AppDirect', ->
+          expect(@appDirectSuccessResponse.isDone()).to.be.true
+
+        it "updates the account's subscription", (done)->
+          expect(@account.deletedAt).to.be.instanceOf(Date)
+          Account.findOne billingEmail: 'thomas@cine.io', (err, account)=>
+            expect(err).to.be.null
+            expect(account._id.toString()).to.equal(@account._id.toString())
+            expect(account.deletedAt).to.be.undefined
+            done()
+
+        it 'returns success and the correct identifier', (done)->
+          xml = _str.lines(@res.text).join(' ')
+          expect(xml).to.include("<success>true</success>")
+          id = xml.match(/.*<accountIdentifier>(.+)<\/accountIdentifier>.*/)[1]
+          Account.findById id, (err, account)->
+            expect(err).to.be.null
+            expect(account.deletedAt).to.be.undefined
+            done()
+
+      describe 'Closed', ->
+        beforeEach ->
+          @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_notice_closed_success')(@account._id)
+
+        beforeEach (done)->
+          getAppdirectUrl.call(this, done)
+
+        it 'returns success', ->
+          expect(@res.statusCode).to.equal(200)
+          expect(@res.headers['content-type']).to.equal('text/xml')
+
+        it 'sends the oauth headers to AppDirect', ->
+          expect(@appDirectSuccessResponse.isDone()).to.be.true
+
+        it "updates the account's subscription", (done)->
+          Account.findOne billingEmail: 'thomas@cine.io', (err, account)->
+            expect(err).to.be.null
+            expect(account.deletedAt).to.be.instanceOf(Date)
+            done()
+
+        it 'returns success and the correct identifier', (done)->
+          xml = _str.lines(@res.text).join(' ')
+          expect(xml).to.include("<success>true</success>")
+          id = xml.match(/.*<accountIdentifier>(.+)<\/accountIdentifier>.*/)[1]
+          Account.findById id, (err, account)->
+            expect(err).to.be.null
+            expect(account.deletedAt).to.be.instanceOf(Date)
+            done()
 
       describe 'Upcoming Invoice', ->
-        it 'is tested'
+        beforeEach ->
+          @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_notice_upcoming_invoice_success')(@account._id)
+
+        beforeEach (done)->
+          getAppdirectUrl.call(this, done)
+
+        it 'returns success', ->
+          expect(@res.statusCode).to.equal(200)
+          expect(@res.headers['content-type']).to.equal('text/xml')
+
+        it 'sends the oauth headers to AppDirect', ->
+          expect(@appDirectSuccessResponse.isDone()).to.be.true
+
+        it 'returns success and the correct identifier', ->
+          xml = _str.lines(@res.text).join(' ')
+          expect(xml).to.include("<success>false</success>")
+          id = xml.match(/.*<errorCode>CONFIGURATION_ERROR<\/errorCode>.*/)[1]

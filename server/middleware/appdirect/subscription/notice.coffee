@@ -53,7 +53,7 @@ noticeSubscription = (req, res)->
       when 'REACTIVATED'
         return reactivateAccount(accountId, res)
       when 'UPCOMING_INVOICE'
-        throw new Error("NOT IMPLEMENTED")
+        return sendAppdirectResponse(res, 'configurationError')
       else
         return sendAppdirectResponse(res, 'configurationError')
 
