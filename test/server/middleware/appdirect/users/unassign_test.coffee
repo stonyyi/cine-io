@@ -65,7 +65,7 @@ describe 'AppDirect/Users/Ununassign', ->
     describe 'without an account', ->
 
       beforeEach ->
-        @appDirectSuccessResponse = requireFixture('nock/appdirect_unassign_user_success')("NOT_AN_ACCOUNT")
+        @appDirectSuccessResponse = requireFixture('nock/appdirect_unassign_user_success')((new Account)._id)
 
       beforeEach (done)->
         getAppdirectUrl.call(this, done)
@@ -77,9 +77,9 @@ describe 'AppDirect/Users/Ununassign', ->
       it 'sends the oauth headers to AppDirect', ->
         expect(@appDirectSuccessResponse.isDone()).to.be.true
 
-        it 'can handle when the appdirect returns a bad result', ->
-          expect(@res.text).to.include("<success>false</success>")
-          expect(@res.text).to.include("<errorCode>ACCOUNT_NOT_FOUND</errorCode>")
+      it 'can handle when the appdirect returns a bad result', ->
+        expect(@res.text).to.include("<success>false</success>")
+        expect(@res.text).to.include("<errorCode>ACCOUNT_NOT_FOUND</errorCode>")
 
     describe 'with the account created and no user', ->
 

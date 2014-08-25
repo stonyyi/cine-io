@@ -65,7 +65,7 @@ describe 'AppDirect/Users/Assign', ->
     describe 'without an account', ->
 
       beforeEach ->
-        @appDirectSuccessResponse = requireFixture('nock/appdirect_assign_user_success')("NOT_AN_ACCOUNT")
+        @appDirectSuccessResponse = requireFixture('nock/appdirect_assign_user_success')((new Account)._id)
 
       beforeEach (done)->
         getAppdirectUrl.call(this, done)
