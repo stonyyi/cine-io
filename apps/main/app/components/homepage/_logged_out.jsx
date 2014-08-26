@@ -282,7 +282,7 @@ exports.Pricing = React.createClass({
                   <li>distribution via our <strong>global CDN</strong> (2,000
                   interconnected networks across 5 continents)</li>
                   <li><strong>no ads</strong> of any kind</li>
-                  <li><a href="http://cineio.uservoice.com">email</a> +
+                  <li><a href="http://cineio.uservoice.com">email</a> {" + "}
                   <strong><a href="https://www.hipchat.com/gZCLRQ9Ih">live chat support</a></strong>
                   &nbsp;from our developers</li>
                 </ul>
