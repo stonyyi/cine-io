@@ -26,13 +26,17 @@ describe 'UsageReport', ->
       expect(UsageReport.maxUsagePerAccount(account)).to.equal(1073741824 + 21474836480 + 161061273600)
 
   describe 'lowestPlanPerUsage', ->
-    it 'returns the lowest plan', ->
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.MiB * 10)).to.equal('starter')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB - 100)).to.equal('starter')
+    it 'returns the lowest plan with allowing', ->
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.MiB * 10)).to.equal('solo')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB - 100)).to.equal('solo')
       expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB + 100)).to.equal('solo')
       expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 20 - 100)).to.equal('solo')
       expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 150 - 100)).to.equal('basic')
       expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB - 100)).to.equal('pro')
+
+    it 'returns the lowest plan with allowing for starter', ->
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.MiB * 10, true)).to.equal('starter')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB - 100, true)).to.equal('starter')
 
   describe 'lastThreeMonths', ->
     it 'is tested'
