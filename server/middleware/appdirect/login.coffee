@@ -8,6 +8,7 @@ strategyOptions =
   realm: "#{domain}/"
   identifierField: 'openid'
   profile: true
+  stateless: true
 
 findUser = (fullOpenIdUrl, profile, done)->
   parts = fullOpenIdUrl.split('/')
