@@ -263,7 +263,10 @@ exports.Pricing = React.createClass({
     this.props.app.trigger('set-signup-plan', plan);
     this.props.app.trigger('show-login');
   },
-
+  showCalculatorModal: function(e){
+    e.preventDefault();
+    this.props.app.trigger('show-modal', 'homepage/_bandwidth_calculator');
+  },
   render: function() {
     return (
        <section id="pricing">
@@ -351,6 +354,11 @@ exports.Pricing = React.createClass({
                   <p>Need more than our <strong>Professional</strong> plan offers?&nbsp;&nbsp;
                   <a href="http://cineio.uservoice.com/">Contact us.</a></p>
                 </div>
+              </div>
+            </div>
+            <div className="row show-for-medium-up">
+              <div className="column-12 columns text-center">
+                <a className="button radius" href="" onClick={this.showCalculatorModal}>Bandwidth Calculator</a>
               </div>
             </div>
           </div>

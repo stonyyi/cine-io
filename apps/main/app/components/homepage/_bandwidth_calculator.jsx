@@ -3,7 +3,8 @@ var
   React = require('react'),
   BandwidthCalculator = Cine.lib('bandwidth_calculator'),
   UsageReport = Cine.model('usage_report'),
-  humanizeBytes = Cine.lib('humanize_bytes');
+  humanizeBytes = Cine.lib('humanize_bytes'),
+  capitalize = Cine.lib('capitalize');
 
 var maxSliderScale = 1000
 //http://stackoverflow.com/questions/846221/logarithmic-slider
@@ -68,8 +69,16 @@ module.exports = React.createClass({
   doNothing: function(e){
     e.preventDefault();
   },
+  getApiKey: function(plan, value, e){
+    e.preventDefault();
+    this.props.app.trigger('hide-modal');
+    this.props.app.tracker.getApiKey({value: value});
+    this.props.app.trigger('set-signup-plan', plan);
+    this.props.app.trigger('show-login');
+  },
   componentDidMount: function(){
     var self = this;
+    $(this.refs.bandwidthCalculator.getDOMNode()).foundation();
     $(this.refs.numberOfViewers.getDOMNode()).on('change.fndtn.slider', function(event){
       self.setState({numberOfViewers: Number($(event.currentTarget).attr('data-slider'))})
     });
@@ -92,7 +101,7 @@ module.exports = React.createClass({
       videoLengthStyle = getStyle(this.state.videoLength),
       simultaneousBroadcastsStyle = getStyle(this.state.simultaneousBroadcasts),
       numberOfViewersStyle = getStyle(this.state.numberOfViewers),
-      totalBandwidth;
+      totalBandwidth, cost, humanizedPlan;
     scaleViewers = Math.floor(logScale(this.state.numberOfViewers, 1, 100000));
     scaleVideoLength = Math.floor(exponentScale(this.state.videoLength, 15, 240)); //180.5 leads to floor of 180
     scaleBitRate = bitrateFromStep(this.state.bitRate); //396 leads to 400 on the 1 position
@@ -105,112 +114,132 @@ module.exports = React.createClass({
     console.log("Calculator", calc)
     totalBandwidth = calc.calculate();
     bestPlan = UsageReport.lowestPlanPerUsage(totalBandwidth);
+    cost = UsageReport.pricePerMonth(bestPlan);
+    humanizedPlan = capitalize(bestPlan);
     humanizedBandwidth = humanizeBytes(totalBandwidth);
     return (
-      <div>
-        <form onSubmit={this.doNothing}>
-          <div>Number of viewers on a broadcast: {scaleViewers}</div>
-          <div className='row'>
-            <div className="small-11 columns">
-              <div className="range-slider radius" ref="numberOfViewers" data-slider={this.state.numberOfViewers} data-options={sliderOptions}>
-                <span className="range-slider-handle"></span>
-                <span className="range-slider-active-segment" style={numberOfViewersStyle}></span>
-              </div>
-            </div>
-          </div>
-          <div className='range-steps'>
-            <div className='row'>
-            <div className='small-2 columns'>1</div>
-            <div className='small-2 columns'>10</div>
-            <div className='small-2 columns'>100</div>
-            <div className='small-2 columns'>1,000</div>
-            <div className='small-2 columns'>10,000</div>
-            <div className='small-2 columns'>100,000</div>
-            </div>
-          </div>
-          <div>Broadcast bitrate: {scaleBitRate}</div>
-          <div className='row'>
-            <div className="small-11 columns">
-              <div className="range-slider radius" ref="bitRate" data-slider={this.state.bitRate} data-options="start: 0; end: 4;">
-                <span className="range-slider-handle"></span>
-                <span className="range-slider-active-segment" style={bitRateStyle}></span>
-              </div>
-            </div>
-          </div>
-          <div className='range-steps'>
-            <div className='row'>
-              <div className="small-11 columns">
-                <div className='twenty-four-percent left'>240 p</div>
-                <div className='twenty-four-percent left'>360 p</div>
-                <div className='twenty-four-percent left'>480 p</div>
-                <div className='twenty-eight-percent left'>
-                  <div className='clearfix'>
-                    <div className='left'>720 p</div>
-                    <div className='right'>1080 p</div>
+      <div ref="bandwidthCalculator" className="bandwidth-calculator">
+        <div className="row">
+          <div className="columns large-6">
+            <form onSubmit={this.doNothing}>
+              <div><strong># Viewers</strong>: {scaleViewers}</div>
+              <div className='row'>
+                <div className="small-11 columns">
+                  <div className="range-slider radius" ref="numberOfViewers" data-slider={this.state.numberOfViewers} data-options={sliderOptions}>
+                    <span className="range-slider-handle"></span>
+                    <span className="range-slider-active-segment" style={numberOfViewersStyle}></span>
                   </div>
                 </div>
               </div>
-            </div>
+              <div className='range-steps'>
+                <div className='row'>
+                <div className='small-2 columns'>1</div>
+                <div className='small-2 columns'>10</div>
+                <div className='small-2 columns'>100</div>
+                <div className='small-2 columns'>1,000</div>
+                <div className='small-2 columns'>10k</div>
+                <div className='small-2 columns'>100k</div>
+                </div>
+              </div>
+              <div><strong>Quality</strong>: {scaleBitRate}</div>
+              <div className='row'>
+                <div className="small-11 columns">
+                  <div className="range-slider radius" ref="bitRate" data-slider={this.state.bitRate} data-options="start: 0; end: 4;">
+                    <span className="range-slider-handle"></span>
+                    <span className="range-slider-active-segment" style={bitRateStyle}></span>
+                  </div>
+                </div>
+              </div>
+              <div className='range-steps'>
+                <div className='row'>
+                  <div className="small-11 columns">
+                    <div className='twenty-four-percent left'>240p</div>
+                    <div className='twenty-four-percent left'>360p</div>
+                    <div className='twenty-four-percent left'>480p</div>
+                    <div className='twenty-eight-percent left'>
+                      <div className='clearfix'>
+                        <div className='left'>720p</div>
+                        <div className='right'>1080p</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div><strong>Duration (min)</strong>: {scaleVideoLength}</div>
+              <div className='row'>
+                <div className="small-11 columns">
+                  <div className="range-slider radius" ref="videoLength" data-slider={this.state.numberOfViewers} data-options={sliderOptions}>
+                    <span className="range-slider-handle"></span>
+                    <span className="range-slider-active-segment" style={videoLengthStyle}></span>
+                  </div>
+                </div>
+              </div>
+              <div className='range-steps'>
+                <div className='row'>
+                <div className='small-2 columns'>
+                  <span className="show-for-small-only">1 min</span>
+                  <span className="show-for-medium-up">1 minute</span>
+                </div>
+                <div className='small-2 columns'>
+                  <span className="show-for-small-only">15 min</span>
+                  <span className="show-for-medium-up">15 minutes</span>
+                </div>
+                <div className='small-2 columns'>
+                  <span className="show-for-small-only">30 min</span>
+                  <span className="show-for-medium-up">30 minutes</span>
+                </div>
+                <div className='small-2 columns'>
+                  <span className="show-for-small-only">1 hr</span>
+                  <span className="show-for-medium-up">1 hour</span>
+                </div>
+                <div className='small-2 columns'>
+                  <span className="show-for-small-only">2 hr</span>
+                  <span className="show-for-medium-up">2 hours</span>
+                </div>
+                <div className='small-2 columns'>
+                  <span className="show-for-small-only">3 hr</span>
+                  <span className="show-for-medium-up">3 hours</span>
+                </div>
+                </div>
+              </div>
+              <div><strong># Broadcasts</strong>: {scaleSimultaneousBroadcasts}</div>
+              <div className='row'>
+                <div className="small-11 columns">
+                  <div className="range-slider radius" ref="simultaneousBroadcasts" data-slider={this.state.simultaneousBroadcasts} data-options={sliderOptions}>
+                    <span className="range-slider-handle"></span>
+                    <span className="range-slider-active-segment" style={simultaneousBroadcastsStyle}></span>
+                  </div>
+                </div>
+              </div>
+              <div className='range-steps'>
+                <div className='row'>
+                <div className='small-2 columns'>1</div>
+                <div className='small-2 columns'>10</div>
+                <div className='small-2 columns'>100</div>
+                <div className='small-2 columns'>1,000</div>
+                <div className='small-2 columns'>10k</div>
+                <div className='small-2 columns'>100k</div>
+                </div>
+              </div>
+            </form>
           </div>
-          <div>Length of video: {scaleVideoLength}</div>
-          <div className='row'>
-            <div className="small-11 columns">
-              <div className="range-slider radius" ref="videoLength" data-slider={this.state.numberOfViewers} data-options={sliderOptions}>
-                <span className="range-slider-handle"></span>
-                <span className="range-slider-active-segment" style={videoLengthStyle}></span>
+          <div className="columns large-6">
+            <div className="row">
+            <div className="columns small-8 small-offset-2">
+                <ul className="pricing-table top-margin-1">
+                  <li className="title">{humanizedPlan}</li>
+                  <li className="price">
+                    <span className="currency">$</span>
+                    <span className="amount">{cost} / mo</span>
+                  </li>
+                  <li className="cta-button">
+                    <a className="button radius" href="" onClick={this.getApiKey.bind(this, bestPlan, 5)}>Get Started</a>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
-          <div className='range-steps'>
-            <div className='row'>
-            <div className='small-2 columns'>
-              <span className="show-for-small-only">1 min</span>
-              <span className="show-for-medium-up">1 minute</span>
-            </div>
-            <div className='small-2 columns'>
-              <span className="show-for-small-only">15 min</span>
-              <span className="show-for-medium-up">15 minutes</span>
-            </div>
-            <div className='small-2 columns'>
-              <span className="show-for-small-only">30 min</span>
-              <span className="show-for-medium-up">30 minutes</span>
-            </div>
-            <div className='small-2 columns'>
-              <span className="show-for-small-only">1 hr</span>
-              <span className="show-for-medium-up">1 hour</span>
-            </div>
-            <div className='small-2 columns'>
-              <span className="show-for-small-only">2 hr</span>
-              <span className="show-for-medium-up">2 hours</span>
-            </div>
-            <div className='small-2 columns'>
-              <span className="show-for-small-only">3 hr</span>
-              <span className="show-for-medium-up">3 hours</span>
-            </div>
-            </div>
-          </div>
-          <div>Number of Simultaneous Broadcasts: {scaleSimultaneousBroadcasts}</div>
-          <div className='row'>
-            <div className="small-11 columns">
-              <div className="range-slider radius" ref="simultaneousBroadcasts" data-slider={this.state.simultaneousBroadcasts} data-options={sliderOptions}>
-                <span className="range-slider-handle"></span>
-                <span className="range-slider-active-segment" style={simultaneousBroadcastsStyle}></span>
-              </div>
-            </div>
-          </div>
-          <div className='range-steps'>
-            <div className='row'>
-            <div className='small-2 columns'>1</div>
-            <div className='small-2 columns'>10</div>
-            <div className='small-2 columns'>100</div>
-            <div className='small-2 columns'>1,000</div>
-            <div className='small-2 columns'>10,000</div>
-            <div className='small-2 columns'>100,000</div>
-            </div>
-          </div>
-        </form>
-        <div>Monthly bandwidth: {humanizedBandwidth}.</div>
-        <div>Recommended plan: {bestPlan}.</div>
+        </div>
       </div>
     );
   }

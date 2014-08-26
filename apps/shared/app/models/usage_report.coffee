@@ -21,12 +21,19 @@ module.exports = class UsageReport extends Base
   @maxUsagePerAccount: (account)->
     _.inject account.get('plans'), usagePerPlanAggregator, 0
 
-  @lowestPlanPerUsage: (bytes)->
+  @lowestPlanPerUsage: (bytes, includeStarter=false)->
     switch
-      when bytes <= humanizeBytes.GiB then 'starter'
+      when includeStarter && bytes <= humanizeBytes.GiB then 'starter'
       when bytes <= humanizeBytes.GiB * 20 then 'solo'
       when bytes <= humanizeBytes.GiB * 150 then 'basic'
       else 'pro'
+
+  @pricePerMonth: (plan)->
+    switch plan
+      when 'free', 'starter', 'test' then 0
+      when 'solo' then 20
+      when 'basic' then 100
+      when 'pro' then 500
 
   @lastThreeMonths: ->
     thisMonth = new Date
