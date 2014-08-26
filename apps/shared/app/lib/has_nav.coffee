@@ -9,7 +9,7 @@ exports.componentDidMount = ->
   @props.app.on('show-login', @openNav, this)
   @props.app.on('hide-login', @closeNav, this)
 
-exports.componentWillUnMount = ->
+exports.componentWillUnmount = ->
   @props.app.currentUser.off('login', @closeNav)
   @props.app.currentUser.off('logout', @closeNav)
   @props.app.off('show-login', @openNav)
