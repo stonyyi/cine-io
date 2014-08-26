@@ -44,32 +44,42 @@ $ more .env
 > warning
 > Credentials and other sensitive configuration values should not be committed to source-control. In Git exclude the .env file with: `echo .env >> .gitignore`.
 
-## Common request life cycle
 
-### 1. Create a live stream
-*Location: Web Server*
+## Common Request Life Cycle
 
-Every project starts off with 1 live stream. Most likely, you'll want to have more than 1 unique live stream.
+1. Create a live stream
+2. Publish a live stream
+3. Play a live stream
 
-Requests normally start off by *creating a live stream*. This live stream is unique to your project. You'll get a response back containing a few fields. The most important fields to persist are `id`, and `password`. You'll need these fields to play and publish your live stream. You can always fetch the other fields again by issuing a get request to the stream/show endpoint.
+### Create a live stream
 
-End point:
+Every project starts off with 1 live stream. Most likely you'll want to have
+more than 1 unique live stream.
 
-* method: POST
-* url: /api/1/-/stream
-* parameters:
-  * secretKey: CINE_IO_SECRET_KEY
+Requests normally start off by *creating a live stream*. This live stream is
+unique to your project. You'll get a response back containing a few fields.
+The most important fields to save in your database is `id`, and `password`.
+You'll need these fields to play and publish your live stream. You can always
+fetch the other fields again by issuing a get request to the `stream/show`
+endpoint.
 
-Example: `curl --data "secretKey=MY_SECRET_KEY" https://www.cine.io/api/1/-/stream`
+Look at the API docs for [POST /stream](https://www.cine.io/docs#stream-stream-post) to learn how to
+create a stream.
 
-### 2. Publish a live stream
-*Location: Web Client*
+### Publish a live stream
 
-Now you've saved your stream `id` and stream `password`. Using the JS SDK, you'll need to pass you project's *public key* to the client. If your specific user has permission in your application to publish to this stream, then you'll need to send along the stream `id` and stream `password` to your web client. For example, this endpoint would be useful if you are building a "virtual classroom" and the current logged-in user has a "teacher" role.
+Now you've saved your stream `id` and stream `password`. Using the [JS
+SDK](https://github.com/cine-io/js-sdk), you'll need to pass you project's
+`publicKey` to the client. If your specific user has permission in your
+application to publish to this stream, then you'll need to send along the
+stream `id` and stream `password` to your web client. For example, this
+endpoint would be useful if you are building a "virtual classroom" and the
+current logged-in user has a "teacher" role.
 
-Publishing a live-stream requires that the logged-in user have Adobe Flash installed and enabled in her browser. The JS SDK will automatically download the correct SWF file and launch it in the user's browser when `start()` is called on the publisher.
-
-Example:
+Publishing a live-stream requires that the logged-in user have Adobe Flash
+installed and enabled in her browser. The JS SDK will automatically download
+the correct SWF file and launch it in the user's browser when `start()` is
+called on the publisher.
 
 ```javascript
 var streamId = '<STREAM_ID>'
@@ -83,14 +93,20 @@ var publisher = CineIO.publish(
 publisher.start();
 ```
 
-### 3. Play a live stream
-*Location: Web Client*
+### Play a live stream
 
-Using the JS SDK, you'll need to pass you project's *public key* to the client. To play a stream using the JS SDK, you only need to send out the stream `id`. Only serve the stream `id` to users who have permission to view a stream. For example, in our aforementioned "virtual classroom" application, this endpoint would be useful when the current logged-in user has a "student" role.
+Using the [JS SDK](https://github.com/cine-io/js-sdk), you'll need to pass you
+project's *public key* to the client. To play a stream using the JS SDK, you
+only need to send out the stream `id`. Only serve the stream `id` to users who
+have permission to view a stream. For example, in our aforementioned "virtual
+classroom" application, this endpoint would be useful when the current logged-
+in user has a "student" role.
 
-Playing a live stream will launch the branded, open-source version of [JWPlayer](http://www.jwplayer.com/). If you have your own JWPlayer license, you can send it as one of the options (key: `jwPlayerKey`) to the `init()` function. Mobile devices will use native `<video>` elements rather than JWPlayer; this happens automatically.
-
-Example:
+Playing a live stream will launch the branded, open-source version of
+[JWPlayer](http://www.jwplayer.com/). If you have your own JWPlayer license,
+you can send it as one of the options (key: `jwPlayerKey`) to the `init()`
+function. Mobile devices will use native `<video>` elements rather than
+JWPlayer; this happens automatically.
 
 ```javascript
 var streamId = '<STREAM_ID>'
@@ -98,6 +114,7 @@ var streamId = '<STREAM_ID>'
 
 CineIO.play(streamId, domId);
 ```
+
 
 ## Additional API endpoints
 
