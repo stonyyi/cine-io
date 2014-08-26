@@ -3,6 +3,7 @@
 var React = require('react'),
 Header = Cine.component('layout/header'),
 Footer = Cine.component('layout/footer'),
+ModalHolder = Cine.component('layout/modal_holder'),
 LeftNav = Cine.component('layout/left_nav'),
 FlashHolder = Cine.component('layout/flash_holder');
 
@@ -22,9 +23,9 @@ module.exports = React.createClass({
             {this.props.children}
           </div>
         )
-
     return (
       <div id="page-layout">
+        <ModalHolder app={this.props.app} />
         <div className={this.canvasClasses('main-wrapper')}>
           <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
           <FlashHolder app={this.props.app} />

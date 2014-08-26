@@ -7,6 +7,7 @@ LeftNav = Cine.component('layout/left_nav'),
 Footer = Cine.component('layout/footer'),
 LoggedOut = Cine.component('homepage/_logged_out'),
 LoggedIn = Cine.component('homepage/_logged_in'),
+ModalHolder = Cine.component('layout/modal_holder'),
 HomeHero = LoggedOut.HomeHero,
 About = LoggedOut.About,
 Example = LoggedOut.Example,
@@ -34,6 +35,7 @@ module.exports = React.createClass({
     }else{
       return (
         <div id='homepage-logged-out' className={this.canvasClasses()}>
+          <ModalHolder app={this.props.app} />
           <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
           <FlashHolder app={this.props.app}/>
           <div className="inner-wrap">

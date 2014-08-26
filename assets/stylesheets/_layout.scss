@@ -30,6 +30,17 @@ footer, .push {
 }
 //end sticky footer
 
+.reveal-modal-bg{
+  display: block;
+}
+.reveal-modal{
+  visibility: visible;
+  display: block;
+  .close-reveal-modal{
+    font-size: 1.5rem;
+  }
+}
+
 #heroku-boomerang{
   position: relative !important;
 }
