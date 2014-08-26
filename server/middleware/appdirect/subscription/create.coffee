@@ -3,6 +3,7 @@ verifySourceOauth = Cine.server_lib('appdirect/verify_source_oauth')
 makeAppdirectRequest = Cine.server_lib('appdirect/make_appdirect_request')
 sendAppdirectResponse = Cine.server_lib('appdirect/send_appdirect_response')
 createNewAccount = Cine.server_lib('create_new_account')
+mailer = Cine.server_lib('mailer')
 
 accountAttributesFromJson = (jsonResponse)->
   payload = jsonResponse.payload
@@ -31,6 +32,8 @@ createSubscription = (req, res)->
     createNewAccount accountAttributes, userAttributes, (err, result)->
       console.log("DONE", err, result)
       return sendAppdirectResponse(res, 'unknownError') if err
+      mailer.welcomeEmail(result.user)
+      mailer.admin.newUser(result.user, 'appdirect')
       sendAppdirectResponse(res, 'accountCreated', result.account)
 
 module.exports = (app)->

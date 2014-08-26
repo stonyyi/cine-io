@@ -4,6 +4,7 @@ User = Cine.server_model('user')
 supertest = require('supertest')
 qs = require('qs')
 _str = require('underscore.string')
+assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 
 describe 'AppDirect/Subscription/Create', ->
   beforeEach ->
@@ -69,6 +70,9 @@ describe 'AppDirect/Subscription/Create', ->
         beforeEach ->
           @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_create_success')()
 
+        assertEmailSent 'welcomeEmail'
+        assertEmailSent.admin 'newUser'
+
         beforeEach (done)->
           getAppdirectUrl.call(this, done)
 
@@ -93,6 +97,9 @@ describe 'AppDirect/Subscription/Create', ->
     describe 'success', ->
       beforeEach ->
         @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_create_success')()
+
+      assertEmailSent 'welcomeEmail'
+      assertEmailSent.admin 'newUser'
 
       beforeEach (done)->
         getAppdirectUrl.call(this, done)
