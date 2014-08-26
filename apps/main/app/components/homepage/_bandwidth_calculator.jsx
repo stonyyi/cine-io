@@ -64,7 +64,7 @@ module.exports = React.createClass({
   displayName: 'BandwidthCalculator',
   mixins: [Cine.lib('requires_app')],
   getInitialState: function(){
-    return {numberOfViewers: 1, bitRate: 0, videoLength: 1, simultaneousBroadcasts: 1}
+    return {numberOfViewers: 205, bitRate: 3, videoLength: 400, simultaneousBroadcasts: 205}
   },
   doNothing: function(e){
     e.preventDefault();
@@ -119,6 +119,7 @@ module.exports = React.createClass({
     humanizedBandwidth = humanizeBytes(totalBandwidth);
     return (
       <div ref="bandwidthCalculator" className="bandwidth-calculator">
+        <h2 className="text-center">Which plan do you need?</h2>
         <div className="row">
           <div className="columns large-6">
             <form onSubmit={this.doNothing}>
@@ -168,7 +169,7 @@ module.exports = React.createClass({
               <div><strong>Duration (min)</strong>: {scaleVideoLength}</div>
               <div className='row'>
                 <div className="small-11 columns">
-                  <div className="range-slider radius" ref="videoLength" data-slider={this.state.numberOfViewers} data-options={sliderOptions}>
+                  <div className="range-slider radius" ref="videoLength" data-slider={this.state.videoLength} data-options={sliderOptions}>
                     <span className="range-slider-handle"></span>
                     <span className="range-slider-active-segment" style={videoLengthStyle}></span>
                   </div>
@@ -225,7 +226,7 @@ module.exports = React.createClass({
           </div>
           <div className="columns large-6">
             <div className="row">
-            <div className="columns small-8 small-offset-2">
+              <div className="columns small-8 small-offset-2">
                 <ul className="pricing-table top-margin-1">
                   <li className="title">{humanizedPlan}</li>
                   <li className="price">
