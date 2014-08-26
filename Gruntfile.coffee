@@ -45,6 +45,7 @@ module.exports = (grunt) ->
             "apps/#{rendrProject}/app/**/*.coffee"
             "apps/shared/**/*.coffee",
             "config/cine.coffee"
+            "config/providers_and_plans.coffee"
             "compiled/#{rendrProject}/components/**/*.js"
             rendrDir + '/client/**/*.js'
             rendrDir + '/shared/**/*.js'

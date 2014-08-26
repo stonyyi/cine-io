@@ -1,19 +1,48 @@
+humanizeBytes = Cine.lib('humanize_bytes')
+
 module.exports =
   'cine.io':
     url: 'https://www.cine.io'
     plans:
-      free: {}
-      solo: {}
-      basic: {}
-      pro: {}
+      free:
+        price: 0
+        transfer: humanizeBytes.GiB
+      solo:
+        price: 20
+        transfer: humanizeBytes.GiB * 20
+      basic:
+        price: 100
+        transfer: humanizeBytes.GiB * 150
+      pro:
+        price: 500
+        transfer: humanizeBytes.TiB
   heroku:
     url: 'https://addons.heroku.com/cine'
     plans:
-      starter: {}
-      test: {}
+      starter:
+        price: 0
+        transfer: humanizeBytes.GiB
+      test:
+        price: 0
+        transfer: humanizeBytes.GiB
+
   appdirect:
     # Url likely to change once we're approved
     # I heard something about a dev profile and public profile
     url: 'https://www.appdirect.com/apps/12055'
     plans:
-      'sample-addon': {}
+      'sample-addon':
+        price: 0
+        transfer: humanizeBytes.GiB
+      free:
+        price: 0
+        transfer: humanizeBytes.GiB
+      solo:
+        price: 20
+        transfer: humanizeBytes.GiB * 20
+      basic:
+        price: 100
+        transfer: humanizeBytes.GiB * 150
+      pro:
+        price: 500
+        transfer: humanizeBytes.TiB

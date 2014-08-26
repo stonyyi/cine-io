@@ -4,7 +4,8 @@ var
   BandwidthCalculator = Cine.lib('bandwidth_calculator'),
   UsageReport = Cine.model('usage_report'),
   humanizeBytes = Cine.lib('humanize_bytes'),
-  capitalize = Cine.lib('capitalize');
+  capitalize = Cine.lib('capitalize'),
+  ProvidersAndPlans = Cine.require('config/providers_and_plans');
 
 var maxSliderScale = 1000
 //http://stackoverflow.com/questions/846221/logarithmic-slider
@@ -114,7 +115,7 @@ module.exports = React.createClass({
     console.log("Calculator", calc)
     totalBandwidth = calc.calculate();
     bestPlan = UsageReport.lowestPlanPerUsage(totalBandwidth);
-    cost = UsageReport.pricePerMonth(bestPlan);
+    cost = ProvidersAndPlans['cine.io'].plans[bestPlan].price;
     humanizedPlan = capitalize(bestPlan);
     humanizedBandwidth = humanizeBytes(totalBandwidth);
     return (

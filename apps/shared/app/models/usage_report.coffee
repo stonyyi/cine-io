@@ -2,16 +2,14 @@ Base = Cine.model('base')
 isServer = typeof window is 'undefined'
 humanizeBytes = Cine.lib('humanize_bytes')
 _ = require('underscore')
+ProvidersAndPlans = Cine.require('config/providers_and_plans')
 
-maxUsagePerPlan = (plan)->
-  switch plan
-    when 'free', 'starter', 'test' then humanizeBytes.GiB
-    when 'solo' then humanizeBytes.GiB * 20
-    when 'basic' then humanizeBytes.GiB * 150
-    when 'pro' then humanizeBytes.TiB
+maxUsagePerPlan = (provider, plan)->
+  ProvidersAndPlans[provider].plans[plan].transfer
 
-usagePerPlanAggregator = (accum, plan)->
-  accum + maxUsagePerPlan(plan)
+usagePerPlanAggregator = (provider)->
+  return (accum, plan)->
+    accum + maxUsagePerPlan(provider, plan)
 
 module.exports = class UsageReport extends Base
   @id: 'UsageReport'
@@ -19,7 +17,7 @@ module.exports = class UsageReport extends Base
   url: if isServer then "/usage-report?masterKey=:masterKey" else "/usage-report"
 
   @maxUsagePerAccount: (account)->
-    _.inject account.get('plans'), usagePerPlanAggregator, 0
+    _.inject account.get('plans'), usagePerPlanAggregator(account.get('provider')), 0
 
   @lowestPlanPerUsage: (bytes, includeStarter=false)->
     switch
@@ -29,11 +27,7 @@ module.exports = class UsageReport extends Base
       else 'pro'
 
   @pricePerMonth: (plan)->
-    switch plan
-      when 'free', 'starter', 'test' then 0
-      when 'solo' then 20
-      when 'basic' then 100
-      when 'pro' then 500
+
 
   @lastThreeMonths: ->
     thisMonth = new Date

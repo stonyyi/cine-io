@@ -8,7 +8,7 @@ basicModel('usage_report', urlAttributes: ['masterKey'], id: 'masterKey')
 describe 'UsageReport', ->
   describe 'maxUsagePerAccount', ->
     it 'returns the max amount', ->
-      account = new Account
+      account = new Account(provider: 'cine.io')
       account.attributes.plans = ['free']
       expect(UsageReport.maxUsagePerAccount(account)).to.equal(1073741824)
       account.attributes.plans = ['solo']
@@ -19,7 +19,7 @@ describe 'UsageReport', ->
       expect(UsageReport.maxUsagePerAccount(account)).to.equal(1099511627776)
 
     it 'works with combos', ->
-      account = new Account
+      account = new Account(provider: 'cine.io')
       account.attributes.plans = ['free', 'pro']
       expect(UsageReport.maxUsagePerAccount(account)).to.equal(1073741824 + 1099511627776)
       account.attributes.plans = ['free', 'solo', 'basic']

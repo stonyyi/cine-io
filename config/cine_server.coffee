@@ -3,7 +3,7 @@ path = require('path')
 
 Cine.root = path.resolve()
 
-Cine.path  = (pathName)->
+Cine.path = (pathName)->
   path.join(Cine.root, pathName)
 
 Cine.require = (pathName, args...)->

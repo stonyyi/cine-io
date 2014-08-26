@@ -8,6 +8,11 @@ else
     require path
 
 # Client
+
+# overridden by cine_server
+Cine.require = (name)->
+  require(name)
+
 Cine.arch = (name) ->
   clientOrServerRequire("app/#{name}", 'shared')
 
