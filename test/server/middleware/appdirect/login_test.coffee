@@ -25,7 +25,7 @@ describe 'AppDirect/Login', ->
       @initialRequest = requireFixture('nock/appdirect_openid/initial_request')()
       @openidOpRequest = requireFixture('nock/appdirect_openid/openid_op_request')()
 
-    it 'takes and openid param and sends back a callback url', (done)->
+    xit 'takes and openid param and sends back a callback url', (done)->
       params =
         openid: "https://www.appdirect.com/openid/id/a959d462-a6b0-41e3-b0eb-c73c1d199fd3"
         accountIdentifier: "53ee4a5932337906002096d9"
