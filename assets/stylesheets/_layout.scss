@@ -36,6 +36,7 @@ footer, .push {
 .reveal-modal{
   visibility: visible;
   display: block;
+  position: fixed;
   .close-reveal-modal{
     font-size: 1.5rem;
   }
