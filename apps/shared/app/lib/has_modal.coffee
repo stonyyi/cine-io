@@ -11,7 +11,14 @@ exports.componentWillUnmount = ->
 
 exports.hideModal = (e)->
   e.preventDefault() if e
-  @setState(showingModal: false, modalCompnent: undefined) if @isMounted()
+  return unless @isMounted()
+  $('body').off('keydown', @_keydownListener)
+  @setState(showingModal: false, modalCompnent: undefined)
 
 exports.showModal = (componentName)->
-  @setState(showingModal: true, modalCompnent: componentName) if @isMounted()
+  return unless @isMounted()
+  $('body').on('keydown', @_keydownListener)
+  @setState(showingModal: true, modalCompnent: componentName)
+
+exports._keydownListener = (e)->
+  @hideModal() if (e.which==27)
