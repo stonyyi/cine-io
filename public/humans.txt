@@ -1,8 +1,6 @@
-/* Foundation was made by ZURB, an interaction design and design strategy firm in Campbell, CA */
-/* zurb.com */
-/* humanstxt.org */
+cine.io is a small PaaS startup located in the San Francisco Bay Area. During this app development "gold rush", we aim to be the "shovel" that handles all developers need in a video backend, including live-streaming, peer-to-peer video chat, and video-on-demand.
 
-/* SITE */
-  Standards: HTML5, CSS3
-  Components: jQuery, Orbit, Reveal
-  Software: Coda, Textmate, Git
+Built by developers.
+
+Built for developers.
+
