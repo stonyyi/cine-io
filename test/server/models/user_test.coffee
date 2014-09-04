@@ -44,10 +44,10 @@ describe 'User', ->
 
   describe 'simpleCurrentUserJSON', ->
     it 'is has these keys', (done)->
-      u = new User(name: 'my name', email: 'my email', hashed_password: 'hash', password_salt: 'salt', githubId: 123)
+      u = new User(name: 'my name', email: 'my email', hashed_password: 'hash', password_salt: 'salt', githubId: 123, appdirectUUID: 'abc')
       u.save (err, user)->
         expect(err).to.be.null
-        keys = ['_accounts', 'createdAt', 'email', 'firstName', 'githubId', 'id', 'isSiteAdmin', 'lastName', 'masterKey', 'name']
+        keys = ['_accounts', 'appdirectUUID', 'createdAt', 'email', 'firstName', 'githubId', 'id', 'isSiteAdmin', 'lastName', 'masterKey', 'name']
         jsonKeys = _.keys(u.simpleCurrentUserJSON()).sort()
         expect(jsonKeys).to.deep.equal(keys)
         done()
