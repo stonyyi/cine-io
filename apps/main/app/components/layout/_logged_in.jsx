@@ -4,15 +4,25 @@ var React = require('react'),
   _ = require('underscore');
 module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
-
+  _createLogoutSuccess: function(){
+    var ca = this.props.app.currentAccount();
+    if (ca.isAppdirect()){
+      var logoutUrl = ca.get('appdirect').baseUrl + '/applogout?openid=' + this.props.app.currentUser.get('appdirectUUID');
+      return function(){
+        window.location = logoutUrl;
+      }
+    }else{
+      return function(){
+        _this.props.app.router.redirectTo('/');
+      }
+    }
+  },
   logout: function(e) {
     e.preventDefault();
     var _this = this
       , app = this.props.app
       , options = {
-          success: function() {
-            _this.props.app.router.redirectTo('/');
-          }
+          success: this._createLogoutSuccess()
         };
     authentication.logout(app, options);
   },
