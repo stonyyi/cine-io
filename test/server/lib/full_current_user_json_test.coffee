@@ -17,8 +17,12 @@ describe 'fullCurrentUserJson', ->
     @account2.save done
 
   beforeEach (done)->
-    @account3 = new Account(name: 'second account', plans: [], masterKey: '4mkey', billingProvider: 'appdirect', appdirectData: {marketplace: {baseUrl: 'the-mplace-base-url'}})
+    @account3 = new Account(name: 'third account', plans: [], masterKey: '4mkey', billingProvider: 'appdirect', appdirectData: {marketplace: {baseUrl: 'the-mplace-base-url'}})
     @account3.save done
+
+  beforeEach (done)->
+    @account4 = new Account(name: 'forth account', plans: [], masterKey: '4mkey', billingProvider: 'cine.io', deletedAt: new Date)
+    @account4.save done
 
   beforeEach (done)->
     @user = new User(name: 'my name', email: 'some email')
@@ -41,6 +45,7 @@ describe 'fullCurrentUserJson', ->
       @user._accounts.push @account._id
       @user._accounts.push @account2._id
       @user._accounts.push @account3._id
+      @user._accounts.push @account4._id
       @user.save done
 
     beforeEach (done)->

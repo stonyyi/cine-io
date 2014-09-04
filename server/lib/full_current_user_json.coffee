@@ -6,8 +6,13 @@ async = require('async')
 fullCurrentUserJson = (user, callback)->
   userJSON = user.simpleCurrentUserJSON()
   return callback(null, userJSON) if _.isEmpty(userJSON._accounts)
+  query =
+    _id:
+      $in: userJSON._accounts
+    deletedAt:
+      $exists: false
 
-  Account.find _id: {$in: userJSON._accounts}, (err, accounts)->
+  Account.find query, (err, accounts)->
     return callback(err, userJSON) if err
     async.map accounts, fullCurrentUserJson.accountJson, (err, accountsJson)->
       userJSON.accounts = accountsJson
