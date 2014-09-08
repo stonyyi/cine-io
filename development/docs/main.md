@@ -184,6 +184,7 @@ curl -X GET "https://www.cine.io/api/1/-/streams?secretKey=PROJECT_SECRET_KEY"
 + Parameters
 
     + secretKey (required, string `abcd1234abcd1234abcd1234abcd1234`) ... The `secretKey` associated with the project
+    + name (optional, string `abc123`) ... Return only streams with the supplied `name`.
 
 + Response 200 (application/json)
 

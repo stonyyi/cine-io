@@ -115,6 +115,7 @@ project <code>secretKey</code>.</p>
 <pre><code class="lang-bash">curl -X GET <span class="hljs-string">"https://www.cine.io/api/1/-/streams?secretKey=PROJECT_SECRET_KEY"</span>
 </code></pre>
 </div><ul class="no-bullet"><li><strong>Parameters</strong></li><li><dl><dt>secretKey</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="label secondary"><strong>e.g.:&nbsp;</strong><span>abcd1234abcd1234abcd1234abcd1234</span></span><p>The <code>secretKey</code> associated with the project</p>
+</dd><dt>name</dt><dd><code>string</code>&nbsp;<span>(optional)</span>&nbsp;<span class="label secondary"><strong>e.g.:&nbsp;</strong><span>abc123</span></span><p>Return only streams with the supplied <code>name</code>.</p>
 </dd></dl></li></ul><ul class="no-bullet"><li><strong>Response&nbsp;&nbsp;<code>200</code></strong></li><li><div class="description"></div><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span><br/></code></pre><h5>Body</h5><pre><code>[
    {
       "<span class="hljs-attribute">name</span>" : <span class="hljs-value"><span class="hljs-string">"Stream 1"</span></span>,
