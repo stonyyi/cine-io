@@ -10,6 +10,8 @@ module.exports = (params, callback)->
       .where('_project').equals(project._id)
       .exists('deletedAt', false)
       .sort(createdAt: -1)
+    if params.name
+      scope = scope.where('name').equals(params.name)
     scope.exec (err, streams)->
       return callback(err, null, status: err.status || 400) if err
       streamOptions = {}

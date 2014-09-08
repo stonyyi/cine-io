@@ -10,8 +10,23 @@ describe 'Streams#Index', ->
     @project.save done
 
   beforeEach (done)->
-    @olderStream = new EdgecastStream(instanceName: 'abcd', _project: @project._id)
+    d = new Date
+    d.setHours(d.getMinutes() - 3)
+
+    @olderStream = new EdgecastStream(instanceName: 'abcd', _project: @project._id, name: 'ddd', createdAt: d)
     @olderStream.save done
+
+  beforeEach (done)->
+    d = new Date
+    d.setHours(d.getMinutes() - 2)
+    @olderStream2 = new EdgecastStream(instanceName: 'abcd', _project: @project._id, name: 'ddd', createdAt: d)
+    @olderStream2.save done
+
+  beforeEach (done)->
+    d = new Date
+    d.setHours(d.getMinutes() - 1)
+    @olderStream3 = new EdgecastStream(instanceName: 'abcd', _project: @project._id, name: 'fff', createdAt: d)
+    @olderStream3.save done
 
   beforeEach (done)->
     d = new Date
@@ -35,7 +50,20 @@ describe 'Streams#Index', ->
     params = secretKey: @project.secretKey
     Index params, (err, response, options)->
       expect(err).to.be.undefined
+      expect(response).to.have.length(4)
+      expect(response[0].publish).to.be.instanceOf(Object)
+      expect(response[1].publish).to.be.instanceOf(Object)
+      expect(response[2].publish).to.be.instanceOf(Object)
+      expect(response[3].publish).to.be.instanceOf(Object)
+      done()
+
+  it 'returns the edgecast streams by name ', (done)->
+    params = secretKey: @project.secretKey, name: 'ddd'
+    Index params, (err, response, options)=>
+      expect(err).to.be.undefined
       expect(response).to.have.length(2)
+      expect(response[0].id.toString()).to.equal(@olderStream2._id.toString())
+      expect(response[1].id.toString()).to.equal(@olderStream._id.toString())
       expect(response[0].publish).to.be.instanceOf(Object)
       expect(response[1].publish).to.be.instanceOf(Object)
       done()
@@ -45,7 +73,7 @@ describe 'Streams#Index', ->
     params = secretKey: @project.secretKey, ipAddress: '81.169.145.154'
     Index params, (err, response, options)->
       expect(err).to.be.undefined
-      expect(response).to.have.length(2)
+      expect(response).to.have.length(4)
       expect(response[0].publish.url).to.include('stream.fra.cine.io')
       expect(response[1].publish.url).to.include('stream.fra.cine.io')
       done()
