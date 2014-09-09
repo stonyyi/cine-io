@@ -381,7 +381,7 @@ Get the list of recordings associated with a stream.
 
 ##### Example
 ```bash
-curl -X GET "https://www.cine.io/api/1/-/stream?secretKey=PROJECT_SECRET_KEY&id=STREAM_ID"
+curl -X GET "https://www.cine.io/api/1/-/stream/recordings?secretKey=PROJECT_SECRET_KEY&id=STREAM_ID"
 ```
 
 + Parameters
@@ -410,7 +410,7 @@ Delete one of the recordings associated with a stream.
 
 ##### Example
 ```bash
-curl -X GET "https://www.cine.io/api/1/-/stream?secretKey=PROJECT_SECRET_KEY&id=STREAM_ID&name=RECORDING_NAME"
+curl -X DELETE "https://www.cine.io/api/1/-/stream/recording?secretKey=PROJECT_SECRET_KEY&id=STREAM_ID&name=RECORDING_NAME"
 ```
 
 + Parameters

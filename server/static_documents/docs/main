@@ -242,7 +242,7 @@ project <code>secretKey</code>.</p>
 </span>}
 </code></pre></li></ul></section></div></div><div><div class="resource-panel"><h3 id="recording">Recording&nbsp;</h3><h4 id="recording-recordings">Recordings&nbsp;<a href="#recording-recordings"><i class="fa fa-link"></i></a></h4><section id="recording-recordings-get" class="resource-panel panel"><div style="float:right"><span style="text-transform: lowercase">Get Recordings for a Stream</span></div><div style="float:left"><a href="#recording-recordings-get">GET</a></div><div style="overflow:hidden">&nbsp;<code>/stream/recordings</code></div><div><p>Get the list of recordings associated with a stream.</p>
 <h5 id="example">Example</h5>
-<pre><code class="lang-bash">curl -X GET <span class="hljs-string">"https://www.cine.io/api/1/-/stream?secretKey=PROJECT_SECRET_KEY&amp;id=STREAM_ID"</span>
+<pre><code class="lang-bash">curl -X GET <span class="hljs-string">"https://www.cine.io/api/1/-/stream/recordings?secretKey=PROJECT_SECRET_KEY&amp;id=STREAM_ID"</span>
 </code></pre>
 </div><ul class="no-bullet"><li><strong>Parameters</strong></li><li><dl><dt>secretKey</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="label secondary"><strong>e.g.:&nbsp;</strong><span>abcd1234abcd1234abcd1234abcd1234</span></span><p>The <code>secretKey</code> associated with the project</p>
 </dd><dt>id</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="label secondary"><strong>e.g.:&nbsp;</strong><span>abcd1234abcd1234abcd1234</span></span><p>The <code>id</code> associated with the given stream</p>
@@ -256,7 +256,7 @@ project <code>secretKey</code>.</p>
 ]
 </code></pre></li></ul></section><h4 id="recording-recording">Recording&nbsp;<a href="#recording-recording"><i class="fa fa-link"></i></a></h4><section id="recording-recording-delete" class="resource-panel panel"><div style="float:right"><span style="text-transform: lowercase">Delete a Recording</span></div><div style="float:left"><a href="#recording-recording-delete">DELETE</a></div><div style="overflow:hidden">&nbsp;<code>/stream/recording</code></div><div><p>Delete one of the recordings associated with a stream.</p>
 <h5 id="example">Example</h5>
-<pre><code class="lang-bash">curl -X GET <span class="hljs-string">"https://www.cine.io/api/1/-/stream?secretKey=PROJECT_SECRET_KEY&amp;id=STREAM_ID&amp;name=RECORDING_NAME"</span>
+<pre><code class="lang-bash">curl -X DELETE <span class="hljs-string">"https://www.cine.io/api/1/-/stream/recording?secretKey=PROJECT_SECRET_KEY&amp;id=STREAM_ID&amp;name=RECORDING_NAME"</span>
 </code></pre>
 </div><ul class="no-bullet"><li><strong>Parameters</strong></li><li><dl><dt>secretKey</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="label secondary"><strong>e.g.:&nbsp;</strong><span>abcd1234abcd1234abcd1234abcd1234</span></span><p>The <code>secretKey</code> associated with the project</p>
 </dd><dt>id</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="label secondary"><strong>e.g.:&nbsp;</strong><span>abcd1234abcd1234abcd1234</span></span><p>The <code>id</code> associated with the given stream</p>
