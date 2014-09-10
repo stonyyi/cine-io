@@ -34,6 +34,10 @@ AccountSchema = new mongoose.Schema
     type: String
     index: true
     sparse: true
+  engineyardId:
+    type: String
+    index: true
+    sparse: true
   appdirectData: mongoose.Schema.Types.Mixed
 
 AccountSchema.plugin(Cine.server_lib('mongoose_timestamps'))

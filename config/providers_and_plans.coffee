@@ -26,6 +26,16 @@ module.exports =
         price: 0
         transfer: humanizeBytes.GiB
 
+  engineyard:
+    url: 'https://addons.engineyard.com/cine.io'
+    plans:
+      starter:
+        price: 0
+        transfer: humanizeBytes.GiB
+      test:
+        price: 0
+        transfer: humanizeBytes.GiB
+
   appdirect:
     # Url likely to change once we're approved
     # I heard something about a dev profile and public profile

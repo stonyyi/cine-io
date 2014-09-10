@@ -2,14 +2,14 @@
 # https://devcenter.heroku.com/articles/building-a-heroku-add-on#3-generate-an-add-on-manifest
 crypto = require("crypto")
 resources = []
-herokuConfig = Cine.config('variables/heroku')
+engineyardConfig = Cine.config('variables/engineyard')
 findOrCreateResourcesFromHerokuAndEngineYard = Cine.server_lib('find_or_create_resources_from_heroku_and_engineyard')
 qs = require('qs')
 
 basic_auth = (req, res, next) ->
   if req.headers.authorization and req.headers.authorization.search("Basic ") is 0
     passedAuth = new Buffer(req.headers.authorization.split(" ")[1], "base64").toString()
-    expectedAuth = herokuConfig.username + ":" + herokuConfig.password
+    expectedAuth = engineyardConfig.username + ":" + engineyardConfig.password
     return next() if passedAuth == expectedAuth
 
   console.log "Unable to authenticate user"
@@ -27,7 +27,7 @@ sso_auth = (req, res, next) ->
   console.log req.body
   console.log('email', req.param('email'))
   console.log('nav-data', req.param('nav-data'))
-  pre_token = accountId + ":" + herokuConfig.ssoSalt + ":" + req.param("timestamp")
+  pre_token = accountId + ":" + engineyardConfig.ssoSalt + ":" + req.param("timestamp")
   shasum = crypto.createHash("sha1")
   shasum.update pre_token
   token = shasum.digest("hex")
@@ -37,7 +37,7 @@ sso_auth = (req, res, next) ->
   time = (new Date().getTime() / 1000) - (2 * 60)
   return res.send "Timestamp Expired", 403 if parseInt(req.param("timestamp")) < time
 
-  res.cookie "heroku-nav-data", req.param("nav-data")
+  res.cookie "engineyard-nav-data", req.param("nav-data")
   findOrCreateResourcesFromHerokuAndEngineYard.findUser accountId, req.param('email'), (err, user)->
     return res.send err, 400 if err
     return res.send "Not found", 404 unless user
@@ -50,11 +50,11 @@ successSSO = (req, res) ->
 module.exports = (app)->
 
   # User just added us on heroku
-  app.post "/heroku/resources", basic_auth, (request, response) ->
-    console.log "POSTING HEROKU RESOURCES", request.body
-    herokuId = request.body.heroku_id
+  app.post "/engineyard/resources", basic_auth, (request, response) ->
+    console.log "POSTING ENGINEYARD RESOURCES", request.body
+    engineyardId = request.body.engineyard_id
     plan = request.body.plan
-    findOrCreateResourcesFromHerokuAndEngineYard.newHerokuAccount herokuId, plan, (err, account, project)->
+    findOrCreateResourcesFromHerokuAndEngineYard.newEngineYardAccount engineyardId, plan, (err, account, project)->
       console.log('created heroku account', err, account, project)
       return response.send err, 400 if err
       return response.send 'could not make account', 400 unless account
@@ -68,7 +68,7 @@ module.exports = (app)->
       response.send resource
 
   # User changed plan on heroku
-  app.put "/heroku/resources/:id", basic_auth, (request, response) ->
+  app.put "/engineyard/resources/:id", basic_auth, (request, response) ->
     console.log request.body
     console.log request.params
     accountId = request.params.id
@@ -80,7 +80,7 @@ module.exports = (app)->
       response.send "ok"
 
   # User removed us from heroku
-  app["delete"] "/heroku/resources/:id", basic_auth, (request, response) ->
+  app["delete"] "/engineyard/resources/:id", basic_auth, (request, response) ->
     console.log request.params
     accountId = request.params.id
     findOrCreateResourcesFromHerokuAndEngineYard.deleteAccount accountId, (err, project)->
@@ -89,7 +89,7 @@ module.exports = (app)->
       response.send "ok"
 
   # ??? - maybe SSO login
-  app.get "/heroku/resources/:id", sso_auth, successSSO
+  app.get "/engineyard/resources/:id", sso_auth, successSSO
 
   # definitely sso login
-  app.post "/heroku/sso", sso_auth, successSSO
+  app.post "/engineyard/sso", sso_auth, successSSO

@@ -13,7 +13,7 @@ nameFromEmail = (herokuId)->
 # herokuId: 'app6848@kensa.heroku.com'
 # plan: 'free'
 # callback(err, user, project)
-exports.newAccount = (herokuId, plan, callback)->
+exports.newHerokuAccount = (herokuId, plan, callback)->
   accountAttributes =
     herokuId: herokuId
     name: nameFromEmail(herokuId)
@@ -25,6 +25,20 @@ exports.newAccount = (herokuId, plan, callback)->
   createNewAccount accountAttributes, userAttributes, projectAttributes, (err, results)->
     return callback(err) if err
     mailer.admin.newUser(results.account, 'heroku')
+    callback(null, results.account, results.project)
+
+exports.newEngineYardAccount = (engineyardId, plan, callback)->
+  accountAttributes =
+    engineyardId: engineyardId
+    name: nameFromEmail(engineyardId)
+    plan: plan
+    billingProvider: 'engineyard'
+  projectAttributes =
+    name: nameFromEmail(engineyardId)
+  userAttributes = {}
+  createNewAccount accountAttributes, userAttributes, projectAttributes, (err, results)->
+    return callback(err) if err
+    mailer.admin.newUser(results.account, 'engineyard')
     callback(null, results.account, results.project)
 
 # callback(err, user)

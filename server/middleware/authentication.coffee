@@ -28,6 +28,7 @@ module.exports = (app)->
   Cine.middleware('authentication/local', app)
   Cine.middleware('authentication/github', app)
   Cine.middleware('authentication/heroku', app)
+  Cine.middleware('authentication/engineyard', app)
 
   app.get '/logout', (req, res)->
     res.clearCookie('remember_me')
