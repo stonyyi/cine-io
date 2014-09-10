@@ -1,6 +1,6 @@
 *.DS_Store
 
-addon-manifest.json
+heroku-addon-manifest.json
 
 cine.sublime-workspace
 compiled/*
