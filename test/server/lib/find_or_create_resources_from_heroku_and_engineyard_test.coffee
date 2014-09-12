@@ -65,14 +65,14 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
     assertEmailSent.admin "newUser"
 
     it 'sends a welcome email', (done)->
-      findOrCreateResourcesFromHerokuAndEngineYard.newEngineYardAccount 'new-engineyard-user@engineyard.com', 'pro', (err, @user, @project)=>
-        expect(@mailerSpies[0].firstCall.args[0].name).to.equal("new-engineyard-user")
+      findOrCreateResourcesFromHerokuAndEngineYard.newEngineYardAccount '9141-cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp', 'pro', (err, @user, @project)=>
+        expect(@mailerSpies[0].firstCall.args[0].name).to.equal("cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp")
         expect(@mailerSpies[0].firstCall.args[1]).to.equal("engineyard")
         done(err)
 
     describe "without a new stream", ->
       beforeEach (done)->
-        findOrCreateResourcesFromHerokuAndEngineYard.newEngineYardAccount 'new-engineyard-user@engineyard.com', 'pro', (err, @account, @project)=>
+        findOrCreateResourcesFromHerokuAndEngineYard.newEngineYardAccount '9141-cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp', 'pro', (err, @account, @project)=>
           done(err)
 
       it 'does not create a new user', (done)->
@@ -82,12 +82,12 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
           done()
 
       it 'creates a new account', ->
-        expect(@account.name).to.equal("new-engineyard-user")
-        expect(@account.engineyardId).to.equal("new-engineyard-user@engineyard.com")
+        expect(@account.name).to.equal("cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp")
+        expect(@account.engineyardId).to.equal("9141-cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp")
 
       it 'creates a new project', ->
         expect(@project).to.be.instanceOf(Project)
-        expect(@project.name).to.equal("new-engineyard-user")
+        expect(@project.name).to.equal("cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp")
         expect(@project.streamsCount).to.equal(0)
         expect(@project._account.toString()).to.equal(@account._id.toString())
 
@@ -101,7 +101,7 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
         @stream = new EdgecastStream(streamName: 'name1')
         @stream.save(done)
       beforeEach (done)->
-        findOrCreateResourcesFromHerokuAndEngineYard.newEngineYardAccount 'new-engineyard-user@engineyard.com', 'pro', (err, @user, @project)=>
+        findOrCreateResourcesFromHerokuAndEngineYard.newEngineYardAccount '9141-cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp', 'pro', (err, @user, @project)=>
           done(err)
 
       it 'adds a stream to that project', (done)->

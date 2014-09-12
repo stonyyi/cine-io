@@ -7,8 +7,12 @@ mailer = Cine.server_lib('mailer')
 deleteAccount = Cine.server_lib('delete_account')
 createNewAccount = Cine.server_lib('create_new_account')
 
-nameFromEmail = (herokuId)->
+nameFromHerokuId = (herokuId)->
   herokuId.split('@')[0]
+
+nameFromEngineYardId = (engineyardId)->
+  matches = engineyardId.match(/(\d+)-(.+)/)
+  if matches then matches[2] else engineyard
 
 # herokuId: 'app6848@kensa.heroku.com'
 # plan: 'free'
@@ -16,11 +20,11 @@ nameFromEmail = (herokuId)->
 exports.newHerokuAccount = (herokuId, plan, callback)->
   accountAttributes =
     herokuId: herokuId
-    name: nameFromEmail(herokuId)
+    name: nameFromHerokuId(herokuId)
     plan: plan
     billingProvider: 'heroku'
   projectAttributes =
-    name: nameFromEmail(herokuId)
+    name: nameFromHerokuId(herokuId)
   userAttributes = {}
   createNewAccount accountAttributes, userAttributes, projectAttributes, (err, results)->
     return callback(err) if err
@@ -30,11 +34,11 @@ exports.newHerokuAccount = (herokuId, plan, callback)->
 exports.newEngineYardAccount = (engineyardId, plan, callback)->
   accountAttributes =
     engineyardId: engineyardId
-    name: nameFromEmail(engineyardId)
+    name: nameFromEngineYardId(engineyardId)
     plan: plan
     billingProvider: 'engineyard'
   projectAttributes =
-    name: nameFromEmail(engineyardId)
+    name: nameFromEngineYardId(engineyardId)
   userAttributes = {}
   createNewAccount accountAttributes, userAttributes, projectAttributes, (err, results)->
     return callback(err) if err

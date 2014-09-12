@@ -52,7 +52,8 @@ module.exports = (app)->
   # User just added us on heroku
   app.post "/engineyard/resources", basic_auth, (request, response) ->
     console.log "POSTING ENGINEYARD RESOURCES", request.body
-    engineyardId = request.body.engineyard_id
+    # YES IT'S ACTUALLY heroku_id!!!!
+    engineyardId = request.body.heroku_id
     plan = request.body.plan
     findOrCreateResourcesFromHerokuAndEngineYard.newEngineYardAccount engineyardId, plan, (err, account, project)->
       console.log('created heroku account', err, account, project)

@@ -62,8 +62,14 @@ describe 'engineyard authentication', ->
 
   describe "post /engineyard/resources", ->
     params =
-      engineyard_id: 'app123@engineyard.com'
+      ey_id: 9141
+      name: 'cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp'
+      invoices_url: 'https://addons.engineyard.com/api/2/provisioned_services/9141/invoices'
+      callback_url: 'https://addons.engineyard.com/api/2/provisioned_services/9141'
       plan: 'solo'
+      heroku_id: '9141-cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp'
+      region: 'NA'
+      options: {}
     requiresEngineYardBasicAuth('post', '/engineyard/resources', params)
 
     describe "success", ->
@@ -84,8 +90,8 @@ describe 'engineyard authentication', ->
             expect(_.keys(response.config).sort()).to.deep.equal(['CINE_IO_PUBLIC_KEY', 'CINE_IO_SECRET_KEY'])
             Account.findById response.id, (err, account)->
               expect(err).to.be.null
-              expect(account.name).to.equal('app123')
-              expect(account.engineyardId).to.equal('app123@engineyard.com')
+              expect(account.name).to.equal('cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp')
+              expect(account.engineyardId).to.equal('9141-cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp')
               Project.find _account: account._id, (err, projects)->
                 expect(err).to.be.null
                 expect(projects).to.have.length(1)
