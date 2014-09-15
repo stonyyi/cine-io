@@ -19,8 +19,6 @@ app.use Cine.require('apps/main', app)
 app.use '/admin', Cine.require('apps/admin', app)
 app.use '/embed', Cine.require('apps/embed')
 
-app.use express.static "#{Cine.root}/public"
-
 # Serve static assets
 app.use express.static "#{Cine.root}/public"
 app.use express.static "#{Cine.root}/ignored" if app.settings.env is 'development'
