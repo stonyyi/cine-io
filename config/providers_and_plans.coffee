@@ -29,12 +29,21 @@ module.exports =
   engineyard:
     url: 'https://addons.engineyard.com/cine.io'
     plans:
-      starter:
-        price: 0
-        transfer: humanizeBytes.GiB
       test:
         price: 0
         transfer: humanizeBytes.GiB
+      starter:
+        price: 0
+        transfer: humanizeBytes.GiB
+      solo:
+        price: 20
+        transfer: humanizeBytes.GiB * 20
+      basic:
+        price: 100
+        transfer: humanizeBytes.GiB * 150
+      pro:
+        price: 500
+        transfer: humanizeBytes.TiB
 
   appdirect:
     # Url likely to change once we're approved
@@ -44,7 +53,7 @@ module.exports =
       'sample-addon':
         price: 0
         transfer: humanizeBytes.GiB
-      free:
+      starter:
         price: 0
         transfer: humanizeBytes.GiB
       solo:
