@@ -22,6 +22,7 @@ CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 humanizeBytes = Cine.lib('humanize_bytes')
 
 _ = require('underscore')
+totalAccountsLogged = 0
 
 callbackFunction = (account, callback)->
   return (err, collectedBytes)->
@@ -33,6 +34,7 @@ callbackFunction = (account, callback)->
 
     byteString = if shouldHumanize then humanizeBytes(collectedBytes) else "#{collectedBytes} bytes"
     console.log("Total account usage for", account._id, account.billingEmail || account.herokuId, byteString)
+    totalAccountsLogged += 1
     callback()
 
 calculateMonthlyUsage = (account, callback)->
@@ -42,7 +44,7 @@ calculateTotalUsage = (account, callback)->
   CalculateAccountUsage.total account, callbackFunction(account, callback)
 
 endFunction = (err)->
-  console.log('ending')
+  console.log("For a total of #{totalAccountsLogged} accounts.")
   console.log("ending err", err) if err
   process.exit(0)
 
