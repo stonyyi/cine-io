@@ -33,7 +33,6 @@ describe 'github auth', ->
 
     afterEach ->
       expect(@oauthResponseNock.isDone()).to.be.true
-      expect(@profileDataNock.isDone()).to.be.true
 
     describe "with a new user", ->
 
@@ -49,6 +48,9 @@ describe 'github auth', ->
       describe 'with a new user who has a public email in github', ->
         beforeEach ->
           @profileDataNock = requireFixture('nock/github_oauth_user_response_with_email')()
+
+        afterEach ->
+          expect(@profileDataNock.isDone()).to.be.true
 
         beforeEach (done)->
           @agent
@@ -140,6 +142,7 @@ describe 'github auth', ->
                 done(err)
         afterEach ->
           expect(@userEmailsNock.isDone()).to.be.true
+          expect(@profileDataNock.isDone()).to.be.true
 
         it 'fetches the private email from github', (done)->
           User.findOne githubId: 135461, (err, user)->
@@ -153,6 +156,9 @@ describe 'github auth', ->
 
         beforeEach ->
           @profileDataNock = requireFixture('nock/github_oauth_user_response_with_email_but_no_name')()
+
+        afterEach ->
+          expect(@profileDataNock.isDone()).to.be.true
 
         beforeEach (done)->
           @agent
@@ -174,6 +180,9 @@ describe 'github auth', ->
     describe "with an existing user", ->
       beforeEach ->
         @profileDataNock = requireFixture('nock/github_oauth_user_response_with_email')()
+
+      afterEach ->
+        expect(@profileDataNock.isDone()).to.be.true
 
       beforeEach (done)->
         @user = new User(githubId: 135461, email: 'orig email', name: 'my name')
@@ -231,6 +240,9 @@ describe 'github auth', ->
 
       beforeEach ->
         @profileDataNock = requireFixture('nock/github_oauth_user_response_with_email')()
+
+      afterEach ->
+        expect(@profileDataNock.isDone()).to.be.true
 
       beforeEach (done)->
         @agent

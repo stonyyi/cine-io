@@ -79,7 +79,7 @@
     "grunt-nodemon": "0.3.0",
     "jquery": "2.1.1",
     "jsdom": "1.0.0-pre.7",
-    "mocha": "1.18.2",
+    "mocha": "1.21.4",
     "nock": "0.47.0",
     "nodemon": "1.2.1",
     "sinon": "1.10.3",
