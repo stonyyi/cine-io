@@ -26,7 +26,7 @@ module.exports = (grunt) ->
             backbone: '../rendr/node_modules/backbone/backbone.js'
             qs: "../qs/index.js"
             handlebars: '../rendr-handlebars/node_modules/handlebars/dist/handlebars.runtime.js'
-            async: '../rendr/node_modules/async/lib/async.js'
+            async: '../async/lib/async.js'
           aliases: [
             from: "apps/#{rendrProject}/app/", to: 'app/'
             {from: "compiled/#{rendrProject}/components/", to: 'app/components/'}

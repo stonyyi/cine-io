@@ -12,22 +12,24 @@ describe 'DataAdapter', ->
     # The response is properly formatted
     # The input is properly passed in
     it 'returns the proper response', (done)->
-      matchingRoute = {
-        callbacks: [(params, callback)->
-          expect(params.param1).to.equal('value1')
-          callback(null, 'matching route response')
-        ]
+      matchingRoute =
+        route:
+          methods: {post: true}
+          stack: [{handle:(params, callback)->
+            expect(params.param1).to.equal('value1')
+            callback(null, 'matching route response')
+          }]
         match: (path)->
           expect(path).to.equal('/api/fake-path')
-      }
-      notMatchingRoute = {
-        callbacks: [(params, callback)->
-          callback(null, 'notmatching route response')
-        ]
+      notMatchingRoute =
+        route:
+          methods: {post: true}
+          stack: [{handle:(params, callback)->
+            callback(null, 'notmatching route response')
+          }]
         match: (path)->
           path == 'do not match'
-      }
-      app = {routes: {post: [notMatchingRoute, matchingRoute]}}
+      app = {_router: {stack: [notMatchingRoute, matchingRoute]}}
       da = new DataAdapter(app)
       req = {method: 'post', headers: {}, connection: {}}
       api = {path: '/fake-path', body: {param1: 'value1'}}
@@ -39,22 +41,24 @@ describe 'DataAdapter', ->
         done()
 
     it 'returns the proper response with jsonp', (done)->
-      matchingRoute = {
-        callbacks: [(params, callback)->
-          expect(params.param1).to.equal('value1')
-          callback(null, hey: 'buddy')
-        ]
+      matchingRoute =
+        route:
+          methods: {get: true}
+          stack: [{handle:(params, callback)->
+            expect(params.param1).to.equal('value1')
+            callback(null, hey: 'buddy')
+          }]
         match: (path)->
           expect(path).to.equal('/api/fake-path')
-      }
-      notMatchingRoute = {
-        callbacks: [(params, callback)->
-          callback(null, 'notmatching route response')
-        ]
+      notMatchingRoute =
+        route:
+          methods: {get: true}
+          stack: [{handle:(params, callback)->
+            callback(null, 'notmatching route response')
+          }]
         match: (path)->
           path == 'do not match'
-      }
-      app = {routes: {get: [notMatchingRoute, matchingRoute]}}
+      app = {_router: {stack: [notMatchingRoute, matchingRoute]}}
       da = new DataAdapter(app)
       req = {method: 'get', headers: {}, connection: {}}
       api = {path: '/fake-path', body: {param1: 'value1', callback: 'fuun'}}
@@ -66,14 +70,15 @@ describe 'DataAdapter', ->
         done()
 
     it 'includes the user session to the params', (done)->
-      matchingRoute = {
-        callbacks: [(params, callback)->
-          callback(null, params.sessionUserId)
-        ]
+      matchingRoute =
+        route:
+          methods: {post: true}
+          stack: [{handle:(params, callback)->
+            callback(null, params.sessionUserId)
+          }]
         match: (path)->
           expect(path).to.equal('/api/fake-path')
-      }
-      app = {routes: {post: [matchingRoute]}}
+      app = {_router: {stack: [matchingRoute]}}
       da = new DataAdapter(app)
       req = {method: 'post', user: 'some_user_id', headers: {}, connection: {}}
       api = {path: '/fake-path', body: {param1: 'value1'}}
@@ -85,14 +90,15 @@ describe 'DataAdapter', ->
 
     describe 'ip address', ->
       it 'prefers the x-forwarded-for header', (done)->
-        matchingRoute = {
-          callbacks: [(params, callback)->
-            callback(null, params.remoteIpAddress)
-          ]
+        matchingRoute =
+          route:
+            methods: {post: true}
+            stack: [{handle:(params, callback)->
+              callback(null, params.remoteIpAddress)
+            }]
           match: (path)->
             expect(path).to.equal('/api/fake-path')
-        }
-        app = {routes: {post: [matchingRoute]}}
+        app = {_router: {stack: [matchingRoute]}}
         da = new DataAdapter(app)
         req = {method: 'post', user: 'some_user_id', headers: {'x-forwarded-for': '123'}, connection: {remoteAddress: '456'}}
         api = {path: '/fake-path', body: {param1: 'value1'}}
@@ -103,14 +109,15 @@ describe 'DataAdapter', ->
           done()
 
       it 'prefers the returns to the remoteAddress header', (done)->
-        matchingRoute = {
-          callbacks: [(params, callback)->
-            callback(null, params.remoteIpAddress)
-          ]
+        matchingRoute =
+          route:
+            methods: {post: true}
+            stack: [{handle:(params, callback)->
+              callback(null, params.remoteIpAddress)
+            }]
           match: (path)->
             expect(path).to.equal('/api/fake-path')
-        }
-        app = {routes: {post: [matchingRoute]}}
+        app = {_router: {stack: [matchingRoute]}}
         da = new DataAdapter(app)
         req = {method: 'post', user: 'some_user_id', headers: {}, connection: {remoteAddress: '456'}}
         api = {path: '/fake-path', body: {param1: 'value1'}}
@@ -121,14 +128,15 @@ describe 'DataAdapter', ->
           done()
 
       it 'will otherwise be undefined', (done)->
-        matchingRoute = {
-          callbacks: [(params, callback)->
-            callback(null, params.remoteIpAddress)
-          ]
+        matchingRoute =
+          route:
+            methods: {post: true}
+            stack: [{handle:(params, callback)->
+              callback(null, params.remoteIpAddress)
+            }]
           match: (path)->
             expect(path).to.equal('/api/fake-path')
-        }
-        app = {routes: {post: [matchingRoute]}}
+        app = {_router: {stack: [matchingRoute]}}
         da = new DataAdapter(app)
         req = {method: 'post', user: 'some_user_id', headers: {}, connection: {}}
         api = {path: '/fake-path', body: {param1: 'value1'}}
@@ -139,14 +147,15 @@ describe 'DataAdapter', ->
           done()
 
     it 'appropriately sends errors', (done)->
-      matchingRoute = {
-        callbacks: [(params, callback)->
-          callback("you ain't logged in", null, status: 401)
-        ]
+      matchingRoute =
+        route:
+          methods: {post: true}
+          stack: [{handle:(params, callback)->
+            callback("you ain't logged in", null, status: 401)
+          }]
         match: (path)->
           expect(path).to.equal('/api/fake-path')
-      }
-      app = {routes: {post: [matchingRoute]}}
+      app = {_router: {stack: [matchingRoute]}}
       da = new DataAdapter(app)
       req = {method: 'post', headers: {}, connection: {}}
       api = {path: '/fake-path', body: {param1: 'value1'}}
@@ -158,14 +167,15 @@ describe 'DataAdapter', ->
         done()
 
     it 'appropriately sends errors with a response', (done)->
-      matchingRoute = {
-        callbacks: [(params, callback)->
-          callback("you ain't logged in", {problem: 'here'}, status: 401)
-        ]
+      matchingRoute =
+        route:
+          methods: {post: true}
+          stack: [{handle:(params, callback)->
+            callback("you ain't logged in", {problem: 'here'}, status: 401)
+          }]
         match: (path)->
           expect(path).to.equal('/api/fake-path')
-      }
-      app = {routes: {post: [matchingRoute]}}
+      app = {_router: {stack: [matchingRoute]}}
       da = new DataAdapter(app)
       req = {method: 'post', headers: {}, connection: {}}
       api = {path: '/fake-path', body: {param1: 'value1'}}
@@ -178,15 +188,16 @@ describe 'DataAdapter', ->
         done()
 
     it 'responds to HEAD requests', (done)->
-      matchingRoute = {
-        callbacks: [(params, callback)->
-          expect(params.param1).to.equal('value1')
-          callback(null, 'matching route response')
-        ]
+      matchingRoute =
+        route:
+          methods: {get: true}
+          stack: [{handle:(params, callback)->
+            expect(params.param1).to.equal('value1')
+            callback(null, 'matching route response')
+          }]
         match: (path)->
           expect(path).to.equal('/api/fake-path')
-      }
-      app = {routes: {get: [matchingRoute]}}
+      app = {_router: {stack: [matchingRoute]}}
       da = new DataAdapter(app)
       req = {method: 'HEAD', headers: {}, connection: {}}
       api = {path: '/fake-path', body: {param1: 'value1'}}

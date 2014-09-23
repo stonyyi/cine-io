@@ -15,13 +15,10 @@ basic_auth = (req, res, next) ->
   console.log "Unable to authenticate user"
   console.log req.headers.authorization
   res.header "WWW-Authenticate", "Basic realm=\"Admin Area\""
-  res.send "Authentication required", 401
+  res.status(401).send "Authentication required"
 
 sso_auth = (req, res, next) ->
-  if req.params.length is 0
-    accountId = req.param("id")
-  else
-    accountId = req.params.id
+  accountId = req.param("id")
   console.log accountId
   console.log req.params
   console.log req.body
@@ -32,15 +29,15 @@ sso_auth = (req, res, next) ->
   shasum.update pre_token
   token = shasum.digest("hex")
 
-  return res.send "Token Mismatch", 403 if req.param("token") isnt token
+  return res.status(403).send("Token Mismatch") if req.param("token") isnt token
 
   time = (new Date().getTime() / 1000) - (2 * 60)
   return res.send "Timestamp Expired", 403 if parseInt(req.param("timestamp")) < time
 
   res.cookie "engineyard-nav-data", req.param("nav-data")
   findOrCreateResourcesFromHerokuAndEngineYard.findUser accountId, req.param('email'), (err, user)->
-    return res.send err, 400 if err
-    return res.send "Not found", 404 unless user
+    return res.send.status(400).send(err) if err
+    return res.send.status(404).send("Not found") unless user
 
     req.login user, next
 
@@ -57,8 +54,8 @@ module.exports = (app)->
     plan = request.body.plan
     findOrCreateResourcesFromHerokuAndEngineYard.newEngineYardAccount engineyardId, plan, (err, account, project)->
       console.log('created heroku account', err, account, project)
-      return response.send err, 400 if err
-      return response.send 'could not make account', 400 unless account
+      return response.send.status(400).send(err) if err
+      return response.send.status(400).send('could not make account') unless account
 
       resource =
         id: account._id
@@ -76,8 +73,8 @@ module.exports = (app)->
     plan = request.body.plan
     findOrCreateResourcesFromHerokuAndEngineYard.updatePlan accountId, plan, (err, project)->
       console.log('updated', err, project)
-      return response.send err, 400 if err
-      return response.send "Not found", 404 unless project
+      return response.status(400).send(err) if err
+      return response.status(404).send("Not found") unless project
       response.send "ok"
 
   # User removed us from heroku
@@ -85,8 +82,8 @@ module.exports = (app)->
     console.log request.params
     accountId = request.params.id
     findOrCreateResourcesFromHerokuAndEngineYard.deleteAccount accountId, (err, project)->
-      return response.send err, 400 if err
-      return response.send "Not found", 404 unless project
+      return response.status(400).send(err) if err
+      return response.status(404).send("Not found") unless project
       response.send "ok"
 
   # ??? - maybe SSO login

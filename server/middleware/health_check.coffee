@@ -1,3 +1,3 @@
 module.exports = (app) ->
   app.get '/health', (req, res)->
-    res.send(200)
+    res.status(200).send("OK")

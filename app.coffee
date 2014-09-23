@@ -15,8 +15,8 @@ Cine.middleware 'middleware', app
 
 Cine.server 'api_routes', app
 
-app.use Cine.require('apps/main', app)
-app.use '/admin', Cine.require('apps/admin', app)
+app.use Cine.require('apps/main', app).handle
+app.use '/admin', Cine.require('apps/admin', app).handle
 app.use '/embed', Cine.require('apps/embed')
 
 # Serve static assets

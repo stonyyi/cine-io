@@ -24,7 +24,7 @@ describe 'github auth', ->
         .expect(302)
         .end (err, res)->
           expect(res.headers.location).to.equal("https://github.com/login/oauth/authorize?response_type=code&redirect_uri=&scope=user%3Aemail&state=%7B%22plan%22%3A%22basic%22%2C%22client%22%3A%22web%22%7D&client_id=0970d704f4137ab1e8a1")
-          expect(res.text).to.equal("Moved Temporarily. Redirecting to https://github.com/login/oauth/authorize?response_type=code&redirect_uri=&scope=user%253Aemail&state=%257B%2522plan%2522%253A%2522basic%2522%252C%2522client%2522%253A%2522web%2522%257D&client_id=0970d704f4137ab1e8a1")
+          expect(res.text).to.equal("")
           done(err)
 
   describe '/auth/github/callback', ->

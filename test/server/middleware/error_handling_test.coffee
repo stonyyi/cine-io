@@ -5,14 +5,16 @@ express = require('express')
 parseUri = Cine.lib('parse_uri')
 qs = require('qs')
 expectSentryLog = Cine.require('test/helpers/expect_sentry_log')
+bodyParser = require('body-parser')
+methodOverride = require('method-override')
+
 
 describe 'ErrorHandling', ->
   beforeEach ->
     app = express()
-    app.use(express.bodyParser())
-    app.use(express.methodOverride())
-    app.use app.router
-    app.use ErrorHandling
+    app.use(bodyParser.urlencoded(extended: false))
+    app.use(bodyParser.json())
+    app.use(methodOverride())
     app.get '/serve-me-a-404', (req, res, next)->
       error = {message: 'some 404 problem', status: 404}
       # error = new Error('some 404 problem')
@@ -25,6 +27,8 @@ describe 'ErrorHandling', ->
     app.get '/serve-me-a-401', (req, res, next)->
       error = message: 'some problem', status: 401
       next(error)
+
+    app.use ErrorHandling
     @agent = supertest.agent(app)
 
   expectSentryLog()

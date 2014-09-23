@@ -32,10 +32,13 @@ class InternalApiRequest
     # add the interpolated params
     throw new Error "no route for #{@path}!" unless route
     _.extend(@params, route.params)
-    route.callbacks[0]
+    route.route.stack[0].handle
   _matchingRoute: ->
-    verb_matching_routes = @app.routes[@method.toLowerCase()]
-    _.find verb_matching_routes, (route)=>
+    method = @method.toLowerCase()
+    # verb_matching_routes = @app.routes[@method.toLowerCase()]
+    _.find @app._router.stack, (route)=>
+      return unless route.route
+      return unless route.route.methods[method]
       route.match("/api#{@path}")
 
 class DataAdapter

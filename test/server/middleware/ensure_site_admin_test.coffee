@@ -11,6 +11,8 @@ describe 'EnsureSiteAdmin', ->
 
   app.get '/admin-test', EnsureSiteAdmin, (req, res)->
     res.send(200, 'success!')
+  # need to add error_handling after this new route
+  app.use Cine.middleware('error_handling')
 
   beforeEach ->
     @agent = supertest.agent(app)

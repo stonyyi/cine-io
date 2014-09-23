@@ -72,7 +72,7 @@ describe 'AppDirect/Users/Ununassign', ->
 
       it 'returns success', ->
         expect(@res.statusCode).to.equal(200)
-        expect(@res.headers['content-type']).to.equal('text/xml')
+        expect(@res.headers['content-type']).to.equal('text/xml; charset=utf-8')
 
       it 'sends the oauth headers to AppDirect', ->
         expect(@appDirectSuccessResponse.isDone()).to.be.true
@@ -95,7 +95,7 @@ describe 'AppDirect/Users/Ununassign', ->
 
       it 'returns success', ->
         expect(@res.statusCode).to.equal(200)
-        expect(@res.headers['content-type']).to.equal('text/xml')
+        expect(@res.headers['content-type']).to.equal('text/xml; charset=utf-8')
 
       it 'sends the oauth headers to AppDirect', ->
         expect(@appDirectSuccessResponse.isDone()).to.be.true
@@ -123,7 +123,7 @@ describe 'AppDirect/Users/Ununassign', ->
 
       it 'returns success', ->
         expect(@res.statusCode).to.equal(200)
-        expect(@res.headers['content-type']).to.equal('text/xml')
+        expect(@res.headers['content-type']).to.equal('text/xml; charset=utf-8')
 
       it 'returns success true', ->
         xml = _str.lines(@res.text).join(' ')

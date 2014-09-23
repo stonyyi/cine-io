@@ -1,6 +1,6 @@
 express = require("express")
 fs = require("fs")
-errorHandler = express.errorHandler()
+errorHandler = require('errorhandler')
 API_PATH_REGEX = /\/api\/\d+\/-\// # /api/1/-/
 _ = require('underscore')
 raven = require('raven')
@@ -10,12 +10,12 @@ AuthenticationError = require('passport/lib/errors/authenticationerror')
 sendErr = (req, res, err, options={})->
   status = err.status || 400
   if err instanceof AuthenticationError
-    response = req.session.messages.pop()
+    body = req.session.messages.pop()
   else if options.api
-    response = {message: err.message, status: status}
+    body = {message: err.message, status: status}
   else
-    response = err
-  res.send(status, response)
+    body = err
+  res.status(status).send(body)
 
 developmentHandler = (err, req, res, next) ->
   console.log('there is an err in development', err)
@@ -28,9 +28,9 @@ serveStaticErrorPage = (status, res)->
   fs.exists errPage, (exists)->
     res.status status
     if exists
-      res.sendfile errPage
+      res.sendFile errPage
     else
-      res.send 400, "An unknown error has occured."
+      res.status(400).send "An unknown error has occured."
 
 captureExtraData = (err, req)->
   extra = _.extend({httpMethod: req.method}, err.extra, req.headers, requestUrl: req.originalUrl)
