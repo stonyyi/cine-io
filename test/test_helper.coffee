@@ -19,7 +19,7 @@ if process.env.CI
 
 jsdom = require('jsdom').jsdom
 document = jsdom('<html><head><script></script></head><body></body></html>')
-window = document.createWindow()
+window = document.parentWindow
 global.jQuery = require("jquery")(window)
 
 App = Cine.require "apps/main/app/app"
