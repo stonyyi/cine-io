@@ -83,3 +83,4 @@ class DataAdapter
     err
 
 module.exports = DataAdapter
+module.exports.InternalApiRequest = InternalApiRequest
