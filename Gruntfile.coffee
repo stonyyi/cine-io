@@ -136,7 +136,6 @@ module.exports = (grunt) ->
 
       production:
         files:
-          "public/compiled/cineio.js": ["public/compiled/cineio-dev.js"]
           "public/compiled/mergedAssets.js": ["public/compiled/mergedAssets.js"]
 
     aglio:
