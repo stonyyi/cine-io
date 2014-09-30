@@ -18,3 +18,15 @@ describe 'Stats', ->
             expect(err).to.be.null
             expect(result).to.deep.equal(some: "sweet stats")
             done()
+
+  describe 'getAll', ->
+    beforeEach (done)->
+      Stats.setUsage(the: 'bandwidth', done)
+    beforeEach (done)->
+      Stats.setSignups(these: 'new users', done)
+
+    it 'returns all the stats', (done)->
+      Stats.getAll (err, results)->
+        expect(err).to.be.null
+        expect(results).to.deep.equal(usage: {the: 'bandwidth'}, signups: {these: 'new users'})
+        done()
