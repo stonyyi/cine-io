@@ -33,7 +33,7 @@ callbackFunction = (account, callback)->
     return callback() if shouldCompact && collectedBytes == 0
 
     byteString = if shouldHumanize then humanizeBytes(collectedBytes) else "#{collectedBytes} bytes"
-    console.log("Total account usage for", account._id, account.billingEmail || account.herokuId, byteString)
+    console.log("Total account usage for", account._id, account.billingEmail || account.herokuId, account.billingProvider, byteString)
     totalAccountsLogged += 1
     callback()
 
