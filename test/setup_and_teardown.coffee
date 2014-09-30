@@ -1,6 +1,7 @@
 _ = require('underscore')
 mongoose = require('mongoose')
 truncateAllTables = Cine.require('test/helpers/truncate_all_tables')
+redisClient = Cine.server_lib('redis_client')
 
 resetMongo = (done)->
   if mongoose.connection._readyState == 1
@@ -9,6 +10,11 @@ resetMongo = (done)->
     truncateAllTables done
 
 beforeEach resetMongo
+
+resetRedis = (done)->
+  redisClient.flushdb done
+
+beforeEach resetRedis
 
 afterEach (done)->
   nock.cleanAll()
