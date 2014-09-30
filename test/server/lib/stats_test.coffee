@@ -1,9 +1,13 @@
 redis  = require('redis')
 Stats = Cine.server_lib("stats")
+_ = require('underscore')
 _str = require('underscore.string')
 
 describe 'Stats', ->
-  test = (statName)->
+  it 'has two stats', ->
+    expect(Stats.statsNames).to.have.length(2)
+
+  _.each Stats.statsNames, (statName)->
     describe statName, ->
       it "can save values and then be fetched", (done)->
         capsName = _str.capitalize(statName)
@@ -14,6 +18,3 @@ describe 'Stats', ->
             expect(err).to.be.null
             expect(result).to.deep.equal(some: "sweet stats")
             done()
-
-  test 'usage'
-  test 'signups'

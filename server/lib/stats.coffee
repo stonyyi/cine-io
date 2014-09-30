@@ -3,7 +3,7 @@ _str = require 'underscore.string'
 client = Cine.server_lib('redis_client')
 
 redisKey = 'sitestats'
-statsKeys = ['usage', 'signups']
+exports.statsNames = ['usage', 'signups']
 
 get = (key, callback)->
   client.hget redisKey, key, (err, reply)->
@@ -14,7 +14,7 @@ set = (key, stats, callback)->
   client.hset redisKey, key, JSON.stringify(stats), ->
     callback(arguments...)
 
-_.each statsKeys, (key)->
+_.each exports.statsNames, (key)->
   exports["get#{_str.capitalize(key)}"] = (callback)->
     get(key, callback)
   exports["set#{_str.capitalize(key)}"] = (stats, callback)->
