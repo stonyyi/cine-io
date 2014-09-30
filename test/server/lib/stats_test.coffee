@@ -1,6 +1,7 @@
 redis  = require('redis')
 Stats = Cine.server_lib("stats")
 _str = require('underscore.string')
+
 describe 'Stats', ->
   test = (statName)->
     describe statName, ->
