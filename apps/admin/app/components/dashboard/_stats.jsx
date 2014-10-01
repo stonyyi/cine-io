@@ -12,32 +12,75 @@ module.exports = React.createClass({
     model: React.PropTypes.instanceOf(Stats).isRequired
   },
   render: function() {
-    var month, monthName, usageStats;
-    monthName = this.props.model.get('usageMonthName');
-    usageStats = _.map(this.props.model.getSortedUsage(), function(account){
-      console.log("this account", account)
+    var usageStats, accounts,
+    splitByPlan, splitByProvider, splitByPlanHtml, splitByProviderHtml;
+    accounts = this.props.model.getSortedUsage();
+
+    splitByProvider = _.countBy(accounts, function(account) {return account.get('billingProvider')})
+    splitByPlan = _.countBy(accounts, function(account) {return account.firstPlan()})
+    splitByProviderHtml = _.map(splitByProvider, function(number, provider){
+      return (<tr key={provider}>
+        <td>{provider}</td>
+        <td>{number}</td>
+        </tr>)
+    });
+
+    splitByPlanHtml = _.map(splitByPlan, function(number, plan){
+      return (<tr key={plan}>
+        <td>{plan}</td>
+        <td>{number}</td>
+        </tr>)
+    });
+
+    usageStats = _.map(accounts, function(account){
       var name = account.get('name') || account.get('billingEmail');
       return (<tr key={account.id}>
         <td>{name}</td>
+        <td>{account.get('billingEmail')}</td>
         <td>{account.get('billingProvider')}</td>
         <td>{humanizeBytes(account.get('usage'))}</td>
+        <td>{humanizeBytes(account.firstPlan())}</td>
         </tr>)
     })
     return (
       <div id='admin-dashboard-show'>
-        <h3>Usage Stats - {monthName}</h3>
+        <h3>Usage Stats</h3>
         <table>
           <thead>
             <tr>
               <th>Name</th>
               <th>Provider</th>
               <th>Usage</th>
+              <th>Plan</th>
             </tr>
           </thead>
           <tbody>
-          {usageStats}
+            {usageStats}
           </tbody>
         </table>
+        <table>
+          <thead>
+            <tr>
+              <th>Plan</th>
+              <th># accounts</th>
+            </tr>
+          </thead>
+          <tbody>
+            {splitByPlanHtml}
+          </tbody>
+        </table>
+        <table>
+          <thead>
+            <tr>
+              <th>Provider</th>
+              <th># accounts</th>
+            </tr>
+          </thead>
+          <tbody>
+            {splitByProviderHtml}
+          </tbody>
+        </table>
+        <div>Total of {accounts.length} active accounts.</div>
       </div>
     );
   }
