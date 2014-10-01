@@ -2,8 +2,8 @@ redis  = require('redis')
 
 authClient = (client, redisConfig)->
   return unless redisConfig.pass
-    client.auth redisConfig.pass, (err)->
-      throw err if err
+  client.auth redisConfig.pass, (err)->
+    throw err if err
 
 selectDb = (client, redisConfig)->
   return unless redisConfig.db
