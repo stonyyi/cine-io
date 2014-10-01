@@ -2,9 +2,9 @@ Account = Cine.server_model('account')
 Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')
 EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
-CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
+CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
 
-describe 'CalculateAccountUsage', ->
+describe 'CalculateAccountBandwidth', ->
 
   beforeEach (done)->
     @account = new Account(name: 'dat account', plans: ['basic'])
@@ -79,19 +79,19 @@ describe 'CalculateAccountUsage', ->
   describe '#byMonth', ->
 
     it 'can aggrigate for this month', (done)->
-      CalculateAccountUsage.byMonth @account, @thisMonth, (err, monthlyBytes)->
+      CalculateAccountBandwidth.byMonth @account, @thisMonth, (err, monthlyBytes)->
         expect(err).to.be.undefined
         expect(monthlyBytes).to.equal(31376164)
         done()
 
     it 'can aggrigate by last month', (done)->
-      CalculateAccountUsage.byMonth @account, @lastMonth, (err, monthlyBytes)->
+      CalculateAccountBandwidth.byMonth @account, @lastMonth, (err, monthlyBytes)->
         expect(err).to.be.undefined
         expect(monthlyBytes).to.equal(12172316)
         done()
 
     it 'can aggrigate by two months ago', (done)->
-      CalculateAccountUsage.byMonth @account, @twoMonthsAgo, (err, monthlyBytes)->
+      CalculateAccountBandwidth.byMonth @account, @twoMonthsAgo, (err, monthlyBytes)->
         expect(err).to.be.undefined
         expect(monthlyBytes).to.equal(0)
         done()
@@ -99,7 +99,7 @@ describe 'CalculateAccountUsage', ->
   describe '#total', ->
 
     it 'can aggrigate all account projects', (done)->
-      CalculateAccountUsage.total @account, (err, monthlyBytes)->
+      CalculateAccountBandwidth.total @account, (err, monthlyBytes)->
         expect(err).to.be.undefined
         expect(monthlyBytes).to.equal(43548480)
         done()

@@ -1,9 +1,9 @@
 Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')
 EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
-CalculateProjectUsage = Cine.server_lib('reporting/calculate_project_usage')
+CalculateProjectBandwidth = Cine.server_lib('reporting/calculate_project_bandwidth')
 
-describe 'CalculateProjectUsage', ->
+describe 'CalculateProjectBandwidth', ->
 
   beforeEach (done)->
     @project = new Project(name: 'the project')
@@ -59,19 +59,19 @@ describe 'CalculateProjectUsage', ->
   describe '#byMonth', ->
 
     it 'can aggrigate for this month', (done)->
-      CalculateProjectUsage.byMonth @project._id, @thisMonth, (err, monthlyBytes)->
+      CalculateProjectBandwidth.byMonth @project._id, @thisMonth, (err, monthlyBytes)->
         expect(err).to.be.null
         expect(monthlyBytes).to.equal(15688082)
         done()
 
     it 'can aggrigate by last month', (done)->
-      CalculateProjectUsage.byMonth @project._id, @lastMonth, (err, monthlyBytes)->
+      CalculateProjectBandwidth.byMonth @project._id, @lastMonth, (err, monthlyBytes)->
         expect(err).to.be.null
         expect(monthlyBytes).to.equal(6086158)
         done()
 
     it 'can aggrigate by two months ago', (done)->
-      CalculateProjectUsage.byMonth @project._id, @twoMonthsAgo, (err, monthlyBytes)->
+      CalculateProjectBandwidth.byMonth @project._id, @twoMonthsAgo, (err, monthlyBytes)->
         expect(err).to.be.null
         expect(monthlyBytes).to.equal(0)
         done()
@@ -79,7 +79,7 @@ describe 'CalculateProjectUsage', ->
   describe '#total', ->
 
     it 'will aggregate all project streams', (done)->
-      CalculateProjectUsage.total @project._id, (err, monthlyBytes)->
+      CalculateProjectBandwidth.total @project._id, (err, monthlyBytes)->
         expect(err).to.be.null
         expect(monthlyBytes).to.equal(21774240)
         done()

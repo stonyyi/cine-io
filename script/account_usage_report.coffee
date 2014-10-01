@@ -18,7 +18,7 @@ Cine = require '../config/cine'
 require "mongoose-querystream-worker"
 moment = require('moment')
 Account = Cine.server_model('account')
-CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
+CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
 humanizeBytes = Cine.lib('humanize_bytes')
 
 _ = require('underscore')
@@ -38,10 +38,10 @@ callbackFunction = (account, callback)->
     callback()
 
 calculateMonthlyUsage = (account, callback)->
-  CalculateAccountUsage.byMonth account, thisMonth, callbackFunction(account, callback)
+  CalculateAccountBandwidth.byMonth account, thisMonth, callbackFunction(account, callback)
 
 calculateTotalUsage = (account, callback)->
-  CalculateAccountUsage.total account, callbackFunction(account, callback)
+  CalculateAccountBandwidth.total account, callbackFunction(account, callback)
 
 endFunction = (err)->
   console.log("For a total of #{totalAccountsLogged} accounts.")

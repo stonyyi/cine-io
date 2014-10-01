@@ -1,4 +1,4 @@
-CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
+CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
 getAccount = Cine.server_lib('get_account')
 async = require('async')
 _ = require('underscore')
@@ -10,7 +10,7 @@ module.exports = (params, callback)->
     lastThreeMonths = UsageReport.lastThreeMonths()
     createAysncCaller = (accum, date)->
       accum[date.format] = (callback)->
-        CalculateAccountUsage.byMonth account, date.date, callback
+        CalculateAccountBandwidth.byMonth account, date.date, callback
       return accum
 
     asyncCalls = _.inject lastThreeMonths, createAysncCaller, {}

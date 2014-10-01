@@ -1,6 +1,6 @@
 require "mongoose-querystream-worker"
 Account = Cine.server_model('account')
-CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
+CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
 
 exports.thisMonth = (done)->
   exports.byMonth new Date, done
@@ -17,7 +17,7 @@ exports.byMonth = (month, done)->
       callback()
 
   calculateUsageForAccount = (account, callback)->
-    CalculateAccountUsage.byMonth account, month, callbackFunction(account, callback)
+    CalculateAccountBandwidth.byMonth account, month, callbackFunction(account, callback)
 
   endFunction = (err)->
     done(err, collectiveStats)

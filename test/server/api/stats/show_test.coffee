@@ -1,7 +1,7 @@
 Show = testApi Cine.api('stats/show')
 User = Cine.server_model('user')
 Account = Cine.server_model('account')
-CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
+CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
 calculateAndSaveUsageStats = Cine.server_lib("stats/calculate_and_save_usage_stats")
 moment = require('moment')
 _ = require('underscore')
@@ -31,7 +31,7 @@ describe 'Stats#Show', ->
     @fakeBandwidth[@account2._id.toString()] = 54321
     @fakeBandwidth[@account3._id.toString()] = 12121
 
-    @bandwidthStub = sinon.stub CalculateAccountUsage, 'byMonth', (account, month, callback)=>
+    @bandwidthStub = sinon.stub CalculateAccountBandwidth, 'byMonth', (account, month, callback)=>
       callback(null, @fakeBandwidth[account._id.toString()])
 
   afterEach ->

@@ -1,6 +1,6 @@
 calculateUsageStats = Cine.server_lib("stats/calculate_usage_stats")
 Account = Cine.server_model('account')
-CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
+CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
 
 describe 'calculateUsageStats', ->
   beforeEach (done)->
@@ -26,7 +26,7 @@ describe 'calculateUsageStats', ->
     @fakeBandwidthByMonth[@account2._id.toString()] = 88888
     @fakeBandwidthByMonth[@account3._id.toString()] = 77777
 
-    @bandwidthStub = sinon.stub CalculateAccountUsage, 'byMonth', (account, month, callback)=>
+    @bandwidthStub = sinon.stub CalculateAccountBandwidth, 'byMonth', (account, month, callback)=>
       resource = if month.getYear() == (new Date).getYear() then @fakeBandwidthThisMonth else @fakeBandwidthByMonth
       callback(null, resource[account._id.toString()])
 

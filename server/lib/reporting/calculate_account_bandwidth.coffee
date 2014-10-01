@@ -1,11 +1,11 @@
 Project = Cine.server_model('project')
-CalculateProjectUsage = Cine.server_lib('reporting/calculate_project_usage')
+CalculateProjectBandwidth = Cine.server_lib('reporting/calculate_project_bandwidth')
 async = require('async')
 
 exports.byMonth = (account, month, callback)->
 
   calculateProjectUsage = (accum, project, callback)->
-    CalculateProjectUsage.byMonth project._id, month, (err, projectMonthlyBytes)->
+    CalculateProjectBandwidth.byMonth project._id, month, (err, projectMonthlyBytes)->
       return callback(err) if err
       callback(null, accum + projectMonthlyBytes)
 
@@ -15,7 +15,7 @@ exports.byMonth = (account, month, callback)->
 exports.total = (account, callback)->
 
   calculateProjectUsage = (accum, project, callback)->
-    CalculateProjectUsage.total project._id, (err, projectMonthlyBytes)->
+    CalculateProjectBandwidth.total project._id, (err, projectMonthlyBytes)->
       return callback(err) if err
       callback(null, accum + projectMonthlyBytes)
 
