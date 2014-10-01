@@ -4,7 +4,7 @@ Stats = Cine.server_lib("stats")
 
 describe 'calculateAndSaveUsageStats', ->
   beforeEach ->
-    @calculateStub = sinon.stub calculateUsageStats, 'thisMonth', (callback)->
+    @calculateStub = sinon.stub calculateUsageStats, 'byMonth', (month, callback)->
       callback(null, the: "full usage stats")
 
   afterEach ->
