@@ -38,8 +38,8 @@ module.exports = React.createClass({
         <td>{name}</td>
         <td>{account.get('billingEmail')}</td>
         <td>{account.get('billingProvider')}</td>
+        <td>{account.firstPlan()}</td>
         <td>{humanizeBytes(account.get('usage'))}</td>
-        <td>{humanizeBytes(account.firstPlan())}</td>
         </tr>)
     })
     return (
@@ -49,9 +49,10 @@ module.exports = React.createClass({
           <thead>
             <tr>
               <th>Name</th>
+              <th>Email</th>
               <th>Provider</th>
-              <th>Usage</th>
               <th>Plan</th>
+              <th>Usage</th>
             </tr>
           </thead>
           <tbody>
