@@ -16,13 +16,19 @@ describe 'calculateUsageStats', ->
     @account3.save done
 
   beforeEach ->
-    @fakeBandwidth = {}
-    @fakeBandwidth[@account1._id.toString()] = 12345
-    @fakeBandwidth[@account2._id.toString()] = 54321
-    @fakeBandwidth[@account3._id.toString()] = 12121
+    @fakeBandwidthThisMonth = {}
+    @fakeBandwidthThisMonth[@account1._id.toString()] = 12345
+    @fakeBandwidthThisMonth[@account2._id.toString()] = 54321
+    @fakeBandwidthThisMonth[@account3._id.toString()] = 12121
+
+    @fakeBandwidthByMonth = {}
+    @fakeBandwidthByMonth[@account1._id.toString()] = 99999
+    @fakeBandwidthByMonth[@account2._id.toString()] = 88888
+    @fakeBandwidthByMonth[@account3._id.toString()] = 77777
 
     @bandwidthStub = sinon.stub CalculateAccountUsage, 'byMonth', (account, month, callback)=>
-      callback(null, @fakeBandwidth[account._id.toString()])
+      resource = if month.getYear() == (new Date).getYear() then @fakeBandwidthThisMonth else @fakeBandwidthByMonth
+      callback(null, resource[account._id.toString()])
 
   afterEach ->
     @bandwidthStub.restore()
@@ -31,5 +37,14 @@ describe 'calculateUsageStats', ->
     it 'calculates the stats for each account', (done)->
       calculateUsageStats.thisMonth (err, results)=>
         expect(err).to.be.null
-        expect(results).to.deep.equal(@fakeBandwidth)
+        expect(results).to.deep.equal(@fakeBandwidthThisMonth)
+        done()
+
+  describe 'byMonth', ->
+    it 'calculates the stats for each account', (done)->
+      d = new Date
+      d.setYear(d.getYear() - 1)
+      calculateUsageStats.byMonth d, (err, results)=>
+        expect(err).to.be.null
+        expect(results).to.deep.equal(@fakeBandwidthByMonth)
         done()

@@ -3,9 +3,10 @@ Account = Cine.server_model('account')
 CalculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 
 exports.thisMonth = (done)->
+  exports.byMonth new Date, done
 
+exports.byMonth = (month, done)->
   collectiveStats = {}
-  thisMonth = new Date
 
   callbackFunction = (account, callback)->
     return (err, collectedBytes)->
@@ -16,7 +17,7 @@ exports.thisMonth = (done)->
       callback()
 
   calculateUsageForAccount = (account, callback)->
-    CalculateAccountUsage.byMonth account, thisMonth, callbackFunction(account, callback)
+    CalculateAccountUsage.byMonth account, month, callbackFunction(account, callback)
 
   endFunction = (err)->
     done(err, collectiveStats)
