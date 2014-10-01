@@ -159,8 +159,8 @@ exports.Example = React.createClass({
   getInitialState: function() {
     return {
       examplePublicKey: '18b4c471bdc2bc1d16ad3cb338108a33',
-      streamId: '53718cef450ff80200f81856',
-      streamPassword: 'bass35',
+      streamId: '5423749488b97308000d0763',
+      streamPassword: 'tune8',
       playerId: 'player-example',
       publisherId: 'publisher-example',
       hasPublished: false,
