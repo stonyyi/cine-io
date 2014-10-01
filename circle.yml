@@ -9,6 +9,7 @@ dependencies:
   pre:
     - gem install iron_worker_ng
 
+# add a redis password to make sure redis auth works, making it similar to production
 machine:
   environment:
     REDIS_PASS: some-password
@@ -17,6 +18,7 @@ database:
   pre:
     - echo "requirepass some-password" | sudo tee -a /etc/redis/redis.conf
     - sudo service redis-server restart
+# -- end redis pass
 
 deployment:
   production:
