@@ -1,5 +1,8 @@
 /** @jsx React.DOM */
-var React = require('react');
+var
+  React = require('react'),
+  Stats = Cine.component('dashboard/_stats', 'admin')
+;
 
 module.exports = React.createClass({
   displayName: 'DashboardShow',
@@ -7,7 +10,8 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div id='admin-dashboard-show'>
-        The admin site
+        <h1>The admin site</h1>
+        <Stats model={this.props.model} />
       </div>
     );
   }

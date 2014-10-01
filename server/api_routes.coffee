@@ -20,6 +20,8 @@ module.exports = (app)->
 
   get 'health#index', url: 'health'
 
+  get 'stats#show', url: 'stats'
+
   get     'projects#index', url: 'projects'
   get     'projects#show',   url: 'project'
   post    'projects#create', url: 'project'
