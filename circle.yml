@@ -9,6 +9,10 @@ dependencies:
   pre:
     - gem install iron_worker_ng
 
+machine:
+  environment:
+    REDIS_PASS: some-password
+
 database:
   pre:
     - echo "requirepass some-password" | sudo tee -a /etc/redis/redis.conf
