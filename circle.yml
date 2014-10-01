@@ -10,9 +10,9 @@ dependencies:
     - gem install iron_worker_ng
 
 database:
-  pre:
-    - echo "requirepass some-password" | sudo tee -a /etc/redis/redis.conf
-    - sudo service redis-server restart
+  pre:
+    - echo "requirepass some-password" | sudo tee -a /etc/redis/redis.conf
+    - sudo service redis-server restart
 
 deployment:
   production:
