@@ -1,10 +1,11 @@
+moment = require('moment')
+_ = require('underscore')
 Show = testApi Cine.api('stats/show')
 User = Cine.server_model('user')
 Account = Cine.server_model('account')
 CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
+CalculateAccountStorage = Cine.server_lib('reporting/calculate_account_storage')
 calculateAndSaveUsageStats = Cine.server_lib("stats/calculate_and_save_usage_stats")
-moment = require('moment')
-_ = require('underscore')
 
 describe 'Stats#Show', ->
   testApi.requiresSiteAdmin Show
@@ -37,20 +38,32 @@ describe 'Stats#Show', ->
   afterEach ->
     @bandwidthStub.restore()
 
+  beforeEach ->
+    @fakeStorageTotals = {}
+    @fakeStorageTotals[@account1._id.toString()] = 111111
+    @fakeStorageTotals[@account2._id.toString()] = 666666
+    @fakeStorageTotals[@account3._id.toString()] = 333333
+
+    @storageStub = sinon.stub CalculateAccountStorage, 'total', (account, callback)=>
+      callback(null, @fakeStorageTotals[account._id.toString()])
+
+  afterEach ->
+    @storageStub.restore()
+
   beforeEach calculateAndSaveUsageStats
 
   assertCorrectResponse = (response)->
     expectedResult = {}
-    expectedResult[@account1._id.toString()] = {name: 'account1 name', usage: 12345}
-    expectedResult[@account2._id.toString()] = {name: 'account2 name', usage: 54321}
-    expectedResult[@account3._id.toString()] = {name: 'account3 name', usage: 12121}
+    expectedResult[@account1._id.toString()] = {name: 'account1 name', usage: {bandwidth: 12345, storage: 111111}}
+    expectedResult[@account2._id.toString()] = {name: 'account2 name', usage: {bandwidth: 54321, storage: 666666}}
+    expectedResult[@account3._id.toString()] = {name: 'account3 name', usage: {bandwidth: 12121, storage: 333333}}
 
     expect(response).to.have.length(3)
 
     _.each response, (accountUsageReport)->
       expected = expectedResult[accountUsageReport._id.toString()]
       expect(accountUsageReport.name).to.equal(expected.name)
-      expect(accountUsageReport.usage).to.equal(expected.usage)
+      expect(accountUsageReport.usage).to.deep.equal(expected.usage)
 
   it 'returns the usage stats', (done)->
     params = {id: 'some-stats'}

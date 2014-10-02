@@ -1,6 +1,7 @@
 calculateUsageStats = Cine.server_lib("stats/calculate_usage_stats")
 Account = Cine.server_model('account')
 CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
+CalculateAccountStorage = Cine.server_lib('reporting/calculate_account_storage')
 
 describe 'calculateUsageStats', ->
   beforeEach (done)->
@@ -33,18 +34,51 @@ describe 'calculateUsageStats', ->
   afterEach ->
     @bandwidthStub.restore()
 
+  beforeEach ->
+    @fakeStorageTotals = {}
+    @fakeStorageTotals[@account1._id.toString()] = 111111
+    @fakeStorageTotals[@account2._id.toString()] = 666666
+    @fakeStorageTotals[@account3._id.toString()] = 333333
+
+    @storageStub = sinon.stub CalculateAccountStorage, 'total', (account, callback)=>
+      callback(null, @fakeStorageTotals[account._id.toString()])
+
+  afterEach ->
+    @storageStub.restore()
+
   describe 'thisMonth', ->
     it 'calculates the stats for each account', (done)->
-      calculateUsageStats.thisMonth (err, results)=>
+      expected = {}
+      expected[@account1._id.toString()] =
+        bandwidth: 12345
+        storage: 111111
+      expected[@account2._id.toString()] =
+        bandwidth: 54321
+        storage: 666666
+      expected[@account3._id.toString()] =
+        bandwidth: 12121
+        storage: 333333
+      calculateUsageStats.thisMonth (err, results)->
         expect(err).to.be.null
-        expect(results).to.deep.equal(@fakeBandwidthThisMonth)
+        expect(results).to.deep.equal(expected)
         done()
 
   describe 'byMonth', ->
     it 'calculates the stats for each account', (done)->
       d = new Date
       d.setYear(d.getYear() - 1)
-      calculateUsageStats.byMonth d, (err, results)=>
+      expected = {}
+      expected[@account1._id.toString()] =
+        bandwidth: 99999
+        storage: 111111
+      expected[@account2._id.toString()] =
+        bandwidth: 88888
+        storage: 666666
+      expected[@account3._id.toString()] =
+        bandwidth: 77777
+        storage: 333333
+
+      calculateUsageStats.byMonth d, (err, results)->
         expect(err).to.be.null
-        expect(results).to.deep.equal(@fakeBandwidthByMonth)
+        expect(results).to.deep.equal(expected)
         done()
