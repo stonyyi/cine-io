@@ -33,13 +33,16 @@ module.exports = React.createClass({
     });
 
     usageStats = _.map(accounts, function(account){
-      var name = account.get('name') || account.get('billingEmail');
+      var
+        name = account.get('name') || account.get('billingEmail'),
+        usage = account.get('usage');
       return (<tr key={account.id}>
         <td>{name}</td>
         <td>{account.get('billingEmail')}</td>
         <td>{account.get('billingProvider')}</td>
         <td>{account.firstPlan()}</td>
-        <td>{humanizeBytes(account.get('usage'))}</td>
+        <td>{humanizeBytes(usage.bandwidth)}</td>
+        <td>{humanizeBytes(usage.storage)}</td>
         </tr>)
     })
     return (
@@ -52,7 +55,8 @@ module.exports = React.createClass({
               <th>Email</th>
               <th>Provider</th>
               <th>Plan</th>
-              <th>Usage</th>
+              <th>Bandwidth</th>
+              <th>Storage</th>
             </tr>
           </thead>
           <tbody>
