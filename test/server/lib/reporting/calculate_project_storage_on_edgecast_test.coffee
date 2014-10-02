@@ -1,10 +1,10 @@
 _ = require 'underscore'
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
-CalculateProjectStorage = Cine.server_lib('reporting/calculate_project_storage')
+CalculateProjectStorageOnEdgecast = Cine.server_lib('reporting/calculate_project_storage_on_edgecast')
 Project = Cine.server_model("project")
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
 
-describe 'CalculateProjectStorage', ->
+describe 'CalculateProjectStorageOnEdgecast', ->
   describe '.total', ->
 
     describe "success", ->
@@ -32,7 +32,7 @@ describe 'CalculateProjectStorage', ->
         @fakeFtpClient.restore()
 
       it 'calculates the project storage for a project', (done)->
-        CalculateProjectStorage.total @project1, (err, sizeInBytes)->
+        CalculateProjectStorageOnEdgecast.total @project1, (err, sizeInBytes)->
           expect(err).to.be.null
           expect(sizeInBytes).to.equal(124854040)
           done()

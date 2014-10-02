@@ -1,11 +1,11 @@
 Project = Cine.server_model('project')
-CalculateProjectStorage = Cine.server_lib('reporting/calculate_project_storage')
+CalculateProjectStorageOnEdgecast = Cine.server_lib('reporting/calculate_project_storage_on_edgecast')
 async = require('async')
 
-exports.total = (account, callback)->
+exports.onEdgecast = (account, callback)->
 
   calculateProjectUsage = (accum, project, callback)->
-    CalculateProjectStorage.total project, (err, projectMonthlyBytes)->
+    CalculateProjectStorageOnEdgecast.total project, (err, projectMonthlyBytes)->
       return callback(err) if err
       callback(null, accum + projectMonthlyBytes)
 
