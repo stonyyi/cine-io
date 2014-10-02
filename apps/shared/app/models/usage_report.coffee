@@ -1,5 +1,4 @@
 Base = Cine.model('base')
-isServer = typeof window is 'undefined'
 humanizeBytes = Cine.lib('humanize_bytes')
 _ = require('underscore')
 ProvidersAndPlans = Cine.require('config/providers_and_plans')
@@ -14,7 +13,7 @@ usagePerPlanAggregator = (provider)->
 module.exports = class UsageReport extends Base
   @id: 'UsageReport'
   idAttribute: 'masterKey'
-  url: if isServer then "/usage-report?masterKey=:masterKey" else "/usage-report"
+  url: "/usage-report?masterKey=:masterKey"
 
   @maxUsagePerAccount: (account)->
     _.inject account.get('plans'), usagePerPlanAggregator(account.get('provider')), 0

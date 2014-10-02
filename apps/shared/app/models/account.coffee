@@ -1,10 +1,9 @@
 Base = Cine.model('base')
-isServer = typeof window is 'undefined'
 capitalize = Cine.lib('capitalize')
 
 module.exports = class Account extends Base
   @id: 'Account'
-  url: if isServer then "/account?masterKey=:masterKey" else "/account"
+  url: "/account?masterKey=:masterKey"
   idAttribute: 'masterKey'
   @plans: ['free', 'solo', 'basic', 'pro']
 
