@@ -17,31 +17,47 @@ environment = require('../config/environment')
 Cine = require '../config/cine'
 require "mongoose-querystream-worker"
 moment = require('moment')
+async = require('async')
 Account = Cine.server_model('account')
 CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
+CalculateAccountStorage = Cine.server_lib('reporting/calculate_account_storage')
 humanizeBytes = Cine.lib('humanize_bytes')
 
 _ = require('underscore')
 totalAccountsLogged = 0
 
-callbackFunction = (account, callback)->
-  return (err, collectedBytes)->
-    if err
-      console.log("ERROR CALCULATING USAGE", err)
-      return callback(err)
-
-    return callback() if shouldCompact && collectedBytes == 0
-
-    byteString = if shouldHumanize then humanizeBytes(collectedBytes) else "#{collectedBytes} bytes"
-    console.log("Total account usage for", account._id, account.billingEmail || account.herokuId, account.billingProvider, byteString)
-    totalAccountsLogged += 1
-    callback()
+logOutput = (account, response, callback)->
+  bandwidthBytes = response.bandwidth
+  storageBytes = response.storage
+  return callback() if shouldCompact && bandwidthBytes == 0 && storageBytes == 0
+  accountUsage = {}
+  if bandwidthBytes != 0
+    accountUsage.bandwidth = if shouldHumanize then humanizeBytes(bandwidthBytes) else "#{bandwidthBytes} bytes"
+  if storageBytes != 0
+    accountUsage.storage = if shouldHumanize then humanizeBytes(storageBytes) else "#{storageBytes} bytes"
+  console.log("Total account usage for", account._id, account.billingEmail || account.herokuId, account.billingProvider, accountUsage)
+  totalAccountsLogged += 1
+  callback()
 
 calculateMonthlyUsage = (account, callback)->
-  CalculateAccountBandwidth.byMonth account, thisMonth, callbackFunction(account, callback)
+  asyncCalls =
+    bandwidth: (cb)->
+      CalculateAccountBandwidth.byMonth account, thisMonth, cb
+    storage: (cb)->
+      CalculateAccountStorage.total account, cb
+  async.parallel asyncCalls, (err, response)->
+    return callback(err) if err
+    logOutput(account, response, callback)
 
 calculateTotalUsage = (account, callback)->
-  CalculateAccountBandwidth.total account, callbackFunction(account, callback)
+  asyncCalls =
+    bandwidth: (cb)->
+      CalculateAccountBandwidth.total account, cb
+    storage: (cb)->
+      CalculateAccountStorage.total account, cb
+  async.parallel asyncCalls, (err, response)->
+    return callback(err) if err
+    logOutput(account, response, callback)
 
 endFunction = (err)->
   console.log("For a total of #{totalAccountsLogged} accounts.")
