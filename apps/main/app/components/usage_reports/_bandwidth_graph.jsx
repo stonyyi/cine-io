@@ -22,9 +22,9 @@ module.exports = React.createClass({
     var ltm = UsageReport.lastThreeMonths(),
       model = this.props.model,
       data = [["Month", { role: 'annotation' }, "Usage", "Cap"]],
-      planUsageInBytes = UsageReport.maxUsagePerAccount(this.props.app.currentAccount()),
-      formatString = humanizeBytes.formatString(planUsageInBytes),
-      planUsage = planUsageInBytes / humanizeBytes[formatString];
+      planBandwidthInBytes = UsageReport.maxUsagePerAccount(this.props.app.currentAccount(), 'bandwidth'),
+      formatString = humanizeBytes.formatString(planBandwidthInBytes),
+      planUsage = planBandwidthInBytes / humanizeBytes[formatString];
 
     _.each(ltm, function(month){
       var bandwidth = model.get('bandwidth')

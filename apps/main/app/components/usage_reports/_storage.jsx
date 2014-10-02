@@ -11,12 +11,35 @@ module.exports = React.createClass({
   getBackboneObjects: function(){
     return this.props.model;
   },
+  componentDidMount: function(){
+    if (document.readyState !== 'complete'){
+      google.setOnLoadCallback(this.loadChart);
+    }else{
+      this.loadChart();
+    }
+  },
+  loadChart: function(){
+    var
+      storageUsage = this.props.model.get('storage');
+      planStorageInBytes = UsageReport.maxUsagePerAccount(this.props.app.currentAccount(), 'storage'),
+      availableStorage = planStorageInBytes - storageUsage;
+
+    var data = google.visualization.arrayToDataTable([
+      ['Storage', 'Used'],
+      ["Used (" + humanizeBytes(storageUsage)+")",     storageUsage],
+      ["Free ("+ humanizeBytes(availableStorage)+")", availableStorage]
+    ]);
+
+    var options = {
+      title: 'Cloud Storage',
+      enableInteractivity: false,
+      sliceVisibilityThreshold: 0
+    };
+
+    var chart = new google.visualization.PieChart(this.refs['chartDiv'].getDOMNode());
+    chart.draw(data, options);
+  },
   render: function(){
-    var storageUsage = humanizeBytes(this.props.model.get('storage'));
-    return (
-      <div>
-        <p>Current storage: {storageUsage}.</p>
-      </div>
-    );
+    return (<div ref="chartDiv" />);
   }
 });

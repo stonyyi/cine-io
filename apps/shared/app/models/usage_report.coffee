@@ -3,20 +3,21 @@ humanizeBytes = Cine.lib('humanize_bytes')
 _ = require('underscore')
 ProvidersAndPlans = Cine.require('config/providers_and_plans')
 
-maxUsagePerPlan = (provider, plan)->
-  ProvidersAndPlans[provider].plans[plan].transfer
+maxUsagePerPlan = (provider, plan, type)->
+  ProvidersAndPlans[provider].plans[plan][type]
 
-usagePerPlanAggregator = (provider)->
+usagePerPlanAggregator = (provider, type)->
   return (accum, plan)->
-    accum + maxUsagePerPlan(provider, plan)
+    accum + maxUsagePerPlan(provider, plan, type)
 
 module.exports = class UsageReport extends Base
   @id: 'UsageReport'
   idAttribute: 'masterKey'
   url: "/usage-report?masterKey=:masterKey"
 
-  @maxUsagePerAccount: (account)->
-    _.inject account.get('plans'), usagePerPlanAggregator(account.get('provider')), 0
+  # type: bandwidth/storage
+  @maxUsagePerAccount: (account, type)->
+    _.inject account.get('plans'), usagePerPlanAggregator(account.get('provider'), type), 0
 
   @lowestPlanPerUsage: (bytes, includeStarter=false)->
     switch

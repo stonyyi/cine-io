@@ -6,44 +6,55 @@ module.exports =
     plans:
       free:
         price: 0
-        transfer: humanizeBytes.GiB
+        bandwidth: humanizeBytes.GiB
+        storage: 0
       solo:
         price: 20
-        transfer: humanizeBytes.GiB * 20
+        bandwidth: humanizeBytes.GiB * 20
+        storage: humanizeBytes.GiB * 5
       basic:
         price: 100
-        transfer: humanizeBytes.GiB * 150
+        bandwidth: humanizeBytes.GiB * 150
+        storage: humanizeBytes.GiB * 25
       pro:
         price: 500
-        transfer: humanizeBytes.TiB
+        bandwidth: humanizeBytes.TiB
+        storage: humanizeBytes.GiB * 100
   heroku:
     url: 'https://addons.heroku.com/cine'
     plans:
       starter:
         price: 0
-        transfer: humanizeBytes.GiB
+        bandwidth: humanizeBytes.GiB
+        storage: 0
       test:
         price: 0
-        transfer: humanizeBytes.GiB
+        bandwidth: humanizeBytes.GiB
+        storage: 0
 
   engineyard:
     url: 'https://addons.engineyard.com/cine.io'
     plans:
       test:
         price: 0
-        transfer: humanizeBytes.GiB
+        bandwidth: humanizeBytes.GiB
+        storage: 0
       starter:
         price: 0
-        transfer: humanizeBytes.GiB
+        bandwidth: humanizeBytes.GiB
+        storage: 0
       solo:
         price: 20
-        transfer: humanizeBytes.GiB * 20
+        bandwidth: humanizeBytes.GiB * 20
+        storage: humanizeBytes.GiB * 5
       basic:
         price: 100
-        transfer: humanizeBytes.GiB * 150
+        bandwidth: humanizeBytes.GiB * 150
+        storage: humanizeBytes.GiB * 25
       pro:
         price: 500
-        transfer: humanizeBytes.TiB
+        bandwidth: humanizeBytes.TiB
+        storage: humanizeBytes.GiB * 100
 
   appdirect:
     # Url likely to change once we're approved
@@ -52,16 +63,20 @@ module.exports =
     plans:
       'sample-addon':
         price: 0
-        transfer: humanizeBytes.GiB
+        bandwidth: humanizeBytes.GiB
       starter:
         price: 0
-        transfer: humanizeBytes.GiB
+        bandwidth: humanizeBytes.GiB
+        storage: 0
       solo:
         price: 20
-        transfer: humanizeBytes.GiB * 20
+        bandwidth: humanizeBytes.GiB * 20
+        storage: humanizeBytes.GiB * 5
       basic:
         price: 100
-        transfer: humanizeBytes.GiB * 150
+        bandwidth: humanizeBytes.GiB * 150
+        storage: humanizeBytes.GiB * 25
       pro:
         price: 500
-        transfer: humanizeBytes.TiB
+        bandwidth: humanizeBytes.TiB
+        storage: humanizeBytes.GiB * 100

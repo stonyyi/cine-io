@@ -18,6 +18,7 @@ module.exports = React.createClass({
           <div className='small-12 columns'>
             <h1>Usage Report</h1>
             <BandwidthGraph model={this.props.model} app={this.props.app}/>
+            <hr/>
             <Storage model={this.props.model} app={this.props.app}/>
           </div>
         </div>
