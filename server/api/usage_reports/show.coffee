@@ -16,5 +16,7 @@ module.exports = (params, callback)->
     asyncCalls = _.inject lastThreeMonths, createAysncCaller, {}
     async.parallel asyncCalls, (err, result)->
       return callback(err, null, status: 400) if err
-      result.masterKey = account.masterKey
-      callback(null, result)
+      response =
+        masterKey: account.masterKey
+        bandwidth: result
+      callback(null, response)

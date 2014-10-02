@@ -27,9 +27,10 @@ var UsageGraph = React.createClass({
       planUsage = planUsageInBytes / humanizeBytes[formatString];
 
     _.each(ltm, function(month){
-      var monthlyUsage = model.get(month.format) / humanizeBytes[formatString];
+      var bandwidth = model.get('bandwidth')
+      var monthlyUsage = bandwidth[month.format] / humanizeBytes[formatString];
       var dateString = ('0' + (month.date.getMonth()+1)).slice(-2) + " / " + month.date.getFullYear();
-      data.push([dateString, humanizeBytes(model.get(month.format)), monthlyUsage, planUsage]);
+      data.push([dateString, humanizeBytes(bandwidth[month.format]), monthlyUsage, planUsage]);
     });
 
     var options = {
