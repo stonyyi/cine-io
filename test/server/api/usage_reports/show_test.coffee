@@ -44,9 +44,9 @@ describe 'ShowUsageReports', ->
     callback = (err, response)=>
       expect(err).to.be.null
       bandwidth = {}
-      bandwidth["2014-#{@twoMonthsAgo.getMonth()}"] = 789
-      bandwidth["2014-#{@lastMonth.getMonth()}"] = 456
-      bandwidth["2014-#{@thisMonth.getMonth()}"] = 123
+      bandwidth["#{@twoMonthsAgo.getFullYear()}-#{@twoMonthsAgo.getMonth()}"] = 789
+      bandwidth["#{@lastMonth.getFullYear()}-#{@lastMonth.getMonth()}"] = 456
+      bandwidth["#{@thisMonth.getFullYear()}-#{@thisMonth.getMonth()}"] = 123
       expectedResponse =
         bandwidth: bandwidth
         storage: 9937
