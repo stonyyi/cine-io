@@ -14,7 +14,7 @@ module.exports = React.createClass({
   render: function() {
     var usageStats, accounts,
     splitByPlan, splitByProvider, splitByPlanHtml, splitByProviderHtml;
-    accounts = this.props.model.getSortedUsage();
+    accounts = this.props.model.getSortedUsage('bandwidth');
 
     splitByProvider = _.countBy(accounts, function(account) {return account.get('billingProvider')})
     splitByPlan = _.countBy(accounts, function(account) {return account.firstPlan()})
