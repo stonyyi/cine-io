@@ -25,9 +25,6 @@ module.exports = class UsageReport extends Base
       when bytes <= humanizeBytes.GiB * 150 then 'basic'
       else 'pro'
 
-  @pricePerMonth: (plan)->
-
-
   @lastThreeMonths: ->
     thisMonth = new Date
     lastMonth = new Date
