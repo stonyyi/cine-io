@@ -10,10 +10,10 @@ testStripeData =
   stripePublishableKey: "pk_test_ckE0OqfgahrU3Xje3RhMi0mV"
 
 createProjectWithUsers = (accountsAndUsers, attributes, callback)->
-    project = new Project attributes
-    project._account = _.sample(accountsAndUsers).account._id
-    project.save (err)->
-      callback(null, project)
+  project = new Project attributes
+  project._account = _.sample(accountsAndUsers).account._id
+  project.save (err)->
+    callback(null, project)
 
 module.exports = (accountsAndUsers, cb)->
   console.log('creating projects')
