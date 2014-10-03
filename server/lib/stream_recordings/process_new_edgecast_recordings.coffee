@@ -111,4 +111,3 @@ processNewEdgecastRecordings = (done)->
   ftpClient = edgecastFtpClientFactory done, fetchStreamList
 
 module.exports = processNewEdgecastRecordings
-module.exports.outputPath = folderToFix

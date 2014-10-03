@@ -18,6 +18,7 @@ fixedDirectory = "#{Cine.root}/tmp/fixed_edgecast_recordings/"
 
 class DownloadAndProcessRecording
   constructor: (@ftpClient, @ftpRecordingEntry)->
+    console.log("DownloadAndProcessRecording", @ftpRecordingEntry)
     @recordingName = @ftpRecordingEntry.name
 
   process: (callback)->
@@ -26,8 +27,8 @@ class DownloadAndProcessRecording
     transcodedFileName = "#{fixedDirectory}#{@recordingName}"
 
     moveOriginalFileToBrokenFolder = =>
+      console.log("moveOriginalFileToBrokenFolder", fullFTPName)
       makeFtpDirectory @ftpClient, ftpErrorPath, (err)=>
-        console.log("YO", err)
         return callback(err) if err
         @ftpClient.list ftpErrorPath, (err, files)=>
           return callback(err) if err
@@ -52,7 +53,9 @@ class DownloadAndProcessRecording
             newFileName += ".#{totalFiles}.mp4"
 
           ftpLocation = "#{ftpOutputPath}/#{newFileName}"
+          console.log("uploading file", ftpLocation)
           @ftpClient.put transcodedFileName, ftpLocation, (err)=>
+            console.log("uploaded file", ftpLocation)
             return callback(err) if err
             @ftpClient.delete fullFTPName, callback
 
@@ -93,6 +96,7 @@ streamRecordingsCodecFixer = (done)->
     ftpClient.end()
     return done(err) if err
     return done() unless scheduleFollowupJob
+    console.log("Scheduling follow up job")
     scheduleJob 'stream_recordings/process_fixed_recordings', {}, {priority: 1}, done
 
   findNewRecordingsAndMoveThemToStreamFolder = (err, list) ->
@@ -113,4 +117,3 @@ streamRecordingsCodecFixer = (done)->
   ftpClient = edgecastFtpClientFactory done, fetchStreamList
 
 module.exports = streamRecordingsCodecFixer
-module.exports.outputPath = ftpOutputPath
