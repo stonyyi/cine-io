@@ -68,7 +68,7 @@ module.exports = React.createClass({
             <td>Total</td>
             <td colSpan="3">{accounts.length} accounts</td>
             <td>{humanizeBytes(model.total('bandwidth'))}</td>
-            <td>{humanizeBytes(model.total('usage'))}</td>
+            <td>{humanizeBytes(model.total('storage'))}</td>
             </tr>
           </tfoot>
         </table>
