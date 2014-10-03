@@ -1,3 +1,12 @@
+# This goes through all edgecast recordings on edgecast
+# and checks them against our local db.
+# It will update any recording entry that it finds.
+# It will then check all the recordings and make sure that
+# there are associated edgecast recordings.
+# It does this by keeping all recording ids in memory
+# that it checks during the first pass
+# and compares that to the entire list
+
 environment = require('../config/environment')
 Cine = require '../config/cine'
 async = require('async')
