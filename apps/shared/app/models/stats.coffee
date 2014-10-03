@@ -9,7 +9,7 @@ module.exports = class Stats extends Base
 
   # return an array of accounts sorted by usage
   getSortedUsage: (type)->
-    usage = @get('usage')
+    accounts = @get('usage')
 
     usageSort = (attributes)->
       attributes.usage[type] * -1
@@ -17,7 +17,15 @@ module.exports = class Stats extends Base
     makeAccount = (attributes)=>
       new Account attributes, app: @app
 
-    _.chain(usage).sortBy(usageSort).map(makeAccount).value()
+    _.chain(accounts).sortBy(usageSort).map(makeAccount).value()
+
+  total: (type)->
+    accounts = @get('usage')
+
+    addUsage = (accum, item)->
+      accum + item.usage[type]
+
+    _.inject accounts, addUsage, 0
 
 Accounts = Cine.collection('accounts')
 Account = Cine.model('account')

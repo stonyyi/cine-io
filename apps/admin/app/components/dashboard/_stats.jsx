@@ -13,8 +13,9 @@ module.exports = React.createClass({
   },
   render: function() {
     var usageStats, accounts,
-    splitByPlan, splitByProvider, splitByPlanHtml, splitByProviderHtml;
-    accounts = this.props.model.getSortedUsage('bandwidth');
+    splitByProvider, splitByPlan, splitByProviderHtml, splitByPlanHtml,
+    model = this.props.model,
+    accounts = model.getSortedUsage('bandwidth');
 
     splitByProvider = _.countBy(accounts, function(account) {return account.get('billingProvider')})
     splitByPlan = _.countBy(accounts, function(account) {return account.firstPlan()})
@@ -62,6 +63,14 @@ module.exports = React.createClass({
           <tbody>
             {usageStats}
           </tbody>
+          <tfoot>
+            <tr>
+            <td>Total</td>
+            <td colSpan="3">{accounts.length} accounts</td>
+            <td>{humanizeBytes(model.total('bandwidth'))}</td>
+            <td>{humanizeBytes(model.total('usage'))}</td>
+            </tr>
+          </tfoot>
         </table>
         <table>
           <thead>
@@ -85,7 +94,6 @@ module.exports = React.createClass({
             {splitByProviderHtml}
           </tbody>
         </table>
-        <div>Total of {accounts.length} active accounts.</div>
       </div>
     );
   }
