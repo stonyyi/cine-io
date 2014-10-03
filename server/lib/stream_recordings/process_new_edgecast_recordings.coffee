@@ -54,7 +54,9 @@ class NewRecordingHandler
   process: (callback)=>
     @_findEdgecastStream (err, stream)=>
       return callback(err) if err
-      return callback("stream not found") unless stream
+      unless stream
+        console.log("Stream not found", @fileName, @ftpRecordingEntry)
+        return callback("stream not found")
       HandlerClass = if stream.record then SaveStreamRecording else RemoveStreamRecording
       handler = new HandlerClass(@ftpClient, @ftpRecordingEntry, stream)
       handler.process(callback)
