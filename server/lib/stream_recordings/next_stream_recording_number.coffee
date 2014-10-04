@@ -3,9 +3,8 @@ _str = require('underscore.string')
 
 allNumber = /^\d+$/
 
-
 nextStramRecordingNumber = (fileName, ftpFileList)->
-  streamName = fileName.split('.')[0]
+  streamName = extractStreamName(fileName)
   countByNameMatch = (largestValue, existingFile)->
     return largestValue unless _str.startsWith(existingFile.name, streamName)
     parts = existingFile.name.split('.')
@@ -19,13 +18,14 @@ nextStramRecordingNumber = (fileName, ftpFileList)->
 
   _.inject(ftpFileList, countByNameMatch, 0)
 
-nextStramRecordingNumber.newFileName = (fileName, ftpFileList)->
+exports.newFileName = (fileName, ftpFileList)->
   newFileName = fileName
   totalFiles = nextStramRecordingNumber(fileName, ftpFileList)
   if totalFiles > 0
-    newFileName = fileName.split('.')[0]
+    newFileName = extractStreamName(fileName)
     newFileName += ".#{totalFiles}.mp4"
     newFileName = newFileName
   newFileName
 
-module.exports = nextStramRecordingNumber
+exports.extractStreamName = (fileName)->
+  fileName.split('.')[0]

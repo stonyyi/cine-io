@@ -57,7 +57,7 @@ class NewRecordingHandler
       handler.process(callback)
 
   _findEdgecastStream: (callback)=>
-    streamName = @fileName.split('.')[0]
+    streamName = nextStreamRecordingNumber.extractStreamName(@fileName)
     query =
       streamName: streamName
       instanceName: EdgecastFtpInfo.vodDirectory

@@ -15,6 +15,7 @@ edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 Project = Cine.server_model('project')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
 EdgecastStream = Cine.server_model('edgecast_stream')
+nextStreamRecordingNumber = Cine.server_lib('stream_recordings/next_stream_recording_number')
 
 done = (err)->
   if err
@@ -29,7 +30,7 @@ processedEdgecastRecordingIds = {}
 # removes directories, and groups by streamName ie abc.12.mp4 goes into group abc
 groupByStreamName = (list)->
   _.chain(list).where(type: '-').groupBy((listItem)->
-    listItem.name.split('.')[0]
+    nextStreamRecordingNumber.extractStreamName(listItem.name)
   ).pairs().value()
 
 findRecordingsMissingInListOne = (listOne, listTwo)->
