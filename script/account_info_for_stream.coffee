@@ -1,3 +1,4 @@
+# heroku run --app=cine-io coffee script/account_usage_report.coffee STREAM_NAME
 environment = require('../config/environment')
 Cine = require '../config/cine'
 EdgecastStream = Cine.server_model('edgecast_stream')
@@ -5,7 +6,7 @@ Project = Cine.server_model("project")
 Account = Cine.server_model("account")
 
 
-streamName = "STREAM_NAME"
+streamName = process.argv[2] || "STREAM_NAME"
 
 query =
   streamName: streamName
