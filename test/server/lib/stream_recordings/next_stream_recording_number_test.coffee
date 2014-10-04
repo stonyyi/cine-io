@@ -25,15 +25,17 @@ describe 'nextStreamRecordingNumber', ->
     it 'can handle missing prior recordings', ->
       expect(nextStreamRecordingNumber.newFileName("jkl.mp4", files)).to.equal("jkl.3.mp4")
 
-    xit 'works with an underscore the newFileName with a dot when there are multiple recordings', ->
-      expect(nextStreamRecordingNumber.newFileName("abc_123.mp4", files)).to.equal("abc.3.mp4")
+    it 'works with an underscore the newFileName with a dot when there are multiple recordings', ->
+      expect(nextStreamRecordingNumber.newFileName("abc_123.mp4", files)).to.equal("abc_123.mp4")
+      expect(nextStreamRecordingNumber.newFileName("abc_1234.mp4", files)).to.equal("abc.3.mp4")
 
   describe 'extractStreamName', ->
     it 'works with no numbers', ->
       expect(nextStreamRecordingNumber.extractStreamName("abc.mp4")).to.equal('abc')
 
-    xit 'works with an underscore numbers', ->
-      expect(nextStreamRecordingNumber.extractStreamName("abc_123.mp4", files)).to.equal("abc")
+    it 'works when there are 4 trailing numbers after an underscore', -> #yeah, thanks edgecast
+      expect(nextStreamRecordingNumber.extractStreamName("abc_123.mp4")).to.equal("abc_123")
+      expect(nextStreamRecordingNumber.extractStreamName("abc_1234.mp4")).to.equal("abc")
 
     it 'works with a dot numbers', ->
       expect(nextStreamRecordingNumber.extractStreamName("abc.3.mp4")).to.equal('abc')
