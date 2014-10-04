@@ -32,11 +32,7 @@ class DownloadAndProcessRecording
         return callback(err) if err
         @ftpClient.list ftpErrorPath, (err, files)=>
           return callback(err) if err
-          newFileName = @recordingName
-          totalFiles = nextStreamRecordingNumber(@recordingName, files)
-          if totalFiles > 0
-            newFileName = @recordingName.split('.')[0]
-            newFileName += ".#{totalFiles}.mp4"
+          newFileName = nextStreamRecordingNumber.newFileName(@recordingName, files)
 
           ftpLocation = "#{ftpErrorPath}/#{newFileName}"
           @ftpClient.rename fullFTPName, ftpLocation, callback
@@ -46,11 +42,7 @@ class DownloadAndProcessRecording
         return callback(err) if err
         @ftpClient.list ftpOutputPath, (err, files)=>
           return callback(err) if err
-          newFileName = @recordingName
-          totalFiles = nextStreamRecordingNumber(@recordingName, files)
-          if totalFiles > 0
-            newFileName = @recordingName.split('.')[0]
-            newFileName += ".#{totalFiles}.mp4"
+          newFileName = nextStreamRecordingNumber.newFileName(@recordingName, files)
 
           ftpLocation = "#{ftpOutputPath}/#{newFileName}"
           console.log("uploading file", ftpLocation)

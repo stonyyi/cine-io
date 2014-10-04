@@ -36,14 +36,9 @@ class SaveStreamRecording
     makeFtpDirectory @ftpClient, @_projectDir(), callback
 
   _ensureNewRecordingHasUniqueName: (callback)=>
-    @newFileName = @fileName
     @ftpClient.list @_projectDir(), (err, files)=>
       return callback(err) if err
-      totalFiles = nextStreamRecordingNumber(@fileName, files)
-      if totalFiles > 0
-        newFileName = @fileName.split('.')[0]
-        newFileName += ".#{totalFiles}.mp4"
-        @newFileName = newFileName
+      @newFileName = nextStreamRecordingNumber.newFileName(@fileName, files)
       callback()
 
   _moveRecordingToProjectFolder: (callback)=>

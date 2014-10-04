@@ -23,3 +23,11 @@ describe 'nextStreamRecordingNumber', ->
 
   it 'can handle missing prior recordings', ->
     expect(nextStreamRecordingNumber("jkl.mp4", files)).to.equal(3)
+
+  describe 'newFileName', ->
+    it 'returns the newFileName with a dot when there are multiple recordings', ->
+      expect(nextStreamRecordingNumber.newFileName("abc.mp4", files)).to.equal("abc.3.mp4")
+      expect(nextStreamRecordingNumber.newFileName("abc.1.mp4", files)).to.equal("abc.3.mp4")
+
+    it 'will the orgingal file for the first entry list', ->
+      expect(nextStreamRecordingNumber.newFileName("ghi.mp4", files)).to.equal("ghi.mp4")
