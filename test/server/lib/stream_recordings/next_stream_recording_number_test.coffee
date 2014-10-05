@@ -39,3 +39,6 @@ describe 'nextStreamRecordingNumber', ->
 
     it 'works with a dot numbers', ->
       expect(nextStreamRecordingNumber.extractStreamName("abc.3.mp4")).to.equal('abc')
+
+    it 'works with a dot and underscore numbers', ->
+      expect(nextStreamRecordingNumber.extractStreamName("e1RIjedUEg.1412521527733_4694.mp4")).to.equal('e1RIjedUEg')

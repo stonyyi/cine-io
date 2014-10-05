@@ -32,6 +32,6 @@ exports.newFileName = (fileName, ftpFileList)->
 # abc.mp4 => abc
 # abc.12.mp4 => abc
 exports.extractStreamName = (fileName)->
-  hasFourTrailingNumbers = fileName.match(trailingFourNumbersAfterAnUnderscore)
-  return hasFourTrailingNumbers[1] if hasFourTrailingNumbers
-  fileName.split('.')[0]
+  streamNameBeforeDot = fileName.split('.')[0]
+  hasFourTrailingNumbers = streamNameBeforeDot.match(trailingFourNumbersAfterAnUnderscore)
+  if hasFourTrailingNumbers then hasFourTrailingNumbers[1] else streamNameBeforeDot
