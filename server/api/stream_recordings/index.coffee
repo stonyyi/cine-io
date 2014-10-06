@@ -4,6 +4,9 @@ getProject = Cine.server_lib('get_project')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
 async = require('async')
 
+isDeleted = (item)->
+  item.deletedAt
+
 module.exports = (params, callback)->
   getProject params, requires: 'either', userOverride: true, (err, project, options)->
     return callback(err, project, options) if err
@@ -36,7 +39,10 @@ module.exports = (params, callback)->
         EdgecastRecordings.findOne query, (err, edgecastRecordings)->
           return cb("findRecordings", err, null, status: 400) if err
           return cb(null, null, []) unless edgecastRecordings
-          response = _.map(edgecastRecordings.recordings, toRecordingJSON)
+          response = _.chain(edgecastRecordings.recordings)
+            .reject(isDeleted)
+            .map(toRecordingJSON)
+            .value()
           cb(null, null, response)
 
     async.parallel asyncCalls, (err, response)->

@@ -30,6 +30,14 @@ describe 'StreamRecordings#Delete', ->
     @notProjectStream = new EdgecastStream(instanceName: 'cines')
     @notProjectStream.save done
 
+  beforeEach (done)->
+    @recordings = new EdgecastRecordings(_edgecastStream: @projectStream._id)
+    @recordings.recordings.push name: "rec1.mp4", size: 12345, date: new Date
+    @recordings.recordings.push name: "abc", size: 67890, date: new Date
+    @recordings.recordings.push name: "rec3.mp4", size: 98765, date: new Date
+    @recordings.recordings.push name: "rec4.mp4", size: 98765, date: new Date, deletedAt: new Date
+    @recordings.save done
+
   describe 'failure', ->
     it 'requires an id', (done)->
       params = secretKey: @project.secretKey
@@ -69,14 +77,15 @@ describe 'StreamRecordings#Delete', ->
           expect(options.status).to.equal(404)
           done()
 
-  describe 'success', ->
-    beforeEach (done)->
-      @recordings = new EdgecastRecordings(_edgecastStream: @projectStream._id)
-      @recordings.recordings.push name: "rec1.mp4", size: 12345, date: new Date
-      @recordings.recordings.push name: "abc", size: 67890, date: new Date
-      @recordings.recordings.push name: "rec3.mp4", size: 98765, date: new Date
-      @recordings.save done
+    it 'returns 404 on a previously deleted recordings', (done)->
+      params = secretKey: @project.secretKey, id: @projectStream._id, name: "rec4.mp4"
+      Delete params, (err, response, options)->
+        expect(err).to.equal('recording not found')
+        expect(response).to.be.null
+        expect(options.status).to.equal(404)
+        done()
 
+  describe 'success', ->
     beforeEach ->
       @fakeFtpClient = new FakeFtpClient
       @deleteStub = @fakeFtpClient.stub('delete')
@@ -85,7 +94,7 @@ describe 'StreamRecordings#Delete', ->
     afterEach ->
       @fakeFtpClient.restore()
 
-    it 'will return a json of the stream archives sorted by date', (done)->
+    it 'returns a deleted at flag', (done)->
       params = secretKey: @project.secretKey, id: @projectStream._id, name: "abc"
       Delete params, (err, response, options)=>
         expect(@deleteStub.calledOnce).to.be.true
@@ -97,9 +106,14 @@ describe 'StreamRecordings#Delete', ->
         done()
 
     it 'deletes the stream recording entry', (done)->
+      firstRecording = @recordings.recordings[1]
+      expect(firstRecording.name).to.equal('abc')
+      expect(firstRecording.deletedAt).to.be.undefined
       params = secretKey: @project.secretKey, id: @projectStream._id, name: "abc"
       Delete params, (err, response, options)=>
         EdgecastRecordings.findById @recordings._id, (err, recordings)->
-          expect(recordings.recordings).to.have.length(2)
-          expect(_.pluck(recordings.recordings, 'name').sort()).to.deep.equal(['rec1.mp4', 'rec3.mp4'])
+          expect(recordings.recordings).to.have.length(4)
+          firstRecording = recordings.recordings[1]
+          expect(firstRecording.name).to.equal("abc")
+          expect(firstRecording.deletedAt).to.be.instanceOf(Date)
           done()

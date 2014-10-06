@@ -7,6 +7,7 @@ EdgecastRecording = new Schema
   name: String
   size: Number
   date: Date
+  deletedAt: Date
 
 EdgecastRecordingsSchema = new Schema
   _edgecastStream:

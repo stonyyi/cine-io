@@ -61,6 +61,7 @@ describe 'StreamRecordings#Index', ->
       @recordings.recordings.push name: "rec1.mp4", size: 12345, date: new Date
       @recordings.recordings.push name: "rec2.mp4", size: 67890, date: new Date
       @recordings.recordings.push name: "rec3.mp4", size: 98765, date: new Date
+      @recordings.recordings.push name: "rec3.mp4", size: 98765, date: new Date, deletedAt: new Date
       @recordings.save done
 
     it 'will return a json of the stream archives sorted by date', (done)->
