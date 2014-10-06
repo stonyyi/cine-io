@@ -28,6 +28,10 @@ $footer-height-neg: $footer-height * -1;
 footer, .push {
   height: $footer-height; /* '.push' must be the same height as 'footer' */
 }
+
+footer {
+  position: relative;
+}
 //end sticky footer
 
 .reveal-modal-bg{
