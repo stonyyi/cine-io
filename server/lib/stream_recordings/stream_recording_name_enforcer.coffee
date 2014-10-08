@@ -27,6 +27,11 @@ exports.newFileName = (fileName, ftpFileList)->
     newFileName = newFileName
   newFileName
 
+
+exports.extractStreamNameFromDirectory = (fullFilePath)->
+  parts = fullFilePath.split('/')
+  exports.extractStreamName _.last(parts)
+
 # abc_123.mp4 => abc_123
 # abc_1234.mp4 => abc
 # abc.mp4 => abc

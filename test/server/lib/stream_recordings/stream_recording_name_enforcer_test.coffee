@@ -42,3 +42,7 @@ describe 'streamRecordingNameEnforcer', ->
 
     it 'works with a dot and underscore numbers', ->
       expect(streamRecordingNameEnforcer.extractStreamName("e1RIjedUEg.1412521527733_4694.mp4")).to.equal('e1RIjedUEg')
+
+  describe 'extractStreamNameFromDirectory', ->
+    it 'takes a full directory', ->
+      expect(streamRecordingNameEnforcer.extractStreamNameFromDirectory("/some/full/path/abc.mp4")).to.equal('abc')
