@@ -1,4 +1,5 @@
 environment = require('../config/environment')
+Cine.config('connect_to_mongo')
 refreshEdgecastStreams = Cine.server_lib('refresh_edgecast_streams')
 
 done = (err)->

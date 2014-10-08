@@ -14,7 +14,7 @@
 # coffee script/account_usage_report.coffee 2014-01 humanize compact
 
 environment = require('../config/environment')
-Cine = require '../config/cine'
+Cine.config('connect_to_mongo')
 require "mongoose-querystream-worker"
 moment = require('moment')
 async = require('async')

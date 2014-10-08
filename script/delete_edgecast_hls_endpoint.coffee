@@ -1,4 +1,5 @@
 environment = require('../config/environment')
+Cine.config('connect_to_mongo')
 
 done = (err)->
   if err

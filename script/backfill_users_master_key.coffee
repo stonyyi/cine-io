@@ -1,5 +1,5 @@
 environment = require('../config/environment')
-Cine = require '../config/cine'
+Cine.config('connect_to_mongo')
 async = require('async')
 User = Cine.server_model('user')
 

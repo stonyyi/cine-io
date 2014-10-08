@@ -1,5 +1,5 @@
 environment = require('../config/environment')
-Cine = require('../config/cine')
+Cine.config('connect_to_mongo')
 
 scheduleJob = Cine.server_lib('schedule_job')
 

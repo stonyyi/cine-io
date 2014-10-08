@@ -1,4 +1,5 @@
 environment = require('../config/environment')
+Cine.config('connect_to_mongo')
 parseEdgecastLogs = Cine.server_lib('reporting/download_and_parse_edgecast_logs')
 
 done = (err)->

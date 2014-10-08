@@ -1,4 +1,5 @@
 environment = require('../config/environment')
+Cine.config('connect_to_mongo')
 return console.error('not development') if environment != 'development'
 
 mongoose = require('mongoose')

@@ -8,7 +8,7 @@
 # and compares that to the entire list
 
 environment = require('../config/environment')
-Cine = require '../config/cine'
+Cine.config('connect_to_mongo')
 async = require('async')
 _ = require('underscore')
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')

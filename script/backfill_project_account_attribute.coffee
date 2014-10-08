@@ -1,5 +1,5 @@
 environment = require('../config/environment')
-Cine = require '../config/cine'
+Cine.config('connect_to_mongo')
 require "mongoose-querystream-worker"
 User = Cine.server_model('user')
 Project = Cine.server_model('project')

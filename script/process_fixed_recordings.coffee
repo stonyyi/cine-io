@@ -1,5 +1,5 @@
 environment = require('../config/environment')
-Cine = require '../config/cine'
+Cine.config('connect_to_mongo')
 
 processFixedRecordings = Cine.server_lib('stream_recordings/process_fixed_recordings.coffee')
 

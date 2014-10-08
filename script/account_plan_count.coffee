@@ -3,7 +3,7 @@
 # coffee script/account_plan_count.coffee
 
 environment = require('../config/environment')
-Cine = require '../config/cine'
+Cine.config('connect_to_mongo')
 Account = Cine.server_model('account')
 humanizeBytes = Cine.lib('humanize_bytes')
 

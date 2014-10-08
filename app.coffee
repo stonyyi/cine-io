@@ -1,4 +1,5 @@
 env     = require './config/environment'
+Cine.config('connect_to_mongo')
 express = require 'express'
 http = require 'http'
 

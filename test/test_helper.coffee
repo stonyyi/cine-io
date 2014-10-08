@@ -1,6 +1,6 @@
 process.env.NODE_ENV ||= 'test'
-process.env.TZ = 'UTC' # https://groups.google.com/forum/#!topic/nodejs/s1gCV44KYrQ
 require '../config/environment'
+Cine.config('connect_to_mongo')
 ModelUtils = require('rendr/shared/modelUtils')
 http = require('http')
 express = require('express')

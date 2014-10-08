@@ -1,5 +1,3 @@
-process.env.NODE_ENV ||= 'development'
-process.env.TZ = 'UTC' # https://groups.google.com/forum/#!topic/nodejs/s1gCV44KYrQ
 env = require '../config/environment'
 
 express = require 'express'
