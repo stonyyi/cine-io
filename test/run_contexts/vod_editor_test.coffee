@@ -15,7 +15,7 @@ describe 'VodEditor', ->
     it "needs a file", (done)->
       @agent.post('/').expect(400).end (err, res)->
         expect(err).to.be.null
-        expect(res.text).to.equal("usage: [POST] /?file=/full/path/to/file")
+        expect(res.text).to.equal("usage: [POST] /, {file: '/full/path/to/file'}")
         done()
 
     it "needs a file that exists", (done)->

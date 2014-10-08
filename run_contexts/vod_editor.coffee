@@ -1,8 +1,9 @@
 Base = require('./base')
 fs = require('fs')
 request = require('request')
-streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
 runMe = !module.parent
+
+streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
 vodTranslatorHost = "vod-translator"
 EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
 EdgecastStream = Cine.server_model('edgecast_stream')
@@ -57,7 +58,7 @@ class NewRecordingHandler
 # takes a /?file=/aboslute/path/to/file
 app.post '/', (req, res)->
   file = req.body?.file
-  return res.status(400).send("usage: [POST] /?file=/full/path/to/file") unless file
+  return res.status(400).send("usage: [POST] /, {file: '/full/path/to/file'}") unless file
   fs.exists file, (exists)->
     return res.status(400).send("Could not find file #{file}") unless exists
 
