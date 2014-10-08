@@ -1,7 +1,7 @@
 _ = require('underscore')
 convertIpAddressToEdgecastServer = Cine.server_lib('convert_ip_address_to_edgecast_server')
 
-nullCase = server: null, code: null, transcode: null
+nullCase = server: null, code: null, transcode: null, app: null, host: null
 
 convert = (params)->
   ipAddress = params.ipAddress || params.remoteIpAddress
@@ -11,9 +11,11 @@ convert = (params)->
   return nullCase unless geo
 
   code = geo.code
-  url = "rtmp://stream.#{code}.cine.io/20C45E/cines"
+  host = "stream.#{code}.cine.io"
+  app = module.exports.default.app
+  url = "rtmp://#{host}/#{app}"
   transcoding = "rtmp://publish-#{geo.transcode}.cine.io/live"
-  return server: url, code: code, transcode: transcoding
+  return server: url, code: code, transcode: transcoding, host: host, app: app
 
 
 module.exports = (params, callback)->
@@ -30,5 +32,8 @@ module.exports = (params, callback)->
 module.exports.convert = convert
 module.exports.default =
   code: 'lax'
-  url: "rtmp://stream.lax.cine.io/20C45E/cines"
+  host: "stream.lax.cine.io"
+  app: "20C45E/cines"
   transcode: "rtmp://publish-west.cine.io/live"
+
+module.exports.default.server = "rtmp://#{module.exports.default.host}/#{module.exports.default.app}"
