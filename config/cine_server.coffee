@@ -23,6 +23,9 @@ Cine.server_lib = (type) ->
 Cine.api = (type) ->
   Cine.require("/server/api/#{type}")
 
+Cine.run_context = (type) ->
+  Cine.require("/run_contexts/#{type}")
+
 Cine.config = (type) ->
   Cine.require("/config/#{type}")
 
