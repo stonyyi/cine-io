@@ -40,7 +40,7 @@ fullJSON = (stream, options, callback)->
     callback = options
     options = {}
 
-  options.server ||= NearestServer.default.url
+  options.server ||= NearestServer.default.server
   options.transcode ||= NearestServer.default.transcode
 
   playJSON stream, (err, streamJSON)->
