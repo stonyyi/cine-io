@@ -75,6 +75,7 @@ describe 'VodEditor', ->
             videoCodec: 'h264'
             audioCodec: 'aac'
             data: true
+            extra: "-movflags faststart"
           @transcodeNock = requireFixture('nock/transcode_service_post')(transcodeBody)
 
         assertNockCalled = (done)->

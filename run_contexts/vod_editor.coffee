@@ -27,6 +27,7 @@ class SaveStreamRecording
         videoCodec: 'h264'
         audioCodec: 'aac'
         data: true
+        extra: "-movflags faststart"
     console.log("posting", requestOptions)
 
     request requestOptions, (err, res, body)->
