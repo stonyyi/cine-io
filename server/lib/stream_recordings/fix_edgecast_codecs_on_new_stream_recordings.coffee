@@ -6,7 +6,7 @@ edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 createNewStreamInEdgecast = Cine.server_lib('create_new_stream_in_edgecast')
 fixMP4Container = Cine.server_lib("stream_recordings/fix_mp4_container")
 makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
-nextStreamRecordingNumber = Cine.server_lib('stream_recordings/next_stream_recording_number')
+streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
 scheduleJob = Cine.server_lib('schedule_job')
 EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
 
@@ -32,7 +32,7 @@ class DownloadAndProcessRecording
         return callback(err) if err
         @ftpClient.list ftpErrorPath, (err, files)=>
           return callback(err) if err
-          newFileName = nextStreamRecordingNumber.newFileName(@recordingName, files)
+          newFileName = streamRecordingNameEnforcer.newFileName(@recordingName, files)
 
           ftpLocation = "#{ftpErrorPath}/#{newFileName}"
           @ftpClient.rename fullFTPName, ftpLocation, callback
@@ -42,7 +42,7 @@ class DownloadAndProcessRecording
         return callback(err) if err
         @ftpClient.list ftpOutputPath, (err, files)=>
           return callback(err) if err
-          newFileName = nextStreamRecordingNumber.newFileName(@recordingName, files)
+          newFileName = streamRecordingNameEnforcer.newFileName(@recordingName, files)
 
           ftpLocation = "#{ftpOutputPath}/#{newFileName}"
           console.log("uploading file", ftpLocation)

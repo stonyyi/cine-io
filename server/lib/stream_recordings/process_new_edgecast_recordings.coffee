@@ -9,7 +9,7 @@ async = require('async')
 EdgecastStream = Cine.server_model('edgecast_stream')
 makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
-nextStreamRecordingNumber = Cine.server_lib('stream_recordings/next_stream_recording_number')
+streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
 EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
 scheduleJob = Cine.server_lib('schedule_job')
 
@@ -32,7 +32,7 @@ class SaveStreamRecording
   _ensureNewRecordingHasUniqueName: (callback)=>
     @ftpClient.list folderToFix, (err, files)=>
       return callback(err) if err
-      @newFileName = nextStreamRecordingNumber.newFileName(@fileName, files)
+      @newFileName = streamRecordingNameEnforcer.newFileName(@fileName, files)
       callback()
 
   _moveRecordingToProcessFolder: (callback)=>
@@ -57,7 +57,7 @@ class NewRecordingHandler
       handler.process(callback)
 
   _findEdgecastStream: (callback)=>
-    streamName = nextStreamRecordingNumber.extractStreamName(@fileName)
+    streamName = streamRecordingNameEnforcer.extractStreamName(@fileName)
     query =
       streamName: streamName
       instanceName: EdgecastFtpInfo.vodDirectory
