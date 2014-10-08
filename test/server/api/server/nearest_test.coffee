@@ -19,7 +19,6 @@ describe 'Server#Nearest', ->
         code: 'lax'
         server: "rtmp://stream.lax.cine.io/20C45E/cines"
         host: "stream.lax.cine.io"
-        host: 'stream.lax.cine.io'
         app: '20C45E/cines'
         transcode: "rtmp://publish-west.cine.io/live"
       expect(options).to.be.undefined
