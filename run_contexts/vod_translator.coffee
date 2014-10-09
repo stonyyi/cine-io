@@ -30,7 +30,7 @@ class VodTranslator
     ffmpegCommand = "-i #{@options.file}"
     ffmpegCommand += " -c:v #{@options.videoCodec}" if _.has @options, 'videoCodec'
     ffmpegCommand += " -c:a #{@options.audioCodec}" if _.has @options, 'audioCodec'
-    ffmpegCommand += " -c:d copy" if @options.data
+    ffmpegCommand += " -c:d #{@options.dataCodec}" if _.has @options, 'dataCodec'
     ffmpegCommand += " #{@options.extra}" if @options.extra
     ffmpegCommand += " -f #{@options.format} #{@outputFile}"
     console.log ffmpegCommand
@@ -47,6 +47,8 @@ class VodTranslator
 
   # /full/path/to/file.flv, format: mp4
   # /full/path/to/file.mp4
+  # todo what happens when the output file is the same as the input file
+  # /full/path/to/file.mp4, format: mp4
   _createOutputFile: ->
     parts = @options.file.split('.')
     _.initial(parts).concat(@options.format).join('.')
@@ -57,6 +59,7 @@ class VodTranslator
 #  videoCodec: output video codec
 #  audioCodec: output audio codec
 #  data: true/false to keep the data channel
+#  extra: extra stuff to send to ffmpeg
 
 app.post '/', (req, res)->
   file = req.body?.file

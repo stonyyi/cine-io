@@ -26,9 +26,9 @@ class SaveStreamRecording
       json:
         file: @fullFileName
         format: 'mp4'
-        videoCodec: 'h264'
-        audioCodec: 'aac'
-        data: true
+        videoCodec: 'copy'
+        audioCodec: 'copy'
+        dataCodec: 'copy'
         extra: "-movflags faststart"
     console.log("posting", requestOptions)
 

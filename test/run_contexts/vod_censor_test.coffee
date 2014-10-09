@@ -61,9 +61,9 @@ describe 'VodCensor', ->
           transcodeBody =
             file: @targetFile
             format: 'mp4'
-            videoCodec: 'h264'
-            audioCodec: 'aac'
-            data: true
+            videoCodec: 'copy'
+            audioCodec: 'copy'
+            dataCodec: 'copy'
             extra: "-movflags faststart"
           @transcodeNock = requireFixture('nock/transcode_service_post')(transcodeBody)
 
