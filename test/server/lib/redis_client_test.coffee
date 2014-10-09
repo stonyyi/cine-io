@@ -13,3 +13,9 @@ describe 'client', ->
         expect(err).to.be.null
         expect(result).to.equal('my value')
         done()
+
+  describe 'clientFactory', ->
+    it 'returns a new redis', ->
+      newClient = client.clientFactory()
+      expect(newClient.commands_sent).to.equal(0)
+      newClient.quit()

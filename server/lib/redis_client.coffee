@@ -17,3 +17,4 @@ newRedisClient = ->
   client
 
 module.exports = newRedisClient()
+module.exports.clientFactory = newRedisClient

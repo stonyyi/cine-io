@@ -1,4 +1,5 @@
 supertest = require('supertest')
+Base = Cine.run_context('base')
 VodCensor = Cine.run_context('vod_censor').app
 copyFile = Cine.require('test/helpers/copy_file')
 assertFileDeleted = Cine.require('test/helpers/assert_file_deleted')
@@ -57,33 +58,20 @@ describe 'VodCensor', ->
           @stream.record = true
           @stream.save done
 
-        beforeEach ->
-          transcodeBody =
-            file: @targetFile
-            format: 'mp4'
-            videoCodec: 'copy'
-            audioCodec: 'copy'
-            dataCodec: 'copy'
-            extra: "-movflags faststart"
-          @transcodeNock = requireFixture('nock/transcode_service_post')(transcodeBody)
-
         afterEach (done)->
           fs.unlink @targetFile, done
 
-        assertNockCalled = (done)->
-          errorLogged = false
-          testFunction = -> errorLogged
-          checkFunction = (callback)=>
-            errorLogged = @transcodeNock.isDone()
-            setTimeout callback
-          async.until testFunction, checkFunction, done
+        afterEach ->
+          Base._createQueue()
 
-        it "posts to the transocde service", (done)->
+        it "schedules a message in the transocde service", (done)->
+          Base.processJobs 'vod_translator', (job, jobDone)=>
+            expect(job.data.file).to.equal(@targetFile)
+            done()
           @agent
             .post('/')
             .send(file: @targetFile)
             .expect(200)
-            .end (err, res)=>
+            .end (err, res)->
               expect(err).to.be.null
               expect(res.text).to.equal("OK")
-              assertNockCalled.call(this, done)

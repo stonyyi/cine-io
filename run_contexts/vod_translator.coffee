@@ -3,7 +3,6 @@ fs = require('fs')
 _ = require('underscore')
 cp = require('child_process')
 runMe = !module.parent
-app = exports.app = Base.app()
 
 ffmpeg = "ffmpeg"
 
@@ -21,6 +20,22 @@ callFfmpeg = (command, callback)->
     callback()
 
 class VodTranslator
+  constructor: (file)->
+    options =
+      file: file
+      format: 'mp4'
+      videoCodec: 'copy'
+      audioCodec: 'copy'
+      dataCodec: 'copy'
+      extra: "-movflags faststart"
+
+    @handler = new FFmpegHandler(options)
+
+  # returns(err, outputFile)
+  process: (@callback)=>
+    @handler.process(callback)
+
+class FFmpegHandler
   constructor: (@options)->
     _.defaults(@options, deleteOriginal: true)
     @outputFile = @_createOutputFile()
@@ -53,6 +68,7 @@ class VodTranslator
     parts = @options.file.split('.')
     _.initial(parts).concat(@options.format).join('.')
 
+
 # json options
 #  file: full path to file
 #  format: output format
@@ -61,19 +77,18 @@ class VodTranslator
 #  data: true/false to keep the data channel
 #  extra: extra stuff to send to ffmpeg
 
-app.post '/', (req, res)->
-  file = req.body?.file
-  return res.status(400).send("usage: [POST] /, {file: '/full/path/to/file'}") unless file
+exports.jobProcessor = (job, done)->
+  file = job.data.file
+  return done("no file passed in") unless file
   fs.exists file, (exists)->
-    return res.status(400).send("Could not find file #{file}") unless exists
+    return done("Could not find file #{file}") unless exists
 
-    handler = new VodTranslator(req.body)
-    handler.process (err)->
+    handler = new VodTranslator(file)
+    handler.process (err, outputFile)->
       if err
         console.log("Could not process file", file, err)
+        done(err)
       else
-        console.log("Processed file successfully", file)
+        Base.scheduleJob Base.getQueueName('vod_bookeeper'), file: outputFile, done
 
-    res.send("OK")
-
-Base.listen app, 8183 if runMe
+Base.processJobs 'vod_translator', jobProcessor if runMe

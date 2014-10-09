@@ -1,5 +1,5 @@
-supertest = require('supertest')
-VodTranslator = Cine.run_context('vod_translator').app
+Base = Cine.run_context('base')
+VodTranslator = Cine.run_context('vod_translator')
 copyFile = Cine.require('test/helpers/copy_file')
 assertFileDeleted = Cine.require('test/helpers/assert_file_deleted')
 fs = require('fs')
@@ -8,27 +8,24 @@ cp = require('child_process')
 
 describe 'VodTranslator', ->
 
-  beforeEach ->
-    @agent = supertest.agent(VodTranslator)
-
-  describe '/', ->
+  describe 'processJobs', ->
+    before ->
+      Base.processJobs 'vod_translator', VodTranslator.jobProcessor
+    after ->
+      Base._createQueue()
 
     it "needs a file", (done)->
-      @agent.post('/').expect(400).end (err, res)->
-        expect(err).to.be.null
-        expect(res.text).to.equal("usage: [POST] /, {file: '/full/path/to/file'}")
+      job = Base.scheduleJob Base.getQueueName('vod_translator')
+      job.on 'failed', (err)->
+        # err is null which is annoying to not get a message
         done()
 
     it "needs a file that exists", (done)->
       nonExistentFile = Cine.path('test/fixtures/NOT_A_FILE')
-      @agent
-        .post('/')
-        .send(file: nonExistentFile)
-        .expect(400)
-        .end (err, res)->
-          expect(err).to.be.null
-          expect(res.text).to.equal("Could not find file #{nonExistentFile}")
-          done()
+      job = Base.scheduleJob Base.getQueueName('vod_translator'), file: nonExistentFile
+      job.on 'failed', (err)->
+        # err is null which is annoying to not get a message
+        done()
 
     describe 'success', ->
 
@@ -58,27 +55,16 @@ describe 'VodTranslator', ->
           done(err)
 
       it "transcodes using ffmpeg using default properties", (done)->
-        @agent
-          .post('/')
-          .send(file: @targetFile, format: 'mp4')
-          .expect(200)
-          .end (err, res)=>
-            expect(err).to.be.null
-            expect(res.text).to.equal("OK")
-            expectedCommand = "ffmpeg -i #{@targetFile} -f mp4 #{@expectedOutputFile}"
-            assertFFmpegCommand.call this, expectedCommand, (err)=>
-              expect(err).to.be.undefined
-              assertFileDeleted(@targetFile, done)
+        job = Base.scheduleJob Base.getQueueName('vod_translator'), file: @targetFile
+        job.on 'complete', (err)=>
+          # err is null which is annoying to not get a message
+          expectedCommand = "ffmpeg -i #{@targetFile} -c:v copy -c:a copy -c:d copy -movflags faststart -f mp4 #{@expectedOutputFile}"
+          assertFFmpegCommand.call this, expectedCommand, (err)=>
+            expect(err).to.be.undefined
+            assertFileDeleted(@targetFile, done)
 
-      it "transcodes using ffmpeg using parameters", (done)->
-        @agent
-          .post('/')
-          .send(file: @targetFile, format: 'mp4', audioCodec: 'aac', videoCodec: 'vp8', extra: '-movflags faststart')
-          .expect(200)
-          .end (err, res)=>
-            expect(err).to.be.null
-            expect(res.text).to.equal("OK")
-            expectedCommand = "ffmpeg -i #{@targetFile} -c:v vp8 -c:a aac -movflags faststart -f mp4 #{@expectedOutputFile}"
-            assertFFmpegCommand.call this, expectedCommand, (err)=>
-              expect(err).to.be.undefined
-              assertFileDeleted(@targetFile, done)
+      it "sends a message to the vod_bookeeper", (done)->
+        Base.processJobs 'vod_bookeeper', (job, jobDone)=>
+          expect(job.data.file).to.equal(@expectedOutputFile)
+          done()
+        job = Base.scheduleJob Base.getQueueName('vod_translator'), file: @targetFile

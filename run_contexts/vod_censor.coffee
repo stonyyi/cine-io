@@ -11,6 +11,7 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 
 app = exports.app = Base.app()
 
+
 class RemoveStreamRecording
   constructor: (@fullFileName)->
   process: (callback)=>
@@ -20,24 +21,25 @@ class RemoveStreamRecording
 class SaveStreamRecording
   constructor: (@fullFileName)->
   process: (callback)=>
-    requestOptions =
-      method: "POST"
-      url: "http://#{vodTranslatorHost}/"
-      json:
-        file: @fullFileName
-        format: 'mp4'
-        videoCodec: 'copy'
-        audioCodec: 'copy'
-        dataCodec: 'copy'
-        extra: "-movflags faststart"
-    console.log("posting", requestOptions)
+    Base.scheduleJob Base.getQueueName('vod_translator'), file:  @fullFileName, callback
+    # requestOptions =
+    #   method: "POST"
+    #   url: "http://#{vodTranslatorHost}/"
+    #   json:
+    #     file: @fullFileName
+    #     format: 'mp4'
+    #     videoCodec: 'copy'
+    #     audioCodec: 'copy'
+    #     dataCodec: 'copy'
+    #     extra: "-movflags faststart"
+    # console.log("posting", requestOptions)
 
-    request requestOptions, (err, res, body)->
-      if err
-        console.log("request err", err)
-        return callback(err)
-      return callback(message: "not 200", status: res.statusCode, body: body) if res.statusCode != 200
-      callback()
+    # request requestOptions, (err, res, body)->
+    #   if err
+    #     console.log("request err", err)
+    #     return callback(err)
+    #   return callback(message: "not 200", status: res.statusCode, body: body) if res.statusCode != 200
+    #   callback()
 
 class NewRecordingHandler
   constructor: (@fullFileName)->
