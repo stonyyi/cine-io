@@ -1,15 +1,15 @@
 supertest = require('supertest')
-VodEditor = Cine.run_context('vod_editor').app
+VodCensor = Cine.run_context('vod_censor').app
 copyFile = Cine.require('test/helpers/copy_file')
 assertFileDeleted = Cine.require('test/helpers/assert_file_deleted')
 fs = require('fs')
 async = require('async')
 EdgecastStream = Cine.server_model('edgecast_stream')
 
-describe 'VodEditor', ->
+describe 'VodCensor', ->
 
   beforeEach ->
-    @agent = supertest.agent(VodEditor)
+    @agent = supertest.agent(VodCensor)
 
   describe '/', ->
 
