@@ -91,4 +91,4 @@ exports.jobProcessor = (job, done)->
       else
         Base.scheduleJob Base.getQueueName('vod_bookeeper'), file: outputFile, done
 
-Base.processJobs 'vod_translator', jobProcessor if runMe
+Base.processJobs 'vod_translator', exports.jobProcessor if runMe
