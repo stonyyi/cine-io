@@ -1,6 +1,7 @@
 supertest = require('supertest')
 VodEditor = Cine.run_context('vod_editor').app
 copyFile = Cine.require('test/helpers/copy_file')
+assertFileDeleted = Cine.require('test/helpers/assert_file_deleted')
 fs = require('fs')
 async = require('async')
 EdgecastStream = Cine.server_model('edgecast_stream')
@@ -41,14 +42,6 @@ describe 'VodEditor', ->
 
 
       describe 'with a stream that is not set to record', ->
-        assertFileDeleted = (done)->
-          fileDeleted = false
-          testFunction = -> fileDeleted
-          checkFunction = (callback)=>
-            fs.exists @targetFile, (exists)->
-              fileDeleted = !exists
-              callback()
-          async.until testFunction, checkFunction, done
 
         it "deletes a file if the stream is not set to record", (done)->
           @agent
@@ -58,15 +51,12 @@ describe 'VodEditor', ->
             .end (err, res)=>
               expect(err).to.be.null
               expect(res.text).to.equal("OK")
-              assertFileDeleted.call(this, done)
+              assertFileDeleted(@targetFile, done)
 
       describe 'with a stream that is set to record', ->
         beforeEach (done)->
           @stream.record = true
           @stream.save done
-
-        afterEach (done)->
-          fs.unlink @targetFile, done
 
         beforeEach ->
           transcodeBody =

@@ -22,15 +22,34 @@ callFfmpeg = (command, callback)->
 
 class VodTranslator
   constructor: (@options)->
-  process: (callback)=>
+    _.defaults(@options, deleteOriginal: true)
+    @outputFile = @_createOutputFile()
+
+  # returns(err, outputFile)
+  process: (@callback)=>
     ffmpegCommand = "-i #{@options.file}"
     ffmpegCommand += " -c:v #{@options.videoCodec}" if _.has @options, 'videoCodec'
     ffmpegCommand += " -c:a #{@options.audioCodec}" if _.has @options, 'audioCodec'
     ffmpegCommand += " -c:d copy" if @options.data
     ffmpegCommand += " #{@options.extra}" if @options.extra
-    ffmpegCommand += " -f #{@options.format}"
+    ffmpegCommand += " -f #{@options.format} #{@outputFile}"
     console.log ffmpegCommand
-    callFfmpeg ffmpegCommand, callback
+    callFfmpeg ffmpegCommand, @_processed
+
+  _processed: (err)=>
+    return @callback(err, @outputFile) if err
+    return @_deleteOriginal() if @options.deleteOriginal
+    @callback(null, @outputFile)
+
+  _deleteOriginal: =>
+    fs.unlink @options.file, (err)=>
+      @callback(err, @outputFile)
+
+  # /full/path/to/file.flv, format: mp4
+  # /full/path/to/file.mp4
+  _createOutputFile: ->
+    parts = @options.file.split('.')
+    _.initial(parts).concat(@options.format).join('.')
 
 # json options
 #  file: full path to file
