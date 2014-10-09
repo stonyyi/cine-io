@@ -46,3 +46,6 @@ describe 'streamRecordingNameEnforcer', ->
   describe 'extractStreamNameFromDirectory', ->
     it 'takes a full directory', ->
       expect(streamRecordingNameEnforcer.extractStreamNameFromDirectory("/some/full/path/abc.mp4")).to.equal('abc')
+
+    it 'takes a full timestamp', ->
+      expect(streamRecordingNameEnforcer.extractStreamNameFromDirectory("/some/full/path/xycITcxBEe.20141007T191714+0000.flv")).to.equal('xycITcxBEe')
