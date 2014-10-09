@@ -5,12 +5,11 @@ request = require('request')
 runMe = !module.parent
 
 streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
-vodTranslatorHost = "vod-translator"
+
 EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
 EdgecastStream = Cine.server_model('edgecast_stream')
 
 app = exports.app = Base.app()
-
 
 class RemoveStreamRecording
   constructor: (@fullFileName)->
