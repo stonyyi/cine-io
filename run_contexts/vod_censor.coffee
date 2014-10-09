@@ -8,6 +8,7 @@ streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recordin
 vodTranslatorHost = "vod-translator"
 EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
 EdgecastStream = Cine.server_model('edgecast_stream')
+
 app = exports.app = Base.app()
 
 class RemoveStreamRecording
@@ -35,8 +36,8 @@ class SaveStreamRecording
       if err
         console.log("request err", err)
         return callback(err)
-        return callback(message: "not 200", status: res.statusCode, body: body) if res.statusCode != 200
-        callback()
+      return callback(message: "not 200", status: res.statusCode, body: body) if res.statusCode != 200
+      callback()
 
 class NewRecordingHandler
   constructor: (@fullFileName)->
