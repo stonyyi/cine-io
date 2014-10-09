@@ -40,7 +40,6 @@ describe 'VodCensor', ->
         @targetFile = Cine.path('test/fixtures/mystream.20141008T191601.flv')
         copyFile existingFile, @targetFile, done
 
-
       describe 'with a stream that is not set to record', ->
 
         it "deletes a file if the stream is not set to record", (done)->
@@ -67,6 +66,9 @@ describe 'VodCensor', ->
             data: true
             extra: "-movflags faststart"
           @transcodeNock = requireFixture('nock/transcode_service_post')(transcodeBody)
+
+        afterEach (done)->
+          fs.unlink @targetFile, done
 
         assertNockCalled = (done)->
           errorLogged = false

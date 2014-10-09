@@ -1,4 +1,5 @@
 Base = require('./base')
+Cine.config('connect_to_mongo')
 fs = require('fs')
 request = require('request')
 runMe = !module.parent
