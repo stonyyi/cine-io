@@ -63,8 +63,8 @@ describe 'VodTranslator', ->
             expect(err).to.be.undefined
             assertFileDeleted(@targetFile, done)
 
-      it "sends a message to the vod_bookeeper", (done)->
-        Base.processJobs 'vod_bookeeper', (job, jobDone)=>
+      it "sends a message to the vod_bookkeeper", (done)->
+        Base.processJobs 'vod_bookkeeper', (job, jobDone)=>
           expect(job.data.file).to.equal(@expectedOutputFile)
           done()
         job = Base.scheduleJob Base.getQueueName('vod_translator'), file: @targetFile

@@ -94,4 +94,4 @@ exports.jobProcessor = (job, done)->
         console.log("processed file", file)
         done()
 
-Base.processJobs 'vod_bookeeper', exports.jobProcessor if runMe
+Base.processJobs 'vod_bookkeeper', exports.jobProcessor if runMe
