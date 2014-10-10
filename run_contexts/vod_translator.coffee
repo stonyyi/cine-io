@@ -90,6 +90,6 @@ exports.jobProcessor = (job, done)->
         done(err)
       else
         console.log("processed file", file)
-        Base.scheduleJob Base.getQueueName('vod_bookeeper'), file: outputFile, done
+        Base.scheduleJob Base.getQueueName('vod_bookkeeper'), file: outputFile, done
 
 Base.processJobs 'vod_translator', exports.jobProcessor if runMe
