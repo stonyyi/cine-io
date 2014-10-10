@@ -1,3 +1,4 @@
+_ = require('underscore')
 calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 ProvidersAndPlans = Cine.require('config/providers_and_plans')
 calculateAccountBill = Cine.server_lib("billing/calculate_account_bill.coffee")
@@ -13,21 +14,27 @@ describe "calculateAccountBill", ->
     @account.plans = ['free']
     calculateAccountBill @account, (err, result)->
       expect(err).to.be.null
-      expect(result).to.deep.equal(plan: 0, bandwidthOverage: 0, storageOverage: 0)
+      expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+      expect(result.billing).to.deep.equal(plan: 0, bandwidthOverage: 0, storageOverage: 0)
+      expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, bandwidthOverage: 0, storageOverage: 0)
       done()
 
   it "returns 100 for basic plan", (done)->
     @account.plans = ['basic']
     calculateAccountBill @account, (err, result)->
       expect(err).to.be.null
-      expect(result).to.deep.equal(plan: 100, bandwidthOverage: 0, storageOverage: 0)
+      expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+      expect(result.billing).to.deep.equal(plan: 100, bandwidthOverage: 0, storageOverage: 0)
+      expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, bandwidthOverage: 0, storageOverage: 0)
       done()
 
   it "returns 600 for basic and pro plan", (done)->
     @account.plans = ['basic', 'pro']
     calculateAccountBill @account, (err, result)->
       expect(err).to.be.null
-      expect(result).to.deep.equal(plan: 600, bandwidthOverage: 0, storageOverage: 0)
+      expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+      expect(result.billing).to.deep.equal(plan: 600, bandwidthOverage: 0, storageOverage: 0)
+      expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, bandwidthOverage: 0, storageOverage: 0)
       done()
 
   describe 'with bandwidth and storage', ->
@@ -46,33 +53,49 @@ describe "calculateAccountBill", ->
     describe 'within limits', ->
       it 'returns 100 for basic plans', (done)->
         @account.plans = ['basic']
-        @usageStub.callsArgWith(1, null, bandwidth: humanizeBytes.GiB * 150, storage: humanizeBytes.GiB * 25)
+        usedBandwidth = humanizeBytes.GiB * 150
+        usedStorage = humanizeBytes.GiB * 25
+        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
         calculateAccountBill @account, (err, result)->
           expect(err).to.be.null
-          expect(result).to.deep.equal(plan: 100, bandwidthOverage: 0, storageOverage: 0)
+          expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+          expect(result.billing).to.deep.equal(plan: 100, bandwidthOverage: 0, storageOverage: 0)
+          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, bandwidthOverage: 0, storageOverage: 0)
           done()
 
       it 'returns 600 for basic and pro plans', (done)->
         @account.plans = ['basic', 'pro']
-        @usageStub.callsArgWith(1, null, bandwidth: humanizeBytes.GiB * 150 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 25 + humanizeBytes.GiB * 100)
+        usedBandwidth = humanizeBytes.GiB * 150 + humanizeBytes.TiB
+        usedStorage = humanizeBytes.GiB * 25 + humanizeBytes.GiB * 100
+        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
         calculateAccountBill @account, (err, result)->
           expect(err).to.be.null
-          expect(result).to.deep.equal(plan: 600, bandwidthOverage: 0, storageOverage: 0)
+          expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+          expect(result.billing).to.deep.equal(plan: 600, bandwidthOverage: 0, storageOverage: 0)
+          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, bandwidthOverage: 0, storageOverage: 0)
           done()
 
     describe 'not within limits', ->
       it 'returns overages for basic plans', (done)->
         @account.plans = ['basic']
-        @usageStub.callsArgWith(1, null, bandwidth: humanizeBytes.GiB * 153, storage: humanizeBytes.GiB * 27)
+        usedBandwidth = humanizeBytes.GiB * 153
+        usedStorage = humanizeBytes.GiB * 27
+        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
         calculateAccountBill @account, (err, result)->
           expect(err).to.be.null
-          expect(result).to.deep.equal(plan: 100, bandwidthOverage: 240, storageOverage: 160)
+          expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+          expect(result.billing).to.deep.equal(plan: 100, bandwidthOverage: 240, storageOverage: 160)
+          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, bandwidthOverage: humanizeBytes.GiB * 3, storageOverage: humanizeBytes.GiB * 2)
           done()
 
       it 'returns overages at the pro rate for basic and pro plans', (done)->
         @account.plans = ['basic', 'pro']
-        @usageStub.callsArgWith(1, null, bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
+        usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
+        usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
+        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
         calculateAccountBill @account, (err, result)->
           expect(err).to.be.null
-          expect(result).to.deep.equal(plan: 600, bandwidthOverage: 350, storageOverage: 280)
+          expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+          expect(result.billing).to.deep.equal(plan: 600, bandwidthOverage: 350, storageOverage: 280)
+          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
           done()

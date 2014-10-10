@@ -5,6 +5,8 @@ UsageReport = Cine.model('usage_report')
 BackboneAccount = Cine.model('account')
 humanizeBytes = Cine.lib('humanize_bytes')
 
+ARITRARY_OVERAGE_COST = 100 #one dollar
+
 accountPlanAmount = (account)->
   plans = ProvidersAndPlans[account.billingProvider].plans
   addPlanAmount = (accum, plan)->
@@ -15,7 +17,7 @@ accountOverageFee = (account, plan, type)->
   ProvidersAndPlans[account.billingProvider].plans[plan]["#{type}Overage"]
 
 cheapestOverageCost = (account, type)->
-  cheapestOveragePlan = accountOverageFee(account, _.first(account.plans), type)
+  cheapestOveragePlan = accountOverageFee(account, _.first(account.plans), type) || ARITRARY_OVERAGE_COST
   _.each account.plans, (plan)->
     thisPlanOverage = accountOverageFee(account, plan, type)
     cheapestOveragePlan = thisPlanOverage if thisPlanOverage < cheapestOveragePlan
@@ -29,7 +31,10 @@ calculateAccountOverage = (account, accountUsageResult, type)->
   maxAmount = UsageReport.maxUsagePerAccount ba, type
   usedAmount = accountUsageResult[type]
   overage = usedAmount - maxAmount
-  return 0 if overage <= 0
+  # overage less than 0 means we used less than the max
+  if overage <= 0 then 0 else overage
+
+calculateAccountOverageCost = (account, overage, type)->
   overageInGib = overage / humanizeBytes.GiB
   return overageInGib * cheapestOverageCost(account, type)
 
@@ -43,8 +48,16 @@ calculateStorageOverage = (account)->
 module.exports = (account, callback)->
   calculateAccountUsage.thisMonth account, (err, accountUsageResult)->
     return callback(err) if err
+    bandwidthOverage = calculateAccountOverage(account, accountUsageResult, 'bandwidth')
+    storageOverage = calculateAccountOverage(account, accountUsageResult, 'storage')
     result =
-      plan: accountPlanAmount(account)
-      bandwidthOverage: calculateAccountOverage(account, accountUsageResult, 'bandwidth')
-      storageOverage: calculateAccountOverage(account, accountUsageResult, 'storage')
+      billing:
+        plan: accountPlanAmount(account)
+        bandwidthOverage: calculateAccountOverageCost(account, bandwidthOverage, 'bandwidth')
+        storageOverage: calculateAccountOverageCost(account, storageOverage, 'bandwidth')
+      usage:
+        bandwidth: accountUsageResult['bandwidth']
+        storage: accountUsageResult['storage']
+        bandwidthOverage: bandwidthOverage
+        storageOverage: storageOverage
     callback(null, result)
