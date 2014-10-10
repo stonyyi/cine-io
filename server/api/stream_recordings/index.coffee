@@ -5,7 +5,7 @@ EdgecastRecordings = Cine.server_model('edgecast_recordings')
 async = require('async')
 
 isDeleted = (item)->
-  item.deletedAt
+  item.deletedAt || item.vodBookkeeperTest
 
 module.exports = (params, callback)->
   getProject params, requires: 'either', userOverride: true, (err, project, options)->
@@ -28,8 +28,6 @@ module.exports = (params, callback)->
           _id: params.id
           _project: project._id
           deletedAt:
-            $exists: false
-          vodBookkeeperTest:
             $exists: false
         EdgecastStream.findOne query, (err, stream)->
           return cb("findStream", err, null, status: 400) if err
