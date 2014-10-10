@@ -23,7 +23,7 @@ cheapestOverageCost = (account, type)->
   cheapestOveragePlan * 100
 
 calculateAccountOverage = (account, accountUsageResult, type)->
-  # HACK for the difference between mongoose provider vs backbone provider
+  # HACK for the difference between mongoose model vs backbone model
   ba = new BackboneAccount(provider: account.billingProvider, plans: account.plans)
 
   maxAmount = UsageReport.maxUsagePerAccount ba, type
