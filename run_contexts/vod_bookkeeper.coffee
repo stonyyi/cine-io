@@ -1,4 +1,5 @@
 Base = require('./base')
+Cine.config('connect_to_mongo')
 fs = require('fs')
 _ = require('underscore')
 async = require('async')
