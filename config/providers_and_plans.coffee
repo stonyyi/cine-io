@@ -12,14 +12,20 @@ module.exports =
         price: 20
         bandwidth: humanizeBytes.GiB * 20
         storage: humanizeBytes.GiB * 5
+        bandwidthOverage: 0.9
+        storageOverage: 0.9
       basic:
         price: 100
         bandwidth: humanizeBytes.GiB * 150
         storage: humanizeBytes.GiB * 25
+        bandwidthOverage: 0.8
+        storageOverage: 0.8
       pro:
         price: 500
         bandwidth: humanizeBytes.TiB
         storage: humanizeBytes.GiB * 100
+        bandwidthOverage: 0.7
+        storageOverage: 0.7
   heroku:
     url: 'https://addons.heroku.com/cine'
     plans:
