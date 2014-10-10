@@ -33,6 +33,7 @@ runScheduledJob = (jobName, payload, done)->
 doWork = (jobName, payload, done)->
   return done('unacceptable job') unless _.include(scheduableTasks, jobName)
   environment = require('../../config/environment')
+  Cine.config('connect_to_mongo')
   return runScheduledJob(jobName, payload, done) if _.chain(scheduledTasks).keys().contains(jobName).value()
   return currentEnvironment(jobName, payload, done) if jobName == 'current_environment'
   runServerLib(jobName, payload, done)
