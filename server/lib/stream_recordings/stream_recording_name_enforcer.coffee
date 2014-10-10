@@ -27,7 +27,6 @@ exports.newFileName = (fileName, ftpFileList)->
     newFileName = newFileName
   newFileName
 
-
 exports.extractStreamNameFromDirectory = (fullFilePath)->
   parts = fullFilePath.split('/')
   exports.extractStreamName _.last(parts)
