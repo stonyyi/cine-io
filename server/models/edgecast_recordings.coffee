@@ -8,6 +8,7 @@ EdgecastRecording = new Schema
   size: Number
   date: Date
   deletedAt: Date
+  vodBookkeeperTest: Boolean
 
 EdgecastRecordingsSchema = new Schema
   _edgecastStream:
@@ -24,7 +25,11 @@ EdgecastRecordingsSchema.methods.totalBytes = ->
   accumEntryBytes = (accum, entry)->
     accum + entry.size
 
-  _.chain(@recordings).where(deletedAt: undefined).reduce(accumEntryBytes, 0).value()
+  _.chain(@recordings)
+    .where(deletedAt: undefined)
+    .where(vodBookkeeperTest: undefined)
+    .reduce(accumEntryBytes, 0)
+    .value()
 
 EdgecastRecordings = mongoose.model 'EdgecastRecordings', EdgecastRecordingsSchema
 

@@ -29,6 +29,8 @@ module.exports = (params, callback)->
           _project: project._id
           deletedAt:
             $exists: false
+          vodBookkeeperTest:
+            $exists: false
         EdgecastStream.findOne query, (err, stream)->
           return cb("findStream", err, null, status: 400) if err
           return cb("findStream", "stream not found", null, status: 404) unless stream
