@@ -16,6 +16,12 @@ describe 'EdgecastRecordings', ->
       size: 7676745
       date: new Date
 
+    recording.recordings.push
+      name: "def"
+      size: 7373737
+      date: new Date
+      deletedAt: new Date
+
   beforeEach (done)->
     @recording = new EdgecastRecordings
     addRecording(@recording)
@@ -23,5 +29,5 @@ describe 'EdgecastRecordings', ->
 
   describe '#totalBytes', ->
 
-    it 'can aggrigate all the entries', ->
+    it 'can aggrigate all the entries ignoring deletedAt', ->
       expect(@recording.totalBytes()).to.equal(10719824)

@@ -23,7 +23,8 @@ EdgecastRecordingsSchema.plugin(findOrCreate)
 EdgecastRecordingsSchema.methods.totalBytes = ->
   accumEntryBytes = (accum, entry)->
     accum + entry.size
-  _.reduce @recordings, accumEntryBytes, 0
+
+  _.chain(@recordings).where(deletedAt: undefined).reduce(accumEntryBytes, 0).value()
 
 EdgecastRecordings = mongoose.model 'EdgecastRecordings', EdgecastRecordingsSchema
 
