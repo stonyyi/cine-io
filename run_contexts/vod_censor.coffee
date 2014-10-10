@@ -5,7 +5,6 @@ request = require('request')
 runMe = !module.parent
 
 streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
-
 EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
 EdgecastStream = Cine.server_model('edgecast_stream')
 
@@ -53,7 +52,7 @@ app.post '/', (req, res)->
       if err
         console.log("Could not process file", file, err)
       else
-        console.log("Processed file successfully", file)
+        console.log("Processed file", file)
 
     res.send("OK")
 

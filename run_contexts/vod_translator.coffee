@@ -89,6 +89,7 @@ exports.jobProcessor = (job, done)->
         console.log("Could not process file", file, err)
         done(err)
       else
+        console.log("processed file", file)
         Base.scheduleJob Base.getQueueName('vod_bookeeper'), file: outputFile, done
 
 Base.processJobs 'vod_translator', exports.jobProcessor if runMe
