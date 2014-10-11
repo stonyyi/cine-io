@@ -10,7 +10,7 @@ ARITRARY_OVERAGE_COST = 100 #one dollar
 accountPlanAmount = (account)->
   plans = ProvidersAndPlans[account.billingProvider].plans
   addPlanAmount = (accum, plan)->
-    accum + plans[plan].price
+    accum + (plans[plan].price * 100)
   _.inject account.plans, addPlanAmount, 0
 
 accountOverageFee = (account, plan, type)->

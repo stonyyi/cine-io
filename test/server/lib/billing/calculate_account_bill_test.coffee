@@ -24,7 +24,7 @@ describe "calculateAccountBill", ->
     calculateAccountBill @account, (err, result)->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
-      expect(result.billing).to.deep.equal(plan: 100, bandwidthOverage: 0, storageOverage: 0)
+      expect(result.billing).to.deep.equal(plan: 10000, bandwidthOverage: 0, storageOverage: 0)
       expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, bandwidthOverage: 0, storageOverage: 0)
       done()
 
@@ -33,7 +33,7 @@ describe "calculateAccountBill", ->
     calculateAccountBill @account, (err, result)->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
-      expect(result.billing).to.deep.equal(plan: 600, bandwidthOverage: 0, storageOverage: 0)
+      expect(result.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0)
       expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, bandwidthOverage: 0, storageOverage: 0)
       done()
 
@@ -59,7 +59,7 @@ describe "calculateAccountBill", ->
         calculateAccountBill @account, (err, result)->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
-          expect(result.billing).to.deep.equal(plan: 100, bandwidthOverage: 0, storageOverage: 0)
+          expect(result.billing).to.deep.equal(plan: 10000, bandwidthOverage: 0, storageOverage: 0)
           expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, bandwidthOverage: 0, storageOverage: 0)
           done()
 
@@ -71,7 +71,7 @@ describe "calculateAccountBill", ->
         calculateAccountBill @account, (err, result)->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
-          expect(result.billing).to.deep.equal(plan: 600, bandwidthOverage: 0, storageOverage: 0)
+          expect(result.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0)
           expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, bandwidthOverage: 0, storageOverage: 0)
           done()
 
@@ -84,7 +84,7 @@ describe "calculateAccountBill", ->
         calculateAccountBill @account, (err, result)->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
-          expect(result.billing).to.deep.equal(plan: 100, bandwidthOverage: 240, storageOverage: 160)
+          expect(result.billing).to.deep.equal(plan: 10000, bandwidthOverage: 240, storageOverage: 160)
           expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, bandwidthOverage: humanizeBytes.GiB * 3, storageOverage: humanizeBytes.GiB * 2)
           done()
 
@@ -96,6 +96,6 @@ describe "calculateAccountBill", ->
         calculateAccountBill @account, (err, result)->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
-          expect(result.billing).to.deep.equal(plan: 600, bandwidthOverage: 350, storageOverage: 280)
+          expect(result.billing).to.deep.equal(plan: 60000, bandwidthOverage: 350, storageOverage: 280)
           expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
           done()
