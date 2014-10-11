@@ -41,7 +41,7 @@ module.exports =
         price: 0
         bandwidth: humanizeBytes.GiB
         storage: 0
-        storageOverage: 0
+        bandwidthOverage: 0
         storageOverage: 0
       basic:
         price: 100
