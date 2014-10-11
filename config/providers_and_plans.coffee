@@ -8,6 +8,8 @@ module.exports =
         price: 0
         bandwidth: humanizeBytes.GiB
         storage: 0
+        bandwidthOverage: 0
+        storageOverage: 0
       solo:
         price: 20
         bandwidth: humanizeBytes.GiB * 20
@@ -41,6 +43,12 @@ module.exports =
         storage: 0
         storageOverage: 0
         storageOverage: 0
+      basic:
+        price: 100
+        bandwidth: humanizeBytes.GiB * 150
+        storage: humanizeBytes.GiB * 25
+        bandwidthOverage: 0.8
+        storageOverage: 0.8
 
   engineyard:
     url: 'https://addons.engineyard.com/cine.io'
