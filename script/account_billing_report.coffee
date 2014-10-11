@@ -12,7 +12,8 @@ humanizeBytes = Cine.lib('humanize_bytes')
 
 _ = require('underscore')
 totalAccountsLogged = 0
-totalIncome = 0
+totalPotentialIncome = 0
+billableIncome = 0
 
 logOutput = (account, response, callback)->
   return callback() if response.billing.plan == 0
@@ -20,9 +21,11 @@ logOutput = (account, response, callback)->
 
   billing = response.billing
   monthlyBill = billing.plan + billing.bandwidthOverage + billing.storageOverage
-  console.log("Total account bill for", account._id, account.billingEmail || account.herokuId, account.billingProvider, account.plans, "$#{monthlyBill / 100}")
+  stripeConnected = account.stripeCustomer.cards.length > 0
+  console.log("Total account bill for", account._id, account.billingEmail || account.herokuId, account.billingProvider, account.plans, "$#{monthlyBill / 100} (card: #{stripeConnected})")
   totalAccountsLogged += 1
-  totalIncome += monthlyBill
+  totalPotentialIncome += monthlyBill
+  billableIncome += monthlyBill if stripeConnected
   callback()
 
 calculateMonthlyBilling = (account, callback)->
@@ -32,7 +35,7 @@ calculateMonthlyBilling = (account, callback)->
 
 endFunction = (err)->
   console.log("ending err", err) if err
-  console.log("Totalling $#{totalIncome / 100} from #{totalAccountsLogged} accounts.")
+  console.log("Totalling $#{billableIncome / 100} ($#{totalPotentialIncome / 100} potential) from #{totalAccountsLogged} accounts.")
   process.exit(0)
 
 scope = Account.find().exists('deletedAt', false)
