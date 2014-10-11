@@ -10,6 +10,15 @@ describe "calculateAccountBill", ->
     @account = new Account billingProvider: 'cine.io'
     @account.save done
 
+  it "returns 0 for no plans", (done)->
+    @account.plans = []
+    calculateAccountBill @account, (err, result)->
+      expect(err).to.be.null
+      expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+      expect(result.billing).to.deep.equal(plan: 0, bandwidthOverage: 0, storageOverage: 0)
+      expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, bandwidthOverage: 0, storageOverage: 0)
+      done()
+
   it "returns 0 for free plans", (done)->
     @account.plans = ['free']
     calculateAccountBill @account, (err, result)->
