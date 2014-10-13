@@ -1,6 +1,5 @@
 _ = require('underscore')
 calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
-ProvidersAndPlans = Cine.require('config/providers_and_plans')
 calculateAccountBill = Cine.server_lib("billing/calculate_account_bill.coffee")
 Account = Cine.server_model("account")
 humanizeBytes = Cine.lib('humanize_bytes')
