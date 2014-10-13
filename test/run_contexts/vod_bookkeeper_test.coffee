@@ -106,7 +106,7 @@ describe 'VodBookkeeper', ->
       beforeEach ->
         @putStub = @fakeFtpClient.stub('put').callsArg(2)
 
-      it.only  "deletes the target file", (done)->
+      it  "deletes the target file", (done)->
         job = Base.scheduleJob Base.getQueueName('vod_bookkeeper'), file: @targetFile
 
         job.on 'complete', (err)=>
