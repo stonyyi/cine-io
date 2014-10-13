@@ -27,6 +27,27 @@ exports.forgotPassword = (user, passwordChangeRequest, callback=noop)->
       followup_copy: "<p>If this is a mistake just ignore this email &mdash; your password will not be changed.</p>"
   sendMail mailOptions, callback
 
+exports.monthlyBill = (account, accountBillingHistory, billingMonthDate, callback=noop)->
+  record = accountBillingHistory.billingRecordForMonth(billingMonthDate)
+  name = account.name || account.billingEmail
+  mailOptions =
+    templateName: 'blank-with-header-and-footer'
+    subject: 'Your cine.io invoice'
+    toEmail: account.billingEmail
+    toName: name
+    userTemplateVars:
+      header_blurb: 'Thank you for using cine.io.'
+      name: name
+      content: """
+      <p>This is your receipt!</p>
+
+      <p>Don't hesitate to contact us if you have any questions or comments.</p>
+      <p>Regards,<br/>
+      Thomas Shafer<br/>
+      Technical Officer, cine.io</p>
+      """
+  sendMail mailOptions, callback
+
 exports.welcomeEmail = (user, callback=noop)->
   name = user.name || user.email
   mailOptions =

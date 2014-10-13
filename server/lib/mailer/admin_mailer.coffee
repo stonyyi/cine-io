@@ -26,6 +26,29 @@ exports.newUser = (user, context, callback=noop)->
     """
   sendAdminEmail mailOptions, callback
 
+
+exports.cardDeclined = (account, abh, now, callback=noop)->
+  mailOptions =
+    subject: 'Card Declined'
+    content: """
+      <p>Card was declined!</p>
+      <p><pre>#{now}</pre></p>
+      <p><pre>#{util.inspect(account)}</pre></p>
+      <p><pre>#{util.inspect(abh)}</pre></p>
+    """
+  sendAdminEmail mailOptions, callback
+
+exports.unknownChargeError = (account, abh, now, callback=noop)->
+  mailOptions =
+    subject: 'Unknown charge error'
+    content: """
+      <p>Unknown charge error!</p>
+      <p><pre>#{now}</pre></p>
+      <p><pre>#{util.inspect(account)}</pre></p>
+      <p><pre>#{util.inspect(abh)}</pre></p>
+    """
+  sendAdminEmail mailOptions, callback
+
 sendAdminEmail = (mailOptions, callback)->
   throw new Error('no subject') unless mailOptions.subject
   throw new Error('no content') unless mailOptions.content
