@@ -72,3 +72,5 @@ module.exports = (account, callback)->
         bandwidthOverage: bandwidthOverage
         storageOverage: storageOverage
     callback(null, result)
+
+module.exports.cheapestOverageCost = cheapestOverageCost

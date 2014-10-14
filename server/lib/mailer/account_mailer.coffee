@@ -1,6 +1,14 @@
 domain = Cine.config('variables/mailer_domain')
 getMailerLogo = Cine.server_lib('mailer/get_mailer_logo')
 sendTemplateEmail = Cine.server_lib('mailer/send_template_email')
+_ = require('underscore')
+_str = require('underscore.string')
+humanizeBytes = Cine.lib('humanize_bytes')
+moment = require('moment')
+BackboneAccount = Cine.model('account')
+UsageReport = Cine.model('usage_report')
+calculateAccountBill = Cine.server_lib("billing/calculate_account_bill.coffee")
+
 noop = ->
 
 sendMail = (mailOptions, callback)->
@@ -27,25 +35,50 @@ exports.forgotPassword = (user, passwordChangeRequest, callback=noop)->
       followup_copy: "<p>If this is a mistake just ignore this email &mdash; your password will not be changed.</p>"
   sendMail mailOptions, callback
 
+# input: ['basic', 'solo']
+# Basic and Solo
+accountPlans = (plans)->
+  _str.toSentence(_.map(plans, _str.titleize))
+
+displayCurrency = (amountInCents)->
+  amountInDollars = amountInCents / 100
+  withDecimals = amountInDollars.toFixed(2)
+  value = if withDecimals == amountInDollars
+    amountInDollars
+  else
+    withDecimals
+  "$#{value}"
+
 exports.monthlyBill = (account, accountBillingHistory, billingMonthDate, callback=noop)->
   record = accountBillingHistory.billingRecordForMonth(billingMonthDate)
   name = account.name || account.billingEmail
+  usage = record.details.usage
+  billing = record.details.billing
+  backboneAccount = new BackboneAccount(provider: account.billingProvider, plans: account.plans)
+
   mailOptions =
-    templateName: 'blank-with-header-and-footer'
+    templateName: 'monthly-invoice'
     subject: 'Your cine.io invoice'
     toEmail: account.billingEmail
     toName: name
     userTemplateVars:
       header_blurb: 'Thank you for using cine.io.'
-      name: name
-      content: """
-      <p>This is your receipt!</p>
-
-      <p>Don't hesitate to contact us if you have any questions or comments.</p>
-      <p>Regards,<br/>
-      Thomas Shafer<br/>
-      Technical Officer, cine.io</p>
-      """
+      BILLING_MONTH: moment(billingMonthDate).format("MMM YYYY")
+      ACCOUNT_NAME: name
+      USAGE_PLAN: accountPlans(record.accountPlans)
+      # Plan details
+      PLAN_COST: displayCurrency(billing.plan)
+      PLAN_BANDWIDTH: humanizeBytes(UsageReport.maxUsagePerAccount(backboneAccount, 'bandwidth'))
+      PLAN_STORAGE: humanizeBytes(UsageReport.maxUsagePerAccount(backboneAccount, 'storage'))
+      # Monthly Usage
+      USAGE_BANDWIDTH: humanizeBytes(usage.bandwidth)
+      USAGE_STORAGE: humanizeBytes(usage.storage)
+      # Overage
+      BILL_BANDWIDTH_OVERAGE: "#{humanizeBytes(usage.bandwidthOverage)} @ #{displayCurrency calculateAccountBill.cheapestOverageCost(account, 'bandwidth')} / GiB = #{displayCurrency(billing.bandwidthOverage)}"
+      BILL_STORAGE_OVERAGE: "#{humanizeBytes(usage.storageOverage)} @ #{displayCurrency calculateAccountBill.cheapestOverageCost(account, 'storage')} / GiB = #{displayCurrency(billing.storageOverage)}"
+      BILL_OVERAGE_TOTAL: displayCurrency(billing.bandwidthOverage + billing.storageOverage)
+      # TOTAL
+      BILL_TOTAL: displayCurrency(billing.plan + billing.bandwidthOverage + billing.storageOverage)
   sendMail mailOptions, callback
 
 exports.welcomeEmail = (user, callback=noop)->

@@ -14,7 +14,7 @@ describe 'accountMailer', ->
     @user.save done
 
   beforeEach (done)->
-    @account = new Account(name: 'my account name', billingEmail: 'my billing email', plans: ['basic', 'pro'])
+    @account = new Account(name: 'my account name', billingEmail: 'my billing email', plans: ['basic', 'pro'], billingProvider: 'cine.io')
     @account.save done
 
   beforeEach ->
@@ -148,10 +148,18 @@ describe 'accountMailer', ->
     assertCorrectMergeVars = (mergeVars)->
       expectedMergeVars =
         header_blurb: "Thank you for using cine.io."
-        name: "my account name"
-      expect(mergeVars.templateVars.content).to.include("Don't hesitate to contact us if you have any questions or comments.")
-      # content is huge, don't want to include it here
-      expectedMergeVars.content = mergeVars.templateVars.content
+        ACCOUNT_NAME: "my account name"
+        BILLING_MONTH: "Oct 2014"
+        BILL_BANDWIDTH_OVERAGE: "0 bytes @ $0.70 / GiB = $3.40"
+        BILL_OVERAGE_TOTAL: "$6.30"
+        BILL_STORAGE_OVERAGE: "0 bytes @ $0.70 / GiB = $2.90"
+        BILL_TOTAL: "$11.30"
+        PLAN_BANDWIDTH: "1.15 TiB"
+        PLAN_COST: "$5.00"
+        PLAN_STORAGE: "125.00 GiB"
+        USAGE_BANDWIDTH: "1.00 TiB"
+        USAGE_PLAN: "Basic and Pro"
+        USAGE_STORAGE: "2.00 GiB"
       expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
       assertMergeVarsInVars(mergeVars, expectedMergeVars)
 

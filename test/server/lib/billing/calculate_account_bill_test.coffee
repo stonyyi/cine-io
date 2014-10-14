@@ -107,3 +107,13 @@ describe "calculateAccountBill", ->
           expect(result.billing).to.deep.equal(plan: 60000, bandwidthOverage: 350, storageOverage: 280)
           expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
           done()
+
+  describe '.cheapestOverageCost', ->
+    it 'returns the cheapest cost for an account with one plan', ->
+      account = new Account(billingProvider: 'cine.io', plans: ['basic'])
+      expect(calculateAccountBill.cheapestOverageCost(account, 'bandwidth')).to.equal(80)
+      expect(calculateAccountBill.cheapestOverageCost(account, 'storage')).to.equal(80)
+    it 'returns the cheapest cost for an account with two plans', ->
+      account = new Account(billingProvider: 'cine.io', plans: ['basic', 'pro'])
+      expect(calculateAccountBill.cheapestOverageCost(account, 'bandwidth')).to.equal(70)
+      expect(calculateAccountBill.cheapestOverageCost(account, 'storage')).to.equal(70)

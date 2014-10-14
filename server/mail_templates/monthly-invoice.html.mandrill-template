@@ -131,7 +131,7 @@
       * @theme page
       */
       #templatePreheader{
-        /*@editable*/ background-color:#FAFAFA;
+        /*@editable*/ background-color:#333;
       }
 
       /**
@@ -140,7 +140,7 @@
       * @tip Set the styling for your email's preheader text. Choose a size and color that is easy to read.
       */
       .preheaderContent div{
-        /*@editable*/ color:#505050;
+        /*@editable*/ color:#ccc;
         /*@editable*/ font-family:Arial;
         /*@editable*/ font-size:10px;
         /*@editable*/ line-height:100%;
@@ -153,9 +153,9 @@
       * @tip Set the styling for your email's preheader links. Choose a color that helps them stand out from your text.
       */
       .preheaderContent div a:link, .preheaderContent div a:visited, /* Yahoo! Mail Override */ .preheaderContent div a .yshortcuts /* Yahoo! Mail Override */{
-        /*@editable*/ color:#336699;
+        /*@editable*/ color:#ccc;
         /*@editable*/ font-weight:normal;
-        /*@editable*/ text-decoration:underline;
+        /*@editable*/ text-decoration:none;
       }
 
       /* /\/\/\/\/\/\/\/\/\/\ STANDARD STYLING: HEADER /\/\/\/\/\/\/\/\/\/\ */
@@ -345,6 +345,9 @@
                                     <table border="0" cellpadding="10" cellspacing="0" width="100%">
                                       <tr>
                                           <td valign="top">
+                                               <img src="cid:LOGO_IMAGE">
+                                            </td>
+                                          <td valign="top">
                                               <div mc:edit="std_preheader_content">
                                                    Your cine.io invoice for *|BILLING_MONTH|*.
                                                 </div>
@@ -372,9 +375,9 @@
                                                             <div mc:edit="std_content00">
                                                                 <strong>Hi *|ACCOUNT_NAME|*,</strong>
                                                                 <br />
-                                                                Thank you again for using cine.io!
+                                                                Thank you for using cine.io!
                                                                 <br />
-                                                                Your monthly payment was successful. This is only a receipt for.
+                                                                Your monthly payment was successful. This is only a receipt.
                                                                 <br/>
                                                                 If you have any questions, you can just hit reply, or send an email to <a href="mailto:support@cine.io">support@cine.io</a>.
                                                             </div>
@@ -402,19 +405,24 @@
                                                     <tr>
                                                         <td valign="top">
                                                             <div mc:edit="std_content00">
-                                                                Usage during *|BILLING_MONTH|*:
+                                                                <strong>Plan:</strong> *|USAGE_PLAN|*
                                                                 <ul>
-                                                                <li>Plan: *|USAGE_PLAN|*</li>
+                                                                  <li>Base cost: *|PLAN_COST|* / month</li>
+                                                                  <li>Included bandwidth: *|PLAN_BANDWIDTH|*</li>
+                                                                  <li>Included storage: *|PLAN_STORAGE|*</li>
+                                                                </ul>
+                                                                <strong>Usage during *|BILLING_MONTH|*:</strong>
+                                                                <ul>
                                                                 <li>Bandwidth: *|USAGE_BANDWIDTH|*</li>
                                                                 <li>Storage: *|USAGE_STORAGE|*</li>
                                                                 </ul>
-                                                                Charge:
+                                                                <strong>Overages:</strong>
                                                                 <ul>
-                                                                  <li>Plan: *|BILL_PLAN|*</li>
-                                                                  <li>Bandwidth Overage: *|BILL_BANDWIDTH_OVERAGE|*</li>
-                                                                  <li>Storage Overage: *|BILL_STORAGE_OVERAGE|*</li>
+                                                                  <li>Bandwidth: *|BILL_BANDWIDTH_OVERAGE|*</li>
+                                                                  <li>Storage: *|BILL_STORAGE_OVERAGE|*</li>
+                                                                  <li>Total: *|BILL_OVERAGE_TOTAL|*</li>
                                                                 </ul>
-                                                                Total: *|BILL_TOTAL|*
+                                                                <strong>Charged to your card:</strong> *|BILL_TOTAL|*
                                                                 <br/>
                                                                 <br/>
                                                                 Thank you again for choosing cine.io.
@@ -442,25 +450,18 @@
                                                     <tr>
                                                         <td colspan="2" valign="middle" id="social">
                                                             <div mc:edit="std_social">
-                                                                &nbsp;<a href="*|TWITTER:PROFILEURL|*">follow us on Twitter</a>
+                                                                &nbsp;<a href="https://twitter.com/cine_io/">follow us on Twitter</a>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td valign="top" width="350">
                                                             <div mc:edit="std_footer">
-                                <em>Copyright &copy; *|CURRENT_YEAR|* *|LIST:COMPANY|*, All rights reserved.</em>
-                                <br />
-                                *|IFNOT:ARCHIVE_PAGE|* *|LIST:DESCRIPTION|*
+                                <em>Copyright &copy; *|CURRENT_YEAR|* cine.io, All rights reserved.</em>
                                 <br />
                                 <strong>Our mailing address is:</strong>
                                 <br />
-                                *|HTML:LIST_ADDRESS_HTML|**|END:IF|*
-                                                            </div>
-                                                        </td>
-                                                        <td valign="top" width="190" id="monkeyRewards">
-                                                            <div mc:edit="monkeyrewards">
-                                                                *|IF:REWARDS|* *|HTML:REWARDS|* *|END:IF|*
+                                548 Market st ste 9239, San Francisco, CA 94104 USA
                                                             </div>
                                                         </td>
                                                     </tr>
