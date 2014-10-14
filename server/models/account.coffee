@@ -30,6 +30,8 @@ AccountSchema = new mongoose.Schema
     cards: [StripeCard]
   deletedAt:
     type: Date
+  throttledAt:
+    type: Date
   herokuId:
     type: String
     index: true
