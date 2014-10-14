@@ -1,19 +1,9 @@
 _ = require('underscore')
 moment = require('moment')
 
-User = Cine.server_model('user')
 Account = Cine.server_model('account')
 Stats = Cine.server_lib("stats")
-
-ensureSiteAdmin = (params, callback)->
-  return callback(false) unless params.sessionUserId
-  User.findById params.sessionUserId, (err, user)->
-    return callback(false) if err || !user
-    return callback(user.isSiteAdmin)
-
-ensureSiteAdmin.unauthorizedCallback = (callback)->
-  callback("Unauthorized", null, status: 401)
-
+ensureSiteAdmin = Cine.server_lib('ensure_site_admin_for_api')
 # changes {accountId: dataInBytes, …}
 # to [_id: accountId, usage: dataInBytes, name: "Account name", …]
 accountFromAccountId = (accounts, accountId)->
