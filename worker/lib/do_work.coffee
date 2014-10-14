@@ -2,7 +2,7 @@ _ = require('underscore')
 async = require('async')
 
 scheduledTasks =
-  once_a_day_worker:
+  once_an_hour_worker:
     [
       'reporting/download_and_parse_edgecast_logs'
     ]

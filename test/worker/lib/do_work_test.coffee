@@ -18,7 +18,7 @@ describe 'doWork', ->
     describe 'scheduled tasks', ->
       schedulableJobs = [
         {
-          name: 'once_a_day_worker'
+          name: 'once_an_hour_worker'
           libs: 'reporting/download_and_parse_edgecast_logs'
         }
         {
