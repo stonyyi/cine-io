@@ -55,6 +55,7 @@ describe 'api routes', ->
   testRoute api: 'users/update', method: 'put' , url: '/api/1/-/user'
 
   testRoute api: 'accounts/update', method: 'put' , url: '/api/1/-/account'
+  testRoute api: 'accounts/index', method: 'get' , url: '/api/1/-/accounts'
 
   testRoute api: 'password_change_requests/show', method: 'get' , url: '/api/1/-/password-change-request'
   testRoute api: 'password_change_requests/create', method: 'post', url: '/api/1/-/password-change-request'

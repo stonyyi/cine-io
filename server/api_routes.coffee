@@ -46,6 +46,7 @@ module.exports = (app)->
   put  'users#update', url: 'user'
 
   put  'accounts#update', url: 'account'
+  get  'accounts#index', url: 'accounts'
 
   get  'password_change_requests#show', url: 'password-change-request'
   post 'password_change_requests#create', url: 'password-change-request'
