@@ -13,6 +13,8 @@ AccountBillingHistorySchema = new mongoose.Schema
       type: Date
     paid:
       type: Boolean
+    notCharged:
+      type: Boolean
     mandrillEmailId:
       type: String
     stripeChargeId:

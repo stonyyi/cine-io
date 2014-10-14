@@ -6,6 +6,7 @@ Account = Cine.server_model('account')
 AccountBillingHistory = Cine.server_model('account_billing_history')
 PasswordChangeRequest = Cine.server_model('password_change_request')
 humanizeBytes = Cine.lib('humanize_bytes')
+moment = require('moment')
 
 describe 'accountMailer', ->
 
@@ -145,11 +146,12 @@ describe 'accountMailer', ->
         stripeChargeId: 'last month charge'
       @abh.save done
 
-    assertCorrectMergeVars = (mergeVars)->
+    assertCorrectMergeVars = (mergeVars, billingMonthDate)->
+      month = moment(billingMonthDate).format("MMM YYYY")
       expectedMergeVars =
         header_blurb: "Thank you for using cine.io."
         ACCOUNT_NAME: "my account name"
-        BILLING_MONTH: "Oct 2014"
+        BILLING_MONTH: month
         BILL_BANDWIDTH_OVERAGE: "0 bytes @ $0.70 / GiB = $3.40"
         BILL_OVERAGE_TOTAL: "$6.30"
         BILL_STORAGE_OVERAGE: "0 bytes @ $0.70 / GiB = $2.90"
@@ -168,5 +170,54 @@ describe 'accountMailer', ->
         options = getMailOptions.call(this)
         expect(options.subject).to.equal("Your cine.io invoice")
         assertToAccount(options, @account)
-        assertCorrectMergeVars accountMergeVars(options, @account)
+        assertCorrectMergeVars accountMergeVars(options, @account), @now
+        assertMailSent.call(this, err, response, done)
+
+  describe 'underOneGibBill', ->
+    beforeEach (done)->
+      results =
+        billing:
+          plan: 500
+          bandwidthOverage: 0
+          storageOverage: 0
+        usage:
+          bandwidth: humanizeBytes.GiB * 0.9
+          storage: humanizeBytes.GiB * 0.9
+          bandwidthOverage: 0
+          storageOverage: 0
+      @now = new Date
+      @abh = new AccountBillingHistory(_account: @account._id)
+      @abh.history.push
+        stripeChargeId: 'this month charge'
+        billingDate: @now
+        billedAt: new Date
+        details: results
+        accountPlans: @account.plans
+
+      lastMonth = new Date
+      lastMonth.setMonth(lastMonth.getMonth() - 1)
+      @abh.history.push
+        billingDate: lastMonth
+        stripeChargeId: 'last month charge'
+      @abh.save done
+
+    assertCorrectMergeVars = (mergeVars, billingMonthDate)->
+      month = moment(billingMonthDate).format("MMM YYYY")
+
+      expectedMergeVars =
+        header_blurb: "Have #{month} on us."
+        name: "my account name"
+      expect(mergeVars.templateVars.content).to.include("This is normally when bills come around. Your bandwidth usage was under 1 GiB so have #{month} on us.")
+      # content is huge, don't want to include it here
+      expectedMergeVars.content = mergeVars.templateVars.content
+
+      expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
+      assertMergeVarsInVars(mergeVars, expectedMergeVars)
+
+    it 'sends the billing email', (done)->
+      accountMailer.underOneGibBill @account, @abh, @now, (err, response)=>
+        options = getMailOptions.call(this)
+        expect(options.subject).to.equal("Your non-invoice for cine.io.")
+        assertToAccount(options, @account)
+        assertCorrectMergeVars accountMergeVars(options, @account), @now
         assertMailSent.call(this, err, response, done)

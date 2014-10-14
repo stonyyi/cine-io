@@ -14,37 +14,47 @@ describe 'billAccountForMonth', ->
     @account.save done
 
   beforeEach ->
-    @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
-    usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
-    usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
-    @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
-
-  beforeEach ->
     @now = new Date
 
-  afterEach ->
-    @usageStub.restore()
+  describe 'failed to bill', ->
+    beforeEach ->
+      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
+      usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
+      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
 
-  it 'requires the account be a stripe customer', (done)->
-    billAccountForMonth @account, @now, (err)->
-      expect(err).to.equal('account not stripe customer')
-      done()
+    afterEach ->
+      @usageStub.restore()
 
-  it 'requires the account have a stripe card', (done)->
-    @account.stripeCustomer.stripeCustomerId = "the customer id"
-    billAccountForMonth @account, @now, (err)->
-      expect(err).to.equal('account has no primary card')
-      done()
+    it 'requires the account be a stripe customer', (done)->
+      billAccountForMonth @account, @now, (err)->
+        expect(err).to.equal('account not stripe customer')
+        done()
 
-  it 'requires the account have a non deleted stripe card', (done)->
-    @account.stripeCustomer.stripeCustomerId = "the customer id"
-    @account.stripeCustomer.cards.push stripeCardId: 'some card id', deletedAt: new Date
+    it 'requires the account have a stripe card', (done)->
+      @account.stripeCustomer.stripeCustomerId = "the customer id"
+      billAccountForMonth @account, @now, (err)->
+        expect(err).to.equal('account has no primary card')
+        done()
 
-    billAccountForMonth @account, @now, (err)->
-      expect(err).to.equal('account has no primary card')
-      done()
+    it 'requires the account have a non deleted stripe card', (done)->
+      @account.stripeCustomer.stripeCustomerId = "the customer id"
+      @account.stripeCustomer.cards.push stripeCardId: 'some card id', deletedAt: new Date
+
+      billAccountForMonth @account, @now, (err)->
+        expect(err).to.equal('account has no primary card')
+        done()
 
   describe 'success', ->
+    beforeEach ->
+      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
+      usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
+      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
+
+    afterEach ->
+      @usageStub.restore()
+
     beforeEach (done)->
       @account.stripeCustomer.stripeCustomerId = "cus_2ghmxawfvEwXkw"
       @account.stripeCustomer.cards.push stripeCardId: "card_102gkI2AL5avr9E4geO0PpkC"
@@ -94,7 +104,84 @@ describe 'billAccountForMonth', ->
         expect(args[3]).to.be.a('function')
         done()
 
+  describe 'with < 1 GiB of usage', ->
+    beforeEach ->
+      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      usedBandwidth = humanizeBytes.GiB * 0.9
+      usedStorage = humanizeBytes.GiB * 0.9
+      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
+
+    afterEach ->
+      @usageStub.restore()
+
+    beforeEach ->
+      @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
+      @mailerSpy = sinon.spy mailer, 'underOneGibBill'
+
+    afterEach ->
+      @mailerSpy.restore()
+
+    describe 'with no credit card', ->
+
+      beforeEach (done)->
+        billAccountForMonth @account, @now, done
+
+      it 'creates a record in AccountBillingHistory', (done)->
+        AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
+          expect(err).to.be.null
+          expect(abh.history).to.have.length(1)
+          lastCharge = abh.history[0]
+          expect(lastCharge.billingDate).to.be.instanceOf(Date)
+          expect(lastCharge.billingDate.toString()).to.equal(@now.toString())
+          expect(lastCharge.billedAt).to.be.instanceOf(Date)
+          expect(lastCharge.paid).to.be.undefined
+          expect(lastCharge.notCharged).to.be.true
+          expect(lastCharge.stripeChargeId).to.be.undefined
+          expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
+          expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
+          expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
+          expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0)
+          expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.9, storage: humanizeBytes.GiB * 0.9, bandwidthOverage: 0, storageOverage: 0)
+          done()
+
+      it 'sends an email that they were not charged', (done)->
+        AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
+          expect(err).to.be.null
+          expect(@templateEmailSuccess.isDone()).to.be.true
+          expect(@mailerSpy.calledOnce).to.be.true
+          args = @mailerSpy.firstCall.args
+          expect(args).to.have.length(4)
+          expect(args[0]._id.toString()).to.equal(@account._id.toString())
+          expect(args[1]._id.toString()).to.equal(abh._id.toString())
+          expect(args[2].toString()).to.equal(@now.toString())
+          expect(args[3]).to.be.a('function')
+          done()
+    describe 'with a credit card', ->
+      beforeEach ->
+        @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 60000)
+
+      beforeEach (done)->
+        @account.stripeCustomer.stripeCustomerId = "cus_2ghmxawfvEwXkw"
+        @account.stripeCustomer.cards.push stripeCardId: "card_102gkI2AL5avr9E4geO0PpkC"
+        @account.save done
+
+
+      beforeEach (done)->
+        billAccountForMonth @account, @now, done
+
+      it 'charges stripe', ->
+        expect(@chargeSuccess.isDone()).to.be.true
+
   describe 'with a declined stripe charge', ->
+    beforeEach ->
+      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
+      usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
+      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
+
+    afterEach ->
+      @usageStub.restore()
+
     beforeEach (done)->
       @account.stripeCustomer.stripeCustomerId = "cus_2ghmxawfvEwXkw"
       @account.stripeCustomer.cards.push stripeCardId: "card_102gkI2AL5avr9E4geO0PpkC"
@@ -138,6 +225,15 @@ describe 'billAccountForMonth', ->
         done()
 
   describe 'with a failed stripe charge for an unknown reason', ->
+    beforeEach ->
+      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
+      usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
+      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
+
+    afterEach ->
+      @usageStub.restore()
+
     beforeEach (done)->
       @account.stripeCustomer.stripeCustomerId = "cus_2ghmxawfvEwXkw"
       @account.stripeCustomer.cards.push stripeCardId: "card_102gkI2AL5avr9E4geO0PpkC"

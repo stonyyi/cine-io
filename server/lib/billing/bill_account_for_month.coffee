@@ -3,15 +3,16 @@ stripe = require('stripe')(Cine.config('variables/stripe').secretKey)
 calculateAccountBill = Cine.server_lib("billing/calculate_account_bill.coffee")
 AccountBillingHistory = Cine.server_model("account_billing_history")
 mailer = Cine.server_lib("mailer")
+humanizeBytes = Cine.lib('humanize_bytes')
 
 CARD_DECLINED_ERROR = 'Error: Your card was declined.'
 ALREADY_REFUNDED_REGEX = /Charge ch_\S+ has already been refunded./
-emailCardDeclined = (account, abh, now)->
-  # mailer.cardDeclined(account, abh, now)
-  mailer.admin.cardDeclined(account, abh, now)
+emailCardDeclined = (account, abh, monthToBill)->
+  # mailer.cardDeclined(account, abh, monthToBill)
+  mailer.admin.cardDeclined(account, abh, monthToBill)
 
-emailUnknownError = (account, abh, now)->
-  mailer.admin.unknownChargeError(account, abh, now)
+emailUnknownError = (account, abh, monthToBill)->
+  mailer.admin.unknownChargeError(account, abh, monthToBill)
 
 findOrCreateAccountBillingHistory = (account, callback)->
   AccountBillingHistory.findOne _account: account._id, (err, abh)->
@@ -20,9 +21,9 @@ findOrCreateAccountBillingHistory = (account, callback)->
     abh = new AccountBillingHistory(_account: account._id)
     abh.save callback
 
-saveResultsToRecord = (abh, account, now, results, callback)->
+saveResultsToRecord = (abh, account, monthToBill, results, callback)->
   record =
-    billingDate: now
+    billingDate: monthToBill
     billedAt: new Date
     details: results
     accountPlans: account.plans
@@ -42,48 +43,68 @@ chargeStripe = (account, results, callback)->
     capture: true
   stripe.charges.create stripeData, callback
 
-saveNewCharge = (abh, now, stripeResults, callback)->
-  record = abh.billingRecordForMonth(now)
+saveNewCharge = (abh, monthToBill, stripeResults, callback)->
+  record = abh.billingRecordForMonth(monthToBill)
   record.stripeChargeId = stripeResults.id
   record.paid = stripeResults.paid
   abh.save callback
 
-sendEmailReceipt = (account, abh, now, callback)->
-  mailer.monthlyBill account, abh, now, (err, emailResult)->
+sendEmailReceipt = (account, abh, monthToBill, callback)->
+  mailer.monthlyBill account, abh, monthToBill, (err, emailResult)->
     # console.log("sent email", err, emailResult)
-    record = abh.billingRecordForMonth(now)
+    record = abh.billingRecordForMonth(monthToBill)
     record.mandrillEmailId = emailResult[0]._id
     abh.save callback
 
-saveChargeError = (account, abh, now, chargeError, callback)->
-  record = abh.billingRecordForMonth(now)
+saveChargeError = (account, abh, monthToBill, chargeError, callback)->
+  record = abh.billingRecordForMonth(monthToBill)
   record.paid = false
   record.chargeError = chargeError
 
   if record.chargeError == CARD_DECLINED_ERROR
-    emailCardDeclined(account, abh, now)
+    emailCardDeclined(account, abh, monthToBill)
   else
-    emailUnknownError(account, abh, now)
+    emailUnknownError(account, abh, monthToBill)
 
   abh.save callback
 
-module.exports = (account, now, callback)->
-  # console.log("charging account", account)
+chargeAccount = (account, abh, monthToBill, results, callback)->
   return callback("account not stripe customer") unless account.stripeCustomer.stripeCustomerId
   return callback("account has no primary card") unless findPrimaryCard(account)
+  chargeStripe account, results, (err, stripeResults)->
+    if err
+      return saveChargeError account, abh, monthToBill, err, (err2)->
+        return callback(err2)
+    saveNewCharge abh, monthToBill, stripeResults, (err)->
+      return callback(err) if err
+      sendEmailReceipt account, abh, monthToBill, callback
+
+sendNotBilledEmail = (account, abh, monthToBill, callback)->
+  record = abh.billingRecordForMonth(monthToBill)
+  record.notCharged = true
+  abh.save (err)->
+    return callback(err) if err
+    mailer.underOneGibBill account, abh, monthToBill, (err, emailResult)->
+      record = abh.billingRecordForMonth(monthToBill)
+      record.mandrillEmailId = emailResult[0]._id
+      abh.save callback
+
+shouldBill = (account, results)->
+  return true if account.stripeCustomer.stripeCustomerId && findPrimaryCard(account)
+  results.usage.bandwidth > humanizeBytes.GiB && results.usage.storage > humanizeBytes.GiB
+
+module.exports = (account, monthToBill, callback)->
+  # console.log("charging account", account)
   findOrCreateAccountBillingHistory account, (err, abh)->
     return callback(err) if err
-    return callback("already charged account for this month") if abh.hasBilledForMonth(now)
+    return callback("already charged account for this month") if abh.hasBilledForMonth(monthToBill)
     calculateAccountBill account, (err, results)->
-      # console.log("calculated", err, results)
       return callback(err) if err
-      saveResultsToRecord abh, account, now, results, (err)->
+      # console.log("calculated", err, results)
+      saveResultsToRecord abh, account, monthToBill, results, (err)->
         # console.log("saved results to record", err)
         return callback(err) if err
-        chargeStripe account, results, (err, stripeResults)->
-          if err
-            return saveChargeError account, abh, now, err, (err2)->
-              return callback(err2)
-          saveNewCharge abh, now, stripeResults, (err)->
-            return callback(err) if err
-            sendEmailReceipt account, abh, now, callback
+        if shouldBill(account, results)
+          chargeAccount(account, abh, monthToBill, results, callback)
+        else
+          sendNotBilledEmail(account, abh, monthToBill, callback)

@@ -81,6 +81,26 @@ exports.monthlyBill = (account, accountBillingHistory, billingMonthDate, callbac
       BILL_TOTAL: displayCurrency(billing.plan + billing.bandwidthOverage + billing.storageOverage)
   sendMail mailOptions, callback
 
+exports.underOneGibBill = (account, accountBillingHistory, billingMonthDate, callback=noop)->
+  name = account.name || account.billingEmail
+  month = moment(billingMonthDate).format("MMM YYYY")
+  mailOptions =
+    templateName: 'blank-with-header-and-footer'
+    subject: 'Your non-invoice for cine.io.'
+    toEmail: account.billingEmail
+    toName: name
+    userTemplateVars:
+      header_blurb: "Have #{month} on us."
+      name: name
+      content: """
+      <p>This is normally when bills come around. Your bandwidth usage was under 1 GiB so have #{month} on us.</p>
+      <p>We hope you enjoy using <a href="https://www.cine.io">cine.io</a>.</p>
+      <p>Regards,<br/>
+      Thomas Shafer<br/>
+      Technical Officer, cine.io</p>
+      """
+  sendMail mailOptions, callback
+
 exports.welcomeEmail = (user, callback=noop)->
   name = user.name || user.email
   mailOptions =
