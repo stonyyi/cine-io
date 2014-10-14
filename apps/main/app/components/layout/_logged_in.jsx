@@ -72,7 +72,7 @@ module.exports = React.createClass({
 
     return (
       <section className="top-bar-section">
-        <ul className="right">
+        <ul className="right account-drop-down">
           {accountDropDown}
           <li className="has-dropdown not-click">
             <a href="" onClick={this.doNothing}>{name}</a>

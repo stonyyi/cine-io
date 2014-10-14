@@ -17,7 +17,7 @@ module.exports = React.createClass({
         <li className="name">
           <h1 className="brand"><a onClick={this.goHome}>cine.io</a></h1>
         </li>
-        <li className="toggle-topbar menu-icon"><a href="" onClick={this.props.toggleExpandMenu}></a></li>
+        <li className="toggle-topbar menu-icon account-drop-down"><a href="" onClick={this.props.toggleExpandMenu}></a></li>
       </ul>
     );
   }

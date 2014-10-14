@@ -51,9 +51,10 @@ footer {
 }
 
 //flash
+$flash-holder-z-index: 1;
 .flash-holder{
   position: fixed;
-  z-index: 1;
+  z-index: $flash-holder-z-index;
   top: 0;
   left: 0;
   right: 0;
@@ -81,6 +82,11 @@ button, .button {
   -webkit-transform: translateZ(0);
   // background: none;
   // border: 2px solid $primary-color;
+}
+
+.account-drop-down{
+  position: relative;
+  z-index: $flash-holder-z-index+1;
 }
 
 .move-right{
