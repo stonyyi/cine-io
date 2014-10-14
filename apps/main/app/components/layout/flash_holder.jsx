@@ -2,6 +2,7 @@
 var React = require('react')
   , App = Cine.arch('shared_app')
   , _ = require('underscore')
+  , FlashMessage = Cine.component('layout/_flash_message')
   , flashTimeout = 5000 // milliseconds
 ;
 module.exports = React.createClass({
@@ -40,14 +41,8 @@ module.exports = React.createClass({
     var
       self = this
       , messageMap = function(flashMessage, i) {
-        var alertClasses = [flashMessage.kind, 'alert-box', 'radius'].join(' ');
         return (
-          <div key={flashMessage.id} data-alert className={alertClasses}>
-            <span className='alert-body' dangerouslySetInnerHTML={{__html: flashMessage.message}} />
-            <a href="" className='close-alert' onClick={self.closeAlert.bind(self, i)}>
-              <i className="fa fa-times"></i>
-            </a>
-          </div>
+          <FlashMessage key={flashMessage.id} kind={flashMessage.kind} message={flashMessage.message} closeAlert={self.closeAlert.bind(self, i)} />
           );
         }
       , flashMessages = _.map(this.state.flashMessages, messageMap);

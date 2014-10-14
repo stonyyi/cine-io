@@ -5,6 +5,7 @@ var
   ListItem = Cine.component('homepage/_project_list_item'),
   Projects = Cine.collection('projects'),
   ProjectStreamsWrapper = Cine.component('homepage/_project_streams_wrapper'),
+  FlashMessage = Cine.component('layout/_flash_message'),
   cx = Cine.lib('cx');
 
 module.exports = React.createClass({
@@ -51,7 +52,9 @@ module.exports = React.createClass({
     this.selectProject(project);
   },
   render: function() {
-    var selectedProjectId = this.state.selectedProjectId;
+    var
+      selectedProjectId = this.state.selectedProjectId,
+      planNeedsCreditCard;
     // if something is selected and but it doesn't exist in the collection, remove it.
     if (selectedProjectId && !this.getCurrentCollection().get(selectedProjectId)){
       selectedProjectId = null;
@@ -74,6 +77,10 @@ module.exports = React.createClass({
       'fa-plus': !this.state.showingNewProject,
       'fa-minus': this.state.showingNewProject
     });
+    if (this.props.app.currentAccount().needsCreditCard()){
+      var message = 'Your plan is currently limited to the free plan. To activate all the benefits of your <strong>'+this.props.app.currentAccount().firstPlan() +'</strong> plan, please go to your <a href="/account">account page</a> to enter a credit card.'
+      planNeedsCreditCard = (<FlashMessage message={message} kind="info"/>)
+    }
 
     if (this.state.showingNewProject){
       newProject = (<NewProject app={this.props.app} masterKey={this.props.masterKey}/>);
@@ -85,6 +92,7 @@ module.exports = React.createClass({
     return (
       <div id="homepage-logged-in">
         <div className='row'>
+          {planNeedsCreditCard}
           <div className='medium-8 columns'>
             <div className="panels-wrapper panel">
               <div className='panel-heading clearfix'>

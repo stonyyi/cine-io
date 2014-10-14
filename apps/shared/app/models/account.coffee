@@ -1,5 +1,10 @@
 Base = Cine.model('base')
 capitalize = Cine.lib('capitalize')
+ProvidersAndPlans = Cine.config('providers_and_plans')
+_ = require('underscore')
+
+planIsFree = (plan)->
+  ProvidersAndPlans['cine.io'].plans[plan].price == 0
 
 module.exports = class Account extends Base
   @id: 'Account'
@@ -14,6 +19,11 @@ module.exports = class Account extends Base
     @get('provider') == 'appdirect'
 
   @include Cine.lib('date_value')
+
+  needsCreditCard: ->
+    return false unless @get('provider') == 'cine.io'
+    return false if _.all @get('plans'), planIsFree
+    !@get('stripeCard')?
 
   createdAt: ->
     @_dateValue('createdAt')
