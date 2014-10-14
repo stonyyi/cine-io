@@ -23,6 +23,7 @@ accountWithinLimit = (account, results)->
   results.bandwidth <= maxBandwidth && results.storage <= maxStorage
 
 throttleAccount = (account, callback)->
+  console.log("Throttling", account)
   account.throttledAt = new Date
   account.save callback
 
