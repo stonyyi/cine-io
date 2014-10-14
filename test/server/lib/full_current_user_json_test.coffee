@@ -13,7 +13,7 @@ describe 'fullCurrentUserJson', ->
     @account.save done
 
   beforeEach (done)->
-    @account2 = new Account(name: 'second account', plans: ['basic', 'pro'], masterKey: '2mkey', billingProvider: 'cine.io')
+    @account2 = new Account(billingEmail: 'with billing email', name: 'second account', plans: ['basic', 'pro'], masterKey: '2mkey', billingProvider: 'cine.io')
     @account2.save done
 
   beforeEach (done)->
@@ -72,6 +72,7 @@ describe 'fullCurrentUserJson', ->
       secondAccount = @userJson.accounts[1]
       expect(secondAccount.id.toString()).to.equal(@account2._id.toString())
       expect(secondAccount.name).to.equal('second account')
+      expect(secondAccount.email).to.equal('with billing email')
       expect(secondAccount.masterKey).to.equal('2mkey')
       expect(secondAccount.plans).have.length(2)
       expect(secondAccount.plans[0]).to.equal('basic')
