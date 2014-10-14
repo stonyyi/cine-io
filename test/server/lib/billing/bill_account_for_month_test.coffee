@@ -16,6 +16,12 @@ describe 'billAccountForMonth', ->
   beforeEach ->
     @now = new Date
 
+  it 'requires the account be a cine.io account', (done)->
+    account = new Account()
+    billAccountForMonth account, @now, (err)->
+      expect(err).to.equal('can only charge cine.io accounts')
+      done()
+
   describe 'failed to bill', ->
     beforeEach ->
       @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')

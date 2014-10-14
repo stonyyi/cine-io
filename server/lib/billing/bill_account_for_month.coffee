@@ -94,6 +94,7 @@ shouldBill = (account, results)->
   results.usage.bandwidth > humanizeBytes.GiB && results.usage.storage > humanizeBytes.GiB
 
 module.exports = (account, monthToBill, callback)->
+  return callback("can only charge cine.io accounts") if account.billingProvider != 'cine.io'
   # console.log("charging account", account)
   findOrCreateAccountBillingHistory account, (err, abh)->
     return callback(err) if err
