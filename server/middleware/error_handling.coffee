@@ -21,7 +21,7 @@ developmentHandler = (err, req, res, next) ->
   console.log('there is an err in development', err)
   return sendErr(req, res, err) if req.xhr
   return sendErr(req, res, err, api: true) if API_PATH_REGEX.test(req.originalUrl)
-  errorHandler(err, req, res, next)
+  errorHandler()(err, req, res, next)
 
 serveStaticErrorPage = (status, res)->
   errPage = "#{Cine.root}/public/error_pages/#{status}.html"
