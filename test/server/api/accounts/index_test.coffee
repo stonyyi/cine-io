@@ -1,4 +1,4 @@
-Index = testApi Cine.api('accounts/Index')
+Index = testApi Cine.api('accounts/index')
 Account = Cine.server_model('account')
 User = Cine.server_model('user')
 
