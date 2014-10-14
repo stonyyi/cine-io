@@ -17,7 +17,7 @@ describe 'Account', ->
       account = new Account(provider: "cine.io")
       expect(account.isHeroku()).to.be.false
 
-  describe.only 'needsCreditCard', ->
+  describe 'needsCreditCard', ->
     it 'returns true for an account on a paid plan without a credit card', ->
       account = new Account(plans: ['pro'], provider: 'cine.io')
       expect(account.needsCreditCard()).to.be.true
