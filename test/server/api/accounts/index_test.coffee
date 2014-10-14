@@ -42,7 +42,7 @@ describe 'Stats#Index', ->
     it "cannot handle other requests", (done)->
       params = {}
       session = user: @siteAdmin
-      callback = (err, response, options)=>
+      callback = (err, response, options)->
         expect(err).to.equal("don't know how to respond")
         expect(response).to.be.null
         expect(options).to.deep.equal(status: 400)
