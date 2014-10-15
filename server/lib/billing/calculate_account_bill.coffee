@@ -45,7 +45,7 @@ calculateStorageOverage = (account)->
 #  plan: Number in cents
 #  storageOverage: Number in cents
 #  bandwidthOverage: Number in cents
-module.exports = (account, callback)->
+module.exports = (account, monthToBill, callback)->
   if account.plans.length == 0
     return callback null,
       billing:
@@ -57,7 +57,7 @@ module.exports = (account, callback)->
         storage: 0
         bandwidthOverage: 0
         storageOverage: 0
-  calculateAccountUsage.thisMonth account, (err, accountUsageResult)->
+  calculateAccountUsage.byMonth account, monthToBill, (err, accountUsageResult)->
     return callback(err) if err
     bandwidthOverage = calculateAccountOverage(account, accountUsageResult, 'bandwidth')
     storageOverage = calculateAccountOverage(account, accountUsageResult, 'storage')

@@ -24,10 +24,10 @@ describe 'billAccountForMonth', ->
 
   describe 'failed to bill', ->
     beforeEach ->
-      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
       usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
-      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
 
     afterEach ->
       @usageStub.restore()
@@ -53,10 +53,10 @@ describe 'billAccountForMonth', ->
 
   describe 'success', ->
     beforeEach ->
-      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
       usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
-      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
 
     afterEach ->
       @usageStub.restore()
@@ -112,10 +112,10 @@ describe 'billAccountForMonth', ->
 
   describe 'with < 1 GiB of usage', ->
     beforeEach ->
-      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 0.9
       usedStorage = humanizeBytes.GiB * 0.9
-      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
 
     afterEach ->
       @usageStub.restore()
@@ -180,10 +180,10 @@ describe 'billAccountForMonth', ->
 
   describe 'with a declined stripe charge', ->
     beforeEach ->
-      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
       usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
-      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
 
     afterEach ->
       @usageStub.restore()
@@ -232,10 +232,10 @@ describe 'billAccountForMonth', ->
 
   describe 'with a failed stripe charge for an unknown reason', ->
     beforeEach ->
-      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
       usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
-      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
 
     afterEach ->
       @usageStub.restore()

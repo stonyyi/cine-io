@@ -8,10 +8,12 @@ describe "calculateAccountBill", ->
   beforeEach (done)->
     @account = new Account billingProvider: 'cine.io'
     @account.save done
+  beforeEach ->
+    @month = new Date
 
   it "returns 0 for no plans", (done)->
     @account.plans = []
-    calculateAccountBill @account, (err, result)->
+    calculateAccountBill @account, @month, (err, result)->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
       expect(result.billing).to.deep.equal(plan: 0, bandwidthOverage: 0, storageOverage: 0)
@@ -20,7 +22,7 @@ describe "calculateAccountBill", ->
 
   it "returns 0 for free plans", (done)->
     @account.plans = ['free']
-    calculateAccountBill @account, (err, result)->
+    calculateAccountBill @account, @month, (err, result)->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
       expect(result.billing).to.deep.equal(plan: 0, bandwidthOverage: 0, storageOverage: 0)
@@ -29,7 +31,7 @@ describe "calculateAccountBill", ->
 
   it "returns 100 for basic plan", (done)->
     @account.plans = ['basic']
-    calculateAccountBill @account, (err, result)->
+    calculateAccountBill @account, @month, (err, result)->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
       expect(result.billing).to.deep.equal(plan: 10000, bandwidthOverage: 0, storageOverage: 0)
@@ -38,7 +40,7 @@ describe "calculateAccountBill", ->
 
   it "returns 600 for basic and pro plan", (done)->
     @account.plans = ['basic', 'pro']
-    calculateAccountBill @account, (err, result)->
+    calculateAccountBill @account, @month, (err, result)->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
       expect(result.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0)
@@ -48,14 +50,15 @@ describe "calculateAccountBill", ->
   describe 'with bandwidth and storage', ->
 
     beforeEach ->
-      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
 
     afterEach ->
       expect(@usageStub.calledOnce).to.be.true
       args = @usageStub.firstCall.args
-      expect(args).to.have.length(2)
+      expect(args).to.have.length(3)
       expect(args[0]._id.toString()).to.equal(@account._id.toString())
-      expect(args[1]).to.be.an.instanceOf(Function)
+      expect(args[1].toString()).to.equal(@month.toString())
+      expect(args[2]).to.be.an.instanceOf(Function)
       @usageStub.restore()
 
     describe 'within limits', ->
@@ -63,8 +66,8 @@ describe "calculateAccountBill", ->
         @account.plans = ['basic']
         usedBandwidth = humanizeBytes.GiB * 150
         usedStorage = humanizeBytes.GiB * 25
-        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
-        calculateAccountBill @account, (err, result)->
+        @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+        calculateAccountBill @account, @month, (err, result)->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
           expect(result.billing).to.deep.equal(plan: 10000, bandwidthOverage: 0, storageOverage: 0)
@@ -75,8 +78,8 @@ describe "calculateAccountBill", ->
         @account.plans = ['basic', 'pro']
         usedBandwidth = humanizeBytes.GiB * 150 + humanizeBytes.TiB
         usedStorage = humanizeBytes.GiB * 25 + humanizeBytes.GiB * 100
-        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
-        calculateAccountBill @account, (err, result)->
+        @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+        calculateAccountBill @account, @month, (err, result)->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
           expect(result.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0)
@@ -88,8 +91,8 @@ describe "calculateAccountBill", ->
         @account.plans = ['basic']
         usedBandwidth = humanizeBytes.GiB * 153
         usedStorage = humanizeBytes.GiB * 27
-        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
-        calculateAccountBill @account, (err, result)->
+        @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+        calculateAccountBill @account, @month, (err, result)->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
           expect(result.billing).to.deep.equal(plan: 10000, bandwidthOverage: 240, storageOverage: 160)
@@ -100,8 +103,8 @@ describe "calculateAccountBill", ->
         @account.plans = ['basic', 'pro']
         usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
         usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
-        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
-        calculateAccountBill @account, (err, result)->
+        @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+        calculateAccountBill @account, @month, (err, result)->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
           expect(result.billing).to.deep.equal(plan: 60000, bandwidthOverage: 350, storageOverage: 280)

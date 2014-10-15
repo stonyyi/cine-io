@@ -57,10 +57,10 @@ describe 'chargeAllAccounts', ->
       @billingSpy.restore()
 
     beforeEach ->
-      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 155
       usedStorage = humanizeBytes.GiB * 29
-      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
 
     afterEach ->
       @usageStub.restore()
