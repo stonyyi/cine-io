@@ -75,6 +75,17 @@ $flash-holder-z-index: 1;
   }
 }
 
+.alert-box{
+  i.fa{
+    vertical-align: middle;
+    padding-right: 5px;
+  }
+}
+.warning.alert-box{
+  border: 1px solid #ccc;
+}
+// end flash
+
 button, .button {
   text-transform: uppercase;
   color: white;

@@ -78,8 +78,8 @@ module.exports = React.createClass({
       'fa-minus': this.state.showingNewProject
     });
     if (this.props.app.currentAccount().needsCreditCard()){
-      var message = 'Your plan is currently limited to the free plan. To activate all the benefits of your <strong>'+this.props.app.currentAccount().firstPlan() +'</strong> plan, please go to your <a href="/account">account page</a> to enter a credit card.'
-      planNeedsCreditCard = (<FlashMessage message={message} kind="info"/>)
+      var message = '<i class="fa fa-2x fa-exclamation-triangle"></i><span>Your account is currently limited to the free plan. To activate all the benefits of your <strong>'+this.props.app.currentAccount().firstPlan() +'</strong> plan, please go to your <a href="/account">account page</a> to enter a credit card.</span>'
+      planNeedsCreditCard = (<FlashMessage message={message} kind="warning"/>)
     }
 
     if (this.state.showingNewProject){
