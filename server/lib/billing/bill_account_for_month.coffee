@@ -77,6 +77,7 @@ chargeAccount = (account, abh, monthToBill, results, callback)->
         return callback(err2)
     saveNewCharge abh, monthToBill, stripeResults, (err)->
       return callback(err) if err
+
       sendEmailReceipt account, abh, monthToBill, callback
 
 sendNotBilledEmail = (account, abh, monthToBill, callback)->
@@ -93,7 +94,12 @@ shouldBill = (account, results)->
   return true if account.stripeCustomer.stripeCustomerId && findPrimaryCard(account)
   results.usage.bandwidth > humanizeBytes.GiB && results.usage.storage > humanizeBytes.GiB
 
+# provides a nice api
 module.exports = (account, monthToBill, callback)->
+  module.exports.__work(account, monthToBill, callback)
+
+# spyable function
+module.exports.__work = (account, monthToBill, callback)->
   return callback("can only charge cine.io accounts") if account.billingProvider != 'cine.io'
   # console.log("charging account", account)
   findOrCreateAccountBillingHistory account, (err, abh)->
