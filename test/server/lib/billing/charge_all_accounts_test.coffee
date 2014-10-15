@@ -18,10 +18,11 @@ describe 'chargeAllAccounts', ->
     assertNotCallableOnAnotherDay = (day, callback)->
       thatDay = new Date
       thatDay.setDate(day)
-      stub = sinon.stub(Date, 'now').returns(thatDay.getTime())
+      dateStub = sinon.stub Date, 'now', ->
+        dateStub.restore()
+        thatDay.getTime()
       chargeAllAccounts (err)->
         expect(err).to.equal("Not running on the first of the month")
-        stub.restore()
         callback()
     async.eachSeries days, assertNotCallableOnAnotherDay, done
 
@@ -70,40 +71,52 @@ describe 'chargeAllAccounts', ->
     beforeEach ->
       @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 10000 + (5*80) + (4*80))
 
-    beforeEach ->
+    stubDate = ->
       @firstOfMonth = new Date
       @firstOfMonth.setDate(1)
-      @dateStub = sinon.stub(Date, 'now').returns(@firstOfMonth.getTime())
+      dateStub = sinon.stub Date, 'now', =>
+        dateStub.restore()
+        @firstOfMonth.getTime()
 
-    afterEach ->
-      @dateStub.restore()
+    it 'does not try to charge heroku, engineyard, or appdirect accounts', (done)->
+      stubDate()
+      chargeAllAccounts (err)=>
+        expect(err).to.be.null
+        expect(@billingSpy.callCount).to.equal(1)
+        account = @billingSpy.firstCall.args[0]
+        expect(account._id.toString()).not.to.equal(@herokuAccount._id.toString())
+        expect(account._id.toString()).not.to.equal(@engineYardAccount._id.toString())
+        expect(account._id.toString()).not.to.equal(@appdirectAccount._id.toString())
+        done()
 
-    beforeEach (done)->
-      chargeAllAccounts done
+    it 'does not try to charge deleted accounts', (done)->
+      stubDate.call(this)
+      chargeAllAccounts (err)=>
+        expect(err).to.be.null
+        expect(@billingSpy.callCount).to.equal(1)
+        account = @billingSpy.firstCall.args[0]
+        expect(account._id.toString()).not.to.equal(@deletedAccount._id.toString())
+        done()
 
-    it 'does not try to charge heroku, engineyard, or appdirect accounts', ->
-      expect(@billingSpy.callCount).to.equal(1)
-      account = @billingSpy.firstCall.args[0]
-      expect(account._id.toString()).not.to.equal(@herokuAccount._id.toString())
-      expect(account._id.toString()).not.to.equal(@engineYardAccount._id.toString())
-      expect(account._id.toString()).not.to.equal(@appdirectAccount._id.toString())
+    it 'does not try to charge throttled accounts', (done)->
+      stubDate.call(this)
+      chargeAllAccounts (err)=>
+        expect(err).to.be.null
+        expect(@billingSpy.callCount).to.equal(1)
+        account = @billingSpy.firstCall.args[0]
+        expect(account._id.toString()).not.to.equal(@throttledAccount._id.toString())
+        done()
 
-    it 'does not try to charge deleted accounts', ->
-      expect(@billingSpy.callCount).to.equal(1)
-      account = @billingSpy.firstCall.args[0]
-      expect(account._id.toString()).not.to.equal(@deletedAccount._id.toString())
+    it 'charges cine.io accounts for the previous month', (done)->
+      stubDate.call(this)
+      chargeAllAccounts (err)=>
+        expect(err).to.be.null
+        expect(@billingSpy.callCount).to.equal(1)
+        account = @billingSpy.firstCall.args[0]
+        expect(account._id.toString()).to.equal(@cineioAccount._id.toString())
 
-    it 'does not try to charge throttled accounts', ->
-      expect(@billingSpy.callCount).to.equal(1)
-      account = @billingSpy.firstCall.args[0]
-      expect(account._id.toString()).not.to.equal(@throttledAccount._id.toString())
-
-    it 'charges cine.io accounts for the previous month', ->
-      expect(@billingSpy.callCount).to.equal(1)
-      account = @billingSpy.firstCall.args[0]
-      expect(account._id.toString()).to.equal(@cineioAccount._id.toString())
-
-      month = @billingSpy.firstCall.args[1]
-      lastOfMonth = new Date(@firstOfMonth.toString())
-      lastOfMonth.setDate(lastOfMonth.getDate() - 1)
-      expect(month.toString()).to.equal(lastOfMonth.toString())
+        month = @billingSpy.firstCall.args[1]
+        lastOfMonth = new Date(@firstOfMonth.toString())
+        lastOfMonth.setDate(lastOfMonth.getDate() - 1)
+        expect(month.toString()).to.equal(lastOfMonth.toString())
+        done()
