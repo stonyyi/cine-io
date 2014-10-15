@@ -71,8 +71,8 @@ describe 'Server#Nearest', ->
       done()
 
   it 'will return a localized publish value for lax', (done)->
-    # 50.184.110.201 is berkeley, ca
-    params = ipAddress: "50.184.110.201"
+    # 24.18.84.223 is seattle, wa
+    params = ipAddress: "24.18.84.223"
     Nearest params, (err, response, options)->
       expect(err).to.be.null
       expect(response).to.deep.equal
