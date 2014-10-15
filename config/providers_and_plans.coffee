@@ -78,20 +78,20 @@ module.exports =
         storageOverage: 0
       solo:
         price: 20
-        bandwidth: humanizeBytes.GiB * 20
-        storage: humanizeBytes.GiB * 5
+        bandwidth: humanizeBytes.GiB * 15
+        storage: humanizeBytes.GiB * 3
         bandwidthOverage: 0
         storageOverage: 0
       basic:
         price: 100
-        bandwidth: humanizeBytes.GiB * 150
-        storage: humanizeBytes.GiB * 25
+        bandwidth: humanizeBytes.GiB * 110
+        storage: humanizeBytes.GiB * 15
         bandwidthOverage: 0
         storageOverage: 0
       pro:
         price: 500
-        bandwidth: humanizeBytes.TiB
-        storage: humanizeBytes.GiB * 100
+        bandwidth: humanizeBytes.Gib * 750
+        storage: humanizeBytes.GiB * 75
         bandwidthOverage: 0
         storageOverage: 0
 
