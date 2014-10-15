@@ -6,7 +6,7 @@ humanizeBytes = Cine.lib('humanize_bytes')
 UsageReport = Cine.model('usage_report')
 BackboneAccount = Cine.model('account')
 
-underOneGibStorageAndBandwidth = (results)->
+underFreePlanStorageAndBandwidth = (results)->
   results.storage <= humanizeBytes.GiB && results.bandwidth <= humanizeBytes.GiB
 
 hasPrimaryCard = (account)->
@@ -34,7 +34,7 @@ checkAccount = (account, callback)->
   calculateAccountUsage.thisMonth account, (err, results)->
     return callback(err) if err
     # it's cool if an account is < 1 GiB, no need to throttle them
-    return callback() if underOneGibStorageAndBandwidth(results)
+    return callback() if underFreePlanStorageAndBandwidth(results)
     # if an account usage is over 1 gib, and they're a cine.io user, throttle them
     return throttleAccount(account, callback) if account.billingProvider == 'cine.io'
     # if the account is not a cine.io account, and they are within limits
