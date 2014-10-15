@@ -5,6 +5,7 @@ calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 humanizeBytes = Cine.lib('humanize_bytes')
 UsageReport = Cine.model('usage_report')
 BackboneAccount = Cine.model('account')
+mailer = Cine.server_lib("mailer")
 
 underFreePlanStorageAndBandwidth = (results)->
   results.storage <= humanizeBytes.GiB && results.bandwidth <= humanizeBytes.GiB
@@ -24,8 +25,11 @@ accountWithinLimit = (account, results)->
 
 throttleAccount = (account, callback)->
   console.log("Throttling", account)
+
   account.throttledAt = new Date
-  account.save callback
+  account.save (err, account)->
+    return callback(err) if err
+    mailer.throttledAccount account, callback
 
 checkAccount = (account, callback)->
   # account has a credit card

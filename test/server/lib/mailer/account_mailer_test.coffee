@@ -214,10 +214,33 @@ describe 'accountMailer', ->
       expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
       assertMergeVarsInVars(mergeVars, expectedMergeVars)
 
-    it 'sends the billing email', (done)->
+    it 'sends the not a bill email', (done)->
       accountMailer.underOneGibBill @account, @abh, @now, (err, response)=>
         options = getMailOptions.call(this)
         expect(options.subject).to.equal("Your non-invoice for cine.io.")
         assertToAccount(options, @account)
         assertCorrectMergeVars accountMergeVars(options, @account), @now
+        assertMailSent.call(this, err, response, done)
+
+  describe 'throttledAccount', ->
+
+    assertCorrectMergeVars = (mergeVars)->
+
+      expectedMergeVars =
+        header_blurb: "Please update your account"
+        name: "my account name"
+      expect(mergeVars.templateVars.content).to.include("All api requests will begin returning a 402 response.")
+      expect(mergeVars.templateVars.content).to.include("Please upgrade your account at <a href=\"https://www.cine.io/account\">https://www.cine.io/account</a>.")
+      # content is huge, don't want to include it here
+      expectedMergeVars.content = mergeVars.templateVars.content
+
+      expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
+      assertMergeVarsInVars(mergeVars, expectedMergeVars)
+
+    it 'sends a throttled account email', (done)->
+      accountMailer.throttledAccount @account, (err, response)=>
+        options = getMailOptions.call(this)
+        expect(options.subject).to.equal("Your account has been throttled.")
+        assertToAccount(options, @account)
+        assertCorrectMergeVars accountMergeVars(options, @account)
         assertMailSent.call(this, err, response, done)

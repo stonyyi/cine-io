@@ -8,6 +8,7 @@ moment = require('moment')
 BackboneAccount = Cine.model('account')
 UsageReport = Cine.model('usage_report')
 calculateAccountBill = Cine.server_lib("billing/calculate_account_bill.coffee")
+ProvidersAndPlans = Cine.config("providers_and_plans")
 
 noop = ->
 
@@ -95,6 +96,35 @@ exports.underOneGibBill = (account, accountBillingHistory, billingMonthDate, cal
       content: """
       <p>This is normally when bills come around. Your bandwidth usage was under 1 GiB so have #{month} on us.</p>
       <p>We hope you enjoy using <a href="https://www.cine.io">cine.io</a>.</p>
+      <p>Regards,<br/>
+      Thomas Shafer<br/>
+      Technical Officer, cine.io</p>
+      """
+  sendMail mailOptions, callback
+
+placetoUpgradeYourAccount = (account)->
+  return account.appdirectData.marketplace.baseUrl if account.billingProvider == 'appdirect'
+  returnUrl =
+    heroku: ProvidersAndPlans['heroku'].url
+    engineyard: ProvidersAndPlans['engineyard'].url
+    'cine.io': "https://www.cine.io/account"
+  returnUrl[account.billingProvider]
+
+exports.throttledAccount = (account, callback=noop)->
+  name = account.name || account.billingEmail
+  month = moment(new Date).format("MMM YYYY")
+  urlToUpgrade = placetoUpgradeYourAccount(account)
+  mailOptions =
+    templateName: 'blank-with-header-and-footer'
+    subject: 'Your account has been throttled.'
+    toEmail: account.billingEmail
+    toName: name
+    userTemplateVars:
+      header_blurb: "Please update your account"
+      name: name
+      content: """
+      <p>We had to throttle your account. All api requests will begin returning a 402 response. You've exceeded the amount of bandwidth your current plan has to offer. Please upgrade your account at <a href="#{urlToUpgrade}">#{urlToUpgrade}</a>.</p>
+      <p>We hope you enjoy using <a href="https://www.cine.io">cine.io</a>. If you have any questions you can reply to this email, or send us an email at <a href="mailto:support@cine.io">support@cine.io</a>.</p>
       <p>Regards,<br/>
       Thomas Shafer<br/>
       Technical Officer, cine.io</p>

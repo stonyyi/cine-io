@@ -67,13 +67,25 @@ describe 'throttleAccountsWhoCannotPayForOverages', ->
       afterEach ->
         @usageStub.restore()
 
+      assertEmailSent 'throttledAccount'
+
       it 'throttles accounts which have not entered a credit card if they are over the limit', (done)->
         throttleAccountsWhoCannotPayForOverages (err)=>
-          expect(err).to.be.null
           Account.findById @account._id, (err, account)->
             expect(err).to.be.null
             expect(account.throttledAt).to.be.instanceOf(Date)
             done()
+
+      it 'sends an email to the account', (done)->
+        throttleAccountsWhoCannotPayForOverages (err)=>
+          expect(err).to.be.null
+          expect(@mailerSpies[0].calledOnce).to.be.true
+          args = @mailerSpies[0].firstCall.args
+          expect(args).to.have.length(2)
+          expect(args[0]._id.toString()).to.equal(@account._id.toString())
+          expect(args[1]).to.be.a('function')
+          done()
+
   describe 'other accounts', ->
     beforeEach (done)->
       @account.billingProvider = 'heroku'
@@ -107,6 +119,8 @@ describe 'throttleAccountsWhoCannotPayForOverages', ->
       afterEach ->
         @usageStub.restore()
 
+      assertEmailSent 'throttledAccount'
+
       it 'throttles accounts which are over their limit but cannot pay overages', (done)->
         throttleAccountsWhoCannotPayForOverages (err)=>
           expect(err).to.be.null
@@ -114,3 +128,13 @@ describe 'throttleAccountsWhoCannotPayForOverages', ->
             expect(err).to.be.null
             expect(account.throttledAt).to.be.instanceOf(Date)
             done()
+
+      it 'sends an email to the account', (done)->
+        throttleAccountsWhoCannotPayForOverages (err)=>
+          expect(err).to.be.null
+          expect(@mailerSpies[0].calledOnce).to.be.true
+          args = @mailerSpies[0].firstCall.args
+          expect(args).to.have.length(2)
+          expect(args[0]._id.toString()).to.equal(@account._id.toString())
+          expect(args[1]).to.be.a('function')
+          done()
