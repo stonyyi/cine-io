@@ -4,6 +4,7 @@ ProvidersAndPlans = Cine.require('config/providers_and_plans')
 UsageReport = Cine.model('usage_report')
 BackboneAccount = Cine.model('account')
 humanizeBytes = Cine.lib('humanize_bytes')
+getDaysInMonth = Cine.server_lib('get_days_in_month')
 
 ARITRARY_OVERAGE_COST = 100 #one dollar
 
@@ -24,11 +25,13 @@ cheapestOverageCost = (account, type)->
   # return in cents
   cheapestOveragePlan * 100
 
-calculateAccountOverage = (account, accountUsageResult, type)->
+calculateMaxUsage = (account, type)->
   # HACK for the difference between mongoose model vs backbone model
   ba = new BackboneAccount(provider: account.billingProvider, plans: account.plans)
+  UsageReport.maxUsagePerAccount ba, type
 
-  maxAmount = UsageReport.maxUsagePerAccount ba, type
+calculateAccountOverage = (account, accountUsageResult, type)->
+  maxAmount = calculateMaxUsage(account, type)
   usedAmount = accountUsageResult[type]
   overage = usedAmount - maxAmount
   # overage less than 0 means we used less than the max
@@ -38,8 +41,16 @@ calculateAccountOverageCost = (account, overage, type)->
   overageInGib = overage / humanizeBytes.GiB
   return overageInGib * cheapestOverageCost(account, type)
 
-calculateStorageOverage = (account)->
-  return 0
+accountIsCreatedInThisMonth = (account, monthToBill)->
+  account.createdAt.getYear() == monthToBill.getYear() && account.createdAt.getMonth() == monthToBill.getMonth()
+
+shouldProrateNewAccounts = (account, monthToBill, bandwidthOverage, storageOverage)->
+  accountIsCreatedInThisMonth(account, monthToBill) && bandwidthOverage == 0 && storageOverage == 0
+
+proratedAccountPlanAmount = (account, accountUsageResult)->
+  daysInMonth = getDaysInMonth(account.createdAt)
+  percentOfMonthAccountWasActive = (daysInMonth - (account.createdAt.getDate() - 1)) / daysInMonth
+  accountPlanAmount(account) * percentOfMonthAccountWasActive
 
 # returns
 #  plan: Number in cents
@@ -52,6 +63,7 @@ module.exports = (account, monthToBill, callback)->
         plan: 0
         bandwidthOverage: 0
         storageOverage: 0
+        prorated: false
       usage:
         bandwidth: 0
         storage: 0
@@ -61,11 +73,15 @@ module.exports = (account, monthToBill, callback)->
     return callback(err) if err
     bandwidthOverage = calculateAccountOverage(account, accountUsageResult, 'bandwidth')
     storageOverage = calculateAccountOverage(account, accountUsageResult, 'storage')
+
+    prorate = shouldProrateNewAccounts(account, monthToBill, bandwidthOverage, storageOverage)
+    planBill = if prorate then proratedAccountPlanAmount(account, accountUsageResult) else accountPlanAmount(account)
     result =
       billing:
-        plan: accountPlanAmount(account)
+        plan: planBill
         bandwidthOverage: calculateAccountOverageCost(account, bandwidthOverage, 'bandwidth')
         storageOverage: calculateAccountOverageCost(account, storageOverage, 'bandwidth')
+        prorated: prorate
       usage:
         bandwidth: accountUsageResult['bandwidth']
         storage: accountUsageResult['storage']

@@ -5,16 +5,12 @@ assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 billAccountForMonth = Cine.server_lib('billing/bill_account_for_month')
 calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 humanizeBytes = Cine.lib('humanize_bytes')
+getDaysInMonth = Cine.server_lib('get_days_in_month')
 
 describe 'chargeAllAccounts', ->
 
-  getDaysInMonth = ->
-    now = new Date
-    d= new Date(now.getFullYear(), now.getMonth()+1, 0)
-    d.getDate()
-
   it 'requires that it runs on the first of the month', (done)->
-    days = (num for num in [2..getDaysInMonth()])
+    days = (num for num in [2..getDaysInMonth(new Date)])
     assertNotCallableOnAnotherDay = (day, callback)->
       thatDay = new Date
       thatDay.setDate(day)

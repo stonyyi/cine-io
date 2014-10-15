@@ -10,7 +10,9 @@ assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 
 describe 'billAccountForMonth', ->
   beforeEach (done)->
-    @account = new Account(plans: ['basic', 'pro'], billingProvider: 'cine.io')
+    twoMonthsAgo = new Date
+    twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2)
+    @account = new Account(plans: ['basic', 'pro'], billingProvider: 'cine.io', createdAt: twoMonthsAgo)
     @account.save done
 
   beforeEach ->
@@ -90,7 +92,7 @@ describe 'billAccountForMonth', ->
         expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
         expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 350, storageOverage: 280)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 350, storageOverage: 280, prorated: false)
         expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
         done()
 
@@ -146,7 +148,7 @@ describe 'billAccountForMonth', ->
           expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
           expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
           expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-          expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0)
+          expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0, prorated: false)
           expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.9, storage: humanizeBytes.GiB * 0.9, bandwidthOverage: 0, storageOverage: 0)
           done()
 
@@ -215,7 +217,7 @@ describe 'billAccountForMonth', ->
         expect(lastCharge.chargeError).to.equal('Error: Your card was declined.')
         expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 350, storageOverage: 280)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 350, storageOverage: 280, prorated: false)
         expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
         done()
 
@@ -267,7 +269,7 @@ describe 'billAccountForMonth', ->
         expect(lastCharge.chargeError).to.equal('Error: Invalid token id: fake_token')
         expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 350, storageOverage: 280)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 350, storageOverage: 280, prorated: false)
         expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
         done()
 
