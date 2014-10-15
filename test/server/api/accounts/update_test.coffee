@@ -86,6 +86,21 @@ describe 'Accounts#update', ->
 
       UpdateAccount params, callback
 
+    describe 'with a throttled account', ->
+      beforeEach (done)->
+        @account.throttledAt = new Date
+        @account.save done
+
+      it 'unthrottles an account', (done)->
+        params = {masterKey: @account.masterKey, stripeToken: "tok_102gkI2AL5avr9E4wef0ysJa"}
+        callback = (err, response)=>
+          Account.findById @account._id, (err, account)->
+            expect(err).to.be.null
+            expect(account.throttledAt).to.be.undefined
+            done()
+
+        UpdateAccount params, callback
+
   describe 'deleting a credit card', ->
     beforeEach (done)->
       @account.stripeCustomer.cards.push(stripeCardId: 'card_102gkI2AL5avr9E4geO0PpkC')

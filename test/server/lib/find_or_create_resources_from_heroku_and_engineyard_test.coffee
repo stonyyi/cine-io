@@ -179,6 +179,17 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
           expect(account.deletedAt).to.be.undefined
           done()
 
+    it "unthrottles an account", (done)->
+      @account.throttledAt = new Date
+      @account.save (err, account)=>
+        expect(err).to.be.null
+        expect(account.throttledAt).to.be.instanceOf(Date)
+        findOrCreateResourcesFromHerokuAndEngineYard.updatePlan @account._id, "basic", (err, account)=>
+          expect(err).to.be.null
+          expect(account._id.toString()).to.equal(@account._id.toString())
+          expect(account.throttledAt).to.be.undefined
+          done()
+
   describe 'deleteAccount', ->
 
     beforeEach (done)->

@@ -68,6 +68,7 @@ exports.findUser = (accountId, userEmail, callback)->
 
 setPlanAndEnsureNotDeleted = (account, plan, callback)->
   account.deletedAt = undefined
+  account.throttledAt = undefined
   account.plans = [plan]
   account.save (err, account)->
     return callback(err) if err

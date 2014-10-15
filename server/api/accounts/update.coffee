@@ -14,8 +14,11 @@ module.exports = (params, callback)->
     if params.stripeToken
       return addStripeCardToAccount account, params.stripeToken, (err, account)->
         return callback(TextMongooseErrorMessage(err), null, status: 400) if err
-        mailer.admin.cardAdded(account)
-        fullCurrentUserJson.accountJson(account, callback)
+        account.throttledAt = undefined
+        account.save (err, account)->
+          return callback(TextMongooseErrorMessage(err), null, status: 400) if err
+          mailer.admin.cardAdded(account)
+          fullCurrentUserJson.accountJson(account, callback)
 
     else if params.deleteCard
       return deleteStripeCard account, params.deleteCard, (err, account)->

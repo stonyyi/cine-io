@@ -21,6 +21,7 @@ addPlanToAccount = (accountId, plan, res)->
     return sendAppdirectResponse(res, 'unknownError') if err
     return sendAppdirectResponse(res, 'accountDoesNotExist', accountId) if !account
     account.plans.push plan
+    account.throttledAt = undefined
     account.save (err, account)->
       return sendAppdirectResponse(res, 'unknownError') if err
       sendAppdirectResponse(res, 'addonAdded', account, plan)

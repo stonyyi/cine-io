@@ -72,30 +72,44 @@ describe 'AppDirect/Addons', ->
     beforeEach ->
       @appDirectSuccessResponse = requireFixture('nock/appdirect_addon_order')(@account._id)
 
-    beforeEach (done)->
-      getAppdirectUrl.call(this, done)
+    describe 'standard', ->
+      beforeEach (done)->
+        getAppdirectUrl.call(this, done)
 
-    it 'returns success', ->
-      expect(@res.statusCode).to.equal(200)
-      expect(@res.headers['content-type']).to.equal('text/xml; charset=utf-8')
+      it 'returns success', ->
+        expect(@res.statusCode).to.equal(200)
+        expect(@res.headers['content-type']).to.equal('text/xml; charset=utf-8')
 
-    it 'sends the oauth headers to AppDirect', ->
-      expect(@appDirectSuccessResponse.isDone()).to.be.true
+      it 'sends the oauth headers to AppDirect', ->
+        expect(@appDirectSuccessResponse.isDone()).to.be.true
 
-    it 'adds the addon to the account', (done)->
-      expect(@account.plans).to.have.length(0)
-      Account.findById @account._id, (err, account)->
-        expect(err).to.be.null
-        expect(account.plans).to.have.length(1)
-        expect(account.plans[0]).to.equal('solo')
-        done()
+      it 'adds the addon to the account', (done)->
+        expect(@account.plans).to.have.length(0)
+        Account.findById @account._id, (err, account)->
+          expect(err).to.be.null
+          expect(account.plans).to.have.length(1)
+          expect(account.plans[0]).to.equal('solo')
+          done()
 
-    it 'returns success and the correct identifier', ->
-      xml = _str.lines(@res.text).join(' ')
-      expect(xml).to.include("<success>true</success>")
-      expect(xml).to.include("solo was added")
-      id = xml.match(/.*<accountIdentifier>(.+)<\/accountIdentifier>.*/)[1]
-      expect(id).to.equal(@account._id.toString())
+      it 'returns success and the correct identifier', ->
+        xml = _str.lines(@res.text).join(' ')
+        expect(xml).to.include("<success>true</success>")
+        expect(xml).to.include("solo was added")
+        id = xml.match(/.*<accountIdentifier>(.+)<\/accountIdentifier>.*/)[1]
+        expect(id).to.equal(@account._id.toString())
+
+    describe 'other', ->
+      it 'unthrottles an account', (done)->
+        @account.throttledAt = new Date
+        @account.save (err, account)=>
+          expect(err).to.be.null
+          expect(account.throttledAt).to.be.instanceOf(Date)
+          getAppdirectUrl.call this, (err)->
+            expect(err).to.be.null
+            Account.findById account._id, (err, accountFromDb)->
+              expect(err).to.be.null
+              expect(accountFromDb.throttledAt).to.be.undefined
+              done()
 
   describe 'cancel', ->
 
