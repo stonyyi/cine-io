@@ -1,6 +1,5 @@
 updateAccountWithHerokuDetails = Cine.server_lib('update_account_with_heroku_details')
 Account = Cine.server_model('account')
-herokuConfig = Cine.config('variables/heroku')
 
 describe 'updateAccountWithHerokuDetails', ->
   it 'errs without an account', (done)->
@@ -20,19 +19,6 @@ describe 'updateAccountWithHerokuDetails', ->
     beforeEach (done)->
       @account = new Account(herokuId: "app29975387@heroku.com")
       @account.save done
-
-    beforeEach ->
-      @oldssoSalt = herokuConfig.ssoSalt
-      @oldusername = herokuConfig.username
-      @oldpassword = herokuConfig.password
-      herokuConfig.ssoSalt = "test-ssoSalt"
-      herokuConfig.username = "test-username"
-      herokuConfig.password = "test-password"
-
-    afterEach ->
-      herokuConfig.ssoSalt = @oldssoSalt
-      herokuConfig.username = @oldusername
-      herokuConfig.password = @oldpassword
 
     beforeEach ->
       @herokuDetailsNock = requireFixture('nock/get_heroku_account_details')()

@@ -4,7 +4,6 @@ User = Cine.server_model('user')
 Account = Cine.server_model('account')
 Project = Cine.server_model('project')
 app = Cine.require('app').app
-herokuConfig = Cine.config('variables/heroku')
 _ = require('underscore')
 assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 crypto = require("crypto")
@@ -13,25 +12,11 @@ mongoose = require('mongoose')
 describe 'heroku authentication', ->
   constantAccountId = mongoose.Types.ObjectId()
 
-  beforeEach ->
-    @oldssoSalt = herokuConfig.ssoSalt
-    @oldusername = herokuConfig.username
-    @oldpassword = herokuConfig.password
-    herokuConfig.ssoSalt = "test-ssoSalt"
-    herokuConfig.username = "test-username"
-    herokuConfig.password = "test-password"
-
-  afterEach ->
-    herokuConfig.ssoSalt = @oldssoSalt
-    herokuConfig.username = @oldusername
-    herokuConfig.password = @oldpassword
-
   app.get '/whoami', (req, res)->
     res.send(req.currentUser)
 
   beforeEach ->
     @agent = supertest.agent(app)
-
 
   beforeEach (done)->
     @account = new Account(plans: ['free'], _id: constantAccountId)
@@ -90,7 +75,7 @@ describe 'heroku authentication', ->
       it 'creates a new user/project/plan', (done)->
         @agent
           .post('/heroku/resources')
-          .auth('test-username', 'test-password')
+          .auth('fake-username', 'fake-password')
           .send(params)
           .expect(200)
           .end (err, res)->
@@ -120,7 +105,7 @@ describe 'heroku authentication', ->
     it 'updates the plan', (done)->
       @agent
         .put("/heroku/resources/#{@account._id}")
-        .auth('test-username', 'test-password')
+        .auth('fake-username', 'fake-password')
         .send(params)
         .expect(200)
         .end (err, res)=>
@@ -141,7 +126,7 @@ describe 'heroku authentication', ->
     it 'deletes the resource', (done)->
       @agent
         .delete("/heroku/resources/#{@account._id}")
-        .auth('test-username', 'test-password')
+        .auth('fake-username', 'fake-password')
         .expect(200)
         .end (err, res)=>
           expect(err).to.be.null
@@ -155,7 +140,7 @@ describe 'heroku authentication', ->
   describe 'Heroku SSO', ->
     generateSSOParams = (method, account)->
       timestamp = (new Date).getTime()
-      pre_token = "#{account._id}:test-ssoSalt:#{timestamp}"
+      pre_token = "#{account._id}:fake-ssoSalt:#{timestamp}"
 
       shasum = crypto.createHash("sha1")
       shasum.update pre_token
