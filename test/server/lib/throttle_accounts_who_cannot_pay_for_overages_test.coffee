@@ -140,3 +140,25 @@ describe 'throttleAccountsWhoCannotPayForOverages', ->
           expect(args[0]._id.toString()).to.equal(@account._id.toString())
           expect(args[1]).to.be.a('function')
           done()
+
+  describe 'special accounts', ->
+    beforeEach (done)->
+      @account.billingProvider = 'cine.io'
+      @account.unthrottleable = true
+      @account.save done
+
+    beforeEach ->
+      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
+      usedBandwidth = humanizeBytes.GiB * 1.1
+      usedStorage = humanizeBytes.GiB * 0.9
+      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
+
+    afterEach ->
+      @usageStub.restore()
+
+    it 'does not throttle accounts which have not entered a credit card if they are over the limit', (done)->
+      throttleAccountsWhoCannotPayForOverages (err)=>
+        Account.findById @account._id, (err, account)->
+          expect(err).to.be.null
+          expect(account.throttledAt).to.be.undefined
+          done()

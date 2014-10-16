@@ -32,6 +32,8 @@ AccountSchema = new mongoose.Schema
     type: Date
   throttledAt:
     type: Date
+  unthrottleable:
+    type: Boolean
   herokuId:
     type: String
     index: true

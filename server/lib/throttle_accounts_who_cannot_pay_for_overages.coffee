@@ -48,5 +48,8 @@ checkAccount = (account, callback)->
     # the account must not be within limits and we cannot charge overages
     throttleAccount(account, callback)
 module.exports = (callback)->
-  scope = Account.find().exists('deletedAt', false).exists('throttledAt', false)
+  scope = Account.find()
+    .exists('deletedAt', false)
+    .exists('throttledAt', false)
+    .exists('unthrottleable', false)
   scope.stream().concurrency(20).work checkAccount, callback
