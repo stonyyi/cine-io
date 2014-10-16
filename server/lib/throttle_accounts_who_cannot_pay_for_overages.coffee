@@ -29,6 +29,7 @@ throttleAccount = (account, callback)->
   account.throttledAt = new Date
   account.save (err, account)->
     return callback(err) if err
+    mailer.admin.throttledAccount account
     mailer.throttledAccount account, callback
 
 checkAccount = (account, callback)->

@@ -68,6 +68,7 @@ describe 'throttleAccountsWhoCannotPayForOverages', ->
         @usageStub.restore()
 
       assertEmailSent 'throttledAccount'
+      assertEmailSent.admin 'throttledAccount'
 
       it 'throttles accounts which have not entered a credit card if they are over the limit', (done)->
         throttleAccountsWhoCannotPayForOverages (err)=>
@@ -120,6 +121,7 @@ describe 'throttleAccountsWhoCannotPayForOverages', ->
         @usageStub.restore()
 
       assertEmailSent 'throttledAccount'
+      assertEmailSent.admin 'throttledAccount'
 
       it 'throttles accounts which are over their limit but cannot pay overages', (done)->
         throttleAccountsWhoCannotPayForOverages (err)=>

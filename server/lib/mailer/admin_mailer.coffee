@@ -16,6 +16,20 @@ exports.cardAdded = (account, callback=noop)->
     """
   sendAdminEmail mailOptions, callback
 
+exports.throttledAccount = (account, callback=noop)->
+  options =
+    billingEmail: account.billingEmail
+    _id: account._id
+    plans: account.plans
+    billingProvider: account.billingProvider
+  mailOptions =
+    subject: '[Events] Throttled account'
+    content: """
+    <p>An account was throttled. The account owner received an email.</p>
+    <p><pre>#{util.inspect(options)}</pre></p>
+    """
+  sendAdminEmail mailOptions, callback
+
 exports.newUser = (user, context, callback=noop)->
   mailOptions =
     subject: '[KPI] New User'
