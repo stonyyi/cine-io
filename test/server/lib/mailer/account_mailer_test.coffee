@@ -229,7 +229,7 @@ describe 'accountMailer', ->
       expectedMergeVars =
         header_blurb: "Please update your account"
         name: "my account name"
-      expect(mergeVars.templateVars.content).to.include("All api requests will begin returning a 402 response.")
+      expect(mergeVars.templateVars.content).to.include("All API requests will begin returning a 402 response.")
       expect(mergeVars.templateVars.content).to.include("Please upgrade your account at <a href=\"https://www.cine.io/account\">https://www.cine.io/account</a>.")
       # content is huge, don't want to include it here
       expectedMergeVars.content = mergeVars.templateVars.content
@@ -240,7 +240,7 @@ describe 'accountMailer', ->
     it 'sends a throttled account email', (done)->
       accountMailer.throttledAccount @account, (err, response)=>
         options = getMailOptions.call(this)
-        expect(options.subject).to.equal("Your account has been throttled.")
+        expect(options.subject).to.equal("Your account has been disabled (usage exceeded).")
         assertToAccount(options, @account)
         assertCorrectMergeVars accountMergeVars(options, @account)
         assertMailSent.call(this, err, response, done)

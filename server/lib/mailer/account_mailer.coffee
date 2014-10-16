@@ -116,14 +116,14 @@ exports.throttledAccount = (account, callback=noop)->
   urlToUpgrade = placetoUpgradeYourAccount(account)
   mailOptions =
     templateName: 'blank-with-header-and-footer'
-    subject: 'Your account has been throttled.'
+    subject: 'Your account has been disabled (usage exceeded).'
     toEmail: account.billingEmail
     toName: name
     userTemplateVars:
       header_blurb: "Please update your account"
       name: name
       content: """
-      <p>We had to throttle your account. All api requests will begin returning a 402 response. You've exceeded the amount of bandwidth your current plan has to offer. Please upgrade your account at <a href="#{urlToUpgrade}">#{urlToUpgrade}</a>.</p>
+      <p>We wanted to let you know we've disabled your account. All API requests will begin returning a 402 response. The reason we've disabled your account is because you've exceeded the usage limits of your current plan. Please upgrade your account at <a href="#{urlToUpgrade}">#{urlToUpgrade}</a>.</p>
       <p>We hope you enjoy using <a href="https://www.cine.io">cine.io</a>. If you have any questions you can reply to this email, or send us an email at <a href="mailto:support@cine.io">support@cine.io</a>.</p>
       <p>Regards,<br/>
       Thomas Shafer<br/>
