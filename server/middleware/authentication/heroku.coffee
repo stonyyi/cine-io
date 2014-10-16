@@ -38,7 +38,7 @@ sso_auth = (req, res, next) ->
   res.cookie "heroku-nav-data", req.param("nav-data")
   findOrCreateResourcesFromHerokuAndEngineYard.findUser accountId, req.param('email'), (err, user)->
     return res.status(400).send(err) if err
-    return res.status(404).send("Not found") unless user
+    return res.status(404).send("Not Found") unless user
 
     req.login user, next
 
