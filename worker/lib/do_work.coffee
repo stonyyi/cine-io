@@ -40,6 +40,7 @@ doWork = (jobName, payload, done)->
 
 doWork.acceptableJobs = [
   'current_environment'
+  'update_account_with_heroku_details'
   'stream_recordings/process_fixed_recordings'
   'stream_recordings/fix_edgecast_codecs_on_new_stream_recordings'
 ]

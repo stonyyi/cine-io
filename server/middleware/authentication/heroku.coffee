@@ -5,6 +5,7 @@ resources = []
 herokuConfig = Cine.config('variables/heroku')
 findOrCreateResourcesFromHerokuAndEngineYard = Cine.server_lib('find_or_create_resources_from_heroku_and_engineyard')
 qs = require('qs')
+scheduleJob = Cine.server_lib('schedule_job')
 
 basic_auth = (req, res, next) ->
   if req.headers.authorization and req.headers.authorization.search("Basic ") is 0
@@ -63,6 +64,8 @@ module.exports = (app)->
           CINE_IO_PUBLIC_KEY: project.publicKey
           CINE_IO_SECRET_KEY: project.secretKey
       response.send resource
+
+      scheduleJob 'update_account_with_heroku_details', {accountId: account._id}
 
   # User changed plan on heroku
   app.put "/heroku/resources/:id", basic_auth, (request, response) ->

@@ -40,6 +40,7 @@ AccountSchema = new mongoose.Schema
     type: String
     index: true
     sparse: true
+  herokuData: mongoose.Schema.Types.Mixed
   appdirectData: mongoose.Schema.Types.Mixed
 
 AccountSchema.plugin(Cine.server_lib('mongoose_timestamps'))

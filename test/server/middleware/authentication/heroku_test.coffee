@@ -1,4 +1,5 @@
 supertest = require('supertest')
+async = require('async')
 User = Cine.server_model('user')
 Account = Cine.server_model('account')
 Project = Cine.server_model('project')
@@ -69,6 +70,22 @@ describe 'heroku authentication', ->
     describe "success", ->
 
       assertEmailSent.admin "newUser"
+
+      beforeEach ->
+        @ironIONock = requireFixture('nock/schedule_ironio_worker')('update_account_with_heroku_details', accountId: 'The Account Id').nock
+        @ironIONock.filteringRequestBody (body)->
+          parsed = JSON.parse(body)
+          payload = parsed.tasks[0].payload
+          parsed.tasks[0].payload = payload.replace(/(\"accountId\":\")\w{24}(\")/, "$1The Account Id$2")
+          JSON.stringify(parsed)
+
+      afterEach (done)->
+        errorLogged = false
+        testFunction = -> errorLogged
+        checkFunction = (callback)=>
+          errorLogged = @ironIONock.isDone()
+          setTimeout callback
+        async.until testFunction, checkFunction, done
 
       it 'creates a new user/project/plan', (done)->
         @agent
