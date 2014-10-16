@@ -17,6 +17,10 @@ mergePayloadWithEnvironment = (jobPayload)->
     # we send mail (for example donation charge errors, and fan reminder emails)
     MANDRILL_APIKEY: Cine.config('variables/mandrill').api_key
 
+    # we make calls to the heroku vendor api
+    HEROKU_USERNAME: Cine.config('variables/heroku').username
+    HEROKU_PASSWORD: Cine.config('variables/heroku').password
+
     # we interact with edgecast
     EDGECAST_TOKEN: Cine.config('variables/edgecast').token
     EDGECAST_FTP_HOST: Cine.config('variables/edgecast').ftp.host

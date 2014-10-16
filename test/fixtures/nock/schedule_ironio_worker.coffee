@@ -13,6 +13,9 @@ module.exports = (jobName, jobPayload={}, options={})->
       MONGOHQ_URL:"mongodb://localhost/cineio-test"
       MANDRILL_APIKEY:"J33rrY3UdBYa9bbwky7Rcw"
 
+      HEROKU_USERNAME: 'fake-username'
+      HEROKU_PASSWORD: 'fake-password'
+
       EDGECAST_TOKEN: "2580b744-962a-44d9-9e95-df7fa6e39e13"
       EDGECAST_FTP_HOST: 'ftp.vny.C45E.edgecastcdn.net'
       EDGECAST_FTP_USER: 'fake-account'
