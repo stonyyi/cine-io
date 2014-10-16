@@ -6,6 +6,7 @@ addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 mailer = Cine.server_lib('mailer')
 deleteAccount = Cine.server_lib('delete_account')
 createNewAccount = Cine.server_lib('create_new_account')
+AccountThrottler = Cine.server_lib('account_throttler')
 
 nameFromHerokuId = (herokuId)->
   herokuId.split('@')[0]
@@ -68,9 +69,8 @@ exports.findUser = (accountId, userEmail, callback)->
 
 setPlanAndEnsureNotDeleted = (account, plan, callback)->
   account.deletedAt = undefined
-  account.throttledAt = undefined
   account.plans = [plan]
-  account.save (err, account)->
+  AccountThrottler.unthrottle account, (err, account)->
     return callback(err) if err
     callback(null, account)
 

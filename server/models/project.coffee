@@ -16,6 +16,8 @@ ProjectSchema = new mongoose.Schema
     default: 0
   deletedAt:
     type: Date
+  throttledAt:
+    type: Date
   _account:
     type: mongoose.Schema.Types.ObjectId, ref: 'Account'
 

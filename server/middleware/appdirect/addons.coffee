@@ -5,6 +5,7 @@ verifySourceOauth = Cine.server_lib('appdirect/verify_source_oauth')
 makeAppdirectRequest = Cine.server_lib('appdirect/make_appdirect_request')
 sendAppdirectResponse = Cine.server_lib('appdirect/send_appdirect_response')
 _ = require('underscore')
+AccountThrottler = Cine.server_lib('account_throttler')
 
 getAccount = (accountId, callback)->
   # testing integration stuff
@@ -21,8 +22,7 @@ addPlanToAccount = (accountId, plan, res)->
     return sendAppdirectResponse(res, 'unknownError') if err
     return sendAppdirectResponse(res, 'accountDoesNotExist', accountId) if !account
     account.plans.push plan
-    account.throttledAt = undefined
-    account.save (err, account)->
+    AccountThrottler.unthrottle account, (err, account)->
       return sendAppdirectResponse(res, 'unknownError') if err
       sendAppdirectResponse(res, 'addonAdded', account, plan)
 

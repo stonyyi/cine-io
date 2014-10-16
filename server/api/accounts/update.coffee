@@ -6,6 +6,7 @@ getAccount = Cine.server_lib('get_account')
 mailer = Cine.server_lib('mailer')
 fullCurrentUserJson = Cine.server_lib('full_current_user_json')
 TextMongooseErrorMessage = Cine.server_lib('text_mongoose_error_message')
+AccountThrottler = Cine.server_lib('account_throttler')
 
 module.exports = (params, callback)->
   getAccount params, (err, account, options)->
@@ -14,8 +15,7 @@ module.exports = (params, callback)->
     if params.stripeToken
       return addStripeCardToAccount account, params.stripeToken, (err, account)->
         return callback(TextMongooseErrorMessage(err), null, status: 400) if err
-        account.throttledAt = undefined
-        account.save (err, account)->
+        AccountThrottler.unthrottle account, (err, account)->
           return callback(TextMongooseErrorMessage(err), null, status: 400) if err
           mailer.admin.cardAdded(account)
           fullCurrentUserJson.accountJson(account, callback)
