@@ -99,6 +99,12 @@ button, .button {
   position: relative;
   z-index: $flash-holder-z-index+1;
 }
+ul.dropdown li a.current{
+  cursor: default;
+  &:hover{
+    background: #333 !important;
+  }
+}
 
 .move-right{
   .left-off-canvas-menu{

@@ -41,10 +41,16 @@ module.exports = React.createClass({
       accounts = this.props.app.currentUser.accounts(),
       accountDropDown, additionalListItems;
     if (accounts.length > 1){
-      var accountList =  _.map(accounts.without(currentAccount), function(account) {
+      var accountList = accounts.map(function(account) {
+        var internal;
+        if (account === currentAccount){
+          internal = (<a href="" className='current' onClick={self.doNothing}>{account.displayName()}</a>);
+        }else{
+          internal = (<a href="" onClick={self.changeAccount.bind(self, account)}>{account.displayName()}</a>);
+        }
         return (
           <li key={account.get('id')}>
-            <a href="" onClick={self.changeAccount.bind(self, account)}>{account.displayName()}</a>
+            {internal}
           </li>
         );
       });
