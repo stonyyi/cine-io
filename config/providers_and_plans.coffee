@@ -62,7 +62,7 @@ module.exports =
         bandwidthOverage: 0
         storageOverage: 0
   engineyard:
-    url: 'https://addons.engineyard.com/cine.io'
+    url: 'https://addons.engineyard.com/addons/cineio'
     plans:
       test:
         price: 0
