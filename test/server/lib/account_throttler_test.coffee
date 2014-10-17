@@ -44,7 +44,7 @@ describe 'AccountThrottler', ->
         Project.findById @accountProject2._id, (err, project2)=>
           expect(err).to.be.null
           expect(project2.throttledAt).to.be.instanceOf(Date)
-          Project.findById @notAccountProject._id, (err, notAccountProject)=>
+          Project.findById @notAccountProject._id, (err, notAccountProject)->
             expect(err).to.be.null
             expect(notAccountProject.throttledAt).to.be.undefined
             done()
@@ -86,7 +86,7 @@ describe 'AccountThrottler', ->
         Project.findById @accountProject2._id, (err, project2)=>
           expect(err).to.be.null
           expect(project2.throttledAt).to.be.undefined
-          Project.findById @notAccountProject._id, (err, notAccountProject)=>
+          Project.findById @notAccountProject._id, (err, notAccountProject)->
             expect(err).to.be.null
             expect(notAccountProject.throttledAt).to.be.instanceOf(Date)
             done()
