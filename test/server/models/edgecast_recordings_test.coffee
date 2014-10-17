@@ -4,30 +4,57 @@ modelTimestamps = Cine.require('test/helpers/model_timestamps')
 describe 'EdgecastRecordings', ->
   modelTimestamps EdgecastRecordings, name: 'some name'
 
-  addRecording = (recording)->
+  addRecording = (recording, thisMonth, thisMonth2, lastMonth, twoMonthsAgo)->
 
     recording.recordings.push
       name: "abc"
       size: 3043079
-      date: new Date
+      date: thisMonth
 
     recording.recordings.push
       name: "def"
       size: 7676745
-      date: new Date
+      date: lastMonth
 
     recording.recordings.push
       name: "def"
       size: 7373737
-      date: new Date
+      date: thisMonth2
       deletedAt: new Date
+
+    recording.recordings.push
+      name: "def"
+      size: 9797948
+      date: twoMonthsAgo
+      deletedAt: thisMonth
 
   beforeEach (done)->
     @recording = new EdgecastRecordings
-    addRecording(@recording)
+    @thisMonth = new Date
+    @thisMonth2 = new Date
+    if @thisMonth.getDate() == 1
+      @thisMonth2.setDate(@thisMonth2.getDate() + 1)
+    else
+      @thisMonth2.setDate(@thisMonth2.getDate() - 1)
+
+    @lastMonth = new Date
+    @lastMonth.setMonth(@lastMonth.getMonth() - 1)
+    @twoMonthsAgo = new Date
+    @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
+
+    addRecording(@recording, @thisMonth, @thisMonth2, @lastMonth, @twoMonthsAgo)
     @recording.save done
 
-  describe '#totalBytes', ->
+  describe '#bytesForMonth', ->
+    it 'can calculate bytes for a month', ->
+      expect(@recording.bytesForMonth(@thisMonth)).to.equal(3043079+7676745)
 
+    it 'can calculate bytes for a month when recordings are deleted on that month', ->
+      expect(@recording.bytesForMonth(@lastMonth)).to.equal(7676745+9797948)
+
+    it 'can calculate bytes for a month where recording are deleted after that month', ->
+      expect(@recording.bytesForMonth(@twoMonthsAgo)).to.equal(9797948)
+
+  describe '#totalBytes', ->
     it 'can aggrigate all the entries ignoring deletedAt', ->
       expect(@recording.totalBytes()).to.equal(10719824)
