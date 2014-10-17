@@ -24,6 +24,7 @@ doFind = (queryParams, options, callback)->
   Project.findOne queryParams, (err, project)->
     return callback(err, null, status: 401) if err
     return callback(cannotFindMessage(options.requires), null, status: 401) if !project
+    return callback('Your account has been disabled. Please update your account.', null, status: 402) if project.throttledAt?
     # return secure: true if we queried based on an secretKey
     callback(null, project, secure: queryParams.secretKey?)
 

@@ -51,6 +51,18 @@ describe 'getProject', ->
           expect(options).to.deep.equal(status: 401)
           done()
 
+    describe 'throttledAt', ->
+      beforeEach (done)->
+        @project.throttledAt = new Date
+        @project.save done
+
+      it 'will return payment required for throttled at projects', (done)->
+        getProject {publicKey: @project.publicKey}, requires: 'either', (err, project, options)->
+          expect(err).to.equal('Your account has been disabled. Please update your account.')
+          expect(project).to.be.null
+          expect(options).to.deep.equal(status: 402)
+          done()
+
   describe 'with user', ->
     it 'will not return a project to a user who does not own that project', (done)->
       getProject {sessionUserId: @user._id.toString(), publicKey: @project.publicKey}, requires: 'secret', userOverride: 'true', (err, project, options)->
