@@ -28,6 +28,7 @@ fullCurrentUserJson.accountJson = (account, callback)->
     plans: account.plans
     provider: account.billingProvider
     email: account.billingEmail
+    isDisabled: account.throttledAt?
   stripeCards = []
   _.each account.stripeCustomer.cards, (card)->
     return if card.deletedAt?

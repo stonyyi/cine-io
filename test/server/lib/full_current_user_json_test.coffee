@@ -17,7 +17,7 @@ describe 'fullCurrentUserJson', ->
     @account2.save done
 
   beforeEach (done)->
-    @account3 = new Account(name: 'third account', plans: [], masterKey: '4mkey', billingProvider: 'appdirect', appdirectData: {marketplace: {baseUrl: 'the-mplace-base-url'}})
+    @account3 = new Account(name: 'third account', plans: [], masterKey: '4mkey', billingProvider: 'appdirect', appdirectData: {marketplace: {baseUrl: 'the-mplace-base-url'}}, throttledAt: new Date)
     @account3.save done
 
   beforeEach (done)->
@@ -85,6 +85,7 @@ describe 'fullCurrentUserJson', ->
       expect(thirdAccount.plans).have.length(0)
       expect(thirdAccount.provider).to.equal('appdirect')
       expect(thirdAccount.appdirect).to.deep.equal(baseUrl: 'the-mplace-base-url')
+      expect(thirdAccount.isDisabled).to.be.true
       expect(thirdAccount.herokuId).to.be.undefined
 
     it 'returns the accounts stripe details', ->
