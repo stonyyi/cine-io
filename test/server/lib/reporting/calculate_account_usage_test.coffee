@@ -23,11 +23,15 @@ describe 'calculateAccountUsage', ->
     @bandwidthStub.restore()
 
   beforeEach ->
-    @fakeStorageTotals = {}
-    @fakeStorageTotals[@account._id.toString()] = 111111
+    @fakeStorageThisMonth = {}
+    @fakeStorageThisMonth[@account._id.toString()] = 111111
 
-    @storageStub = sinon.stub CalculateAccountStorage, 'total', (account, callback)=>
-      callback(null, @fakeStorageTotals[account._id.toString()])
+    @fakeStorageByMonth = {}
+    @fakeStorageByMonth[@account._id.toString()] = 2222222
+
+    @storageStub = sinon.stub CalculateAccountStorage, 'byMonth', (account, month, callback)=>
+      resource = if month.getYear() == (new Date).getYear() then @fakeStorageThisMonth else @fakeStorageByMonth
+      callback(null, resource[account._id.toString()])
 
   afterEach ->
     @storageStub.restore()
@@ -49,7 +53,7 @@ describe 'calculateAccountUsage', ->
       d.setYear(d.getYear() - 1)
       expected =
         bandwidth: 99999
-        storage: 111111
+        storage: 2222222
 
       calculateAccountUsage.byMonth @account, d, (err, results)->
         expect(err).to.be.undefined

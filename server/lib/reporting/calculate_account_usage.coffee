@@ -10,6 +10,6 @@ exports.byMonth = (account, month, callback)->
     bandwidth: (cb)->
       CalculateAccountBandwidth.byMonth account, month, cb
     storage: (cb)->
-      CalculateAccountStorage.total account, cb
+      CalculateAccountStorage.byMonth account, month, cb
 
   async.parallel asyncCalls, callback
