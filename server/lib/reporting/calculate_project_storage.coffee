@@ -19,7 +19,6 @@ exports.byMonth = (project, month, callback)->
 
     callback(null, totalProjectBytes)
 
-
 exports.total = (project, callback)->
   getRecordingsForProject project, (err, recordings)->
     return callback(err) if err
