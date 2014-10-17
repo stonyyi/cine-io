@@ -54,6 +54,7 @@ module.exports = React.createClass({
   render: function() {
     var
       selectedProjectId = this.state.selectedProjectId,
+      currentAccount = this.props.app.currentAccount(),
       planNeedsCreditCard;
     // if something is selected and but it doesn't exist in the collection, remove it.
     if (selectedProjectId && !this.getCurrentCollection().get(selectedProjectId)){
@@ -77,8 +78,11 @@ module.exports = React.createClass({
       'fa-plus': !this.state.showingNewProject,
       'fa-minus': this.state.showingNewProject
     });
-    if (this.props.app.currentAccount().needsCreditCard()){
-      var message = '<i class="fa fa-2x fa-exclamation-triangle"></i><span>Your account is currently limited to the free plan. To activate all the benefits of your <strong>'+this.props.app.currentAccount().firstPlan() +'</strong> plan, please go to your <a href="/account">account page</a> to enter a credit card.</span>'
+    if (currentAccount.isDisabled()){
+      var message = '<i class="fa fa-2x fa-exclamation-triangle"></i><span>Your account is currently disabled. Please <a href="'+currentAccount.updateAccountUrl()+'">update your plan or payment information</a> to immediatly reinstate your account. If you have questions feel free to <a target="_blank" href="mailto:support@cine.io?subject=Account disabled&body=Account Number: '+currentAccount.get('id')+'">contact support</a>.</span>'
+      planNeedsCreditCard = (<FlashMessage message={message} kind="warning"/>)
+    } else if (currentAccount.needsCreditCard()){
+      var message = '<i class="fa fa-2x fa-exclamation-triangle"></i><span>Your account is currently limited to the free plan. To activate all the benefits of your <strong>'+currentAccount.firstPlan() +'</strong> plan, please go to your <a href="/account">account page</a> to enter a credit card.</span>'
       planNeedsCreditCard = (<FlashMessage message={message} kind="warning"/>)
     }
 
