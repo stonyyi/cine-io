@@ -41,7 +41,7 @@ describe 'CalculateAccountStorage', ->
         expect(totalInBytes).to.equal(333)
         done()
 
-  describe 'total', ->
+  describe 'in mongo', ->
     beforeEach (done)->
       @stream1 = new EdgecastStream(_project: @project1._id)
       @stream1.save done
@@ -58,36 +58,56 @@ describe 'CalculateAccountStorage', ->
       @notProjectStream = new EdgecastStream()
       @notProjectStream.save done
 
-    addRecordings = (recording)->
+    addRecordings = (recording, thisMonth, lastMonth)->
 
       recording.recordings.push
         name: "abc"
         size: 3043079
-        date: new Date
+        date: thisMonth
 
       recording.recordings.push
         name: "def"
         size: 7573983
-        date: new Date
+        date: lastMonth
 
-    createRecordingsForStream = (stream, done)->
+    createRecordingsForStream = (stream, thisMonth, lastMonth, done)->
       recordings = new EdgecastRecordings(_edgecastStream: stream)
-      addRecordings(recordings)
+      addRecordings(recordings, thisMonth, lastMonth)
       recordings.save done
 
-    beforeEach (done)->
-      createRecordingsForStream @stream1, done
-    beforeEach (done)->
-      createRecordingsForStream @stream2, done
-    beforeEach (done)->
-      createRecordingsForStream @stream3, done
-    beforeEach (done)->
-      createRecordingsForStream @stream4, done
-    beforeEach (done)->
-      createRecordingsForStream @notProjectStream, done
+    beforeEach ->
+      @thisMonth = new Date
+      @lastMonth = new Date
+      @lastMonth.setMonth(@lastMonth.getMonth() - 1)
+      @twoMonthsAgo = new Date
+      @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
 
-    it 'can aggrigate all account projects', (done)->
-      CalculateAccountStorage.total @account, (err, monthlyBytes)->
-        expect(err).to.be.undefined
-        expect(monthlyBytes).to.equal(42468248)
-        done()
+    beforeEach (done)->
+      createRecordingsForStream @stream1, @thisMonth, @lastMonth, done
+    beforeEach (done)->
+      createRecordingsForStream @stream2, @thisMonth, @lastMonth, done
+    beforeEach (done)->
+      createRecordingsForStream @stream3, @thisMonth, @lastMonth, done
+    beforeEach (done)->
+      createRecordingsForStream @stream4, @thisMonth, @lastMonth, done
+    beforeEach (done)->
+      createRecordingsForStream @notProjectStream, @thisMonth, @lastMonth, done
+
+    describe 'byMonth', ->
+      it 'can aggrigate all account projects for a month', (done)->
+        CalculateAccountStorage.byMonth @account, @thisMonth, (err, monthlyBytes)->
+          expect(err).to.be.undefined
+          expect(monthlyBytes).to.equal(42468248)
+          done()
+      it 'can aggrigate all account projects for a previous month', (done)->
+        CalculateAccountStorage.byMonth @account, @lastMonth, (err, monthlyBytes)->
+          expect(err).to.be.undefined
+          expect(monthlyBytes).to.equal(7573983*4)
+          done()
+
+    describe 'total', ->
+      it 'can aggrigate all account projects', (done)->
+        CalculateAccountStorage.total @account, (err, totalBytes)->
+          expect(err).to.be.undefined
+          expect(totalBytes).to.equal(42468248)
+          done()

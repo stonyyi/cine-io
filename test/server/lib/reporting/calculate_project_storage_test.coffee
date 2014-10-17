@@ -46,6 +46,7 @@ describe 'CalculateProjectStorage', ->
     @lastMonth.setMonth(@lastMonth.getMonth() - 1)
     @twoMonthsAgo = new Date
     @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
+
   beforeEach (done)->
     createRecordingsForStream @stream1, @thisMonth, @lastMonth, done
   beforeEach (done)->
@@ -72,7 +73,6 @@ describe 'CalculateProjectStorage', ->
         expect(err).to.be.null
         expect(monthlyBytes).to.equal(0)
         done()
-
 
   describe '#total', ->
 
