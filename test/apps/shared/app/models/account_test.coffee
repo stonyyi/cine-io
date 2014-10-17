@@ -37,6 +37,30 @@ describe 'Account', ->
       account = new Account(plans: ['pro'], provider: 'heroku')
       expect(account.needsCreditCard()).to.be.false
 
+  describe '#isDisabled', ->
+    it 'is true for disabled accounts', ->
+      account = new Account(isDisabled: true)
+      expect(account.isDisabled()).to.be.true
+
+    it 'is false for non-disabled accounts', ->
+      account = new Account(isDisabled: false)
+      expect(account.isDisabled()).to.be.false
+
+  describe '#updateAccountUrl', ->
+    it 'works with cine.io', ->
+      account = new Account(provider: 'cine.io')
+      expect(account.updateAccountUrl()).to.equal('https://www.cine.io/account')
+    it 'works with heroku', ->
+      account = new Account(provider: 'heroku')
+      expect(account.updateAccountUrl()).to.equal('https://addons.heroku.com/cine')
+    it 'works with engineyard', ->
+      account = new Account(provider: 'engineyard')
+      expect(account.updateAccountUrl()).to.equal('https://addons.engineyard.com/addons/cineio')
+
+    it 'works with appdirect', ->
+      account = new Account(provider: 'appdirect', appdirect: {baseUrl: 'the appdirect url'})
+      expect(account.updateAccountUrl()).to.equal('the appdirect url')
+
   describe '#isAppdirect', ->
     it 'is true with appdirect', ->
       account = new Account(provider: 'appdirect')

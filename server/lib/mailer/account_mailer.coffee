@@ -9,6 +9,7 @@ BackboneAccount = Cine.model('account')
 UsageReport = Cine.model('usage_report')
 calculateAccountBill = Cine.server_lib("billing/calculate_account_bill.coffee")
 ProvidersAndPlans = Cine.config("providers_and_plans")
+fullCurrentUserJson = Cine.server_lib('full_current_user_json')
 
 noop = ->
 
@@ -55,32 +56,34 @@ exports.monthlyBill = (account, accountBillingHistory, billingMonthDate, callbac
   name = account.name || account.billingEmail
   usage = record.details.usage
   billing = record.details.billing
-  backboneAccount = new BackboneAccount(provider: account.billingProvider, plans: account.plans)
+  fullCurrentUserJson.accountJson account, (err, accountJSON)->
+    return callback(err) if err
+    backboneAccount = new BackboneAccount(accountJSON)
 
-  mailOptions =
-    templateName: 'monthly-invoice'
-    subject: 'Your cine.io invoice'
-    toEmail: account.billingEmail
-    toName: name
-    userTemplateVars:
-      header_blurb: 'Thank you for using cine.io.'
-      BILLING_MONTH: moment(billingMonthDate).format("MMM YYYY")
-      ACCOUNT_NAME: name
-      USAGE_PLAN: accountPlans(record.accountPlans)
-      # Plan details
-      PLAN_COST: displayCurrency(billing.plan)
-      PLAN_BANDWIDTH: humanizeBytes(UsageReport.maxUsagePerAccount(backboneAccount, 'bandwidth'))
-      PLAN_STORAGE: humanizeBytes(UsageReport.maxUsagePerAccount(backboneAccount, 'storage'))
-      # Monthly Usage
-      USAGE_BANDWIDTH: humanizeBytes(usage.bandwidth)
-      USAGE_STORAGE: humanizeBytes(usage.storage)
-      # Overage
-      BILL_BANDWIDTH_OVERAGE: "#{humanizeBytes(usage.bandwidthOverage)} @ #{displayCurrency calculateAccountBill.cheapestOverageCost(account, 'bandwidth')} / GiB = #{displayCurrency(billing.bandwidthOverage)}"
-      BILL_STORAGE_OVERAGE: "#{humanizeBytes(usage.storageOverage)} @ #{displayCurrency calculateAccountBill.cheapestOverageCost(account, 'storage')} / GiB = #{displayCurrency(billing.storageOverage)}"
-      BILL_OVERAGE_TOTAL: displayCurrency(billing.bandwidthOverage + billing.storageOverage)
-      # TOTAL
-      BILL_TOTAL: displayCurrency(billing.plan + billing.bandwidthOverage + billing.storageOverage)
-  sendMail mailOptions, callback
+    mailOptions =
+      templateName: 'monthly-invoice'
+      subject: 'Your cine.io invoice'
+      toEmail: account.billingEmail
+      toName: name
+      userTemplateVars:
+        header_blurb: 'Thank you for using cine.io.'
+        BILLING_MONTH: moment(billingMonthDate).format("MMM YYYY")
+        ACCOUNT_NAME: name
+        USAGE_PLAN: accountPlans(record.accountPlans)
+        # Plan details
+        PLAN_COST: displayCurrency(billing.plan)
+        PLAN_BANDWIDTH: humanizeBytes(UsageReport.maxUsagePerAccount(backboneAccount, 'bandwidth'))
+        PLAN_STORAGE: humanizeBytes(UsageReport.maxUsagePerAccount(backboneAccount, 'storage'))
+        # Monthly Usage
+        USAGE_BANDWIDTH: humanizeBytes(usage.bandwidth)
+        USAGE_STORAGE: humanizeBytes(usage.storage)
+        # Overage
+        BILL_BANDWIDTH_OVERAGE: "#{humanizeBytes(usage.bandwidthOverage)} @ #{displayCurrency calculateAccountBill.cheapestOverageCost(account, 'bandwidth')} / GiB = #{displayCurrency(billing.bandwidthOverage)}"
+        BILL_STORAGE_OVERAGE: "#{humanizeBytes(usage.storageOverage)} @ #{displayCurrency calculateAccountBill.cheapestOverageCost(account, 'storage')} / GiB = #{displayCurrency(billing.storageOverage)}"
+        BILL_OVERAGE_TOTAL: displayCurrency(billing.bandwidthOverage + billing.storageOverage)
+        # TOTAL
+        BILL_TOTAL: displayCurrency(billing.plan + billing.bandwidthOverage + billing.storageOverage)
+    sendMail mailOptions, callback
 
 exports.underOneGibBill = (account, accountBillingHistory, billingMonthDate, callback=noop)->
   name = account.name || account.billingEmail
@@ -113,23 +116,27 @@ placetoUpgradeYourAccount = (account)->
 exports.throttledAccount = (account, callback=noop)->
   name = account.name || account.billingEmail
   month = moment(new Date).format("MMM YYYY")
-  urlToUpgrade = placetoUpgradeYourAccount(account)
-  mailOptions =
-    templateName: 'blank-with-header-and-footer'
-    subject: 'Your account has been disabled (usage exceeded).'
-    toEmail: account.billingEmail
-    toName: name
-    userTemplateVars:
-      header_blurb: "Please update your account"
-      name: name
-      content: """
-      <p>We wanted to let you know we've disabled your account. All API requests will begin returning a 402 response. The reason we've disabled your account is because you've exceeded the usage limits of your current plan. Please upgrade your account at <a href="#{urlToUpgrade}">#{urlToUpgrade}</a>.</p>
-      <p>We hope you enjoy using <a href="https://www.cine.io">cine.io</a>. If you have any questions you can reply to this email, or send us an email at <a href="mailto:support@cine.io">support@cine.io</a>.</p>
-      <p>Regards,<br/>
-      Thomas Shafer<br/>
-      Technical Officer, cine.io</p>
-      """
-  sendMail mailOptions, callback
+  fullCurrentUserJson.accountJson account, (err, accountJSON)->
+    return callback(err) if err
+    backboneAccount = new BackboneAccount(accountJSON)
+
+    urlToUpgrade = backboneAccount.updateAccountUrl()
+    mailOptions =
+      templateName: 'blank-with-header-and-footer'
+      subject: 'Your account has been disabled (usage exceeded).'
+      toEmail: account.billingEmail
+      toName: name
+      userTemplateVars:
+        header_blurb: "Please update your account"
+        name: name
+        content: """
+        <p>We wanted to let you know we've disabled your account. All API requests will begin returning a 402 response. The reason we've disabled your account is because you've exceeded the usage limits of your current plan. Please upgrade your account at <a href="#{urlToUpgrade}">#{urlToUpgrade}</a>.</p>
+        <p>We hope you enjoy using <a href="https://www.cine.io">cine.io</a>. If you have any questions you can reply to this email, or send us an email at <a href="mailto:support@cine.io">support@cine.io</a>.</p>
+        <p>Regards,<br/>
+        Thomas Shafer<br/>
+        Technical Officer, cine.io</p>
+        """
+    sendMail mailOptions, callback
 
 exports.welcomeEmail = (user, callback=noop)->
   name = user.name || user.email

@@ -20,10 +20,21 @@ module.exports = class Account extends Base
 
   @include Cine.lib('date_value')
 
+  isDisabled: ->
+    @get('isDisabled')
+
   needsCreditCard: ->
     return false unless @get('provider') == 'cine.io'
     return false if _.all @get('plans'), planIsFree
     !@get('stripeCard')?
+
+  updateAccountUrl: ->
+    return @get('appdirect').baseUrl if @get('provider') == 'appdirect'
+    returnUrl =
+      heroku: ProvidersAndPlans['heroku'].url
+      engineyard: ProvidersAndPlans['engineyard'].url
+      'cine.io': "https://www.cine.io/account"
+    returnUrl[@get('provider')]
 
   createdAt: ->
     @_dateValue('createdAt')
