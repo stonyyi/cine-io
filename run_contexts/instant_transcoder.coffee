@@ -2,9 +2,11 @@ Base = require('./base')
 fs = require('fs')
 _ = require('underscore')
 async = require('async')
+request = require('request')
 cp = require('child_process')
 runMe = !module.parent
 tailingStream = require('tailing-stream')
+express = require('express')
 
 ffmpeg = "ffmpeg"
 app = exports.app = Base.app()
@@ -99,9 +101,24 @@ sendAndStreamFile = (file, req, res)->
         console.log("Processed file", file)
 
 
+app.use express.static "/Users/thomas/work/tmp"
+
+
+
+# saver
 app.get '/', (req,res)->
-  file = "/Users/thomas/work/tmp/stage5.flv"
-  sendAndStreamFile(file, req, res)
+  requestOptions =
+    url: 'http://localhost:8182/stage5.flv'
+    method: "GET"
+  outputFile = Cine.path('ignored/downloaded.flv')
+  request(requestOptions).pipe(fs.createWriteStream(outputFile))
+  request requestOptions
+  res.send(200)
+
+# streamer
+# app.get '/', (req,res)->
+#   file = "/Users/thomas/work/tmp/stage5.flv"
+#   sendAndStreamFile(file, req, res)
 
 # json options
 #  file: full path to file
