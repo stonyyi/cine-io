@@ -8,14 +8,22 @@ var
 
 module.exports = React.createClass({
   displayName: 'DashboardStats',
+  getInitialState: function(){
+    return {selectedMonth: this.props.model.getUsageMonths()[0]}
+  },
   propTypes:{
     model: React.PropTypes.instanceOf(Stats).isRequired
+  },
+  changeMonth: function(month){
+    this.setState({selectedMonth: month});
   },
   render: function() {
     var usageStats, accounts,
     splitByProvider, splitByPlan, splitByProviderHtml, splitByPlanHtml,
+    self = this,
     model = this.props.model,
-    accounts = model.getSortedUsage('bandwidth');
+    selectedMonth = this.state.selectedMonth,
+    accounts = model.getSortedUsage('bandwidth', selectedMonth);
 
     splitByProvider = _.countBy(accounts, function(account) {return account.get('billingProvider')})
     splitByPlan = _.countBy(accounts, function(account) {return account.firstPlan()})
@@ -45,10 +53,22 @@ module.exports = React.createClass({
         <td>{humanizeBytes(usage.bandwidth)}</td>
         <td>{humanizeBytes(usage.storage)}</td>
         </tr>)
+    });
+    monthSelector = _.map(model.getUsageMonths(), function(month){
+      var inside
+      if (month === selectedMonth){
+        inside = month;
+      }else{
+        inside = (<a onClick={self.changeMonth.bind(this, month)}> {month} </a>);
+      }
+      return (<li key={month}>{inside}</li>)
     })
     return (
       <div id='admin-dashboard-show'>
         <h3>Usage Stats</h3>
+        <ul className="inline-list">
+          {monthSelector}
+        </ul>
         <table>
           <thead>
             <tr>
@@ -67,8 +87,8 @@ module.exports = React.createClass({
             <tr>
             <td>Total</td>
             <td colSpan="3">{accounts.length} accounts</td>
-            <td>{humanizeBytes(model.total('bandwidth'))}</td>
-            <td>{humanizeBytes(model.total('storage'))}</td>
+            <td>{humanizeBytes(model.total('bandwidth', selectedMonth))}</td>
+            <td>{humanizeBytes(model.total('storage', selectedMonth))}</td>
             </tr>
           </tfoot>
         </table>
