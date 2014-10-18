@@ -11,9 +11,10 @@ describe 'calculateAndSaveUsageStats', ->
     @calculateStub.restore()
 
   it 'calculates stats and saves them', (done)->
-    calculateAndSaveUsageStats (err)->
+    d = new Date
+    calculateAndSaveUsageStats d, (err)->
       expect(err).to.be.null
-      Stats.getUsage (err, results)->
+      Stats.getUsage d, (err, results)->
         expect(err).to.be.null
         expect(results).to.deep.equal(the: 'full usage stats')
         done()

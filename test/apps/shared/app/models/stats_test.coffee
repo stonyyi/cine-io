@@ -9,7 +9,9 @@ describe 'Stats', ->
     @account1 = id: "id1", name: "1 name", usage: {bandwidth: 123, storage: 999}
     @account2 = id: "id2", name: "2 name", usage: {bandwidth: 789, storage: 777}
     @account3 = id: "id3", name: "3 name", usage: {bandwidth: 456, storage: 888}
-    @stats = new Stats usage: [@account1, @account2, @account3]
+    attributes = {usage:{}}
+    attributes.usage["usage-2014-08"] = [@account1, @account2, @account3]
+    @stats = new Stats attributes
 
   describe 'getSortedUsage', ->
     it 'returns accounts sorted by bandwidth', ->

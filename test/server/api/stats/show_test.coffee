@@ -6,6 +6,7 @@ Account = Cine.server_model('account')
 CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/calculate_account_storage')
 calculateAndSaveUsageStats = Cine.server_lib("stats/calculate_and_save_usage_stats")
+moment = require('moment')
 
 describe 'Stats#Show', ->
   testApi.requiresSiteAdmin Show
@@ -44,23 +45,29 @@ describe 'Stats#Show', ->
     @fakeStorageTotals[@account2._id.toString()] = 666666
     @fakeStorageTotals[@account3._id.toString()] = 333333
 
-    @storageStub = sinon.stub CalculateAccountStorage, 'total', (account, callback)=>
+    @storageStub = sinon.stub CalculateAccountStorage, 'byMonth', (account, month, callback)=>
       callback(null, @fakeStorageTotals[account._id.toString()])
 
   afterEach ->
     @storageStub.restore()
 
-  beforeEach calculateAndSaveUsageStats
+  beforeEach (done)->
+    @month = new Date
+    calculateAndSaveUsageStats @month, done
 
   assertCorrectResponse = (response)->
+    expect(response.id).to.equal('some-stats')
+    usageForMonthKey = "usage-#{moment(@month).format("YYYY-MM")}"
+    expect(_.keys(response).sort()).to.deep.equal(['id', 'usage'])
+    usageForMonth = response.usage[usageForMonthKey]
     expectedResult = {}
     expectedResult[@account1._id.toString()] = {name: 'account1 name', usage: {bandwidth: 12345, storage: 111111}}
     expectedResult[@account2._id.toString()] = {name: 'account2 name', usage: {bandwidth: 54321, storage: 666666}}
     expectedResult[@account3._id.toString()] = {name: 'account3 name', usage: {bandwidth: 12121, storage: 333333}}
 
-    expect(response).to.have.length(3)
+    expect(usageForMonth).to.have.length(3)
 
-    _.each response, (accountUsageReport)->
+    _.each usageForMonth, (accountUsageReport)->
       expected = expectedResult[accountUsageReport._id.toString()]
       expect(accountUsageReport.name).to.equal(expected.name)
       expect(accountUsageReport.usage).to.deep.equal(expected.usage)
@@ -70,10 +77,7 @@ describe 'Stats#Show', ->
     session = user: @siteAdmin
     callback = (err, response)=>
       expect(err).to.be.null
-      expect(response.id).to.equal('some-stats')
-      usageMonth = moment(new Date).format("MMM YYYY")
-      expect(response.usageMonthName).to.equal(usageMonth)
-      assertCorrectResponse.call(this, response.usage)
+      assertCorrectResponse.call(this, response)
       done()
 
     Show params, session, callback

@@ -7,10 +7,15 @@ module.exports = class Stats extends Base
   url: '/stats?id=:id'
   idAttribute: 'id'
 
-  # return an array of accounts sorted by usage
-  getSortedUsage: (type)->
-    accounts = @get('usage')
+  getAccounts: (monthKey)->
+    usage = @get('usage')
+    # hack for now
+    # eventually use monthKey
+    accounts = _.values(usage)[0]
 
+  # return an array of accounts sorted by usage
+  getSortedUsage: (type, monthKey)->
+    accounts = @getAccounts(monthKey)
     usageSort = (attributes)->
       attributes.usage[type] * -1
 
@@ -19,8 +24,8 @@ module.exports = class Stats extends Base
 
     _.chain(accounts).sortBy(usageSort).map(makeAccount).value()
 
-  total: (type)->
-    accounts = @get('usage')
+  total: (type, monthKey)->
+    accounts = @getAccounts(monthKey)
 
     addUsage = (accum, item)->
       accum + item.usage[type]

@@ -1,11 +1,6 @@
 calculateUsageStats = Cine.server_lib("stats/calculate_usage_stats")
 Stats = Cine.server_lib("stats")
 
-module.exports = (callback)->
-  module.exports.saveByMonth new Date, callback
-
-# I know this isn't ideal.
-# It overwrites a global stats with a different month
-module.exports.saveByMonth = (month, callback)->
+module.exports = (month, callback)->
   calculateUsageStats.byMonth month, (err, collectiveStats)->
-    Stats.setUsage collectiveStats, callback
+    Stats.setUsage month, collectiveStats, callback

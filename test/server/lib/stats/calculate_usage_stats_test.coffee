@@ -35,13 +35,19 @@ describe 'calculateUsageStats', ->
     @bandwidthStub.restore()
 
   beforeEach ->
-    @fakeStorageTotals = {}
-    @fakeStorageTotals[@account1._id.toString()] = 111111
-    @fakeStorageTotals[@account2._id.toString()] = 666666
-    @fakeStorageTotals[@account3._id.toString()] = 333333
+    @fakeStorageThisMonth = {}
+    @fakeStorageThisMonth[@account1._id.toString()] = 111111
+    @fakeStorageThisMonth[@account2._id.toString()] = 666666
+    @fakeStorageThisMonth[@account3._id.toString()] = 333333
 
-    @storageStub = sinon.stub CalculateAccountStorage, 'total', (account, callback)=>
-      callback(null, @fakeStorageTotals[account._id.toString()])
+    @fakeStorageByMonth = {}
+    @fakeStorageByMonth[@account1._id.toString()] = 222222
+    @fakeStorageByMonth[@account2._id.toString()] = 444444
+    @fakeStorageByMonth[@account3._id.toString()] = 555555
+
+    @storageStub = sinon.stub CalculateAccountStorage, 'byMonth', (account, month, callback)=>
+      resource = if month.getYear() == (new Date).getYear() then @fakeStorageThisMonth else @fakeStorageByMonth
+      callback(null, resource[account._id.toString()])
 
   afterEach ->
     @storageStub.restore()
@@ -70,13 +76,13 @@ describe 'calculateUsageStats', ->
       expected = {}
       expected[@account1._id.toString()] =
         bandwidth: 99999
-        storage: 111111
+        storage: 222222
       expected[@account2._id.toString()] =
         bandwidth: 88888
-        storage: 666666
+        storage: 444444
       expected[@account3._id.toString()] =
         bandwidth: 77777
-        storage: 333333
+        storage: 555555
 
       calculateUsageStats.byMonth d, (err, results)->
         expect(err).to.be.null

@@ -1,6 +1,6 @@
 _ = require('underscore')
 moment = require('moment')
-
+async = require('async')
 Account = Cine.server_model('account')
 Stats = Cine.server_lib("stats")
 ensureSiteAdmin = Cine.server_lib('ensure_site_admin_for_api')
@@ -11,18 +11,24 @@ accountFromAccountId = (accounts, accountId)->
     account._id.toString() == accountId.toString()
 
 updateUsageWithAccountInformation = (results, callback)->
-  accountIds = _.keys(results)
-  Account.where(_id: {$in: accountIds}).exec (err, accounts)->
-    return callback(err) if err
-    resultToExpectedOutput = (accum, dataInBytes, accountId)->
-      account = accountFromAccountId(accounts, accountId)
-      return unless account
-      result = account.toJSON()
-      result.usage = dataInBytes
-      accum.push result
-      accum
-    response = _.inject results, resultToExpectedOutput, []
-    callback(null, response)
+  # console.log("got results", results)
+  pairs = _.pairs(results)
+  findAccountsForStats = (monthlyAccum, tuple, cb)->
+    key = tuple[0]
+    monthlyResults = tuple[1]
+    accountIds = _.keys(monthlyResults)
+    Account.where(_id: {$in: accountIds}).exec (err, accounts)->
+      return cb(err) if err
+      resultToExpectedOutput = (accum, dataInBytes, accountId)->
+        account = accountFromAccountId(accounts, accountId)
+        return unless account
+        result = account.toJSON()
+        result.usage = dataInBytes
+        accum.push result
+        accum
+      monthlyAccum[key] = _.inject monthlyResults, resultToExpectedOutput, []
+      cb(null, monthlyAccum)
+  async.reduce pairs, {}, findAccountsForStats, callback
 
 module.exports = (params, callback)->
   ensureSiteAdmin params, (isSiteAdmin)->
@@ -31,11 +37,6 @@ module.exports = (params, callback)->
     Stats.getAll (err, results)->
       return callback(err) if err
       return callback("results not found") unless results
-      #hack: the stats are always for the current month
-      # but we might want to be able to choose a month later
-      results.usageMonth = new Date
-      results.usageMonthName = moment(results.usageMonth).format("MMM YYYY")
-      updateUsageWithAccountInformation results.usage, (err, usage)->
-        results.usage = usage
+      updateUsageWithAccountInformation results, (err, usage)->
         return callback(err, null) if err
-        callback(null, _.extend(id: params.id, results))
+        callback(null, _.extend(id: params.id, usage: usage))
