@@ -64,7 +64,7 @@ class FFmpegHandler
     # ffmpegSpawn.stderr.setEncoding('utf8')
     # ffmpegSpawn.stderr.on 'data', (data)->
     #   if (/^execvp\(\)/.test(data))
-    #     console.log('Failed to start child process.');
+    #     console.log('Failed to start child process.')
     #   console.log("ffmpeg stderr", data)
 
     ffmpegSpawn.on 'close', (code)->
@@ -124,8 +124,8 @@ sendAndStreamFile = (file, req, res)->
   ffmpegSpawn.stderr.setEncoding('utf8')
   ffmpegSpawn.stderr.on 'data', (data)->
     if(/^execvp\(\)/.test(data))
-      console.log('failed to start ' + argv.ffmpeg);
-      process.exit(1);
+      console.log('failed to start ' + argv.ffmpeg)
+      process.exit(1)
 
 # FROM BOX
 # app.get '/box-file.flv', (req, res)->
