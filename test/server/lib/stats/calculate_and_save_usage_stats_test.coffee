@@ -19,7 +19,7 @@ describe 'calculateAndSaveUsageStats', ->
   describe 'thisMonth', ->
     it 'calculates stats and saves them', (done)->
       d = new Date
-      calculateAndSaveUsageStats.thisMonth (err)->
+      calculateAndSaveUsageStats (err)->
         expect(err).to.be.null
         Stats.getUsage d, (err, results)->
           expect(err).to.be.null
