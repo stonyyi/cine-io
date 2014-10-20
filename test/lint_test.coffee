@@ -60,3 +60,18 @@ describe 'the test suite', ->
   ]
   _.each notDoneYet, (path)->
     it "tests every file in #{path}"
+
+  itOnly = ["", "only"].join('.')
+  fileHasItOnly = (filePath, callback)->
+    fs.readFile filePath, (err, data)->
+      return callback(err) if err
+      callback data.toString().indexOf(itOnly) >= 0
+
+  it "ensures there is no #{itOnly} in the test suite", (done)->
+    findCoffeeFiles 'test', (err, files)->
+      return done(err) if err
+      async.filter files, fileHasItOnly, (filesWithItOnly)->
+        if filesWithItOnly.length > 0
+          console.log("files with #{itOnly}", filesWithItOnly)
+        expect(filesWithItOnly).to.have.length(0)
+        done()
