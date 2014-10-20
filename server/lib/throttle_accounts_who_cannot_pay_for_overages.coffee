@@ -46,6 +46,7 @@ checkAccount = (account, callback)->
     return callback() if accountWithinLimit(account, results)
     # the account must not be within limits and we cannot charge overages
     throttleAccount(account, callback)
+
 module.exports = (callback)->
   scope = Account.find()
     .exists('deletedAt', false)
