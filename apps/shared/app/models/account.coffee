@@ -25,6 +25,7 @@ module.exports = class Account extends Base
 
   needsCreditCard: ->
     return false unless @get('provider') == 'cine.io'
+    return false if @get('cannotBeDisabled')
     return false if _.all @get('plans'), planIsFree
     !@get('stripeCard')?
 

@@ -13,7 +13,7 @@ describe 'fullCurrentUserJson', ->
     @account.save done
 
   beforeEach (done)->
-    @account2 = new Account(billingEmail: 'with billing email', name: 'second account', plans: ['basic', 'pro'], masterKey: '2mkey', billingProvider: 'cine.io')
+    @account2 = new Account(billingEmail: 'with billing email', name: 'second account', plans: ['basic', 'pro'], masterKey: '2mkey', billingProvider: 'cine.io', unthrottleable: true)
     @account2.save done
 
   beforeEach (done)->
@@ -67,6 +67,7 @@ describe 'fullCurrentUserJson', ->
       expect(firstAccount.plans).have.length(1)
       expect(firstAccount.plans[0]).to.equal('solo')
       expect(firstAccount.herokuId).to.equal('my heroku id')
+      expect(firstAccount.cannotBeDisabled).to.be.undefined
       expect(firstAccount.provider).to.equal('heroku')
 
       secondAccount = @userJson.accounts[1]
@@ -78,6 +79,7 @@ describe 'fullCurrentUserJson', ->
       expect(secondAccount.plans[0]).to.equal('basic')
       expect(secondAccount.plans[1]).to.equal('pro')
       expect(secondAccount.provider).to.equal('cine.io')
+      expect(secondAccount.cannotBeDisabled).to.be.true
       expect(secondAccount.herokuId).to.be.undefined
 
       thirdAccount = @userJson.accounts[2]

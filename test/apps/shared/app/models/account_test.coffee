@@ -30,9 +30,14 @@ describe 'Account', ->
       account = new Account(plans: ['free'], provider: 'cine.io')
       expect(account.needsCreditCard()).to.be.false
 
+    it 'returns false for an account on a pro plan which cannot be disabled', ->
+      account = new Account(plans: ['pro'], provider: 'cine.io', cannotBeDisabled: true)
+      expect(account.needsCreditCard()).to.be.false
+
     it 'returns false for an account on a paid plan with a credit card', ->
       account = new Account(plans: ['pro'], provider: 'cine.io', stripeCard: {last4: '4242'})
       expect(account.needsCreditCard()).to.be.false
+
     it 'returns false for an account on a paid plan without a credit card on a different provider', ->
       account = new Account(plans: ['pro'], provider: 'heroku')
       expect(account.needsCreditCard()).to.be.false
