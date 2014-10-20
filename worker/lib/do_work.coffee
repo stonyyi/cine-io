@@ -5,6 +5,7 @@ scheduledTasks =
   once_an_hour_worker:
     [
       'reporting/download_and_parse_edgecast_logs'
+      'stats/calculate_and_save_usage_stats'
     ]
   process_new_edgecast_recordings:
     [
