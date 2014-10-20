@@ -4,17 +4,35 @@ Stats = Cine.server_lib("stats")
 
 describe 'calculateAndSaveUsageStats', ->
   beforeEach ->
+    now = new Date
     @calculateStub = sinon.stub calculateUsageStats, 'byMonth', (month, callback)->
-      callback(null, the: "full usage stats")
+      if month.getMonth() == now.getMonth()
+        callback(null, the: "this month usage stats")
+      else if month.getMonth() == now.getMonth() - 1
+        callback(null, the: "last month usage stats")
+      else
+        throw new Error("unknown month")
 
   afterEach ->
     @calculateStub.restore()
 
-  it 'calculates stats and saves them', (done)->
-    d = new Date
-    calculateAndSaveUsageStats d, (err)->
-      expect(err).to.be.null
-      Stats.getUsage d, (err, results)->
+  describe 'thisMonth', ->
+    it 'calculates stats and saves them', (done)->
+      d = new Date
+      calculateAndSaveUsageStats.thisMonth (err)->
         expect(err).to.be.null
-        expect(results).to.deep.equal(the: 'full usage stats')
-        done()
+        Stats.getUsage d, (err, results)->
+          expect(err).to.be.null
+          expect(results).to.deep.equal(the: 'this month usage stats')
+          done()
+
+  describe 'byMonth', ->
+    it 'calculates stats and saves them', (done)->
+      d = new Date
+      d.setMonth(d.getMonth() - 1)
+      calculateAndSaveUsageStats.byMonth d, (err)->
+        expect(err).to.be.null
+        Stats.getUsage d, (err, results)->
+          expect(err).to.be.null
+          expect(results).to.deep.equal(the: 'last month usage stats')
+          done()

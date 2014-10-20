@@ -53,7 +53,7 @@ describe 'Stats#Show', ->
 
   beforeEach (done)->
     @month = new Date
-    calculateAndSaveUsageStats @month, done
+    calculateAndSaveUsageStats.byMonth @month, done
 
   assertCorrectResponse = (response)->
     expect(response.id).to.equal('some-stats')
