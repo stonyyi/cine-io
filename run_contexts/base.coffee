@@ -30,8 +30,9 @@ exports.app = ->
   return app
 
 exports.listen = (app, defaultPort)->
-  app.listen(process.env.PORT || defaultPort)
-
+  port = process.env.PORT || defaultPort
+  console.log("listening on", port)
+  app.listen(port)
 
 # scheduleJob("process-video", {file: "some-file"})
 exports.scheduleJob = (queue, details={}, callback=noop)->
