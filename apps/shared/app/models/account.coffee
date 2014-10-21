@@ -41,7 +41,7 @@ module.exports = class Account extends Base
     @_dateValue('createdAt')
 
   firstPlan: ->
-    @get('plans')[0]
+    _.first(@get('plans'))
 
   displayName: ->
     @get('name') || capitalize(@firstPlan())

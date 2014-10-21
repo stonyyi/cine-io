@@ -17,6 +17,15 @@ describe 'Account', ->
       account = new Account(provider: "cine.io")
       expect(account.isHeroku()).to.be.false
 
+  describe '#isAppdirect', ->
+    it 'is true with appdirect', ->
+      account = new Account(provider: 'appdirect')
+      expect(account.isAppdirect()).to.be.true
+
+    it 'is false without appdirect', ->
+      account = new Account(provider: 'cine.io')
+      expect(account.isAppdirect()).to.be.false
+
   describe 'needsCreditCard', ->
     it 'returns true for an account on a paid plan without a credit card', ->
       account = new Account(plans: ['pro'], provider: 'cine.io')
@@ -66,11 +75,26 @@ describe 'Account', ->
       account = new Account(provider: 'appdirect', appdirect: {baseUrl: 'the appdirect url'})
       expect(account.updateAccountUrl()).to.equal('the appdirect url')
 
-  describe '#isAppdirect', ->
-    it 'is true with appdirect', ->
-      account = new Account(provider: 'appdirect')
-      expect(account.isAppdirect()).to.be.true
 
-    it 'is false without appdirect', ->
-      account = new Account(provider: 'cine.io')
-      expect(account.isAppdirect()).to.be.false
+  describe 'createdAt', ->
+    it 'returns a date', ->
+      account = new Account(createdAt: (new Date).toISOString())
+      expect(account.createdAt()).to.be.instanceOf(Date)
+
+  describe 'firstPlan', ->
+    it 'returns the first plan', ->
+      account = new Account(plans: ['a', 'b', 'c'])
+      expect(account.firstPlan()).to.equal('a')
+
+  describe 'displayName', ->
+    it 'returns the name if available', ->
+      account = new Account(name: 'my name', plans: ['a', 'b', 'c'])
+      expect(account.displayName()).to.equal('my name')
+
+    it 'returns a capitalized first plan if name is not available', ->
+      account = new Account(plans: ['the b plan', 'c'])
+      expect(account.displayName()).to.equal('The b plan')
+
+    it 'returns null if name is not available and plans are not available', ->
+      account = new Account()
+      expect(account.displayName()).to.be.undefined
