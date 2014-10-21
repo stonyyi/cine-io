@@ -46,6 +46,7 @@ app.get '/', (req, res)->
   res.send("I am the vod_censor")
 
 app.post '/', (req, res)->
+  console.log("got request", req.body)
   file = req.body?.file
   return res.status(400).send("usage: [POST] /, {file: '/full/path/to/file'}") unless file
   fs.exists file, (exists)->
