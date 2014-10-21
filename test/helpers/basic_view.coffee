@@ -1,10 +1,12 @@
 _str = require 'underscore.string'
 
-module.exports = (id)->
+module.exports = (id, app)->
+  parts = id.split('/')
+  controller = parts[0]
+  action = parts[1]
   describe "View: #{id}", ->
-    ViewClass = Cine.view(id)
+    ViewClass = Cine.view(controller, action, app)
     expectedClassName = id.replace('/', '-')
-    parts = id.split('/')
     displayName = [_str.classify(parts[0]), _str.classify(parts[1])].join('')
 
     before ->
