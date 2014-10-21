@@ -41,6 +41,10 @@ class NewRecordingHandler
     EdgecastStream.findOne query, callback
 
 # takes a /?file=/aboslute/path/to/file
+
+app.get '/', (req, res)->
+  res.send("I am the vod_censor")
+
 app.post '/', (req, res)->
   file = req.body?.file
   return res.status(400).send("usage: [POST] /, {file: '/full/path/to/file'}") unless file
