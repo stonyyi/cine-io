@@ -2,7 +2,7 @@ express = require('express')
 fs = require('fs')
 module.exports = app = express()
 
-console.log('loaded')
+console.log('loaded embed app')
 fileName = __dirname + "/index.html"
 
 app.get '/:publicKey/:steramId', (req, res)->
