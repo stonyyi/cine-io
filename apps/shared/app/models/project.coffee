@@ -8,7 +8,7 @@ module.exports = class Project extends Base
   getStreams: ->
     return @streams if @streams
     @streams = new Streams([], app: @app)
-    @streams.fetch({data: secretKey: @get('secretKey')})
+    @streams.fetch(data: {secretKey: @get('secretKey')})
     @streams
 
   @include Cine.lib('date_value')
