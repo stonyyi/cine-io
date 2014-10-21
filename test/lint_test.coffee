@@ -37,6 +37,8 @@ describe 'the test suite', ->
     # main
     "apps/main/app/controllers"
     "apps/main/app/views"
+    #admin
+    "apps/admin/app/views"
     # server
     "server/api"
     "server/models"
@@ -49,7 +51,6 @@ describe 'the test suite', ->
     # admin
     "apps/admin/app/components"
     "apps/admin/app/controllers"
-    "apps/admin/app/views"
     # main
     "apps/main/app/components"
     # shared
