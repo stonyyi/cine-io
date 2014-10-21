@@ -396,7 +396,7 @@ exports.Consulting = React.createClass({
             </p>
 
             <p>
-               <a className="button radius secondary" href="mailto:support@cine.io?subject=consulting+services">
+               <a className="button radius secondary" target="_blank" href="mailto:support@cine.io?subject=Business+Inquiry">
                  Talk to us
                </a>
             </p>
