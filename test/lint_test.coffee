@@ -38,6 +38,7 @@ describe 'the test suite', ->
     "apps/main/app/controllers"
     "apps/main/app/views"
     #admin
+    "apps/admin/app/controllers"
     "apps/admin/app/views"
     # server
     "server/api"
@@ -50,7 +51,6 @@ describe 'the test suite', ->
   notDoneYet = [
     # admin
     "apps/admin/app/components"
-    "apps/admin/app/controllers"
     # main
     "apps/main/app/components"
     # shared
