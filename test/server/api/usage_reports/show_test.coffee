@@ -3,11 +3,11 @@ ShowUsageReports = testApi Cine.api('usage_reports/show')
 CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/calculate_account_storage')
 
-describe 'ShowUsageReports', ->
+describe 'UsageReports#Show', ->
   testApi.requiresMasterKey ShowUsageReports
 
   beforeEach (done)->
-    @account = new Account masterKey: 'dat mk', plans: ['free']
+    @account = new Account billingProvider: 'cine.io', masterKey: 'dat mk', plans: ['free']
     @account.save done
 
   beforeEach ->

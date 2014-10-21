@@ -33,7 +33,7 @@ describe 'engineyard authentication', ->
 
 
   beforeEach (done)->
-    @account = new Account(plans: ['free'], _id: constantAccountId)
+    @account = new Account(billingProvider: 'engineyard', plans: ['free'], _id: constantAccountId)
     @account.save done
 
   beforeEach (done)->

@@ -84,7 +84,7 @@ describe 'AppDirect/Users/Assign', ->
     describe 'with the account created and no user', ->
 
       beforeEach (done)->
-        @account = new Account
+        @account = new Account billingProvider: 'appdirect'
         @account.save done
 
       beforeEach ->
@@ -118,7 +118,7 @@ describe 'AppDirect/Users/Assign', ->
     describe 'with the account created and the user already created', ->
 
       beforeEach (done)->
-        @account = new Account
+        @account = new Account billingProvider: 'appdirect'
         @account.save done
 
       beforeEach (done)->

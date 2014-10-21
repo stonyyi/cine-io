@@ -7,7 +7,7 @@ describe 'AddCardToAccountFromStripeToken', ->
 
     it 'creates a card object on the account', (done)->
       stripeSuccess = requireFixture('nock/stripe_create_card_for_customer_success')()
-      account = new Account(plans: ['pro'], billingEmail: 'the email', stripeCustomer: {stripeCustomerId: 'cus_2ghmxawfvEwXkw'})
+      account = new Account(billingProvider: 'cine.io', plans: ['pro'], billingEmail: 'the email', stripeCustomer: {stripeCustomerId: 'cus_2ghmxawfvEwXkw'})
       caller = new AddCardToAccountFromStripeToken(account, 'tok_102gkI2AL5avr9E4wef0ysJa')
       caller.add (err, account, card)->
         expect(err).to.equal(null)
@@ -31,7 +31,7 @@ describe 'AddCardToAccountFromStripeToken', ->
         done()
 
     it 'requires a account be a stripe customer', (done)->
-      account = new Account(stripeCustomer: {stripeCustomerId: ''})
+      account = new Account(billingProvider: 'cine.io', stripeCustomer: {stripeCustomerId: ''})
       caller = new AddCardToAccountFromStripeToken(account, 'fake token')
       caller.add (err, account, card)->
         expect(err).to.equal("account is not a stripe customer")
@@ -39,7 +39,7 @@ describe 'AddCardToAccountFromStripeToken', ->
         expect(card).to.equal(undefined)
         done()
     it 'requires a stripe token', (done)->
-      account = new Account(stripeCustomer: {stripeCustomerId: 'fake customer'})
+      account = new Account(billingProvider: 'cine.io', stripeCustomer: {stripeCustomerId: 'fake customer'})
       caller = new AddCardToAccountFromStripeToken(account, '')
       caller.add (err, account, card)->
         expect(err).to.equal("no stripe token")

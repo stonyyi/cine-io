@@ -5,15 +5,15 @@ CalculateAccountStorage = Cine.server_lib('reporting/calculate_account_storage')
 
 describe 'calculateUsageStats', ->
   beforeEach (done)->
-    @account1 = new Account
+    @account1 = new Account billingProvider: 'cine.io'
     @account1.save done
 
   beforeEach (done)->
-    @account2 = new Account
+    @account2 = new Account billingProvider: 'cine.io'
     @account2.save done
 
   beforeEach (done)->
-    @account3 = new Account
+    @account3 = new Account billingProvider: 'cine.io'
     @account3.save done
 
   beforeEach ->

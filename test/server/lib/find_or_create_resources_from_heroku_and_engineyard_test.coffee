@@ -116,7 +116,7 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
   describe 'findUser', ->
 
     beforeEach (done)->
-      @account = new Account(plans: ['test'], name: 'the account name')
+      @account = new Account(billingProvider: 'heroku', plans: ['test'], name: 'the account name')
       @account.save done
 
     beforeEach (done)->
@@ -153,7 +153,7 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
   describe 'updatePlan', ->
 
     beforeEach (done)->
-      @account = new Account(plans: ['test'])
+      @account = new Account(billingProvider: 'heroku', plans: ['test'])
       @account.save done
 
     it "updates the account's plan", (done)->
@@ -193,7 +193,7 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
   describe 'deleteAccount', ->
 
     beforeEach (done)->
-      @account = new Account(plans: ['test'])
+      @account = new Account(billingProvider: 'heroku', plans: ['test'])
       @account.save done
 
     it "adds deletedAt to an account", (done)->

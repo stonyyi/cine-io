@@ -7,7 +7,7 @@ describe 'Accounts#update', ->
   testApi.requiresMasterKey UpdateAccount
 
   beforeEach (done)->
-    @account = new Account(plans: ['pro'], billingEmail: 'the email', name: 'Chillin')
+    @account = new Account(billingProvider: 'cine.io', plans: ['pro'], billingEmail: 'the email', name: 'Chillin')
     @account.save done
 
   it "updates the account fields", (done)->

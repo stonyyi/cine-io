@@ -7,7 +7,7 @@ calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 
 describe 'throttleAccountsWhoCannotPayForOverages', ->
   beforeEach (done)->
-    @account = new Account(plans: ['solo'])
+    @account = new Account(billingProvider: 'cine.io', plans: ['solo'])
     @account.save done
 
   describe 'cine.io accounts', ->

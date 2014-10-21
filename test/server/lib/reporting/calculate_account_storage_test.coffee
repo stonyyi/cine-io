@@ -8,7 +8,7 @@ EdgecastRecordings = Cine.server_model('edgecast_recordings')
 describe 'CalculateAccountStorage', ->
 
   beforeEach (done)->
-    @account = new Account(name: 'dat account', plans: ['basic'])
+    @account = new Account(billingProvider: 'cine.io', name: 'dat account', plans: ['basic'])
     @account.save done
   beforeEach (done)->
     @project1 = new Project(name: 'project1', _account: @account._id)

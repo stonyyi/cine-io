@@ -7,7 +7,7 @@ CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwid
 describe 'CalculateAccountBandwidth', ->
 
   beforeEach (done)->
-    @account = new Account(name: 'dat account', plans: ['basic'])
+    @account = new Account(billingProvider: 'cine.io', name: 'dat account', plans: ['basic'])
     @account.save done
   beforeEach (done)->
     @project1 = new Project(name: 'project1', _account: @account._id)

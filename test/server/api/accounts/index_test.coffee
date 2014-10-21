@@ -2,7 +2,7 @@ Index = testApi Cine.api('accounts/index')
 Account = Cine.server_model('account')
 User = Cine.server_model('user')
 
-describe 'Stats#Index', ->
+describe 'Accounts#Index', ->
   testApi.requiresSiteAdmin Index
 
   beforeEach (done)->
@@ -10,17 +10,17 @@ describe 'Stats#Index', ->
     @siteAdmin.save done
 
   beforeEach (done)->
-    @account1 = new Account name: "account1 name"
+    @account1 = new Account billingProvider: 'cine.io', name: "account1 name"
     @account1.save done
 
   beforeEach (done)->
-    @account2 = new Account name: "account2 name", throttledAt: new Date
+    @account2 = new Account billingProvider: 'cine.io', name: "account2 name", throttledAt: new Date
     @account2.save done
 
   beforeEach (done)->
     throttledYesterday = new Date
     throttledYesterday.setDate(throttledYesterday.getDate() - 1)
-    @account3 = new Account name: "account3 name", throttledAt: throttledYesterday
+    @account3 = new Account billingProvider: 'cine.io', name: "account3 name", throttledAt: throttledYesterday
     @account3.save done
 
   describe 'throttled accounts', ->

@@ -4,7 +4,7 @@ Project = Cine.server_model('project')
 
 describe 'AccountThrottler', ->
   beforeEach (done)->
-    @account = new Account()
+    @account = new Account(billingProvider: 'cine.io')
     @account.save done
   beforeEach (done)->
     @accountProject1 = new Project(_account: @account._id)

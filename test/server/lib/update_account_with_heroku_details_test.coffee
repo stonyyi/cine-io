@@ -17,7 +17,7 @@ describe 'updateAccountWithHerokuDetails', ->
   describe 'success', ->
 
     beforeEach (done)->
-      @account = new Account(herokuId: "app29975387@heroku.com")
+      @account = new Account(billingProvider: 'heroku', herokuId: "app29975387@heroku.com")
       @account.save done
 
     beforeEach ->

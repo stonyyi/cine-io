@@ -12,7 +12,7 @@ describe 'AppDirect/Addons', ->
     @agent = supertest.agent(@app)
 
   beforeEach (done)->
-    createNewAccount name: 'some name', (err, results)=>
+    createNewAccount name: 'some name', billingProvider: 'appdirect', (err, results)=>
       @results = results
       @account = results.account
       @project = results.project

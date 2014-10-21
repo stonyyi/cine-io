@@ -22,6 +22,7 @@ AccountSchema = new mongoose.Schema
   # links to config
   billingProvider:
     type: String
+    default: null
   plans:[
     type: String
   ]

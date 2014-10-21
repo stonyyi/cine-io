@@ -6,7 +6,7 @@ BackboneAccount = Cine.model('account')
 ProvidersAndPlans = Cine.config('providers_and_plans')
 
 describe 'Account', ->
-  modelTimestamps(Account, plans: ['pro'])
+  modelTimestamps(Account, plans: ['pro'], billingProvider: 'cine.io')
 
   describe 'validations', ->
     describe 'billingProvider', ->
@@ -22,24 +22,22 @@ describe 'Account', ->
           expect(err).not.to.be.null
           done()
 
-      xit 'cannot be null', (done)->
+      it 'cannot be null', (done)->
         account = new Account
         account.save (err, member)->
-          expect(err).not.to.be.null
+          expect(err.errors.billingProvider.message).to.equal('Invalid billing provider')
           done()
-
-    describe 'plans', ->
 
   describe 'masterKey', ->
     it 'has a unique masterKey generated on save', (done)->
-      account = new Account(name: 'some name', plans: ['test'])
+      account = new Account(billingProvider: 'cine.io', name: 'some name', plans: ['test'])
       account.save (err)->
         expect(err).to.be.null
         expect(account.masterKey.length).to.equal(64)
         done()
 
     it 'will not override the masterKey on future saves', (done)->
-      account = new Account(name: 'some name', plans: ['test'])
+      account = new Account(billingProvider: 'cine.io', name: 'some name', plans: ['test'])
       account.save (err)->
         expect(err).to.be.null
         masterKey = account.masterKey
@@ -51,7 +49,7 @@ describe 'Account', ->
   describe 'streamLimit', ->
     testPlan = (plans..., limit)->
       plans = [plans] unless _.isArray(plans)
-      account = new Account(plans: plans)
+      account = new Account(billingProvider: 'cine.io', plans: plans)
 
       expect(account.streamLimit()).to.equal(limit)
 
@@ -76,7 +74,7 @@ describe 'Account', ->
   describe '#projects', ->
 
     beforeEach (done)->
-      @account = new Account(plans: ['test'])
+      @account = new Account(billingProvider: 'cine.io', plans: ['test'])
       @account.save done
 
     beforeEach (done)->

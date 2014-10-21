@@ -4,7 +4,7 @@ Account = Cine.server_model('account')
 describe 'deleteStripeCard', ->
 
   beforeEach (done)->
-    @account = new Account name: 'Mah name', plans: ['free']
+    @account = new Account billingProvider: 'cine.io', name: 'Mah name', plans: ['free']
     @account.stripeCustomer.cards.push(stripeCardId: 'card_102gkI2AL5avr9E4geO0PpkC')
     @account.stripeCustomer.cards.push(stripeCardId: 'card2')
     @account.save done

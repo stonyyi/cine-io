@@ -80,7 +80,7 @@ describe 'AppDirect/Subscription/Notice', ->
 
     describe 'success', ->
       beforeEach (done)->
-        @account = new Account(billingEmail: 'thomas@cine.io', plans: ['startup'])
+        @account = new Account(billingProvider: 'appdirect', billingEmail: 'thomas@cine.io', plans: ['startup'])
         @account.save done
 
       describe 'Deactivate', ->

@@ -16,15 +16,15 @@ describe 'Stats#Show', ->
     @siteAdmin.save done
 
   beforeEach (done)->
-    @account1 = new Account name: "account1 name"
+    @account1 = new Account billingProvider: 'cine.io', name: "account1 name"
     @account1.save done
 
   beforeEach (done)->
-    @account2 = new Account name: "account2 name"
+    @account2 = new Account billingProvider: 'cine.io', name: "account2 name"
     @account2.save done
 
   beforeEach (done)->
-    @account3 = new Account name: "account3 name"
+    @account3 = new Account billingProvider: 'cine.io', name: "account3 name"
     @account3.save done
 
   beforeEach ->

@@ -7,7 +7,7 @@ Account = Cine.server_model('account')
 describe 'addNextStreamToProject', ->
 
   beforeEach (done)->
-    @account = new Account name: 'some account', plans: ['free']
+    @account = new Account billingProvider: 'cine.io', name: 'some account', plans: ['free']
     @account.save done
 
   beforeEach (done)->
