@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react'),
   User = Cine.model('user'),
+  SubmitButton = Cine.component('shared/_submit_button'),
   authentication = Cine.lib('authentication');
 
 module.exports = React.createClass({
@@ -8,7 +9,7 @@ module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
   getInitialState: function(){
     var currentUser = this.props.app.currentUser;
-    return {name: currentUser.get('name'), email: currentUser.get('email')};
+    return {name: currentUser.get('name'), email: currentUser.get('email'), submitting: false};
   },
   changeName: function(event) {
     this.setState({name: event.target.value});
@@ -18,8 +19,20 @@ module.exports = React.createClass({
   },
   updateUser: function(event){
     event.preventDefault();
-    var form = jQuery(event.currentTarget);
-    authentication.updateAccount(this.props.app, form);
+    if(this.state.submitting){return;}
+    this.setState({submitting: true});
+    var
+      self = this,
+      form = jQuery(event.currentTarget);
+    options = {
+      success: function(){
+        self.setState({submitting: false});
+      },
+      error: function(){
+        self.setState({submitting: false});
+      }
+    }
+    authentication.updateAccount(this.props.app, form, options);
   },
   render: function() {
     return (
@@ -40,7 +53,7 @@ module.exports = React.createClass({
         </div>
         <div className="row">
           <div className="large-12 columns">
-            <button type='submit'>Save</button>
+            <SubmitButton text="Save" submittingText="Saving" submitting={this.state.submitting}/>
           </div>
         </div>
       </form>
