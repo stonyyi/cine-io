@@ -39,7 +39,7 @@ module.exports = React.createClass({
   render: function() {
     var
       attribute = this.props.model.get(this.props.confirmationAttribute),
-      deleteObject, deleteObjectSubmitButton;
+      deleteObjectSubmitButton;
     if (this.state.isDeleting){
       if (this.state.deletingObjectName == attribute){
         deleteObjectSubmitButton = (<button className='button alert tiny' type='submit'>Delete {attribute}</button>);
