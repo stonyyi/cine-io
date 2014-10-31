@@ -2,6 +2,7 @@
 var
   React = require('react'),
   Project = Cine.model('project'),
+  SubmitButton = Cine.component('shared/_submit_button'),
   DeleteButtonWithInputConfirmation = Cine.component('shared/_delete_button_with_input_confirmation'),
   cx = Cine.lib('cx');
 module.exports = React.createClass({
@@ -11,7 +12,7 @@ module.exports = React.createClass({
     model: React.PropTypes.instanceOf(Project).isRequired
   },
   getInitialState: function(){
-    return {showingSettings: false, showingNameForm: false, newProjectName: null};
+    return {showingSettings: false, showingNameForm: false, newProjectName: null, submitting: false};
   },
   getBackboneObjects: function(){
     return this.props.model;
@@ -26,7 +27,7 @@ module.exports = React.createClass({
     this.setState({showingNameForm: true, newProjectName: this.props.model.get('name')});
   },
   hideNameForm: function(e){
-    e.preventDefault()
+    e.preventDefault();
     this.setState({showingNameForm: false, newProjectName: null});
   },
   setProjectName: function(event){
@@ -38,12 +39,16 @@ module.exports = React.createClass({
     }
   },
   saveNewProjectName: function(e){
-    e.preventDefault()
+    e.preventDefault();
+    if (this.state.submitting){return;}
+    this.setState({submitting: true});
     var self = this;
     this.props.model.set({name: this.state.newProjectName});
     this.props.model.save(null, {
       success: function(model, response){
-        self.setState({showingNameForm: false, newProjectName: null});
+        self.setState({showingNameForm: false, newProjectName: null, submitting: false});
+      }, error: function(model, response){
+        self.setState({submitting: false});
       }
     });
   },
@@ -70,7 +75,7 @@ module.exports = React.createClass({
         modelName = (
           <form onSubmit={this.saveNewProjectName} >
             <input ref='newNameInput' required='required' type="text" name='name' value={this.state.newProjectName} onChange={this.setProjectName} placeholder="Add a project name" />
-            <button type='submit' >Save</button>
+            <SubmitButton text="Save" submittingText="Saving" submitting={this.state.submitting}/>
             <a href='' onClick={this.hideNameForm} >cancel</a>
           </form>
         );
