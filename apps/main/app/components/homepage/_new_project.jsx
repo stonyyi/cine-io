@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 var
   React = require('react'),
+  SubmitButton = Cine.component('shared/_submit_button'),
   qs = require('qs'),
   Project = Cine.model('project'),
   _ = require('underscore');
@@ -12,13 +13,15 @@ module.exports = React.createClass({
     masterKey: React.PropTypes.string.isRequired
   },
   getInitialState: function() {
-    return {};
+    return {submitting: false};
   },
   componentDidMount: function(){
     this.refs.projectName.getDOMNode().focus();
   },
   createProject: function (e) {
     e.preventDefault();
+    if(this.state.submitting){return;}
+    this.setState({submitting: true});
     var self = this,
       form = jQuery(e.currentTarget),
       data = qs.parse(form.serialize()),
@@ -28,7 +31,11 @@ module.exports = React.createClass({
     var p = new Project(projectAttrs, {app: this.props.app});
     p.save(null, {
       success: function(model, response, options){
+        self.setState({submitting: false});
         self._owner.addProject(model);
+      },
+      error: function(model, response, options){
+        self.setState({submitting: false});
       }
     });
   },
@@ -48,7 +55,7 @@ module.exports = React.createClass({
             <input type="text" ref='projectName' id="project-name" name='project[name]' value={projectName} onChange={this.changeProjectName} placeholder="My Fun Project (Production)" />
           </div>
           <div className="small-3 columns">
-            <button className='button radius tiny' type='submit'> Create </button>
+            <SubmitButton className="button radius tiny" text="Create" submittingText="Creating" submitting={this.state.submitting}/>
           </div>
         </div>
       </form>
