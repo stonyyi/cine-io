@@ -13,7 +13,7 @@ module.exports = React.createClass({
       }
     }else{
       return function(){
-        _this.props.app.router.redirectTo('/');
+        this.props.app.router.redirectTo('/');
       }
     }
   },
