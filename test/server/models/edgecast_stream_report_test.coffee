@@ -34,8 +34,10 @@ describe 'EdgecastStreamReport', ->
       @thisMonth2.setDate(@thisMonth2.getDate() - 1)
 
     @lastMonth = new Date
+    @lastMonth.setDate(1)
     @lastMonth.setMonth(@lastMonth.getMonth() - 1)
     @twoMonthsAgo = new Date
+    @twoMonthsAgo.setDate(1)
     @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
     addReportEntries(@report, @thisMonth, @thisMonth2, @lastMonth)
     @report.save done

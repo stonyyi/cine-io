@@ -43,8 +43,10 @@ describe 'CalculateProjectStorage', ->
   beforeEach ->
     @thisMonth = new Date
     @lastMonth = new Date
+    @lastMonth.setDate(1)
     @lastMonth.setMonth(@lastMonth.getMonth() - 1)
     @twoMonthsAgo = new Date
+    @twoMonthsAgo.setDate(1)
     @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
 
   beforeEach (done)->

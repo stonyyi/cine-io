@@ -5,6 +5,7 @@ Stats = Cine.server_lib("stats")
 describe 'calculateAndSaveUsageStats', ->
   beforeEach ->
     now = new Date
+    now.setDate(1)
     @calculateStub = sinon.stub calculateUsageStats, 'byMonth', (month, callback)->
       if month.getMonth() == now.getMonth()
         callback(null, the: "this month usage stats")
@@ -29,6 +30,7 @@ describe 'calculateAndSaveUsageStats', ->
   describe 'byMonth', ->
     it 'calculates stats and saves them', (done)->
       d = new Date
+      d.setDate(1)
       d.setMonth(d.getMonth() - 1)
       calculateAndSaveUsageStats.byMonth d, (err)->
         expect(err).to.be.null

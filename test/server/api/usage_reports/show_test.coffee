@@ -13,12 +13,15 @@ describe 'UsageReports#Show', ->
   beforeEach ->
     @thisMonth = new Date
     @lastMonth = new Date
+    @lastMonth.setDate(1)
     @lastMonth.setMonth(@lastMonth.getMonth() - 1)
     @twoMonthsAgo = new Date
+    @twoMonthsAgo.setDate(1)
     @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
 
   beforeEach ->
     today = new Date
+    today.setDate(1)
     @bandwidthStub = sinon.stub CalculateAccountBandwidth, 'byMonth', (account, date, callback)->
       if date.getMonth() == today.getMonth()
         callback(null, 123)

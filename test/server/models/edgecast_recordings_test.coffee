@@ -31,6 +31,7 @@ describe 'EdgecastRecordings', ->
   beforeEach (done)->
     @recording = new EdgecastRecordings
     @thisMonth = new Date
+    console.log("This month", @thisMonth)
     @thisMonth2 = new Date
     if @thisMonth.getDate() == 1
       @thisMonth2.setDate(@thisMonth2.getDate() + 1)
@@ -38,8 +39,10 @@ describe 'EdgecastRecordings', ->
       @thisMonth2.setDate(@thisMonth2.getDate() - 1)
 
     @lastMonth = new Date
+    @lastMonth.setDate(1)
     @lastMonth.setMonth(@lastMonth.getMonth() - 1)
     @twoMonthsAgo = new Date
+    @twoMonthsAgo.setDate(1)
     @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
 
     addRecording(@recording, @thisMonth, @thisMonth2, @lastMonth, @twoMonthsAgo)

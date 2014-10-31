@@ -20,6 +20,7 @@ describe 'EdgecastStream', ->
 
     beforeEach (done)->
       c = new Date
+      c.setDate(1)
       c.setMonth(c.getMonth() - 1)
       @stream2 = new EdgecastStream(streamName: 'name2', createdAt: c)
       @stream2.save done

@@ -140,6 +140,7 @@ describe 'accountMailer', ->
         accountPlans: @account.plans
 
       lastMonth = new Date
+      lastMonth.setDate(1)
       lastMonth.setMonth(lastMonth.getMonth() - 1)
       @abh.history.push
         billingDate: lastMonth
@@ -195,6 +196,7 @@ describe 'accountMailer', ->
         accountPlans: @account.plans
 
       lastMonth = new Date
+      lastMonth.setDate(1)
       lastMonth.setMonth(lastMonth.getMonth() - 1)
       @abh.history.push
         billingDate: lastMonth
