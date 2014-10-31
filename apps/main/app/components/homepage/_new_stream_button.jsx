@@ -10,13 +10,19 @@ module.exports = React.createClass({
   propTypes: {
     model: React.PropTypes.instanceOf(Project).isRequired,
   },
+  getInitialState: function(){
+    return {submitting: false};
+  },
   createNewStream: function(e){
     e.preventDefault();
+    if(this.state.submitting){return;}
+    this.setState({submitting: true})
     var self = this,
       p = new Stream({secretKey: this.props.model.get('secretKey')}, {app: this.props.app});
     p.save(null, {
       success: function(model, response, options){
         var returnedExistingStream = self.props.model.getStreams().get(model.id);
+        self.setState({submitting: false});
         self.props.model.getStreams().add(model);
         if (!returnedExistingStream){
           self.props.model.set('streamsCount', self.props.model.get('streamsCount') + 1);
@@ -24,6 +30,9 @@ module.exports = React.createClass({
           self.props.app.flash("This plan is at its maximum stream limit. Please <a href='/account'>upgrade your account</a>.", 'info');
         }
         self._owner.changeSelectedStreamId(model.id);
+      },
+      error: function(model, response, options){
+        self.setState({submitting: false});
       }
     });
   },
