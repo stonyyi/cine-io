@@ -2,6 +2,7 @@
 var
   React = require('react'),
   Stream = Cine.model('stream'),
+  SubmitButton = Cine.component('shared/_submit_button'),
   DeleteButtonWithInputConfirmation = Cine.component('shared/_delete_button_with_input_confirmation'),
   Project = Cine.model('project');
 
@@ -13,7 +14,7 @@ module.exports = React.createClass({
     project: React.PropTypes.instanceOf(Project).isRequired
   },
   getInitialState: function(){
-    return {showingNameForm: false, newStreamName: null};
+    return {showingNameForm: false, newStreamName: null, submitting: false};
   },
   getBackboneObjects: function(){
     return this.props.model;
@@ -50,7 +51,9 @@ module.exports = React.createClass({
     }
   },
   saveNewStreamName: function(e){
-    e.preventDefault()
+    e.preventDefault();
+    if(this.state.submitting){return;}
+    this.setState({submitting: true});
     var self = this,
       secretKey = this.props.project.get('secretKey');
     this.props.model.attributes.secretKey = secretKey;
@@ -58,7 +61,10 @@ module.exports = React.createClass({
     this.props.model.save(null, {
       success: function(model, response){
         model.store()
-        self.setState({showingNameForm: false, newStreamName: null});
+        self.setState({showingNameForm: false, newStreamName: null, submitting :false});
+      },
+      error: function(model, response){
+        self.setState({submitting: false})
       }
     });
   },
@@ -86,7 +92,7 @@ module.exports = React.createClass({
       modelName = (
         <form onSubmit={this.saveNewStreamName} >
           <input ref='newNameInput' type="text" name='name' value={this.state.newStreamName} onChange={this.setStreamName} placeholder="Add a stream name" />
-          <button type='submit' >Save</button>
+          <SubmitButton className="button radius expand" text="Save" submittingText="Saving" submitting={this.state.submitting}/>
           <a href='' onClick={this.hideNameForm} >cancel</a>
         </form>
       );
