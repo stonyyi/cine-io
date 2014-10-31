@@ -92,7 +92,7 @@ module.exports = React.createClass({
       modelName = (
         <form onSubmit={this.saveNewStreamName} >
           <input ref='newNameInput' type="text" name='name' value={this.state.newStreamName} onChange={this.setStreamName} placeholder="Add a stream name" />
-          <SubmitButton className="button radius expand" text="Save" submittingText="Saving" submitting={this.state.submitting}/>
+          <SubmitButton text="Save" submittingText="Saving" submitting={this.state.submitting}/>
           <a href='' onClick={this.hideNameForm} >cancel</a>
         </form>
       );
