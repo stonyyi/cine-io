@@ -18,7 +18,7 @@ var GithubLogin = React.createClass({
     this.setState({plan: plan});
   },
   render: function() {
-    url = "/auth/github?client=web&plan="+this.state.plan;
+    var url = "/auth/github?client=web&plan="+this.state.plan;
     return (
       <a className='button expand radius button-social button-github github-login' href={url}>
         <i className="fa fa-github"></i>
