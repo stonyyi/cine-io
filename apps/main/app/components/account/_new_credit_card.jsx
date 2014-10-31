@@ -1,11 +1,12 @@
 /** @jsx React.DOM */
-var React = require('react');
+var React = require('react'),
+  SubmitButton = Cine.component('shared/_submit_button');
 
 module.exports = React.createClass({
   displayName: 'NewCreditCard',
   mixins: [Cine.lib('requires_app')],
   getInitialState: function(){
-    return {creditCard: null, expiration: null, cvc: null};
+    return {creditCard: null, expiration: null, cvc: null, submitting: false};
   },
   changeCreditCard: function(event){
     this.setState({creditCard: event.target.value});
@@ -37,24 +38,30 @@ module.exports = React.createClass({
     if (!this.validateNewCreditCard(stripeData)){
       return;
     }
+    this.setState({submitting: true});
     Stripe.card.createToken(stripeData, this.saveCreditCard)
   },
   saveCreditCard: function(status, response){
     if(response.error){
+      this.setState({submitting: false});
       this.props.app.flash(response.error.message, 'alert');
       return;
     }
-    var stripeToken = response.id;
-    var app = this.props.app;
+    var
+      self = this,
+      stripeToken = response.id,
+      app = this.props.app;
     app.currentAccount().set('stripeToken', response.id)
     app.currentAccount().save(null, {
       success: function(model, response, options){
+        self.setState({submitting: false});
         model.unset('stripeToken');
         model.store();
         app.flash('Successfully saved credit card.', 'success');
         app.tracker.addedCard();
       },
       error: function(model, response, options){
+        self.setState({submitting: false});
         model.unset('stripeToken');
         app.flash('Could not save credit card.', 'alert');
       }
@@ -109,9 +116,7 @@ module.exports = React.createClass({
           </div>
           <div className="row">
             <div className="large-offset-3 columns">
-              <button type="submit" className="button radius">
-                Save credit card
-              </button>
+              <SubmitButton className='radius' text="Save credit card" submittingText="Saving credit card" submitting={this.state.submitting}/>
             </div>
           </div>
         </form>

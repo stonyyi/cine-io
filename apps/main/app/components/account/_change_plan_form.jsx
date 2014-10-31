@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react'),
-PageWrapper = Cine.component('layout/_page_wrapper'),
+  PageWrapper = Cine.component('layout/_page_wrapper'),
+  SubmitButton = Cine.component('shared/_submit_button'),
   Account = Cine.model('account'),
   _ = require('underscore'),
   capitalize = Cine.lib('capitalize');
@@ -13,7 +14,7 @@ module.exports = React.createClass({
   },
   getInitialState: function(){
     var currentAccount = this.props.app.currentAccount();
-    return {plan: currentAccount.firstPlan(), initialPlan: currentAccount.firstPlan()};
+    return {plan: currentAccount.firstPlan(), initialPlan: currentAccount.firstPlan(), submitting: false};
   },
   changePlan: function(event) {
     this.setState({plan: event.target.value});
@@ -21,13 +22,19 @@ module.exports = React.createClass({
   updateSuccess: function(){
     if (this.state.plan != this.state.initialPlan){
       this.props.app.tracker.planChange(this.state.plan);
-      this.setState({initialPlan: this.state.plan});
+      this.setState({initialPlan: this.state.plan, submitting: false});
+    } else {
+      this.setState({submitting: false});
     }
   },
   updateAccount: function(e){
     e.preventDefault();
     var self = this;
       ca = self.props.app.currentAccount();
+    if(this.state.submitting){
+      return;
+    }
+    self.setState({submitting: true});
     ca.set({plans: [this.state.plan]})
     ca.save(null,{
       success: function(model, response, options){
@@ -36,6 +43,7 @@ module.exports = React.createClass({
         self.props.app.flash('Successfully updated plan.', 'success');
       },
       error: function(model, response, options){
+        self.setState({submitting: false})
       }
     });
   },
@@ -57,7 +65,7 @@ module.exports = React.createClass({
         </div>
         <div className="row">
           <div className="large-12 columns">
-            <button type='submit'>Save</button>
+            <SubmitButton text="Save" submittingText="Saving Account" submitting={this.state.submitting}/>
           </div>
         </div>
       </form>
