@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react'),
-authentication = Cine.lib('authentication');
+  SubmitButton = Cine.component('shared/_submit_button'),
+  authentication = Cine.lib('authentication');
 
 var GithubLogin = React.createClass({
   displayName: 'GithubLogin',
@@ -35,7 +36,7 @@ var EmailLogin = React.createClass({
     showing: React.PropTypes.bool.isRequired
   },
   getInitialState: function() {
-    return {allowFocusHijack: true, completeSignup: false, myName: '', myPassword: '', myEmail: '', plan: 'free'};
+    return {allowFocusHijack: true, completeSignup: false, myName: '', myPassword: '', myEmail: '', plan: 'free', submitting: false};
   },
   componentDidMount: function(){
     this.props.app.on('set-signup-plan', this.setPlan, this);
@@ -48,28 +49,32 @@ var EmailLogin = React.createClass({
   },
   submitName: function (e){
     e.preventDefault();
+    if (this.state.submitting){return;}
     var
       _this = this,
       app = this.props.app,
       form = jQuery(e.currentTarget),
       options = {completeSignup: this.completeSignup};
+    this.setState({submitting: true});
     authentication.updateAccount(app, form, options);
   },
   loginError: function (message){
     this.props.app.flash(message, 'alert');
+    this.setState({submitting: false});
   },
   emailLogin: function (e){
     e.preventDefault();
+    if (this.state.submitting){return;}
     var
       _this = this,
       app = this.props.app,
       form = jQuery(e.currentTarget),
       options = {completeSignup: this.completeSignup, error: this.loginError};
-
+    this.setState({submitting: true});
     authentication.login(app, form, options);
   },
   completeSignup: function(){
-    this.setState({allowFocusHijack: true, completeSignup: true});
+    this.setState({allowFocusHijack: true, completeSignup: true, submitting: false});
   },
   changeMyName: function(event) {
     this.setState({myName: event.target.value});
@@ -114,21 +119,26 @@ var EmailLogin = React.createClass({
   },
   showForgotPassword: function(e){
     e.preventDefault();
-    this.setState({forgotPassword: true, completeSignup: false});
+    this.setState({forgotPassword: true, completeSignup: false, submitting: false});
     this.focusProperInput();
   },
   hideForgotPassword: function(e){
     e.preventDefault();
-    this.setState({forgotPassword: false, completeSignup: false});
+    this.setState({forgotPassword: false, completeSignup: false, submitting: false});
     this.focusProperInput();
   },
   sendForgotPassword: function(e){
     e.preventDefault();
+    if (this.state.submitting){return;}
+    this.setState({submitting: true});
     var self = this;
     authentication.forgotPassword(this.props.app, jQuery(e.currentTarget), {
       success: function(){
-        self.setState({forgotPassword: false, completeSignup: false});
+        self.setState({forgotPassword: false, completeSignup: false, submitting: false});
         self.props.app.flash("A password recovery email was sent to "+self.state.myEmail+".", 'info');
+      },
+      error: function(){
+        self.setState({submitting: false});
       }
     });
   },
@@ -143,14 +153,14 @@ var EmailLogin = React.createClass({
           <p>Welcome to cine.io{suffix}.</p>
           <input name='completedsignup' type="hidden" value="local" />
           <input name='name' type="text" required placeholder='Your Name' ref='nameField' value={this.state.myName} onChange={this.changeMyName}/>
-          <button className="button radius expand">Join</button>
+          <SubmitButton className="button radius expand" text="Join" submittingText="Joining" submitting={this.state.submitting}/>
         </form>
       );
     } else if (this.state.forgotPassword){
       return (
         <form onSubmit={this.sendForgotPassword}>
           <input name='email' type="email" required placeholder='Your email' ref='emailField' value={this.state.myEmail} onChange={this.changeMyEmail}/>
-          <button className="button radius expand bottom-margin-0">Recover Password</button>
+          <SubmitButton className="button radius expand bottom-margin-0" text="Recover Password" submittingText="Recovering" submitting={this.state.submitting}/>
           <div className='text-center top-margin-half'>
             <a href='' onClick={this.hideForgotPassword}>I remember my password.</a>
           </div>
@@ -162,7 +172,7 @@ var EmailLogin = React.createClass({
           <input name='username' type="email" required placeholder='Your email' ref='emailField' value={this.state.myEmail} onChange={this.changeMyEmail}/>
           <input name='password' type="password" required placeholder='Your password' value={this.state.myPassword} onChange={this.changeMyPassword}/>
           <input name='plan' type="hidden" required value={this.state.plan}/>
-          <button className="button radius expand bottom-margin-0">Sign up or sign in</button>
+          <SubmitButton className="button radius expand bottom-margin-0" text="Sign up or sign in" submittingText="Submitting" submitting={this.state.submitting}/>
           <div className='text-center top-margin-half'>
             <a href='' onClick={this.showForgotPassword}>Forgot password?</a>
           </div>
