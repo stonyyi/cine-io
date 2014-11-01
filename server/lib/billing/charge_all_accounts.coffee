@@ -1,12 +1,6 @@
-_ = require('underscore')
 Account = Cine.server_model('account')
 require "mongoose-querystream-worker"
 billAccountForMonth = Cine.server_lib('billing/bill_account_for_month')
-ProvidersAndPlans = Cine.config('providers_and_plans')
-
-
-accountShouldBeBilled = (account)->
-  account.stripeCustomer && account.stripeCustomer.stripeCustomerId && findPrimaryCard(account)
 
 # this is expecting to run on the first of every month
 module.exports = (done)->

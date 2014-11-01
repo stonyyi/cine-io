@@ -35,6 +35,7 @@ findPrimaryCard = (account)->
 
 chargeStripe = (account, results, callback)->
   amount = results.billing.plan + results.billing.bandwidthOverage + results.billing.storageOverage
+  console.log("charging stripe for account", account._id, amount)
   stripeData =
     amount: amount
     currency: "USD"
@@ -111,7 +112,10 @@ module.exports.__work = (account, monthToBill, callback)->
       saveResultsToRecord abh, account, monthToBill, results, (err)->
         # console.log("saved results to record", err)
         return callback(err) if err
+
         if shouldBill(account, results)
+          console.log("will bill account", account._id, account.billingEmail)
           chargeAccount(account, abh, monthToBill, results, callback)
         else
+          console.log("will not bill account", account._id, account.billingEma)
           sendNotBilledEmail(account, abh, monthToBill, callback)
