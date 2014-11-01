@@ -117,5 +117,5 @@ module.exports.__work = (account, monthToBill, callback)->
           console.log("will bill account", account._id, account.billingEmail)
           chargeAccount(account, abh, monthToBill, results, callback)
         else
-          console.log("will not bill account", account._id, account.billingEma)
+          console.log("will not bill account", account._id, account.billingEmail)
           sendNotBilledEmail(account, abh, monthToBill, callback)
