@@ -105,7 +105,7 @@ module.exports.__work = (account, monthToBill, callback)->
   # console.log("charging account", account)
   findOrCreateAccountBillingHistory account, (err, abh)->
     return callback(err) if err
-    return callback("already charged account for this month") if abh.hasBilledForMonth(monthToBill)
+    return callback(null, "already charged account for this month") if abh.hasBilledForMonth(monthToBill)
     calculateAccountBill account, monthToBill, (err, results)->
       return callback(err) if err
       # console.log("calculated", err, results)

@@ -342,8 +342,9 @@ describe 'billAccountForMonth', ->
       @abh.save done
 
     it 'does not update the account billing history', (done)->
-      billAccountForMonth @account, @now, (err)=>
-        expect(err).to.equal("already charged account for this month")
+      billAccountForMonth @account, @now, (err, result)=>
+        expect(err).be.null
+        expect(result).to.equal("already charged account for this month")
         AccountBillingHistory.findOne _account: @account._id, (err, abh)->
           expect(err).to.be.null
           expect(abh.history).to.have.length(1)
