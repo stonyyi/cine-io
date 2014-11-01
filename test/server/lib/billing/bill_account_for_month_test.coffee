@@ -112,6 +112,52 @@ describe 'billAccountForMonth', ->
         expect(args[3]).to.be.a('function')
         done()
 
+  describe 'with a non integer charge amount', ->
+    beforeEach ->
+      @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
+      usedBandwidth = humanizeBytes.GiB * 12 + 234734338338
+      usedStorage = humanizeBytes.GiB * 10
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+
+    afterEach ->
+      @usageStub.restore()
+
+    beforeEach (done)->
+      @account.plans = ['basic']
+      @account.createdAt = new Date(@now.toString())
+      @account.createdAt.setDate(7)
+      @account.stripeCustomer.stripeCustomerId = "cus_2ghmxawfvEwXkw"
+      @account.stripeCustomer.cards.push stripeCardId: "card_102gkI2AL5avr9E4geO0PpkC"
+      @account.save done
+
+    beforeEach ->
+      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 16449)
+      @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
+      @mailerSpy = sinon.spy mailer, 'monthlyBill'
+
+    afterEach ->
+      @mailerSpy.restore()
+
+    beforeEach (done)->
+      billAccountForMonth @account, @now, done
+
+    it 'creates a record in AccountBillingHistory with a rounded down number', (done)->
+      AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
+        expect(err).to.be.null
+        expect(abh.history).to.have.length(1)
+        lastCharge = abh.history[0]
+        expect(lastCharge.billingDate).to.be.instanceOf(Date)
+        expect(lastCharge.billingDate.toString()).to.equal(@now.toString())
+        expect(lastCharge.billedAt).to.be.instanceOf(Date)
+        expect(lastCharge.paid).to.be.true
+        expect(lastCharge.stripeChargeId).to.equal("ch_102dM82AL5avr9E4B8GOejKB")
+        expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
+        expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic'])
+        expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
+        expect(lastCharge.details.billing).to.deep.equal(plan: 10000, bandwidthOverage: 6449.071066528559, storageOverage: 0, prorated: false)
+        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 12 + 234734338338, storage: humanizeBytes.GiB * 10, bandwidthOverage: 86557966626, storageOverage: 0)
+        done()
+
   describe 'with < 1 GiB of usage', ->
     beforeEach ->
       @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')

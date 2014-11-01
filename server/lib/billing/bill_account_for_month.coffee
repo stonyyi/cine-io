@@ -37,7 +37,7 @@ chargeStripe = (account, results, callback)->
   amount = results.billing.plan + results.billing.bandwidthOverage + results.billing.storageOverage
   console.log("charging stripe for account", account._id, amount)
   stripeData =
-    amount: amount
+    amount: Math.floor(amount)
     currency: "USD"
     customer: account.stripeCustomer.stripeCustomerId
     card: findPrimaryCard(account).stripeCardId
