@@ -19,4 +19,6 @@ exports.listenToBackboneChangeEvents = (modelOrCollection)->
 exports._getBackboneObjects = ->
   console.error('getBackboneObjects is not defined') unless @getBackboneObjects
   objects = @getBackboneObjects()
-  if _.isArray(objects) then objects else [objects]
+  objects = if _.isArray(objects) then objects else [objects]
+  # remove any null/undefineds
+  _.compact(objects)

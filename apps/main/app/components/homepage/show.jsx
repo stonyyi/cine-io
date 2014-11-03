@@ -14,6 +14,7 @@ Example = LoggedOut.Example,
 Libraries = LoggedOut.Libraries,
 Pricing = LoggedOut.Pricing,
 Consulting = LoggedOut.Consulting,
+NoAccount = Cine.component('shared/_no_account'),
 Projects = Cine.collection('projects');
 
 module.exports = React.createClass({
@@ -26,9 +27,13 @@ module.exports = React.createClass({
   render: function() {
 
     if (this.props.app.currentUser.isLoggedIn()) {
+      var currentAccount = this.props.app.currentAccount();
+      if (currentAccount == null){
+        return (<NoAccount app={this.props.app} />);
+      }
       return (
         <PageWrapper app={this.props.app}>
-          <LoggedIn app={this.props.app} masterKey={this.props.app.currentAccount().get('masterKey')}/>
+          <LoggedIn app={this.props.app} masterKey={currentAccount.get('masterKey')}/>
         </PageWrapper>
       );
 

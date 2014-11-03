@@ -65,7 +65,7 @@ module.exports = React.createClass({
       );
     }
 
-    if (currentAccount.isAppdirect()){
+    if (currentAccount && currentAccount.isAppdirect()){
       var
         billingUrl = currentAccount.get('appdirect').baseUrl+"/account/apps/",
         userUrl = currentAccount.get('appdirect').baseUrl+"/account/assign/";
