@@ -56,11 +56,19 @@ testApi.requresLoggedIn = (testApiResource)->
       done()
 
 testApi.requiresMasterKey = (testApiResource)->
-  it 'requires an account masterKey', (done)->
+
+  it 'requires an account masterKey parameter', (done)->
     testApiResource {}, (err, response, options)->
       expect(err).to.equal('masterKey not supplied')
       expect(response).to.be.null
       expect(options.status).to.equal(401)
+      done()
+
+  it 'requires an account with that masterKey to be in the db', (done)->
+    testApiResource masterKey: "NOT A KEY", (err, response, options)->
+      expect(err).to.equal('account not found')
+      expect(response).to.be.null
+      expect(options.status).to.equal(404)
       done()
 
 testApi.requiresSiteAdmin = (testApiResource)->
