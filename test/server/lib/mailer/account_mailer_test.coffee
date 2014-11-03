@@ -226,11 +226,20 @@ describe 'accountMailer', ->
 
   describe 'throttledAccount', ->
 
+    beforeEach (done)->
+      @throttledDate  = new Date
+      @throttledDate.setDate(@throttledDate.getDate() + 10)
+      @account.throttledAt = @throttledDate
+      @account.save done
+
     assertCorrectMergeVars = (mergeVars)->
 
       expectedMergeVars =
         header_blurb: "Please update your account"
         name: "my account name"
+
+      throttledDate = moment(@throttledDate).format("MMMM Do, YYYY")
+      expect(mergeVars.templateVars.content).to.include("on <strong>#{throttledDate}</strong> your account will be disabled.")
       expect(mergeVars.templateVars.content).to.include("All API requests will begin returning a 402 response.")
       expect(mergeVars.templateVars.content).to.include("Please upgrade your account at <a href=\"https://www.cine.io/account\">https://www.cine.io/account</a>.")
       # content is huge, don't want to include it here
@@ -240,9 +249,10 @@ describe 'accountMailer', ->
       assertMergeVarsInVars(mergeVars, expectedMergeVars)
 
     it 'sends a throttled account email', (done)->
+
       accountMailer.throttledAccount @account, (err, response)=>
         options = getMailOptions.call(this)
         expect(options.subject).to.equal("Your account has been disabled (usage exceeded).")
         assertToAccount(options, @account)
-        assertCorrectMergeVars accountMergeVars(options, @account)
+        assertCorrectMergeVars.call this, accountMergeVars(options, @account)
         assertMailSent.call(this, err, response, done)
