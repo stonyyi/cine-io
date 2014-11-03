@@ -63,6 +63,20 @@ describe 'getProject', ->
           expect(options).to.deep.equal(status: 402)
           done()
 
+      describe 'with a future throttledAt', ->
+        beforeEach (done)->
+          d = new Date
+          d.setDate(d.getDate() + 10)
+          @project.throttledAt = d
+          @project.save done
+
+        it 'will return success when the throttledAt is in the future', (done)->
+          getProject {publicKey: @project.publicKey}, requires: 'either', (err, project, options)=>
+            expect(err).to.be.null
+            expect(project._id.toString()).to.equal(@project._id.toString())
+            expect(options).to.deep.equal(secure: false)
+            done()
+
   describe 'with user', ->
     it 'will not return a project to a user who does not own that project', (done)->
       getProject {sessionUserId: @user._id.toString(), publicKey: @project.publicKey}, requires: 'secret', userOverride: 'true', (err, project, options)->
