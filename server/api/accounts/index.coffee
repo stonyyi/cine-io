@@ -7,6 +7,7 @@ accountJson = (account, callback)->
   fullCurrentUserJson.accountJson account, (err, json)->
     return callback(err, json) if err
     json.throttledAt = account.throttledAt
+    json.throttledReason = account.throttledReason
     callback(null, json)
 
 module.exports = (params, callback)->

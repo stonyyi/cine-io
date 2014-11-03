@@ -14,13 +14,13 @@ describe 'Accounts#Index', ->
     @account1.save done
 
   beforeEach (done)->
-    @account2 = new Account billingProvider: 'cine.io', name: "account2 name", throttledAt: new Date
+    @account2 = new Account billingProvider: 'cine.io', name: "account2 name", throttledAt: new Date, throttledReason: 'overLimit'
     @account2.save done
 
   beforeEach (done)->
     throttledYesterday = new Date
     throttledYesterday.setDate(throttledYesterday.getDate() - 1)
-    @account3 = new Account billingProvider: 'cine.io', name: "account3 name", throttledAt: throttledYesterday
+    @account3 = new Account billingProvider: 'cine.io', name: "account3 name", throttledAt: throttledYesterday, throttledReason: 'cardDeclined'
     @account3.save done
 
   describe 'throttled accounts', ->
@@ -32,8 +32,12 @@ describe 'Accounts#Index', ->
         expect(response).to.have.length(2)
         expect(response[0].id.toString()).to.equal(@account2._id.toString())
         expect(response[0].name).to.equal(@account2.name)
+        expect(response[0].throttledAt).to.be.instanceOf(Date)
+        expect(response[0].throttledReason).to.equal("overLimit")
         expect(response[1].id.toString()).to.equal(@account3._id.toString())
         expect(response[1].name).to.equal(@account3.name)
+        expect(response[1].throttledAt).to.be.instanceOf(Date)
+        expect(response[1].throttledReason).to.equal("cardDeclined")
         done()
 
       Index params, session, callback

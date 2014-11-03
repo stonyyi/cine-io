@@ -24,6 +24,7 @@ module.exports = React.createClass({
         <td>{account.get('provider')}</td>
         <td>{account.firstPlan()}</td>
         <td>{account.get('throttledAt')}</td>
+        <td>{account.get('throttledReason')}</td>
         </tr>)
     })
 
@@ -39,6 +40,7 @@ module.exports = React.createClass({
               <th>Provider</th>
               <th>Plan</th>
               <th>throttledAt</th>
+              <th>throttledReason</th>
             </tr>
           </thead>
           <tbody>
