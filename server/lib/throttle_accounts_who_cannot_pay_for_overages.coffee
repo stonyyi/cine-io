@@ -26,7 +26,7 @@ accountWithinLimit = (account, results)->
 
 throttleAccount = (account, callback)->
   console.log("Throttling", account)
-  AccountThrottler.throttle account, (err, account)->
+  AccountThrottler.throttle account, 'overLimit', (err, account)->
     return callback(err) if err
     mailer.admin.throttledAccount account
     mailer.throttledAccount account, callback

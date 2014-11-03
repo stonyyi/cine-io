@@ -113,9 +113,18 @@ placetoUpgradeYourAccount = (account)->
     'cine.io': "https://www.cine.io/account"
   returnUrl[account.billingProvider]
 
+throttleReason = (reason)->
+  reasons =
+    overLimit: "The reason we've disabled your account is because you've exceeded the usage limits of your current plan."
+    cardDeclined: "The reason we've disabled your account is because we were unable to charge your current card."
+  reasons[reason]
+
 exports.throttledAccount = (account, callback=noop)->
   name = account.name || account.billingEmail
   throttleDate = moment(account.throttledAt).format("MMMM Do, YYYY")
+  throttledReason = throttleReason(account.throttledReason)
+  unless throttledReason
+    return process.nextTick -> callback("Not a valid reason")
   fullCurrentUserJson.accountJson account, (err, accountJSON)->
     return callback(err) if err
     backboneAccount = new BackboneAccount(accountJSON)
@@ -130,7 +139,7 @@ exports.throttledAccount = (account, callback=noop)->
         header_blurb: "Please update your account"
         name: name
         content: """
-        <p>We wanted to let you know on <strong>#{throttleDate}</strong> your account will be disabled. All API requests will begin returning a 402 response. The reason we've disabled your account is because you've exceeded the usage limits of your current plan. Please upgrade your account at <a href="#{urlToUpgrade}">#{urlToUpgrade}</a>.</p>
+        <p>We wanted to let you know on <strong>#{throttleDate}</strong> your account will be disabled. All API requests will begin returning a 402 response. #{throttledReason} Please update your account at <a href="#{urlToUpgrade}">#{urlToUpgrade}</a>.</p>
         <p>We hope you enjoy using <a href="https://www.cine.io">cine.io</a>. If you have any questions you can reply to this email, or send us an email at <a href="mailto:support@cine.io">support@cine.io</a>.</p>
         <p>Regards,<br/>
         Thomas Shafer<br/>

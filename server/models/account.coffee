@@ -33,6 +33,8 @@ AccountSchema = new mongoose.Schema
     type: Date
   throttledAt:
     type: Date
+  throttledReason:
+    type: String
   unthrottleable:
     type: Boolean
   herokuId:
@@ -67,6 +69,10 @@ AccountSchema.path('billingProvider').validate ((value)->
   allProvidersRegex.test value
 ), 'Invalid billing provider'
 
+AccountSchema.path('throttledReason').validate ((value)->
+  return true if value == undefined
+  /overLimit|cardDeclined/.test value
+), 'Invalid throttledReason'
 
 AccountSchema.pre 'save', (next)->
   return next() if @masterKey

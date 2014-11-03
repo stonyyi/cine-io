@@ -28,6 +28,27 @@ describe 'Account', ->
           expect(err.errors.billingProvider.message).to.equal('Invalid billing provider')
           done()
 
+    describe 'throttledReason', ->
+
+      _.each ['cardDeclined', 'overLimit'], (throttledReason)->
+        it "can accept #{throttledReason}", (done)->
+          account = new Account(billingProvider: 'cine.io', throttledReason: throttledReason)
+          account.save (err, member)->
+            done(err)
+
+      it 'cannot be anything else', (done)->
+        account = new Account(billingProvider: 'cine.io', throttledReason: 'NOT A REASON')
+        account.save (err, member)->
+          expect(err.errors.throttledReason.message).to.equal('Invalid throttledReason')
+          done()
+
+      it 'can be unset', (done)->
+        account = new Account(billingProvider: 'cine.io', throttledReason: 'cardDeclined')
+        account.save (err, member)->
+          expect(err).to.be.null
+          account.throttledReason = undefined
+          account.save done
+
   describe 'masterKey', ->
     it 'has a unique masterKey generated on save', (done)->
       account = new Account(billingProvider: 'cine.io', name: 'some name', plans: ['test'])

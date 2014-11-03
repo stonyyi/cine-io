@@ -75,6 +75,7 @@ describe 'throttleAccountsWhoCannotPayForOverages', ->
           Account.findById @account._id, (err, account)->
             expect(err).to.be.null
             expect(account.throttledAt).to.be.instanceOf(Date)
+            expect(account.throttledReason).to.equal('overLimit')
             done()
 
       it 'sends an email to the account', (done)->
@@ -129,6 +130,7 @@ describe 'throttleAccountsWhoCannotPayForOverages', ->
           Account.findById @account._id, (err, account)->
             expect(err).to.be.null
             expect(account.throttledAt).to.be.instanceOf(Date)
+            expect(account.throttledReason).to.equal('overLimit')
             done()
 
       it 'sends an email to the account', (done)->

@@ -232,7 +232,7 @@ describe 'accountMailer', ->
       @account.throttledAt = @throttledDate
       @account.save done
 
-    assertCorrectMergeVars = (mergeVars)->
+    assertCorrectMergeVars = (mergeVars, expectedReasonString)->
 
       expectedMergeVars =
         header_blurb: "Please update your account"
@@ -240,19 +240,34 @@ describe 'accountMailer', ->
 
       throttledDate = moment(@throttledDate).format("MMMM Do, YYYY")
       expect(mergeVars.templateVars.content).to.include("on <strong>#{throttledDate}</strong> your account will be disabled.")
+      expect(mergeVars.templateVars.content).to.include(expectedReasonString)
       expect(mergeVars.templateVars.content).to.include("All API requests will begin returning a 402 response.")
-      expect(mergeVars.templateVars.content).to.include("Please upgrade your account at <a href=\"https://www.cine.io/account\">https://www.cine.io/account</a>.")
+      expect(mergeVars.templateVars.content).to.include("Please update your account at <a href=\"https://www.cine.io/account\">https://www.cine.io/account</a>.")
       # content is huge, don't want to include it here
       expectedMergeVars.content = mergeVars.templateVars.content
 
       expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
       assertMergeVarsInVars(mergeVars, expectedMergeVars)
 
-    it 'sends a throttled account email', (done)->
+    it 'requires a reason', (done)->
+      accountMailer.throttledAccount @account, (err, response)->
+        expect(err).to.equal("Not a valid reason")
+        done()
 
+    it 'sends a throttled account email for accounts over limit', (done)->
+      @account.throttledReason = 'overLimit'
       accountMailer.throttledAccount @account, (err, response)=>
         options = getMailOptions.call(this)
         expect(options.subject).to.equal("Your account has been disabled (usage exceeded).")
         assertToAccount(options, @account)
-        assertCorrectMergeVars.call this, accountMergeVars(options, @account)
+        assertCorrectMergeVars.call this, accountMergeVars(options, @account), "you've exceeded the usage limits of your current plan."
+        assertMailSent.call(this, err, response, done)
+
+    it 'sends a throttled account email for accounts with a declined charge', (done)->
+      @account.throttledReason = 'cardDeclined'
+      accountMailer.throttledAccount @account, (err, response)=>
+        options = getMailOptions.call(this)
+        expect(options.subject).to.equal("Your account has been disabled (usage exceeded).")
+        assertToAccount(options, @account)
+        assertCorrectMergeVars.call this, accountMergeVars(options, @account), "we were unable to charge your current card."
         assertMailSent.call(this, err, response, done)

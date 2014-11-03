@@ -29,6 +29,7 @@ fullCurrentUserJson.accountJson = (account, callback)->
     provider: account.billingProvider
     email: account.billingEmail
     isDisabled: account.throttledAt?
+  returnJson.disabledReason = account.throttledReason if account.throttledReason
   returnJson.cannotBeDisabled = account.unthrottleable if account.unthrottleable
   stripeCards = []
   _.each account.stripeCustomer.cards, (card)->
