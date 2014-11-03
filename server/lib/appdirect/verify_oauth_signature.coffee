@@ -2,16 +2,17 @@ _ = require('underscore')
 sign = require('oauth-sign').hmacsign
 consumerSecret = Cine.config('variables/appdirect').oauthConsumerSecret
 
+# input interator: ['abc=def', 'ghi=jkl', …]
+# output {abc: 'def', ghi: 'jkl', …}
+putIntoObj = (accum, part)->
+  authParts = part.split('=')
+  accum[authParts[0]] = authParts[1].substr(1,authParts[1].length-2)
+  accum
+
 extractOauthParams = (authorization)->
   # sometimes it starts with "OAuth "
   authorization = authorization.replace(/^(OAuth\s?)?(.+)$/, "$2")
-
   parts = authorization.split(/\s?,\s?/)
-  putIntoObj = (accum, part)->
-    authParts = part.split('=')
-    accum[authParts[0]] = authParts[1].substr(1,authParts[1].length-2)
-    accum
-
   _.inject parts, putIntoObj, {}
 
 getOauthParams = (authObj)->
