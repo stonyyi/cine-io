@@ -1,4 +1,4 @@
-# heroku run --app=cine-io coffee scripe/delete_account ACCOUNT_ID
+# heroku run --app=cine-io coffee scripe/delete_account.coffee ACCOUNT_ID
 environment = require('../config/environment')
 Cine.config('connect_to_mongo')
 Account = Cine.server_model('account')
