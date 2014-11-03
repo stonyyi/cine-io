@@ -3,7 +3,9 @@ var React = require('react'),
 PageWrapper = Cine.component('layout/_page_wrapper'),
 NewCreditCard = Cine.component('account/_new_credit_card'),
 ChangePlanForm = Cine.component('account/_change_plan_form'),
-CurrentCreditCard = Cine.component('account/_current_credit_card');
+CurrentCreditCard = Cine.component('account/_current_credit_card'),
+NoAccount = Cine.component('shared/_no_account'),
+DeleteAccount = Cine.component('account/_delete_account');
 
 module.exports = React.createClass({
   displayName: 'AccountShow',
@@ -13,11 +15,15 @@ module.exports = React.createClass({
   },
   render: function() {
     var
-      ca = this.props.app.currentAccount(),
+      ca = this.props.app.currentAccount();
+    if (ca == null){
+      return (<NoAccount app={this.props.app}/>);
+    }
+    var
       CardModule = ca.get('stripeCard') ? CurrentCreditCard : NewCreditCard,
-      changePlan;
+      accountActions;
     if (ca.isHeroku()){
-      changePlan = (
+      accountActions = (
         <div>
           <span>Current plan: {ca.firstPlan()}. {" "}</span>
           <a target="_blank" href="https://addons.heroku.com/cine">Change plan on Heroku</a>
@@ -25,17 +31,18 @@ module.exports = React.createClass({
       );
     }else if (ca.isAppdirect()){
       var appdirectUrl = ca.get('appdirect').baseUrl+"/account/apps/";
-      changePlan = (
+      accountActions = (
         <div>
           <span>Current plan: {ca.firstPlan()}. {" "}</span>
           <a target="_blank" href={appdirectUrl}>Change plan on Appdirect</a>
         </div>
       );
     }else{
-      changePlan = (
+      accountActions = (
         <div>
           <ChangePlanForm app={this.props.app} />
           <CardModule app={this.props.app} />
+          <DeleteAccount app={this.props.app} model={ca} />
         </div>
       );
     }
@@ -49,7 +56,7 @@ module.exports = React.createClass({
           </dl>
         </div>
 
-        {changePlan}
+        {accountActions}
       </PageWrapper>
     );
   }
