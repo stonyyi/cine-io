@@ -1,8 +1,10 @@
 async = require('async')
 Project = Cine.server_model('project')
 
-exports.throttle = (account, callback)->
-  throttleDate = new Date
+exports.throttle = (account, throttleDate, callback)->
+  if typeof throttleDate == 'function'
+    callback = throttleDate
+    throttleDate = new Date
   asyncCalls =
     updateAccount: (callback)->
       account.throttledAt = throttleDate
