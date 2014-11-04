@@ -7,6 +7,7 @@ Account = Cine.server_model("account")
 humanizeBytes = Cine.lib('humanize_bytes')
 mailer = Cine.server_lib("mailer")
 assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
+AccountThrottler = Cine.server_lib('account_throttler')
 
 describe 'billAccountForMonth', ->
   beforeEach (done)->
@@ -244,7 +245,15 @@ describe 'billAccountForMonth', ->
     beforeEach ->
       @chargeDeclined = requireFixture('nock/stripe_charge_card_declined')(amount: 60000 + 350 + 280)
 
+    assertEmailSent 'throttledAccount'
     assertEmailSent.admin 'cardDeclined'
+    assertEmailSent.admin 'throttledAccount'
+
+    beforeEach ->
+      @throttleSpy = sinon.spy AccountThrottler, 'throttle'
+
+    afterEach ->
+      @throttleSpy.restore()
 
     beforeEach (done)->
       billAccountForMonth @account, @now, done
@@ -267,11 +276,33 @@ describe 'billAccountForMonth', ->
         expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
         done()
 
+    it 'throttles the account in four days', (done)->
+      fourDaysAgo = new Date
+      fourDaysAgo.setDate(fourDaysAgo.getDate() + 4)
+      rangeStart = new Date(fourDaysAgo.toString())
+      rangeStart.setSeconds(rangeStart.getSeconds() - 1)
+      rangeEnd = new Date(fourDaysAgo.toString())
+      rangeEnd.setSeconds(rangeEnd.getSeconds() + 1)
+      Account.findById @account._id, (err, account)->
+        expect(err).to.be.null
+        expect(account.throttledAt).to.be.instanceOf(Date)
+        expect(account.throttledAt).to.be.within(rangeStart, rangeEnd)
+        expect(account.throttledReason).to.equal("cardDeclined")
+        done()
+
+    it 'sends an email to the user', ->
+      expect(@mailerSpies[0].calledOnce).to.be.true
+      args = @mailerSpies[0].firstCall.args
+      expect(args).to.have.length(2)
+      expect(args[0]._id.toString()).to.equal(@account._id.toString())
+      expect(args[1]).to.be.instanceOf(Function)
+
     it 'sends an email to the admins', (done)->
       AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
         expect(err).to.be.null
-        expect(@mailerSpies[0].calledOnce).to.be.true
-        args = @mailerSpies[0].firstCall.args
+        adminEmail = @mailerSpies[1]
+        expect(adminEmail.calledOnce).to.be.true
+        args = adminEmail.firstCall.args
         expect(args).to.have.length(3)
         expect(args[0]._id.toString()).to.equal(@account._id.toString())
         expect(args[1]._id.toString()).to.equal(abh._id.toString())

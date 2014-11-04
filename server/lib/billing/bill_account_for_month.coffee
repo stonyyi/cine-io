@@ -4,12 +4,19 @@ calculateAccountBill = Cine.server_lib("billing/calculate_account_bill.coffee")
 AccountBillingHistory = Cine.server_model("account_billing_history")
 mailer = Cine.server_lib("mailer")
 humanizeBytes = Cine.lib('humanize_bytes')
+AccountThrottler = Cine.server_lib('account_throttler')
 
 CARD_DECLINED_ERROR = 'Error: Your card was declined.'
 ALREADY_REFUNDED_REGEX = /Charge ch_\S+ has already been refunded./
-emailCardDeclined = (account, abh, monthToBill)->
+handleCardDeclined = (account, abh, monthToBill, callback)->
   # mailer.cardDeclined(account, abh, monthToBill)
   mailer.admin.cardDeclined(account, abh, monthToBill)
+  throttleInFourDays = new Date
+  throttleInFourDays.setDate(throttleInFourDays.getDate() + 4)
+  AccountThrottler.throttle account, 'cardDeclined', throttleInFourDays, (err)->
+    return callback(err) if err
+    mailer.admin.throttledAccount account
+    mailer.throttledAccount account, callback
 
 emailUnknownError = (account, abh, monthToBill)->
   mailer.admin.unknownChargeError(account, abh, monthToBill)
@@ -62,12 +69,13 @@ saveChargeError = (account, abh, monthToBill, chargeError, callback)->
   record.paid = false
   record.chargeError = chargeError
 
-  if record.chargeError == CARD_DECLINED_ERROR
-    emailCardDeclined(account, abh, monthToBill)
-  else
-    emailUnknownError(account, abh, monthToBill)
-
-  abh.save callback
+  abh.save (err)->
+    return callback(err) if err
+    if record.chargeError == CARD_DECLINED_ERROR
+      handleCardDeclined(account, abh, monthToBill, callback)
+    else
+      emailUnknownError(account, abh, monthToBill)
+      callback()
 
 chargeAccount = (account, abh, monthToBill, results, callback)->
   return callback("account not stripe customer") unless account.stripeCustomer.stripeCustomerId
