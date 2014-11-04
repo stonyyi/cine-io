@@ -64,9 +64,9 @@
     </reconnectinterval>
     <output>
         <rtmp>
-        <url>rtmp://stream.EDGECAST_SERVER_NAME.cine.io/20C45E/EDGECAST_INSTANCE_NAME</url>
+        <url>SERVER_URL</url>
         <backup_url></backup_url>
-        <stream>EDGECAST_STREAM_NAME?EDGECAST_STREAM_KEY&amp;adbe-live-event=EDGECAST_EVENT_NAME</stream>
+        <stream>STREAM_NAME?STREAM_KEY&amp;adbe-live-event=EVENT_NAME</stream>
         </rtmp>
     </output>
     <metadata>

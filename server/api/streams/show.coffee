@@ -12,17 +12,16 @@ fmleProfile = (stream, options, callback)->
     callback = options
     options = {}
 
-  options.code ||= NearestServer.default.code
+  options.server ||= NearestServer.default.server
 
   fs.readFile profileFileName, 'utf8', (err, profileFile)->
     return callback("cannot read profile", null, status: 500) if err
     content = profileFile
       .toString()
-      .replace(/EDGECAST_SERVER_NAME/g, options.code)
-      .replace(/EDGECAST_INSTANCE_NAME/g, stream.instanceName)
-      .replace(/EDGECAST_STREAM_NAME/g, stream.streamName)
-      .replace(/EDGECAST_STREAM_KEY/g, stream.streamKey)
-      .replace(/EDGECAST_EVENT_NAME/g, stream.eventName)
+      .replace(/SERVER_URL/g, options.server)
+      .replace(/STREAM_NAME/g, stream.streamName)
+      .replace(/STREAM_KEY/g, stream.streamKey)
+      .replace(/EVENT_NAME/g, stream.eventName)
     callback(null, content: content)
 
 playJSON = (stream, callback)->
@@ -41,7 +40,6 @@ fullJSON = (stream, options, callback)->
     options = {}
 
   options.server ||= NearestServer.default.server
-  options.transcode ||= NearestServer.default.transcode
 
   playJSON stream, (err, streamJSON)->
     streamJSON.publish =
@@ -57,7 +55,6 @@ fullJSON = (stream, options, callback)->
 addEdgecastServerToStreamOptions = (streamOptions, params)->
   response = NearestServer.convert params
   return unless _.has(response, 'code')
-  streamOptions.code = response.code
   streamOptions.server = response.server
 
 Show = (params, callback)->
