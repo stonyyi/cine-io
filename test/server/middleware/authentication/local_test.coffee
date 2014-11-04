@@ -18,7 +18,7 @@ describe 'local authentication', ->
 
   describe 'existing user', ->
     beforeEach (done)->
-      @user = new User(email: 'the email')
+      @user = new User(email: 'the email', lastLoginIP: '999.888.777.666', createdAtIP: '111.222.333.444')
       @user.assignHashedPasswordAndSalt 'the pass', (err)=>
         @user.save(done)
 
@@ -27,6 +27,16 @@ describe 'local authentication', ->
         response = JSON.parse(res.text)
         expect(response.email).to.equal('the email')
         done(err)
+
+    it 'saves the lastLoginIP on the user', (done)->
+      login @agent, @user, 'the pass', (err, res)=>
+        expect(err).to.be.null
+        response = JSON.parse(res.text)
+        User.findById @user._id, (err, user)->
+          expect(err).to.be.null
+          expect(user.lastLoginIP).to.equal('127.0.0.1')
+          expect(user.createdAtIP).to.equal('111.222.333.444')
+          done(err)
 
     it 'logs in the user', (done)->
       login @agent, @user, 'the pass', (err, res)=>
@@ -81,6 +91,14 @@ describe 'local authentication', ->
         response = JSON.parse(res.text)
         User.findById response.id, (err, user)->
           expect(user.email).to.equal('new email')
+          done(err)
+
+    it 'sets createdAtIP and lastLoginIP', (done)->
+      login @agent, 'new email', 'new pass', 'free', (err, res)->
+        response = JSON.parse(res.text)
+        User.findById response.id, (err, user)->
+          expect(user.lastLoginIP).to.equal('127.0.0.1')
+          expect(user.createdAtIP).to.equal('127.0.0.1')
           done(err)
 
     it 'creates an account', (done)->

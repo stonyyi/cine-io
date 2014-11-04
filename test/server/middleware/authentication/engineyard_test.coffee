@@ -37,7 +37,7 @@ describe 'engineyard authentication', ->
     @account.save done
 
   beforeEach (done)->
-    @user = new User
+    @user = new User lastLoginIP: '999.888.777.666', createdAtIP: '111.222.333.444'
     @user._accounts.push(@account._id)
     @user.save done
 
@@ -76,7 +76,7 @@ describe 'engineyard authentication', ->
 
       assertEmailSent.admin "newUser"
 
-      it 'creates a new user/project/plan', (done)->
+      it 'creates a new account and plan', (done)->
         @agent
           .post('/engineyard/resources')
           .auth('test-username', 'test-password')
@@ -199,6 +199,13 @@ describe 'engineyard authentication', ->
               expect(currentUser.id.toString()).to.equal(@user._id.toString())
               done()
 
+          it 'sets lastLoginIP on the user', (done)->
+            User.findOne email: 'some email', (err, user)->
+              expect(err).to.be.null
+              expect(user.createdAtIP).to.equal('111.222.333.444')
+              expect(user.lastLoginIP).to.equal('127.0.0.1')
+              done()
+
         describe 'with a new user to that account', ->
           beforeEach (done)->
             ssoCall.call(this, method, url, done)
@@ -208,6 +215,13 @@ describe 'engineyard authentication', ->
               expect(err).to.be.null
               expect(user._accounts).to.have.length(1)
               expect(user._accounts[0].toString()).to.equal(@account._id.toString())
+              done()
+
+          it 'sets lastLoginIP on the user', (done)->
+            User.findOne email: 'some email', (err, user)->
+              expect(err).to.be.null
+              expect(user.createdAtIP).to.equal('127.0.0.1')
+              expect(user.lastLoginIP).to.equal('127.0.0.1')
               done()
 
       describe 'verifying personal email', ->

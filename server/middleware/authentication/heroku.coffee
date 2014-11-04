@@ -36,7 +36,7 @@ sso_auth = (req, res, next) ->
   return res.status(403).send("Timestamp Expired") if parseInt(req.param("timestamp")) < time
 
   res.cookie "heroku-nav-data", req.param("nav-data")
-  findOrCreateResourcesFromHerokuAndEngineYard.findUser accountId, req.param('email'), (err, user)->
+  findOrCreateResourcesFromHerokuAndEngineYard.findUser accountId, req.param('email'), req, (err, user)->
     return res.status(400).send(err) if err
     return res.status(404).send("Not Found") unless user
 

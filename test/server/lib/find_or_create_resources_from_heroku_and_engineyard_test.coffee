@@ -120,34 +120,57 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
       @account.save done
 
     beforeEach (done)->
-      @accountUser = new User(email: 'some email')
+      @accountUser = new User(email: 'some email', createdAtIP: '888.777.666.555', lastLoginIP: '666.555.444.333')
       @accountUser._accounts.push @account._id
       @accountUser.save done
 
     beforeEach (done)->
-      @secondUser = new User(email: 'second email')
+      @secondUser = new User(email: 'second email', createdAtIP: '888.777.666.554', lastLoginIP: '666.555.444.332')
       @secondUser.save done
 
+    beforeEach ->
+      @req = ip: '111.222.333.444'
 
     it 'returns a user who is already part of the account', (done)->
-      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'some email', (err, user)=>
+      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'some email', @req, (err, user)=>
         expect(err).to.be.null
         expect(user._id.toString()).to.equal(@accountUser._id.toString())
         done()
 
+    it 'sets lastLoginIP to a user who is already part of the account', (done)->
+      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'some email', @req, (err, user)=>
+        expect(err).to.be.null
+        expect(user.createdAtIP).to.equal('888.777.666.555')
+        expect(user.lastLoginIP).to.equal('111.222.333.444')
+        done()
+
     it 'adds a user to an account', (done)->
-      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'second email', (err, user)=>
+      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'second email', @req, (err, user)=>
         expect(err).to.be.null
         expect(user._id.toString()).to.equal(@secondUser._id.toString())
         done()
 
+    it 'sets lastLoginIP to an existing user but newly added to an account', (done)->
+      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'second email', @req, (err, user)=>
+        expect(err).to.be.null
+        expect(user.createdAtIP).to.equal('888.777.666.554')
+        expect(user.lastLoginIP).to.equal('111.222.333.444')
+        done()
+
     it 'creates a new user and adds them to the account', (done)->
-      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'other email', (err, user)=>
+      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'other email', @req, (err, user)=>
         expect(err).to.be.null
         expect(user._id.toString()).not.to.equal(@accountUser._id.toString())
         expect(user._id.toString()).not.to.equal(@secondUser._id.toString())
         expect(user.email).to.equal('other email')
         expect(user.name).to.equal('the account name')
+        done()
+
+    it 'sets createdAtIP and lastLoginIP on new users', (done)->
+      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'other email', @req, (err, user)=>
+        expect(err).to.be.null
+        expect(user.createdAtIP).to.equal('111.222.333.444')
+        expect(user.lastLoginIP).to.equal('111.222.333.444')
         done()
 
   describe 'updatePlan', ->

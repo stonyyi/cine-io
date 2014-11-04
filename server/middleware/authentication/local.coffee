@@ -13,14 +13,18 @@ createNewUser = (email, cleartextPassword, req, callback)->
   userAttributes =
     email: email
     cleartextPassword: cleartextPassword
+    lastLoginIP: req.ip
+    createdAtIP: req.ip
   createNewAccount accountAttributes, userAttributes, (err, results)->
     return callback(err) if err
     callback(null, results.user)
 
-validatePasswordOfExistingUser = (user, cleartextPassword, callback)->
+validatePasswordOfExistingUser = (user, cleartextPassword, req, callback)->
   user.isCorrectPassword cleartextPassword, (err)->
     return callback(null, false) if err
-    callback(null, user)
+    user.lastLoginIP = req.ip
+    user.save (err, user)->
+      callback(null, user)
 
 issueRememberMeToken = (req, res, next)->
   createNewToken req.user, (err, token)->
@@ -32,7 +36,7 @@ strategyFunction = (req, email, cleartextPassword, done)->
   User.findOne email: email, (err, user)->
     return done(err) if err
     return createNewUser(email, cleartextPassword, req, done) unless user
-    validatePasswordOfExistingUser(user, cleartextPassword, done)
+    validatePasswordOfExistingUser(user, cleartextPassword, req, done)
 
 module.exports = (app) ->
   passport.use new LocalStrategy(passReqToCallback: true, strategyFunction)

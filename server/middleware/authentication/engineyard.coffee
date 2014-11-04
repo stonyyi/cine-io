@@ -35,7 +35,7 @@ sso_auth = (req, res, next) ->
   return res.send "Timestamp Expired", 403 if parseInt(req.param("timestamp")) < time
 
   res.cookie "engineyard-nav-data", req.param("nav-data")
-  findOrCreateResourcesFromHerokuAndEngineYard.findUser accountId, req.param('email'), (err, user)->
+  findOrCreateResourcesFromHerokuAndEngineYard.findUser accountId, req.param('email'), req, (err, user)->
     return res.send.status(400).send(err) if err
     return res.send.status(404).send("Not found") unless user
 

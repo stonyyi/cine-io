@@ -49,22 +49,26 @@ exports.newEngineYardAccount = (engineyardId, plan, callback)->
 # callback(err, user)
 # This finds a user by email
 #
-exports.findUser = (accountId, userEmail, callback)->
+exports.findUser = (accountId, userEmail, req, callback)->
   User.findOne email: userEmail, (err, user)->
     return callback(err) if err
 
     if !user
       Account.findById accountId, (err, account)->
         return callback(err) if err
-        user = new User email: userEmail, name: account.name
+        user = new User
+          email: userEmail
+          name: account.name
+          lastLoginIP: req.ip
+          createdAtIP: req.ip
         user._accounts.push accountId
         user.save callback
     else
       hasAccount = (userAccountId)->
         userAccountId.toString() == accountId.toString()
       # return the user if the user already
-      return callback(null, user) if _.any user.accounts, hasAccount
-      user._accounts.push accountId
+      user._accounts.push accountId unless _.any user.accounts, hasAccount
+      user.lastLoginIP = req.ip
       user.save callback
 
 setPlanAndEnsureNotDeleted = (account, plan, callback)->

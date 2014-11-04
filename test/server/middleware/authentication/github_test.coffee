@@ -93,6 +93,13 @@ describe 'github auth', ->
             expect(user.githubAccessToken).to.equal("5b375ac2ddd691be9a8468877ea38ad3ba86f440")
             done()
 
+        it 'sets createdAtIP and lastLoginIP', (done)->
+          User.findOne githubId: 135461, (err, user)->
+            expect(err).to.be.null
+            expect(user.lastLoginIP).to.equal('127.0.0.1')
+            expect(user.createdAtIP).to.equal('127.0.0.1')
+            done()
+
         it 'logs the user in', (done)->
           @agent.get('/whoami').expect(200).end (err, res)->
             currentUser = JSON.parse(res.text)
@@ -185,7 +192,7 @@ describe 'github auth', ->
         expect(@profileDataNock.isDone()).to.be.true
 
       beforeEach (done)->
-        @user = new User(githubId: 135461, email: 'orig email', name: 'my name')
+        @user = new User(githubId: 135461, email: 'orig email', name: 'my name', lastLoginIP: '999.888.777.666', createdAtIP: '111.222.333.444')
         @user.save done
 
       beforeEach (done)->
@@ -208,6 +215,13 @@ describe 'github auth', ->
           expect(user.name).to.equal("my name")
           expect(user.email).to.equal("orig email")
           expect(user.githubAccessToken).to.equal("5b375ac2ddd691be9a8468877ea38ad3ba86f440")
+          done()
+
+      it 'sets lastLoginIP', (done)->
+        User.findOne githubId: 135461, (err, user)->
+          expect(err).to.be.null
+          expect(user.createdAtIP).to.equal('111.222.333.444')
+          expect(user.lastLoginIP).to.equal('127.0.0.1')
           done()
 
       it 'logs the user in', (done)->

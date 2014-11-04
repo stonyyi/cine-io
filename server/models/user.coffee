@@ -42,6 +42,10 @@ UserSchema = new Schema
   generation:
     type: Number
     default: 0
+  createdAtIP:
+    type: String
+  lastLoginIP:
+    type: String
   name:
     type: String
     default: ''

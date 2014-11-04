@@ -15,9 +15,10 @@ createNewToken = Cine.middleware('authentication/remember_me').createNewToken
 _str = require('underscore.string')
 createNewAccount = Cine.server_lib('create_new_account')
 
-updateUserData = (user, profile, accessToken, callback)->
+updateUserData = (user, profile, accessToken, req, callback)->
   user.githubData = profile._json
   user.githubAccessToken = accessToken
+  user.lastLoginIP = req.ip
   user.save callback
 
 findBestGithubEmail = (githubEmails)->
@@ -31,7 +32,7 @@ findBestGithubEmail = (githubEmails)->
   return firstEmail.email if firstEmail
   null
 
-createNewUser = (profile, plan, accessToken, callback)->
+createNewUser = (profile, plan, accessToken, req, callback)->
   console.log('got github profile', profile)
   email = profile.emails[0] && profile.emails[0].value
   console.log(profile)
@@ -45,6 +46,8 @@ createNewUser = (profile, plan, accessToken, callback)->
       name: if _str.isBlank(profile.displayName) then profile.username else profile.displayName
       githubData: profile._json
       githubAccessToken: accessToken
+      lastLoginIP: req.ip
+      createdAtIP: req.ip
     console.log("creating github user", userAttributes)
     createNewAccount accountAttributes, userAttributes, (err, results)->
       # console.log("CREATED GITHUB ACCOUNT", err, results)
@@ -72,9 +75,9 @@ findGithubUser = (req, accessToken, refreshToken, profile, callback)->
   # console.log(accessToken, refreshToken, profile)
   User.findOne githubId: profile.id, (err, user)->
     return callback(err) if err
-    return updateUserData(user, profile, accessToken, callback) if user
+    return updateUserData(user, profile, accessToken, req, callback) if user
     state = if req.query.state then JSON.parse(req.query.state) else {}
-    createNewUser(profile, state.plan, accessToken, callback)
+    createNewUser(profile, state.plan, accessToken, req, callback)
 
 githubStrategy = new GitHubStrategy strategyOptions, findGithubUser
 
