@@ -48,7 +48,9 @@ describe 'AppDirect/Login', ->
       @openIdResponse = requireFixture('nock/appdirect_openid/openid_op_response')()
 
     beforeEach (done)->
-      @user = new User(appdirectUUID: 'a959d462-a6b0-41e3-b0eb-c73c1d199fd3')
+      @user = new User
+        appdirectUUID: 'a959d462-a6b0-41e3-b0eb-c73c1d199fd3'
+        lastLoginIP: '888.777.666.555'
       @user.save done
 
     beforeEach (done)->
@@ -68,4 +70,10 @@ describe 'AppDirect/Login', ->
         expect(err).to.be.null
         currentUser = JSON.parse(res.text)
         expect(currentUser.id.toString()).to.equal(@user._id.toString())
+        done()
+
+    it 'updates lastLoginIP for the user', (done)->
+      User.findById @user._id, (err, user)->
+        expect(err).to.be.null
+        expect(user.lastLoginIP).to.equal('127.0.0.1')
         done()
