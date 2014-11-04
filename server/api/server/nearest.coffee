@@ -7,7 +7,6 @@ nullCase =
   transcode: null
   app: null
   host: null
-  rtmpCDN: null
   rtmpCDNHost: null
   rtmpCDNApp: null
 
@@ -23,7 +22,7 @@ convert = (params)->
   app = module.exports.default.app
   rtmpCDN = "rtmp://#{rtmpCDNHost}/#{app}"
   transcoding = "rtmp://publish-#{geo.transcode}.cine.io/live"
-  return server: rtmpCDN, code: code, transcode: transcoding, host: rtmpCDNHost, app: app, rtmpCDNApp: app, rtmpCDN: rtmpCDN, rtmpCDNHost: rtmpCDNHost
+  return server: rtmpCDN, code: code, transcode: transcoding, host: rtmpCDNHost, app: app, rtmpCDNApp: app, rtmpCDNHost: rtmpCDNHost
 
 
 module.exports = (params, callback)->
@@ -47,4 +46,3 @@ module.exports.default =
   rtmpCDNHost: "stream.lax.cine.io"
 
 module.exports.default.server = "rtmp://#{module.exports.default.host}/#{module.exports.default.app}"
-module.exports.default.rtmpCDN = "rtmp://#{module.exports.default.host}/#{module.exports.default.app}"
