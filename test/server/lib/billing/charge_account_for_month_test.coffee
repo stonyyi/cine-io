@@ -1,6 +1,6 @@
 _ = require('underscore')
 async = require('async')
-billAccountForMonth = Cine.server_lib('billing/bill_account_for_month')
+chargeAccountForMonth = Cine.server_lib('billing/charge_account_for_month')
 AccountBillingHistory = Cine.server_model("account_billing_history")
 calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 Account = Cine.server_model("account")
@@ -9,7 +9,7 @@ mailer = Cine.server_lib("mailer")
 assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 AccountThrottler = Cine.server_lib('account_throttler')
 
-describe 'billAccountForMonth', ->
+describe 'chargeAccountForMonth', ->
   beforeEach (done)->
     twoMonthsAgo = new Date
     twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2)
@@ -21,7 +21,7 @@ describe 'billAccountForMonth', ->
 
   it 'requires the account be a cine.io account', (done)->
     account = new Account()
-    billAccountForMonth account, @now, (err)->
+    chargeAccountForMonth account, @now, (err)->
       expect(err).to.equal('can only charge cine.io accounts')
       done()
 
@@ -36,13 +36,13 @@ describe 'billAccountForMonth', ->
       @usageStub.restore()
 
     it 'requires the account be a stripe customer', (done)->
-      billAccountForMonth @account, @now, (err)->
+      chargeAccountForMonth @account, @now, (err)->
         expect(err).to.equal('account not stripe customer')
         done()
 
     it 'requires the account have a stripe card', (done)->
       @account.stripeCustomer.stripeCustomerId = "the customer id"
-      billAccountForMonth @account, @now, (err)->
+      chargeAccountForMonth @account, @now, (err)->
         expect(err).to.equal('account has no primary card')
         done()
 
@@ -50,7 +50,7 @@ describe 'billAccountForMonth', ->
       @account.stripeCustomer.stripeCustomerId = "the customer id"
       @account.stripeCustomer.cards.push stripeCardId: 'some card id', deletedAt: new Date
 
-      billAccountForMonth @account, @now, (err)->
+      chargeAccountForMonth @account, @now, (err)->
         expect(err).to.equal('account has no primary card')
         done()
 
@@ -78,7 +78,7 @@ describe 'billAccountForMonth', ->
       @mailerSpy.restore()
 
     beforeEach (done)->
-      billAccountForMonth @account, @now, done
+      chargeAccountForMonth @account, @now, done
 
     it 'creates a record in AccountBillingHistory', (done)->
       AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
@@ -140,7 +140,7 @@ describe 'billAccountForMonth', ->
       @mailerSpy.restore()
 
     beforeEach (done)->
-      billAccountForMonth @account, @now, done
+      chargeAccountForMonth @account, @now, done
 
     it 'creates a record in AccountBillingHistory with a rounded down number', (done)->
       AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
@@ -179,7 +179,7 @@ describe 'billAccountForMonth', ->
     describe 'with no credit card', ->
 
       beforeEach (done)->
-        billAccountForMonth @account, @now, done
+        chargeAccountForMonth @account, @now, done
 
       it 'creates a record in AccountBillingHistory', (done)->
         AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
@@ -222,7 +222,7 @@ describe 'billAccountForMonth', ->
 
 
       beforeEach (done)->
-        billAccountForMonth @account, @now, done
+        chargeAccountForMonth @account, @now, done
 
       it 'charges stripe', ->
         expect(@chargeSuccess.isDone()).to.be.true
@@ -256,7 +256,7 @@ describe 'billAccountForMonth', ->
       @throttleSpy.restore()
 
     beforeEach (done)->
-      billAccountForMonth @account, @now, done
+      chargeAccountForMonth @account, @now, done
 
     it 'saves the charge error', (done)->
       AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
@@ -330,7 +330,7 @@ describe 'billAccountForMonth', ->
     assertEmailSent.admin 'unknownChargeError'
 
     beforeEach (done)->
-      billAccountForMonth @account, @now, done
+      chargeAccountForMonth @account, @now, done
 
     it 'saves the charge error', (done)->
       AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
@@ -373,7 +373,7 @@ describe 'billAccountForMonth', ->
       @abh.save done
 
     it 'does not update the account billing history', (done)->
-      billAccountForMonth @account, @now, (err, result)=>
+      chargeAccountForMonth @account, @now, (err, result)=>
         expect(err).be.null
         expect(result).to.equal("already charged account for this month")
         AccountBillingHistory.findOne _account: @account._id, (err, abh)->
@@ -387,7 +387,7 @@ describe 'billAccountForMonth', ->
       @account.save done
 
     it 'does not send an email to the free plans', (done)->
-      billAccountForMonth @account, @now, (err, response)->
+      chargeAccountForMonth @account, @now, (err, response)->
         expect(err).to.be.null
         expect(response).to.equal('free accounts do not recieve non-invoice emails')
         done()

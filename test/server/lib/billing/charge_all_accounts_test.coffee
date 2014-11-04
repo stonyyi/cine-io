@@ -2,7 +2,7 @@ chargeAllAccounts = Cine.server_lib('billing/charge_all_accounts')
 async = require('async')
 Account = Cine.server_model('account')
 assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
-billAccountForMonth = Cine.server_lib('billing/bill_account_for_month')
+chargeAccountForMonth = Cine.server_lib('billing/charge_account_for_month')
 calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 humanizeBytes = Cine.lib('humanize_bytes')
 getDaysInMonth = Cine.server_lib('get_days_in_month')
@@ -48,7 +48,7 @@ describe 'chargeAllAccounts', ->
       @throttledAccount.save done
 
     beforeEach ->
-      @billingSpy = sinon.spy billAccountForMonth, '__work'
+      @billingSpy = sinon.spy chargeAccountForMonth, '__work'
 
     afterEach ->
       @billingSpy.restore()

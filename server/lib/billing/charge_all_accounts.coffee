@@ -1,6 +1,6 @@
 Account = Cine.server_model('account')
 require "mongoose-querystream-worker"
-billAccountForMonth = Cine.server_lib('billing/bill_account_for_month')
+chargeAccountForMonth = Cine.server_lib('billing/charge_account_for_month')
 
 # this is expecting to run on the first of every month
 module.exports = (done)->
@@ -11,7 +11,7 @@ module.exports = (done)->
 
   billAcount = (account, callback)->
     # console.log("billing account", account)
-    billAccountForMonth account, monthToBill, callback
+    chargeAccountForMonth account, monthToBill, callback
 
   scope = Account.where(billingProvider: 'cine.io').exists('deletedAt', false).exists('throttledAt', false)
   scope.stream().concurrency(20).work billAcount, done
