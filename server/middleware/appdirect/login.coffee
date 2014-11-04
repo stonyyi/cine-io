@@ -15,7 +15,6 @@ findUser = (fullOpenIdUrl, profile, done)->
   identifier = parts[parts.length - 1]
   query = appdirectUUID: identifier
   User.findOne query, (err, user)->
-    console.log()
     done(err, user)
 
 Strategy = new OpenIDStrategy strategyOptions, findUser
