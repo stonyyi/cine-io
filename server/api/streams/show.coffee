@@ -54,7 +54,7 @@ fullJSON = (stream, options, callback)->
 
 addEdgecastServerToStreamOptions = (streamOptions, params)->
   response = NearestServer.convert params
-  return unless _.has(response, 'code')
+  return unless _.has(response, 'server')
   streamOptions.server = response.server
 
 Show = (params, callback)->
