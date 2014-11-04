@@ -1,4 +1,5 @@
 Base = Cine.run_context('base')
+os = require("os")
 
 describe 'Base', ->
 
@@ -21,6 +22,15 @@ describe 'Base', ->
       expect(app.get).to.be.a('function')
       expect(app.post).to.be.a('function')
       expect(app.listen).to.be.a('function')
+
+  describe 'getQueueName', ->
+    beforeEach ->
+      @hostSpy = sinon.stub(os, 'hostname').returns('the computer host')
+    afterEach ->
+      @hostSpy.restore()
+
+    it 'includes the hostname', ->
+      expect(Base.getQueueName('my-run-context')).to.equal("the computer host-my-run-context-incoming")
 
   describe 'listen', ->
     beforeEach ->

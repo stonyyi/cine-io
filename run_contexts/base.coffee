@@ -4,6 +4,7 @@ express = require 'express'
 morgan = require('morgan')
 bodyParser = require('body-parser')
 redisClient = Cine.server_lib('redis_client')
+os = require("os")
 
 kue = require('kue')
 noop = ->
@@ -53,8 +54,7 @@ processJobs = (queue, options, callback)->
 
 # eventually we need a per-machine specific name
 exports.getQueueName = (runContext)->
-  machineName = "GLOBAL"
-  "#{machineName}-#{runContext}-incoming"
+  "#{os.hostname()}-#{runContext}-incoming"
 
 exports.processJobs = (runContext, callback)->
   queueName = exports.getQueueName(runContext)
