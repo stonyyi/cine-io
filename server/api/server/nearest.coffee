@@ -1,7 +1,15 @@
 _ = require('underscore')
 convertIpAddressToEdgecastServer = Cine.server_lib('convert_ip_address_to_edgecast_server')
 
-nullCase = server: null, code: null, transcode: null, app: null, host: null
+nullCase =
+  server: null
+  code: null
+  transcode: null
+  app: null
+  host: null
+  rtmpCDN: null
+  rtmpCDNHost: null
+  rtmpCDNApp: null
 
 convert = (params)->
   ipAddress = params.ipAddress || params.remoteIpAddress
@@ -11,11 +19,11 @@ convert = (params)->
   return nullCase unless geo
 
   code = geo.code
-  host = "stream.#{code}.cine.io"
+  rtmpCDNHost = "stream.#{code}.cine.io"
   app = module.exports.default.app
-  url = "rtmp://#{host}/#{app}"
+  rtmpCDN = "rtmp://#{rtmpCDNHost}/#{app}"
   transcoding = "rtmp://publish-#{geo.transcode}.cine.io/live"
-  return server: url, code: code, transcode: transcoding, host: host, app: app
+  return server: rtmpCDN, code: code, transcode: transcoding, host: rtmpCDNHost, app: app, rtmpCDNApp: app, rtmpCDN: rtmpCDN, rtmpCDNHost: rtmpCDNHost
 
 
 module.exports = (params, callback)->
@@ -34,6 +42,9 @@ module.exports.default =
   code: 'lax'
   host: "stream.lax.cine.io"
   app: "20C45E/cines"
+  rtmpCDNApp: "20C45E/cines"
   transcode: "rtmp://publish-west.cine.io/live"
+  rtmpCDNHost: "stream.lax.cine.io"
 
 module.exports.default.server = "rtmp://#{module.exports.default.host}/#{module.exports.default.app}"
+module.exports.default.rtmpCDN = "rtmp://#{module.exports.default.host}/#{module.exports.default.app}"
