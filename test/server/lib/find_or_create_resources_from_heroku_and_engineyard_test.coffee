@@ -138,7 +138,7 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
         done()
 
     it 'sets lastLoginIP to a user who is already part of the account', (done)->
-      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'some email', @req, (err, user)=>
+      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'some email', @req, (err, user)->
         expect(err).to.be.null
         expect(user.createdAtIP).to.equal('888.777.666.555')
         expect(user.lastLoginIP).to.equal('111.222.333.444')
@@ -151,7 +151,7 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
         done()
 
     it 'sets lastLoginIP to an existing user but newly added to an account', (done)->
-      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'second email', @req, (err, user)=>
+      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'second email', @req, (err, user)->
         expect(err).to.be.null
         expect(user.createdAtIP).to.equal('888.777.666.554')
         expect(user.lastLoginIP).to.equal('111.222.333.444')
@@ -167,7 +167,7 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
         done()
 
     it 'sets createdAtIP and lastLoginIP on new users', (done)->
-      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'other email', @req, (err, user)=>
+      findOrCreateResourcesFromHerokuAndEngineYard.findUser @account._id, 'other email', @req, (err, user)->
         expect(err).to.be.null
         expect(user.createdAtIP).to.equal('111.222.333.444')
         expect(user.lastLoginIP).to.equal('111.222.333.444')
