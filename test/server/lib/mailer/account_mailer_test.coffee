@@ -267,7 +267,7 @@ describe 'accountMailer', ->
       @account.throttledReason = 'cardDeclined'
       accountMailer.throttledAccount @account, (err, response)=>
         options = getMailOptions.call(this)
-        expect(options.subject).to.equal("Your account has been disabled (usage exceeded).")
+        expect(options.subject).to.equal("Your card was declined. Account at risk of being disabled.")
         assertToAccount(options, @account)
         assertCorrectMergeVars.call this, accountMergeVars(options, @account), "we were unable to charge your current card."
         assertMailSent.call(this, err, response, done)

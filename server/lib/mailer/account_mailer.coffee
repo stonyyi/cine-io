@@ -118,6 +118,11 @@ throttleReason = (reason)->
     overLimit: "The reason we've disabled your account is because you've exceeded the usage limits of your current plan."
     cardDeclined: "The reason we've disabled your account is because we were unable to charge your current card."
   reasons[reason]
+throttleSubject = (reason)->
+  reasons =
+    overLimit: 'Your account has been disabled (usage exceeded).'
+    cardDeclined: 'Your card was declined. Account at risk of being disabled.'
+  reasons[reason]
 
 exports.throttledAccount = (account, callback=noop)->
   name = account.name || account.billingEmail
@@ -132,7 +137,7 @@ exports.throttledAccount = (account, callback=noop)->
     urlToUpgrade = backboneAccount.updateAccountUrl()
     mailOptions =
       templateName: 'blank-with-header-and-footer'
-      subject: 'Your account has been disabled (usage exceeded).'
+      subject: throttleSubject(account.throttledReason)
       toEmail: account.billingEmail
       toName: name
       userTemplateVars:
