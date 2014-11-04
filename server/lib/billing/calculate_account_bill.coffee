@@ -90,3 +90,4 @@ module.exports = (account, monthToBill, callback)->
     callback(null, result)
 
 module.exports.cheapestOverageCost = cheapestOverageCost
+module.exports.accountPlanAmount = accountPlanAmount

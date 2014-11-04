@@ -380,3 +380,14 @@ describe 'billAccountForMonth', ->
           expect(err).to.be.null
           expect(abh.history).to.have.length(1)
           done()
+
+  describe 'on the free plan', ->
+    beforeEach (done)->
+      @account.plans = ['free', 'free']
+      @account.save done
+
+    it 'does not send an email to the free plans', (done)->
+      billAccountForMonth @account, @now, (err, response)->
+        expect(err).to.be.null
+        expect(response).to.equal('free accounts do not recieve non-invoice emails')
+        done()

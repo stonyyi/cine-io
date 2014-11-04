@@ -111,6 +111,7 @@ module.exports = (account, monthToBill, callback)->
 module.exports.__work = (account, monthToBill, callback)->
   return callback("can only charge cine.io accounts") if account.billingProvider != 'cine.io'
   # console.log("charging account", account)
+  return callback(null, "free accounts do not recieve non-invoice emails") if calculateAccountBill.accountPlanAmount(account) == 0
   findOrCreateAccountBillingHistory account, (err, abh)->
     return callback(err) if err
     return callback(null, "already charged account for this month") if abh.hasBilledForMonth(monthToBill)
