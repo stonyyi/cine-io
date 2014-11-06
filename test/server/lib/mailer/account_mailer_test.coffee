@@ -138,6 +138,7 @@ describe 'accountMailer', ->
         billedAt: new Date
         details: results
         accountPlans: @account.plans
+        paid: true
 
       lastMonth = new Date
       lastMonth.setDate(1)
@@ -145,6 +146,7 @@ describe 'accountMailer', ->
       @abh.history.push
         billingDate: lastMonth
         stripeChargeId: 'last month charge'
+        paid: true
       @abh.save done
 
     assertCorrectMergeVars = (mergeVars, billingMonthDate)->

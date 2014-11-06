@@ -369,7 +369,7 @@ describe 'chargeAccountForMonth', ->
 
     beforeEach (done)->
       @abh = new AccountBillingHistory(_account: @account._id)
-      @abh.history.push billingDate: @now
+      @abh.history.push billingDate: @now, paid: true
       @abh.save done
 
     it 'does not update the account billing history', (done)->
