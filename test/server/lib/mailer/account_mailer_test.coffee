@@ -169,7 +169,7 @@ describe 'accountMailer', ->
       assertMergeVarsInVars(mergeVars, expectedMergeVars)
 
     it 'sends the billing email', (done)->
-      accountMailer.monthlyBill @account, @abh, @now, (err, response)=>
+      accountMailer.monthlyBill @account, @abh, @abh.history[0]._id, @now, (err, response)=>
         options = getMailOptions.call(this)
         expect(options.subject).to.equal("Your cine.io invoice")
         assertToAccount(options, @account)

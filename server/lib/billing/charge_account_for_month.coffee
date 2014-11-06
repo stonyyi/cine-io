@@ -35,7 +35,9 @@ saveResultsToRecord = (abh, account, monthToBill, results, callback)->
     details: results
     accountPlans: account.plans
   abh.history.push record
-  abh.save callback
+  recordId = _.last(abh.history)._id
+  abh.save (err, abh)->
+    callback(err, recordId)
 
 findPrimaryCard = (account)->
   _.findWhere account.stripeCustomer.cards, deletedAt: undefined
@@ -51,21 +53,21 @@ chargeStripe = (account, results, callback)->
     capture: true
   stripe.charges.create stripeData, callback
 
-saveNewCharge = (abh, monthToBill, stripeResults, callback)->
-  record = abh.billingRecordForMonth(monthToBill)
+saveNewCharge = (abh, recordId, monthToBill, stripeResults, callback)->
+  record = abh.history.id(recordId)
   record.stripeChargeId = stripeResults.id
   record.paid = stripeResults.paid
   abh.save callback
 
-sendEmailReceipt = (account, abh, monthToBill, callback)->
-  mailer.monthlyBill account, abh, monthToBill, (err, emailResult)->
+sendEmailReceipt = (account, abh, recordId, monthToBill, callback)->
+  mailer.monthlyBill account, abh, recordId, monthToBill, (err, emailResult)->
     # console.log("sent email", err, emailResult)
-    record = abh.billingRecordForMonth(monthToBill)
+    record = abh.history.id(recordId)
     record.mandrillEmailId = emailResult[0]._id
     abh.save callback
 
-saveChargeError = (account, abh, monthToBill, chargeError, callback)->
-  record = abh.billingRecordForMonth(monthToBill)
+saveChargeError = (account, abh, recordId, monthToBill, chargeError, callback)->
+  record = abh.history.id(recordId)
   record.paid = false
   record.chargeError = chargeError
 
@@ -77,20 +79,20 @@ saveChargeError = (account, abh, monthToBill, chargeError, callback)->
       emailUnknownError(account, abh, monthToBill)
       callback()
 
-chargeAccount = (account, abh, monthToBill, results, callback)->
+chargeAccount = (account, abh, recordId, monthToBill, results, callback)->
   return callback("account not stripe customer") unless account.stripeCustomer.stripeCustomerId
   return callback("account has no primary card") unless findPrimaryCard(account)
   chargeStripe account, results, (err, stripeResults)->
     if err
-      return saveChargeError account, abh, monthToBill, err, (err2)->
+      return saveChargeError account, abh, recordId, monthToBill, err, (err2)->
         return callback(err2)
-    saveNewCharge abh, monthToBill, stripeResults, (err)->
+    saveNewCharge abh, recordId, monthToBill, stripeResults, (err)->
       return callback(err) if err
 
-      sendEmailReceipt account, abh, monthToBill, callback
+      sendEmailReceipt account, abh, recordId, monthToBill, callback
 
-sendNotBilledEmail = (account, abh, monthToBill, callback)->
-  record = abh.billingRecordForMonth(monthToBill)
+sendNotBilledEmail = (account, abh, recordId, monthToBill, callback)->
+  record = abh.history.id(recordId)
   record.notCharged = true
   abh.save (err)->
     return callback(err) if err
@@ -118,13 +120,13 @@ module.exports.__work = (account, monthToBill, callback)->
     calculateAccountBill account, monthToBill, (err, results)->
       return callback(err) if err
       # console.log("calculated", err, results)
-      saveResultsToRecord abh, account, monthToBill, results, (err)->
+      saveResultsToRecord abh, account, monthToBill, results, (err, recordId)->
         # console.log("saved results to record", err)
         return callback(err) if err
 
         if shouldBill(account, results)
           console.log("will bill account", account._id, account.billingEmail)
-          chargeAccount(account, abh, monthToBill, results, callback)
+          chargeAccount(account, abh, recordId, monthToBill, results, callback)
         else
           console.log("will not bill account", account._id, account.billingEmail)
-          sendNotBilledEmail(account, abh, monthToBill, callback)
+          sendNotBilledEmail(account, abh, recordId, monthToBill, callback)

@@ -106,11 +106,12 @@ describe 'chargeAccountForMonth', ->
         expect(@templateEmailSuccess.isDone()).to.be.true
         expect(@mailerSpy.calledOnce).to.be.true
         args = @mailerSpy.firstCall.args
-        expect(args).to.have.length(4)
+        expect(args).to.have.length(5)
         expect(args[0]._id.toString()).to.equal(@account._id.toString())
         expect(args[1]._id.toString()).to.equal(abh._id.toString())
-        expect(args[2].toString()).to.equal(@now.toString())
-        expect(args[3]).to.be.a('function')
+        expect(args[2].toString()).to.equal(abh.history[0]._id.toString())
+        expect(args[3].toString()).to.equal(@now.toString())
+        expect(args[4]).to.be.a('function')
         done()
 
   describe 'with a non integer charge amount', ->
@@ -211,6 +212,7 @@ describe 'chargeAccountForMonth', ->
           expect(args[2].toString()).to.equal(@now.toString())
           expect(args[3]).to.be.a('function')
           done()
+
     describe 'with a credit card', ->
       beforeEach ->
         @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 60000)
@@ -380,6 +382,77 @@ describe 'chargeAccountForMonth', ->
           expect(err).to.be.null
           expect(abh.history).to.have.length(1)
           done()
+
+  describe 'with a current record that was not paid', ->
+    beforeEach (done)->
+      @account.stripeCustomer.stripeCustomerId = "cus_2ghmxawfvEwXkw"
+      @account.stripeCustomer.cards.push stripeCardId: "card_102gkI2AL5avr9E4geO0PpkC"
+      @account.save done
+
+    beforeEach (done)->
+      @before = new Date
+      @abh = new AccountBillingHistory(_account: @account._id)
+      @abh.history.push billingDate: @before, paid: false
+      @abh.save done
+
+    beforeEach ->
+      @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
+      usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
+      usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+
+    afterEach ->
+      @usageStub.restore()
+
+    beforeEach ->
+      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 60000 + 350 + 280)
+      @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
+      @mailerSpy = sinon.spy mailer, 'monthlyBill'
+
+    afterEach ->
+      @mailerSpy.restore()
+
+    beforeEach (done)->
+      chargeAccountForMonth @account, @now, done
+
+    it 'creates a record in AccountBillingHistory', (done)->
+      AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
+        expect(err).to.be.null
+        expect(abh.history).to.have.length(2)
+        firstCharge = abh.history[0]
+        expect(firstCharge.billingDate).to.be.instanceOf(Date)
+        expect(firstCharge.billingDate.toString()).to.equal(@before.toString())
+        expect(firstCharge.paid).to.be.false
+
+        lastCharge = abh.history[1]
+        expect(lastCharge.billingDate).to.be.instanceOf(Date)
+        expect(lastCharge.billingDate.toString()).to.equal(@now.toString())
+        expect(lastCharge.billedAt).to.be.instanceOf(Date)
+        expect(lastCharge.paid).to.be.true
+        expect(lastCharge.stripeChargeId).to.equal("ch_102dM82AL5avr9E4B8GOejKB")
+        expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
+        expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
+        expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
+        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 350, storageOverage: 280, prorated: false)
+        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
+        done()
+
+    it 'charges stripe', ->
+      expect(@chargeSuccess.isDone()).to.be.true
+
+    it 'sends an email', (done)->
+      AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
+        expect(err).to.be.null
+        expect(@templateEmailSuccess.isDone()).to.be.true
+        expect(@mailerSpy.calledOnce).to.be.true
+        args = @mailerSpy.firstCall.args
+        expect(args).to.have.length(5)
+        expect(args[0]._id.toString()).to.equal(@account._id.toString())
+        expect(args[1]._id.toString()).to.equal(abh._id.toString())
+        expect(args[2].toString()).to.equal(abh.history[1]._id.toString())
+        expect(args[3].toString()).to.equal(@now.toString())
+        expect(args[4]).to.be.a('function')
+        done()
 
   describe 'on the free plan', ->
     beforeEach (done)->

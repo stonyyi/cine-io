@@ -1,31 +1,32 @@
 mongoose = require 'mongoose'
 _ = require('underscore')
 
+BillingHistoryRecord = new mongoose.Schema
+  billingDate:
+    type: Date
+  billedAt:
+    type: Date
+  paid:
+    type: Boolean
+  notCharged:
+    type: Boolean
+  mandrillEmailId:
+    type: String
+  stripeChargeId:
+    type: String
+  chargeError:
+    type: String
+  accountPlans:
+    [type: String]
+  details:
+    type: mongoose.Schema.Types.Mixed
+
 AccountBillingHistorySchema = new mongoose.Schema
   _account:
     type: mongoose.Schema.Types.ObjectId
     ref: 'Account'
     index: true
-  history: [
-    billingDate:
-      type: Date
-    billedAt:
-      type: Date
-    paid:
-      type: Boolean
-    notCharged:
-      type: Boolean
-    mandrillEmailId:
-      type: String
-    stripeChargeId:
-      type: String
-    chargeError:
-      type: String
-    accountPlans:
-      [type: String]
-    details:
-      type: mongoose.Schema.Types.Mixed
-  ]
+  history: [BillingHistoryRecord]
 
 AccountBillingHistorySchema.plugin(Cine.server_lib('mongoose_timestamps'))
 

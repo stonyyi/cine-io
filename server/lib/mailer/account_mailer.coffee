@@ -51,8 +51,8 @@ displayCurrency = (amountInCents)->
     withDecimals
   "$#{value}"
 
-exports.monthlyBill = (account, accountBillingHistory, billingMonthDate, callback=noop)->
-  record = accountBillingHistory.billingRecordForMonth(billingMonthDate)
+exports.monthlyBill = (account, accountBillingHistory, recordId, billingMonthDate, callback=noop)->
+  record = accountBillingHistory.history.id(recordId)
   name = account.name || account.billingEmail
   usage = record.details.usage
   billing = record.details.billing
