@@ -39,7 +39,9 @@ AccountBillingHistorySchema.methods.billingRecordForMonth = (dateToCheck)->
   _.find @history, trueIfSameMonth
 
 AccountBillingHistorySchema.methods.hasBilledForMonth = (dateToCheck)->
-  @billingRecordForMonth(dateToCheck)?
+  record = @billingRecordForMonth(dateToCheck)
+  return false unless record
+  record.paid
 
 AccountBillingHistory = mongoose.model 'AccountBillingHistory', AccountBillingHistorySchema
 
