@@ -74,6 +74,6 @@ describe 'Streams#Index', ->
     Index params, (err, response, options)->
       expect(err).to.be.undefined
       expect(response).to.have.length(4)
-      expect(response[0].publish.url).to.include('stream.fra.cine.io')
-      expect(response[1].publish.url).to.include('stream.fra.cine.io')
+      expect(response[0].publish.url).to.include('publish-ams1.cine.io')
+      expect(response[1].publish.url).to.include('publish-ams1.cine.io')
       done()

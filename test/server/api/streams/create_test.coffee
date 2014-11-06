@@ -39,7 +39,7 @@ describe 'Streams#Create', ->
           hls: "http://hls.cine.io/cines/cine1ENAME/cine1.m3u8"
           rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
         expectedPublishResponse =
-          url: "rtmp://stream.lax.cine.io/20C45E/cines"
+          url: "rtmp://publish-sfo1.cine.io/live"
           stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
         expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish', 'record', 'streamName'])
         expect(response.play).to.deep.equal(expectedPlayResponse)
@@ -59,7 +59,7 @@ describe 'Streams#Create', ->
         expect(err).to.be.null
         expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish', 'record', 'streamName'])
         expectedPublishResponse =
-          url: "rtmp://stream.fra.cine.io/20C45E/cines"
+          url: "rtmp://publish-ams1.cine.io/live"
           stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
         expect(response.publish).to.deep.equal(expectedPublishResponse)
         expect(options).to.be.undefined

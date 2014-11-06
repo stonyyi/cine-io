@@ -7,7 +7,7 @@ describe 'Server#Nearest', ->
     params = {}
     Nearest params, (err, response, options)->
       expect(err).to.equal("ipAddress not available")
-      expect(response).to.deep.equal(server: null, code: null, transcode: null, host: null, app: null, rtmpCDNHost: null, rtmpCDNApp: null)
+      expect(response).to.deep.equal(server: null, transcode: null, host: null, app: null, rtmpCDNHost: null, rtmpCDNApp: null)
       expect(options).to.deep.equal(status: 400)
       done()
 
@@ -16,13 +16,12 @@ describe 'Server#Nearest', ->
     Nearest params, (err, response, options)->
       expect(err).to.be.null
       expect(response).to.deep.equal
-        code: 'lax'
-        server: "rtmp://stream.lax.cine.io/20C45E/cines"
+        server: "rtmp://publish-sfo1.cine.io/live"
         host: "stream.lax.cine.io"
         rtmpCDNHost: 'stream.lax.cine.io'
         app: '20C45E/cines'
         rtmpCDNApp: '20C45E/cines'
-        transcode: "rtmp://publish-west.cine.io/live"
+        transcode: "rtmp://publish-sfo1.cine.io:1936/live"
       expect(options).to.be.undefined
       done()
 
@@ -30,7 +29,7 @@ describe 'Server#Nearest', ->
     params = remoteIpAddress: "127.0.0.1"
     Nearest params, (err, response, options)->
       expect(err).to.be.null
-      expect(response).to.deep.equal(server: null, code: null, transcode: null, host: null, app: null, rtmpCDNHost: null, rtmpCDNApp: null)
+      expect(response).to.deep.equal(server: null, transcode: null, host: null, app: null, rtmpCDNHost: null, rtmpCDNApp: null)
       done()
 
   it 'will return a default when unknown but with default true', (done)->
@@ -38,13 +37,12 @@ describe 'Server#Nearest', ->
     Nearest params, (err, response, options)->
       expect(err).to.be.null
       expect(response).to.deep.equal
-        code: 'lax'
-        server: "rtmp://stream.lax.cine.io/20C45E/cines"
+        server: "rtmp://publish-sfo1.cine.io/live"
         host: "stream.lax.cine.io"
         rtmpCDNHost: 'stream.lax.cine.io'
         app: '20C45E/cines'
         rtmpCDNApp: '20C45E/cines'
-        transcode: "rtmp://publish-west.cine.io/live"
+        transcode: "rtmp://publish-sfo1.cine.io:1936/live"
       expect(options).to.be.undefined
       done()
 
@@ -54,13 +52,12 @@ describe 'Server#Nearest', ->
     Nearest params, (err, response, options)->
       expect(err).to.be.null
       expect(response).to.deep.equal
-        code: 'hhp'
-        server: "rtmp://stream.hhp.cine.io/20C45E/cines"
+        server: "rtmp://publish-ams1.cine.io/live"
         host: "stream.hhp.cine.io"
         rtmpCDNHost: 'stream.hhp.cine.io'
         app: '20C45E/cines'
         rtmpCDNApp: '20C45E/cines'
-        transcode: "rtmp://publish-ams.cine.io/live"
+        transcode: "rtmp://publish-ams1.cine.io:1936/live"
       done()
 
   it 'will return a localized publish value for parameter ipAddress', (done)->
@@ -69,13 +66,12 @@ describe 'Server#Nearest', ->
     Nearest params, (err, response, options)->
       expect(err).to.be.null
       expect(response).to.deep.equal
-        code: 'fra'
-        server: "rtmp://stream.fra.cine.io/20C45E/cines"
+        server: "rtmp://publish-ams1.cine.io/live"
         host: "stream.fra.cine.io"
         rtmpCDNHost: 'stream.fra.cine.io'
         app: '20C45E/cines'
         rtmpCDNApp: '20C45E/cines'
-        transcode: "rtmp://publish-ams.cine.io/live"
+        transcode: "rtmp://publish-ams1.cine.io:1936/live"
       done()
 
   it 'will return a localized publish value for lax', (done)->
@@ -84,11 +80,10 @@ describe 'Server#Nearest', ->
     Nearest params, (err, response, options)->
       expect(err).to.be.null
       expect(response).to.deep.equal
-        code: 'lax'
-        server: "rtmp://stream.lax.cine.io/20C45E/cines"
+        server: "rtmp://publish-sfo1.cine.io/live"
         host: "stream.lax.cine.io"
         rtmpCDNHost: 'stream.lax.cine.io'
         app: '20C45E/cines'
         rtmpCDNApp: '20C45E/cines'
-        transcode: "rtmp://publish-west.cine.io/live"
+        transcode: "rtmp://publish-sfo1.cine.io:1936/live"
       done()

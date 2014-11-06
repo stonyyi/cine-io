@@ -3,7 +3,6 @@ convertIpAddressToEdgecastServer = Cine.server_lib('convert_ip_address_to_edgeca
 
 nullCase =
   server: null
-  code: null
   transcode: null
   app: null
   host: null
@@ -17,20 +16,27 @@ convert = (params)->
   geo = convertIpAddressToEdgecastServer(ipAddress)
   return nullCase unless geo
 
-  code = geo.code
-  rtmpCDNHost = "stream.#{code}.cine.io"
+  rtmpCDNHost = "stream.#{geo.rtmpCDNCode}.cine.io"
   app = module.exports.default.app
-  rtmpCDN = "rtmp://#{rtmpCDNHost}/#{app}"
-  transcoding = "rtmp://publish-#{geo.transcode}.cine.io/live"
-  return server: rtmpCDN, code: code, transcode: transcoding, host: rtmpCDNHost, app: app, rtmpCDNApp: app, rtmpCDNHost: rtmpCDNHost
+  cineIOEndpoint = "rtmp://publish-#{geo.cineioEndpointCode}.cine.io/live"
+  cineIOTranscodeEndpoint = "rtmp://publish-#{geo.cineioEndpointCode}.cine.io:1936/live"
+  response =
+    server: cineIOEndpoint
+    transcode: cineIOTranscodeEndpoint
+    host: rtmpCDNHost
+    app: app
+    rtmpCDNApp: app
+    rtmpCDNHost: rtmpCDNHost
+  return response
 
 
 module.exports = (params, callback)->
   response = convert(params)
-  unless response.code
+  # console.log("response", response)
+  unless response.server
     return callback(null, module.exports.default) if params.default
     errorResponse = nullCase
-    response = null if _.has(response, 'code')
+    response = null if _.has(response, 'server')
     return callback(response, errorResponse, status: 400)
 
   callback(null, response)
@@ -38,11 +44,10 @@ module.exports = (params, callback)->
 
 module.exports.convert = convert
 module.exports.default =
-  code: 'lax'
   host: "stream.lax.cine.io"
   app: "20C45E/cines"
   rtmpCDNApp: "20C45E/cines"
-  transcode: "rtmp://publish-west.cine.io/live"
+  transcode: "rtmp://publish-sfo1.cine.io:1936/live"
   rtmpCDNHost: "stream.lax.cine.io"
 
-module.exports.default.server = "rtmp://#{module.exports.default.host}/#{module.exports.default.app}"
+module.exports.default.server = "rtmp://publish-sfo1.cine.io/live"

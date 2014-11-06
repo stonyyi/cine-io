@@ -4,12 +4,14 @@ describe 'convertIpAddressToEdgecastServer', ->
   it 'converts a San Francisco IP to lax', ->
     sfIp = "204.14.156.177"
     edgecastServer = convertIpAddressToEdgecastServer sfIp
-    expect(edgecastServer.code).to.equal('lax')
+    expect(edgecastServer.rtmpCDNCode).to.equal('lax')
+    expect(edgecastServer.cineioEndpointCode).to.equal('sfo1')
 
   it 'converts a Berlin IP to fra', ->
     sfIp = "81.169.145.154"
     edgecastServer = convertIpAddressToEdgecastServer sfIp
-    expect(edgecastServer.code).to.equal('fra')
+    expect(edgecastServer.rtmpCDNCode).to.equal('fra')
+    expect(edgecastServer.cineioEndpointCode).to.equal('ams1')
 
   it 'returns null for localhost', ->
     sfIp = "127.0.0.1"
