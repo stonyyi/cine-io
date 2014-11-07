@@ -14,6 +14,7 @@ Example = LoggedOut.Example,
 Libraries = LoggedOut.Libraries,
 Pricing = LoggedOut.Pricing,
 Consulting = LoggedOut.Consulting,
+Marketplaces = LoggedOut.Marketplaces,
 NoAccount = Cine.component('shared/_no_account'),
 Projects = Cine.collection('projects');
 
@@ -49,6 +50,7 @@ module.exports = React.createClass({
             <Libraries />
             <Example app={this.props.app}/>
             <Pricing app={this.props.app} />
+            <Marketplaces />
             <Consulting />
             <Footer />
           </div>

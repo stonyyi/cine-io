@@ -136,17 +136,17 @@ module.exports = React.createClass({
             <ul className="inline-list">
               <li>
                 <a target="_blank" href='https://github.com/cine-io/js-sdk'>
-                  <img width='36' height='36' src="/images/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
+                  <img width='36' height='36' src="/images/code-logos/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-ios'>
-                  <img width='36' height='36' src="/images/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
+                  <img width='36' height='36' src="/images/code-logos/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-android'>
-                  <img width='36' height='36' src="/images/android-logo.png" alt="Android logo" title="The Android SDK" />
+                  <img width='36' height='36' src="/images/code-logos/android-logo.png" alt="Android logo" title="The Android SDK" />
                 </a>
               </li>
             </ul>
@@ -155,17 +155,17 @@ module.exports = React.createClass({
             <ul className="inline-list">
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-ruby'>
-                  <img width='36' height='36' src="/images/ruby-logo.png" alt="Ruby logo" title="The Ruby Gem" />
+                  <img width='36' height='36' src="/images/code-logos/ruby-logo.png" alt="Ruby logo" title="The Ruby Gem" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-python'>
-                  <img width='36' height='36' src="/images/python-logo.png" alt="Python logo" title="The Python Egg" />
+                  <img width='36' height='36' src="/images/code-logos/python-logo.png" alt="Python logo" title="The Python Egg" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-node'>
-                  <img width='36' height='36' src="/images/nodejs-logo.png" alt="Node.js logo" title="The Node.js Package" />
+                  <img width='36' height='36' src="/images/code-logos/nodejs-logo.png" alt="Node.js logo" title="The Node.js Package" />
                 </a>
               </li>
             </ul>

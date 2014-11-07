@@ -173,20 +173,9 @@
     }
   }
 
-  #libraries{
+  #libraries, #marketplaces{
     padding-top: 1.5em;
 
-    ul{
-      li{
-        img{
-          width: 32px;
-          height: 32px;
-        }
-      }
-    }
-    .icon-list {
-      @include block-grid(6);
-    }
     .developer-actions {
       @include grid-row();
       div {
@@ -195,6 +184,34 @@
           width: 100%;
         }
       }
+    }
+  }
+  #libraries {
+    ul{
+      li{
+        img{
+          width: 32px;
+          height: 32px;
+        }
+      }
+    }
+
+    .icon-list {
+      @include block-grid(6);
+    }
+  }
+  #marketplaces {
+    background: #ccc;
+    ul{
+      li{
+        img{
+          width: 48px;
+          height: 48px;
+        }
+      }
+    }
+    .icon-list {
+      @include block-grid(5);
     }
   }
   #pricing {
@@ -282,17 +299,6 @@
     }
 
     #libraries {
-      ul {
-        li {
-          img {
-            width: 64px;
-            height: 64px;
-          }
-        }
-      }
-      .icon-list {
-        @include block-grid(7);
-      }
       .developer-actions {
         div {
           @include grid-column(4, false, false, 2);
@@ -303,6 +309,30 @@
         div:last-child {
           @include grid-column(4, true, false, 0);
         }
+      }
+    }
+    #marketplaces{
+      ul {
+        li {
+          img {
+            width: 96px;
+            height: 96px;
+          }
+        }
+      }
+    }
+    #libraries {
+      ul {
+        li {
+          img {
+            width: 64px;
+            height: 64px;
+          }
+        }
+      }
+
+      .icon-list {
+        @include block-grid(7);
       }
     }
   }

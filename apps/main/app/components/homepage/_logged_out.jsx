@@ -83,7 +83,6 @@ exports.About = React.createClass({
   }
 });
 
-
 exports.Libraries = React.createClass({
   displayName: 'Libraries',
   render: function() {
@@ -100,37 +99,37 @@ exports.Libraries = React.createClass({
             <ul className="icon-list">
               <li>
                 <a target="_blank" href='https://github.com/cine-io/js-sdk'>
-                  <img src="/images/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
+                  <img src="/images/code-logos/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-ios'>
-                  <img src="/images/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
+                  <img src="/images/code-logos/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-android'>
-                  <img src="/images/android-logo.png" alt="Android logo" title="The Android SDK" />
+                  <img src="/images/code-logos/android-logo.png" alt="Android logo" title="The Android SDK" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-ruby'>
-                  <img src="/images/ruby-logo.png" alt="Ruby logo" title="The Ruby Gem" />
+                  <img src="/images/code-logos/ruby-logo.png" alt="Ruby logo" title="The Ruby Gem" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-python'>
-                  <img src="/images/python-logo.png" alt="Python logo" title="The Python Egg" />
+                  <img src="/images/code-logos/python-logo.png" alt="Python logo" title="The Python Egg" />
                 </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-node'>
-                  <img src="/images/nodejs-logo.png" alt="Node.js logo" title="The Node.js Package" />
+                  <img src="/images/code-logos/nodejs-logo.png" alt="Node.js logo" title="The Node.js Package" />
                 </a>
               </li>
               <li className="show-for-medium-up">
                 <a target="_blank" href='https://github.com/cine-io'>
-                  <img src="/images/github-logo.png" alt="GitHub logo" title="Find us on GitHub" />
+                  <img src="/images/code-logos/github-logo.png" alt="GitHub logo" title="Find us on GitHub" />
                 </a>
               </li>
             </ul>
@@ -151,7 +150,6 @@ exports.Libraries = React.createClass({
     );
   }
 });
-
 
 exports.Example = React.createClass({
   displayName: 'Example',
@@ -251,6 +249,52 @@ exports.Example = React.createClass({
   }
 });
 
+exports.Marketplaces = React.createClass({
+  displayName: 'Marketplaces',
+  render: function() {
+    var squareSize = 32;
+      multiplier = 2;
+    squareSize *= multiplier;
+    return (
+      <section id="marketplaces">
+        <div className="row text-center">
+          <div className="medium-12 columns">
+            <h2 className="bottom-margin-1">
+              Find us on
+            </h2>
+            <ul className="icon-list">
+              <li>
+                <a target="_blank" href='https://addons.heroku.com/cine'>
+                  <img src="/images/partner-logos/heroku.png" alt="Heroku logo" title="Heroku Addon" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://console.run.pivotal.io/marketplace/cine-io'>
+                  <img src="/images/partner-logos/engineyard.png" alt="PWS logo" title="Pivotal Web Services Addon" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://addons.engineyard.com/addons/cineio'>
+                  <img src="/images/partner-logos/pivotal-web-services.png" alt="Engineyard logo" title="Engineyard Addon" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://marketplace.openshift.com/apps/14079'>
+                  <img src="/images/partner-logos/redhat-openshift.png" alt="OpenShift logo" title="OpenShift Addon" />
+                </a>
+              </li>
+              <li>
+                <a target="_blank" href='https://marketplace.samsungknox.com/apps/639'>
+                  <img src="/images/partner-logos/samsung-knox.png" alt="Samsung Knox logo" title="Samsung Knox Marketplace" />
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    );
+  }
+});
 
 exports.Pricing = React.createClass({
   mixins: [Cine.lib('requires_app')],
