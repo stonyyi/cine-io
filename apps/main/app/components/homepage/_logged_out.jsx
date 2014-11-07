@@ -260,8 +260,11 @@ exports.Marketplaces = React.createClass({
         <div className="row text-center">
           <div className="medium-12 columns">
             <h2 className="bottom-margin-1">
-              Find us on
+              We work where you work.
             </h2>
+            <p>
+              cine.io supports one-click deployment with many popular PaaS providers, and can integrate with virtually any cloud infrastructure.
+            </p>
             <ul className="icon-list">
               <li>
                 <a target="_blank" href='https://addons.heroku.com/cine'>
@@ -326,8 +329,7 @@ exports.Pricing = React.createClass({
                   <li>HD live-streaming <strong>to and from any
                   device</strong> (web, iOS, Android)</li>
                   <li>archiving / recording of streams</li>
-                  <li>distribution via our <strong>global CDN</strong> (2,000
-                  interconnected networks across 5 continents)</li>
+                  <li>distribution via our <strong>global CDN</strong></li>
                   <li><strong>no ads</strong> of any kind</li>
                   <li><a href="http://cineio.uservoice.com">email</a> {" + "}
                   <strong><a href="https://www.hipchat.com/gZCLRQ9Ih">live chat support</a></strong>
