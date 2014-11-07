@@ -43,6 +43,10 @@ describe 'the test suite', ->
     # server
     "server/api"
     "server/models"
+    "server/lib/appdirect"
+    "server/lib/billing"
+    "server/lib/stats"
+    "server/lib/stream_recordings"
   ]
   _.each fullyTestedDirectories, (path)->
     it "tests every file in #{path}", (done)->
