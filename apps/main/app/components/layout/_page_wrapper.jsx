@@ -10,6 +10,10 @@ FlashHolder = Cine.component('layout/flash_holder');
 module.exports = React.createClass({
   displayName: 'PageWrapper',
   mixins: [Cine.lib('requires_app'), Cine.lib('has_nav')],
+  propTypes: {
+      wide: React.PropTypes.bool,
+      className: React.PropTypes.string
+  },
   render: function() {
     var wide = this.props.wide || false
       , children = wide ?
@@ -24,7 +28,7 @@ module.exports = React.createClass({
           </div>
         )
     return (
-      <div id="page-layout">
+      <div id="page-layout" className={this.props.className}>
         <ModalHolder app={this.props.app} />
         <div className={this.canvasClasses('main-wrapper')}>
           <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
