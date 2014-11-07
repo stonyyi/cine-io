@@ -15,16 +15,16 @@ module.exports = React.createClass({
     return this.props.app.currentAccount();
   },
   getInitialState: function(){
-    return {submitting: false};
+    return {isDeleting: false};
   },
   destroyAccount: function(e){
     var
       self = this,
       app = self.props.app;
-    if(this.state.submitting){
+    if(this.state.isDeleting){
       return;
     }
-    self.setState({submitting: true});
+    self.setState({isDeleting: true});
     this.props.model.destroy({
       data: {
         masterKey: this.props.model.get('masterKey')
@@ -32,14 +32,18 @@ module.exports = React.createClass({
       processData: true,
       wait: true,
       success: function(model, response){
-        self.setState({submitting: false});
+        if (self.isMounted()){
+          self.setState({isDeleting: false});
+        }
         app.flash('Successfully deleted account.', 'success');
         var newAccount = app.currentUser.accounts().first();
         app.changeAccount(newAccount);
       },
       error: function(model, response){
         app.flash('Could not delete account.', 'warning');
-        self.setState({submitting: false});
+        if (self.isMounted()){
+          self.setState({isDeleting: false});
+        }
       }
     });
   },
@@ -49,7 +53,7 @@ module.exports = React.createClass({
       confirmationAttribute = model.get('name') ? 'name' : 'email';
     return (
       <div>
-        <DeleteButtonWithInputConfirmation model={model} confirmationAttribute={confirmationAttribute} deleteCallback={this.destroyAccount} objectName="account" />
+        <DeleteButtonWithInputConfirmation model={model} isDeleting={this.state.isDeleting} confirmationAttribute={confirmationAttribute} deleteCallback={this.destroyAccount} objectName="account" />
       </div>
     );
   }

@@ -8,24 +8,28 @@ module.exports = React.createClass({
     model: React.PropTypes.instanceOf(BaseModel).isRequired,
     confirmationAttribute: React.PropTypes.string.isRequired,
     objectName: React.PropTypes.string.isRequired,
-    deleteCallback: React.PropTypes.func.isRequired
+    deleteCallback: React.PropTypes.func.isRequired,
+    isDeleting: React.PropTypes.bool.isRequired
   },
   getInitialState: function(){
-    return {isDeleting: false, deletingObjectName: ''};
+    return {showDeleteButton: false, deletingObjectName: ''};
+  },
+  doNothing: function(e){
+    e.preventDefault();
   },
   deleteObject: function(e){
     var attribute = this.props.model.get(this.props.confirmationAttribute);
 
     e.preventDefault();
-    if (this.state.isDeleting && this.state.deletingObjectName == attribute){
+    if (this.state.showDeleteButton && this.state.deletingObjectName == attribute){
       this.setState(this.getInitialState());
       this.props.deleteCallback();
     } else {
-      this.setState({isDeleting: true});
+      this.setState({showDeleteButton: true});
     }
   },
   cancelDeleting: function(e){
-    this.setState({isDeleting: false});
+    this.setState({showDeleteButton: false});
   },
   changeObjectDeletingName: function(e){
     this.setState({deletingObjectName: event.target.value});
@@ -40,11 +44,11 @@ module.exports = React.createClass({
     var
       attribute = this.props.model.get(this.props.confirmationAttribute),
       deleteObjectSubmitButton;
-    if (this.state.isDeleting){
+    if (this.state.showDeleteButton){
       if (this.state.deletingObjectName == attribute){
         deleteObjectSubmitButton = (<button className='button alert tiny' type='submit'>Delete {attribute}</button>);
       }else{
-        deleteObjectSubmitButton = (<button className='button alert tiny' disabled='disabled' type='submit'>Delete {attribute}</button>);
+        deleteObjectSubmitButton = (<button className='button alert tiny' disabled type='submit'>Delete {attribute}</button>);
       }
       return (
         <form onSubmit={this.deleteObject}>
@@ -57,7 +61,9 @@ module.exports = React.createClass({
           {deleteObjectSubmitButton}
         </form>
       );
-    }else{
+    }else if (this.props.isDeleting) {
+      return (<button className='button alert tiny'disabled  onClick={this.doNothing}>Deleting {attribute}</button>);
+    }else {
       return (<button className='button alert tiny' onClick={this.deleteObject}>Delete {attribute}</button>);
     }
   }

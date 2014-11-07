@@ -12,7 +12,7 @@ module.exports = React.createClass({
     model: React.PropTypes.instanceOf(Project).isRequired
   },
   getInitialState: function(){
-    return {showingSettings: false, showingNameForm: false, newProjectName: null, submitting: false};
+    return {showingSettings: false, showingNameForm: false, newProjectName: null, submitting: false, isDeleting: false};
   },
   getBackboneObjects: function(){
     return this.props.model;
@@ -56,12 +56,25 @@ module.exports = React.createClass({
     this._owner.selectProject(this.props.model);
   },
   destroyProject: function(){
+    if(this.state.isDeleting){return;}
+    var self = this;
+    this.setState({isDeleting: true});
     this.props.model.destroy({
       data: {
         secretKey: this.props.model.get('secretKey')
       },
       processData: true,
-      wait: true
+      wait: true,
+      success: function(model, response){
+        if (self.isMounted()){
+          self.setState({isDeleting: false});
+        }
+      },
+      error: function(model, response){
+        if (self.isMounted()){
+          self.setState({isDeleting: false});
+        }
+      }
     });
   },
   render: function() {
@@ -95,7 +108,7 @@ module.exports = React.createClass({
             <dt>Streams count</dt>
             <dd>{model.get('streamsCount')}</dd>
           </dl>
-          <DeleteButtonWithInputConfirmation model={model} confirmationAttribute='name' deleteCallback={this.destroyProject} objectName="project" />
+          <DeleteButtonWithInputConfirmation model={model} isDeleting={this.state.isDeleting} confirmationAttribute='name' deleteCallback={this.destroyProject} objectName="project" />
         </div>
       );
     }else{

@@ -14,12 +14,14 @@ module.exports = React.createClass({
     project: React.PropTypes.instanceOf(Project).isRequired
   },
   getInitialState: function(){
-    return {showingNameForm: false, newStreamName: null, submitting: false};
+    return {showingNameForm: false, newStreamName: null, submitting: false, isDeleting: false};
   },
   getBackboneObjects: function(){
     return this.props.model;
   },
   destroyStream: function(){
+    if(this.state.isDeleting){return;}
+    this.setState({isDeleting: true});
     var self = this,
       secretKey = this.props.project.get('secretKey');
     this.props.model.attributes.secretKey = secretKey;
@@ -30,7 +32,15 @@ module.exports = React.createClass({
       processData: true,
       wait: true,
       success: function(model, response){
+        if (self.isMounted()){
+          self.setState({isDeleting: false});
+        }
         self.props.project.set('streamsCount', self.props.project.get('streamsCount')-1);
+      },
+      error: function(model, response){
+        if (self.isMounted()){
+          self.setState({isDeleting: false});
+        }
       }
     });
   },
@@ -143,7 +153,7 @@ module.exports = React.createClass({
           <dt>FMS url:</dt>
           <dd>{model.get('publish').url}</dd>
         </dl>
-        <DeleteButtonWithInputConfirmation model={this.props.model} confirmationAttribute={confirmationAttribute} deleteCallback={this.destroyStream} objectName="stream" />
+        <DeleteButtonWithInputConfirmation isDeleting={this.state.isDeleting} model={this.props.model} confirmationAttribute={confirmationAttribute} deleteCallback={this.destroyStream} objectName="stream" />
       </div>
     );
   }
