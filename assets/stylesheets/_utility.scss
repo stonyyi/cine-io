@@ -36,3 +36,11 @@ $expected-font-size: 16px;
 .twenty-eight-percent{
   width: 28%;
 }
+
+a.disabled, a[disabled]{
+  &, &:hover, &:focus{
+    opacity: $button-disabled-opacity;
+    cursor: default;
+    color: $primary-color;
+  }
+}
