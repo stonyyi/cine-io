@@ -8,6 +8,10 @@ ReactView = RendrView.extend
   getInnerHtml: ->
     React.renderComponentToString @_renderComponent()
 
+  remove: ->
+    RendrView.prototype.remove.call(this)
+    React.unmountComponentAtNode @el
+
   postRender: ->
     @_renderReact()
 
