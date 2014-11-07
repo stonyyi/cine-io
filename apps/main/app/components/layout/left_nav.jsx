@@ -138,7 +138,7 @@ var EmailLogin = React.createClass({
         self.props.app.flash("A password recovery email was sent to "+self.state.myEmail+".", 'info');
       },
       error: function(){
-        self.setState({submitting: false});
+        if (self.isMounted()){ self.setState({submitting: false}); }
       }
     });
   },

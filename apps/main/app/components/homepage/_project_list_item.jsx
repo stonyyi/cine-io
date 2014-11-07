@@ -48,7 +48,7 @@ module.exports = React.createClass({
       success: function(model, response){
         self.setState({showingNameForm: false, newProjectName: null, submitting: false});
       }, error: function(model, response){
-        self.setState({submitting: false});
+        if (self.isMounted()){ self.setState({submitting: false}); }
       }
     });
   },

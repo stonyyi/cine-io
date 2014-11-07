@@ -22,7 +22,7 @@ module.exports = React.createClass({
     p.save(null, {
       success: function(model, response, options){
         var returnedExistingStream = self.props.model.getStreams().get(model.id);
-        self.setState({submitting: false});
+        if (self.isMounted()){ self.setState({submitting: false}); }
         self.props.model.getStreams().add(model);
         if (!returnedExistingStream){
           self.props.model.set('streamsCount', self.props.model.get('streamsCount') + 1);
@@ -32,7 +32,7 @@ module.exports = React.createClass({
         self._owner.changeSelectedStreamId(model.id);
       },
       error: function(model, response, options){
-        self.setState({submitting: false});
+        if (self.isMounted()){ self.setState({submitting: false}); }
       }
     });
   },

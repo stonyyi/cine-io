@@ -54,14 +54,14 @@ module.exports = React.createClass({
     app.currentAccount().set('stripeToken', response.id)
     app.currentAccount().save(null, {
       success: function(model, response, options){
-        self.setState({submitting: false});
+        if (self.isMounted()){ self.setState({submitting: false}); }
         model.unset('stripeToken');
         model.store();
         app.flash('Successfully saved credit card.', 'success');
         app.tracker.addedCard();
       },
       error: function(model, response, options){
-        self.setState({submitting: false});
+        if (self.isMounted()){ self.setState({submitting: false}); }
         model.unset('stripeToken');
         app.flash('Could not save credit card.', 'alert');
       }

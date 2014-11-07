@@ -31,11 +31,11 @@ module.exports = React.createClass({
     var p = new Project(projectAttrs, {app: this.props.app});
     p.save(null, {
       success: function(model, response, options){
-        self.setState({submitting: false});
+        if (self.isMounted()){ self.setState({submitting: false}); }
         self._owner.addProject(model);
       },
       error: function(model, response, options){
-        self.setState({submitting: false});
+        if (self.isMounted()){ self.setState({submitting: false}); }
       }
     });
   },

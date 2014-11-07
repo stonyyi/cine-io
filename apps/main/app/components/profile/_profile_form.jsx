@@ -26,10 +26,10 @@ module.exports = React.createClass({
       form = jQuery(event.currentTarget);
     options = {
       success: function(){
-        self.setState({submitting: false});
+        if (self.isMounted()){ self.setState({submitting: false}); }
       },
       error: function(){
-        self.setState({submitting: false});
+        if (self.isMounted()){ self.setState({submitting: false}); }
       }
     }
     authentication.updateAccount(this.props.app, form, options);
