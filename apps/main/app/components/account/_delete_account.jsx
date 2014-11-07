@@ -53,6 +53,7 @@ module.exports = React.createClass({
       confirmationAttribute = model.get('name') ? 'name' : 'email';
     return (
       <div>
+        <h3>Delete Account</h3>
         <DeleteButtonWithInputConfirmation model={model} isDeleting={this.state.isDeleting} confirmationAttribute={confirmationAttribute} deleteCallback={this.destroyAccount} objectName="account" />
       </div>
     );

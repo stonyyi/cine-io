@@ -42,6 +42,7 @@ module.exports = React.createClass({
         <div>
           <ChangePlanForm app={this.props.app} />
           <CardModule app={this.props.app} />
+          <hr/>
           <DeleteAccount app={this.props.app} model={ca} />
         </div>
       );
