@@ -8,7 +8,7 @@ html, body {
   -webkit-overflow-scrolling: touch;
 }
 
-#content, #content > div, #page-layout {
+#content, #page-layout {
   height: 100%;
 }
 #page-layout{
@@ -181,6 +181,32 @@ ul.dropdown li a.current{
 
   .wide-container {
     @include grid-column(12);
+  }
+
+  &.fixed {
+    margin-top: 45px;
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1;
+    }
+  }
+  header{
+    .brand {
+      transition: opacity 500ms ease;
+      opacity: 0;
+      z-index: -1;
+    }
+  }
+  &.show-logo{
+    header  {
+    .brand {
+        transition: opacity 500ms ease;
+        opacity: 1;
+      }
+    }
   }
 
 }

@@ -14,6 +14,12 @@ module.exports = React.createClass({
         <ul className="right show-for-large-up">
           <li className="active"><a onClick={this.login}>Sign In or Sign Up</a></li>
         </ul>
+        <ul className="right show-for-large-up">
+        <li><a>Products</a></li>
+        <li><a>Solutions</a></li>
+        <li><a>Pricing</a></li>
+        <li><a href='/docs'>Docs</a></li>
+        </ul>
       </section>
     );
   }
