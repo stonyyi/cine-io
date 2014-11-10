@@ -37,6 +37,7 @@ exports.listen = (app, defaultPort)->
 
 # scheduleJob("process-video", {file: "some-file"})
 exports.scheduleJob = (queue, details={}, callback=noop)->
+  console.log("scheduling job in", queue, details)
   job = jobs.create(queue, details)
   job.save callback
 
