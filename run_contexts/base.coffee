@@ -47,6 +47,7 @@ processJobs = (queue, options, callback)->
   if typeof options == 'function'
     callback = options
     options = {}
+  console.log("processing jobs for", queue)
   if options.concurrency
     jobs.process(queue, options.concurrency, callback)
   else
