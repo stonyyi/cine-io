@@ -82,6 +82,7 @@ class VodBookkeeper
 # json options
 #  file: full path to file
 exports.jobProcessor = (job, done)->
+  console.log("running job", job.data)
   file = job.data.file
   return done("no file passed in") unless file
   fs.exists file, (exists)->

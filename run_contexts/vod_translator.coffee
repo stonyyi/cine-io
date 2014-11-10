@@ -78,6 +78,7 @@ class FFmpegHandler
 #  extra: extra stuff to send to ffmpeg
 
 exports.jobProcessor = (job, done)->
+  console.log("running job", job.data)
   file = job.data.file
   return done("no file passed in") unless file
   fs.exists file, (exists)->
