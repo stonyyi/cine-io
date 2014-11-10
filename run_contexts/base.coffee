@@ -3,21 +3,16 @@ env = require '../config/environment'
 express = require 'express'
 morgan = require('morgan')
 bodyParser = require('body-parser')
-redisClient = Cine.server_lib('redis_client')
+createQueue = Cine.server_lib('create_queue')
 os = require("os")
 
-kue = require('kue')
 noop = ->
 
 jobs = null
-exports._createQueue = ->
-  jobs.shutdown() if jobs
-  jobs = kue.createQueue
-    prefix: 'kue'
-    redis:
-      createClientFactory: redisClient.clientFactory
+exports._recreateQueue = ->
+  jobs = createQueue(force: true)
 
-exports._createQueue()
+exports._recreateQueue()
 
 exports.app = ->
   app = express()

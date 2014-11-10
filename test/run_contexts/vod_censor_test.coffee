@@ -62,7 +62,7 @@ describe 'VodCensor', ->
           fs.unlink @targetFile, done
 
         afterEach ->
-          Base._createQueue()
+          Base._recreateQueue()
 
         it "schedules a message in the transocde service", (done)->
           Base.processJobs 'vod_translator', (job, jobDone)=>

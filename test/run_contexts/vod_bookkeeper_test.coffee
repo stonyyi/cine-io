@@ -19,7 +19,7 @@ describe 'VodBookkeeper', ->
     before ->
       Base.processJobs 'vod_bookkeeper', VodBookkeeper.jobProcessor
     after ->
-      Base._createQueue()
+      Base._recreateQueue()
 
     it "needs a file", (done)->
       job = Base.scheduleJob Base.getQueueName('vod_bookkeeper')

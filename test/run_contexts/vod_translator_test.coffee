@@ -12,7 +12,7 @@ describe 'VodTranslator', ->
     before ->
       Base.processJobs 'vod_translator', VodTranslator.jobProcessor
     after ->
-      Base._createQueue()
+      Base._recreateQueue()
 
     it "needs a file", (done)->
       job = Base.scheduleJob Base.getQueueName('vod_translator')
