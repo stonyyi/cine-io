@@ -1,5 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react'),
+Libraries = Cine.component('homepage/_libraries'),
 PageWrapper = Cine.component('layout/_page_wrapper');
 
 module.exports = React.createClass({
@@ -11,6 +12,7 @@ module.exports = React.createClass({
     return (
       <PageWrapper selected='products' app={this.props.app}>
         <h1>I am products</h1>
+        <Libraries />
       </PageWrapper>
     );
   }

@@ -6,8 +6,7 @@ LoggedIn = Cine.component('homepage/_logged_in'),
 HomeHero = LoggedOut.HomeHero,
 About = LoggedOut.About,
 Example = LoggedOut.Example,
-Libraries = LoggedOut.Libraries,
-Pricing = LoggedOut.Pricing,
+Libraries = Cine.component('homepage/_libraries'),
 Consulting = LoggedOut.Consulting,
 Marketplaces = LoggedOut.Marketplaces,
 NoAccount = Cine.component('shared/_no_account'),
@@ -40,7 +39,6 @@ module.exports = React.createClass({
           <About />
           <Libraries />
           <Example app={this.props.app}/>
-          <Pricing app={this.props.app} />
           <Marketplaces />
           <Consulting />
         </PageWrapper>

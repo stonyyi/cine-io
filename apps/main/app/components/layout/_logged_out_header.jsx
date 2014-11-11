@@ -11,7 +11,6 @@ module.exports = React.createClass({
     this.props.app.trigger('show-login');
   },
   render: function() {
-    console.log("HERE IN PROPS", this.props)
     var
       productsClass = cx({active: this.props.selected === "products"}),
       solutionsClass = cx({active: this.props.selected === "solutions"}),
