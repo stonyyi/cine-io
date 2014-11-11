@@ -91,6 +91,7 @@ UserSchema.methods.simpleCurrentUserJSON = ->
   json = @toJSON()
   result = _.pick(json, 'isSiteAdmin', 'createdAt', 'name', 'email', 'masterKey', 'githubId', '_accounts', 'appdirectUUID')
   result.id = json._id
+  result.userToken = result.masterKey
   result.firstName = @firstName()
   result.lastName = @lastName()
   result
