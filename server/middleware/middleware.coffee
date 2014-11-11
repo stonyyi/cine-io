@@ -49,8 +49,16 @@ module.exports = (app) ->
   app.use Cine.middleware('force_https_and_www') if app.settings.env is "production"
 
   if process.env.USE_BASIC_AUTH
+    auth = require('basic-auth')
     authCredentials = Cine.config('variables/basic_auth')
-    app.use express.basicAuth(authCredentials.user, authCredentials.password)
+
+    app.use (req, res, next)->
+      user = auth(req)
+      if (user == undefined || user['name'] != authCredentials.user || user['pass'] != authCredentials.password)
+        res.setHeader('WWW-Authenticate', 'Basic realm="cineiorealm"')
+        res.status(401).send('Unauthorized')
+      else
+        next()
 
   Cine.middleware('authentication', app)
   Cine.middleware('appdirect', app)
