@@ -73,8 +73,8 @@
   },
   "devDependencies": {
     "aglio": "1.16.1",
-    "chai": "1.9.1",
-    "coffeelint": "1.6.0",
+    "chai": "1.10.0",
+    "coffeelint": "1.6.1",
     "grunt": "~0.4.2",
     "grunt-aglio": "0.3.1",
     "grunt-concurrent": "1.0.0",
@@ -82,12 +82,12 @@
     "grunt-markdown": "0.6.1",
     "grunt-nodemon": "0.3.0",
     "jquery": "2.1.1",
-    "jsdom": "1.0.0-pre.7",
-    "mocha": "1.21.4",
-    "nock": "0.47.0",
+    "jsdom": "1.2.1",
+    "mocha": "2.0.1",
+    "nock": "0.48.2",
     "nodemon": "1.2.1",
-    "sinon": "1.10.3",
-    "supertest": "0.13.0"
+    "sinon": "1.11.1",
+    "supertest": "0.15.0"
   },
   "license": "Copyrighted / All Rights Reserved",
   "engines": {
