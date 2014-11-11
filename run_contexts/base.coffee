@@ -10,7 +10,7 @@ noop = ->
 
 jobs = null
 exports._recreateQueue = ->
-  jobs = createQueue(force: true)
+  jobs = createQueue(force: jobs?)
 
 exports._recreateQueue()
 
