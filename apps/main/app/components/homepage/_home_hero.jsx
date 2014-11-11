@@ -14,18 +14,28 @@ module.exports = React.createClass({
 
     return (
       <div className='home-hero'>
-        <div className="hero-image laptop-video">
-          <video muted={true} autoPlay={true} loop={true}>
-            <source src="/videos/fireworks.mp4" type="video/mp4" />
-          </video>
-          <img src="/images/home-hero/laptop.png" />
+
+        <div className="players">
+          <div className="hero-image laptop-video">
+            <video muted={true} autoPlay={true} loop={true}>
+              <source src="/videos/fireworks.mp4" type="video/mp4" />
+            </video>
+            <img src="/images/home-hero/laptop.png" />
+          </div>
+          <div className="hero-image tablet-video">
+            <video muted={true} autoPlay={true} loop={true}>
+              <source src="/videos/fireworks.mp4" type="video/mp4" />
+            </video>
+            <img src="/images/home-hero/tablet.png" />
+          </div>
+          <div className="hero-image phone-video">
+            <video muted={true} autoPlay={true} loop={true}>
+              <source src="/videos/fireworks.mp4" type="video/mp4" />
+            </video>
+            <img src="/images/home-hero/phone.png" />
+          </div>
         </div>
-        <div className="hero-image tablet-video">
-          <video muted={true} autoPlay={true} loop={true}>
-            <source src="/videos/fireworks.mp4" type="video/mp4" />
-          </video>
-          <img src="/images/home-hero/tablet.png" />
-        </div>
+
       </div>
     );
   }

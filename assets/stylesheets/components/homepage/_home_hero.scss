@@ -8,60 +8,126 @@
     padding: 0 20px;
   }
 
+  $full-width: 700px;
 
-  .laptop-video{
-    $laptop-width: 320px;
-    $laptop-height: 189px;
-    $video-margin: 25px;
-    width: $laptop-width;
-    height: $laptop-height;
+  $full-height: $full-width * 0.65;
+  $laptop-width: $full-width * 0.76;
+  $tablet-width: $full-width * 0.46;
+  $phone-width: $full-width * 0.31;
+  $tablet-bottom: $full-width * 0.09;
+  $phone-right: $full-width * 0.26;
+
+  .players{
+    width: $full-width;
+    height: $full-height;
     position: relative;
-    video, img{
-      width: $laptop-width;
+    img, video{
       position: absolute;
       top: 0;
       bottom: 0;
       left: 0;
       right: 0;
     }
+    .laptop-video, .tablet-video, .phone-video{
+      position: absolute;
+    }
+    .laptop-video{
+      top: 0;
+      left: 0;
+      video{
+        z-index: 1;
+      }
+      img{
+        z-index: 2;
+      }
+    }
+    .tablet-video{
+      bottom: $tablet-bottom;
+      right: 0;
+      video {
+        z-index: 3;
+      }
+      img {
+        z-index: 4;
+      }
+    }
+    .phone-video{
+      bottom: 0;
+      right: $phone-right;
+      video {
+        z-index: 5;
+      }
+      img {
+        z-index: 6;
+      }
+
+    }
+  }
+
+  //LAPTOP
+  $laptop-height: $laptop-width * 0.6;
+  $laptop-video-margin: $laptop-width * 0.08;
+  $laptop-video-height: $laptop-width * 0.55;
+
+  .laptop-video{
+    width: $laptop-width;
+    height: $laptop-height;
+    video, img{
+      width: $laptop-width;
+    }
     video{
-      width: $laptop-width - ($video-margin * 2);
-      height: 175px;
-      left: $video-margin;
-      z-index: 1;
+      width: $laptop-width - ($laptop-video-margin * 2);
+      height: $laptop-video-height;
+      left: $laptop-video-margin;
     }
     img{
       width: $laptop-width;
       height: $laptop-height;
-      z-index: 2;
     }
   }
-  .tablet-video{
-    $tablet-width: 282px;
-    $tablet-height: 188px;
-    $video-margin: 2;
+  //TABLET
+  $tablet-height: $tablet-width * 0.6;
+  $tablet-video-margin: 2px;
+  $tablet-video-width: $tablet-width * 0.93;
 
+  .tablet-video{
     width: $tablet-width;
     height: $tablet-height;
-    position: relative;
     video, img{
       width: $tablet-width;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
     }
     video{
-      width: 263px;
-      height: 178px;
-      left: $video-margin;
-      z-index: 1;
+      width: $tablet-video-width;
+      height: $tablet-height;
+      left: $tablet-video-margin;
     }
     img{
       width: $tablet-width;
       height: $tablet-height;
-      z-index: 2;
+    }
+  }
+  //PHONE
+  $phone-height: $phone-width * 0.5;
+  $phone-video-margin: $phone-width * 0.04;
+  $phone-video-width: $phone-width * 0.87;
+  $phone-video-height: $phone-width * 0.47;
+  $phone-video-top: $phone-width * 0.01;
+
+  .phone-video{
+    width: $phone-width;
+    height: $phone-height;
+    video, img{
+      width: $phone-width;
+    }
+    video{
+      width: $phone-video-width;
+      height: $phone-video-height;
+      left: $phone-video-margin;
+      top: $phone-video-top;
+    }
+    img{
+      width: $phone-width;
+      height: $phone-height;
     }
   }
 }
