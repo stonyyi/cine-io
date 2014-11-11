@@ -92,14 +92,14 @@ describe 'VodBookkeeper', ->
             date: "Wed Jul 16 2014 20:34:00 GMT+0000 (UTC)"
           }
         ]
-        @listStub.withArgs('/vod_bookkeeper_sandbox/this-pub-key').returns(list)
+        @listStub.withArgs('/cines/this-pub-key').returns(list)
 
       afterEach ->
         @fakeFtpClient.restore()
 
       beforeEach ->
         @mkdirStub = @fakeFtpClient.stub('mkdir')
-        @mkdirStub.withArgs('/vod_bookkeeper_sandbox/this-pub-key')
+        @mkdirStub.withArgs('/cines/this-pub-key')
           .onFirstCall().callsArgWith(1, null)
           .onSecondCall().callsArgWith(1, directoryAlreadyExists)
 
@@ -126,7 +126,7 @@ describe 'VodBookkeeper', ->
           args = @putStub.firstCall.args
           expect(args).to.have.length(3)
           expect(args[0]).to.equal(@targetFile)
-          expect(args[1]).to.equal("/vod_bookkeeper_sandbox/this-pub-key/mystream.20141008T191601.mp4")
+          expect(args[1]).to.equal("/cines/this-pub-key/mystream.20141008T191601.mp4")
           expect(args[2]).to.be.a("function")
           assertFileDeleted(@targetFile, done)
 

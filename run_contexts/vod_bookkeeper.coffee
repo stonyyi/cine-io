@@ -13,8 +13,6 @@ EdgecastRecordings = Cine.server_model('edgecast_recordings')
 makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 
-finalDirectory = "/vod_bookkeeper_sandbox"
-
 class SaveStreamRecording
   constructor: (@fullFilePath, @stream)->
     @fileName = _.last(@fullFilePath.split('/'))
@@ -38,7 +36,7 @@ class SaveStreamRecording
 
   _projectDir: ->
     streamFolder = @project.publicKey
-    projectDir = "#{finalDirectory}/#{streamFolder}"
+    projectDir = "/#{EdgecastFtpInfo.vodDirectory}/#{streamFolder}"
 
   _uploadToProjectDir: (callback)=>
     ftpLocation = "#{@_projectDir()}/#{@fileName}"
