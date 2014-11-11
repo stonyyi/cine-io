@@ -8,10 +8,6 @@ scheduledTasks =
       'stats/calculate_and_save_usage_stats'
       'throttle_accounts_who_cannot_pay_for_overages'
     ]
-  process_new_edgecast_recordings:
-    [
-      'stream_recordings/process_new_edgecast_recordings'
-    ]
 
 runServerLib = (libraryName, payload, callback)->
   console.log("running #{libraryName} with", payload)
@@ -43,8 +39,6 @@ doWork = (jobName, payload, done)->
 doWork.acceptableJobs = [
   'current_environment'
   'update_account_with_heroku_details'
-  'stream_recordings/process_fixed_recordings'
-  'stream_recordings/fix_edgecast_codecs_on_new_stream_recordings'
 ]
 
 otherJobNames = _.keys(scheduledTasks)
