@@ -8,6 +8,9 @@ var React = require('react')
 module.exports = React.createClass({
   displayName: 'Header',
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
+  propTypes: {
+    selected: React.PropTypes.string
+  },
   getInitialState: function(){
     return {expanded: false};
   },
@@ -38,7 +41,7 @@ module.exports = React.createClass({
         <header>
           <nav className={topBarClasses}>
             <Brand app={this.props.app} toggleExpandMenu={this.toggleExpandMenu}/>
-            <LoggedOutHeader app={this.props.app} />
+            <LoggedOutHeader selected={this.props.selected} app={this.props.app} />
           </nav>
         </header>
       );

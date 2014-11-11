@@ -15,7 +15,7 @@ Projects = Cine.collection('projects');
 
 module.exports = React.createClass({
   displayName: 'HomepageShow',
-  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin'), Cine.lib('has_nav')],
+  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
 
   getBackboneObjects: function(){
     return this.props.app.currentUser;
@@ -35,7 +35,7 @@ module.exports = React.createClass({
 
     }else{
       return (
-        <PageWrapper app={this.props.app} wide={true} className="homepage-logged-out">
+        <PageWrapper app={this.props.app} wide={true} fixedNav={true} className="homepage-logged-out">
           <HomeHero app={this.props.app} />
           <About />
           <Libraries />

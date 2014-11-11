@@ -10,3 +10,27 @@ describe 'HomepageController', ->
         expect(err).to.equal(undefined)
         done()
       test('show', params, callback)
+
+  describe '#products', ->
+    it "calls back", (done)->
+      params = {}
+      callback = (err, viewOptions)->
+        expect(err).to.equal(undefined)
+        done()
+      test('products', params, callback)
+
+  describe '#solutions', ->
+    it "calls back", (done)->
+      params = {}
+      callback = (err, viewOptions)->
+        expect(err).to.equal(undefined)
+        done()
+      test('solutions', params, callback)
+
+  describe '#pricing', ->
+    it "calls back", (done)->
+      params = {}
+      callback = (err, viewOptions)->
+        expect(err).to.equal(undefined)
+        done()
+      test('pricing', params, callback)

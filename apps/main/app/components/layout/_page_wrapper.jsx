@@ -14,7 +14,9 @@ module.exports = React.createClass({
   mixins: [Cine.lib('requires_app'), Cine.lib('has_nav')],
   propTypes: {
       wide: React.PropTypes.bool,
-      className: React.PropTypes.string
+      className: React.PropTypes.string,
+      selected: React.PropTypes.string,
+      fixedNav: React.PropTypes.string
   },
   getInitialState: function(){
     return {showingLogo: false};
@@ -39,33 +41,36 @@ module.exports = React.createClass({
     this.setState({showingLogo: scrollOffset >= 45});
   },
   render: function() {
-    var wide = this.props.wide || false
-      , children = wide ?
-        (
-          <div className="wide-container">
-            {this.props.children}
-          </div>
-        ) :
-        (
-          <div className="container">
-            {this.props.children}
-          </div>
-        )
-    var classNameOptions = {
-      fixed: true
-    };
-    classNameOptions[this.props.className] = true;
-    classNameOptions['show-logo'] = this.state.showingLogo;
-    var className = cx(classNameOptions);
+    var
+      wide = this.props.wide || false
+      , children = (wide ?
+        (<div className="wide-container"> {this.props.children} </div>) :
+        (<div className="container"> {this.props.children} </div>)
+      ),
+      classNameOptions = {
+        fixed: !!this.props.fixedNav
+      }, className;
+    if (this.props.className){
+      classNameOptions[this.props.className] = true;
+    }
+    if (this.props.fixedNav){
+      classNameOptions['show-logo'] = this.state.showingLogo;
+      scrollHandler = this.onScroll;
+    } else {
+      classNameOptions['show-logo'] = true;
+      scrollHandler = false;
+    }
+    console.log('classNameOptions', classNameOptions)
+    className = cx(classNameOptions);
 
     return (
-      <div ref="pageWrapper" id="page-layout" onScroll={this.onScroll} className={className}>
+      <div ref="pageWrapper" id="page-layout" onScroll={scrollHandler} className={className}>
         <ModalHolder app={this.props.app} />
         <div className={this.canvasClasses('main-wrapper')}>
           <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
           <FlashHolder app={this.props.app} />
           <div className="inner-wrap">
-            <Header ref="header" app={this.props.app} />
+            <Header ref="header" selected={this.props.selected} app={this.props.app} />
             {children}
           </div>
           <div className='push'/>

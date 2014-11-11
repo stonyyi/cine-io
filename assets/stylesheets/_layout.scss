@@ -198,6 +198,9 @@ ul.dropdown li a.current{
       transition: opacity 500ms ease;
       opacity: 0;
       z-index: -1;
+      a{
+        cursor: default;
+      }
     }
   }
   &.show-logo{
@@ -205,6 +208,9 @@ ul.dropdown li a.current{
     .brand {
         transition: opacity 500ms ease;
         opacity: 1;
+      }
+      a{
+        cursor: pointer;
       }
     }
   }
