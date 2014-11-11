@@ -106,6 +106,9 @@ describe 'VodBookkeeper', ->
       beforeEach ->
         @putStub = @fakeFtpClient.stub('put').callsArg(2)
 
+      beforeEach ->
+        @endSpy = sinon.spy @fakeFtpClient, 'end'
+
       it  "deletes the target file", (done)->
         job = Base.scheduleJob Base.getQueueName('vod_bookkeeper'), file: @targetFile
 
@@ -126,6 +129,15 @@ describe 'VodBookkeeper', ->
           expect(args[1]).to.equal("/vod_bookkeeper_sandbox/this-pub-key/mystream.20141008T191601.mp4")
           expect(args[2]).to.be.a("function")
           assertFileDeleted(@targetFile, done)
+
+      it  "closes the ftp connection", (done)->
+        job = Base.scheduleJob Base.getQueueName('vod_bookkeeper'), file: @targetFile
+
+        job.on 'complete', (err)=>
+          # err is null which is annoying to not get a message
+          expect(err).to.be.null
+          expect(@endSpy.calledOnce).to.be.true
+          done()
 
       it "creates an entry in EdgecastRecordings", (done)->
         job = Base.scheduleJob Base.getQueueName('vod_bookkeeper'), file: @targetFile

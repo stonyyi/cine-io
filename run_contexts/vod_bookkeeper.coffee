@@ -25,7 +25,7 @@ class SaveStreamRecording
     @ftpClient = edgecastFtpClientFactory @callback, @_waterfall
 
   _waterfall: =>
-    waterfallCalls = [@_findStreamProject, @_mkProjectDir, @_uploadToProjectDir, @_addRecordingToEdgecastRecordings, @_deleteOriginal]
+    waterfallCalls = [@_findStreamProject, @_mkProjectDir, @_uploadToProjectDir, @_addRecordingToEdgecastRecordings, @_deleteOriginal, @_closeConnection]
     async.waterfall waterfallCalls, @callback
 
   _findStreamProject: (callback)=>
@@ -60,6 +60,10 @@ class SaveStreamRecording
 
   _deleteOriginal: (callback)=>
     fs.unlink @fullFilePath, callback
+
+  _closeConnection: (callback)=>
+    @ftpClient.end()
+    callback()
 
 class VodBookkeeper
   constructor: (@fileName)->
