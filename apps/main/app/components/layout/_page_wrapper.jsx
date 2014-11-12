@@ -16,7 +16,7 @@ module.exports = React.createClass({
       wide: React.PropTypes.bool,
       className: React.PropTypes.string,
       selected: React.PropTypes.string,
-      fixedNav: React.PropTypes.boolean
+      fixedNav: React.PropTypes.bool
   },
   getInitialState: function(){
     return {showingLogo: false};
