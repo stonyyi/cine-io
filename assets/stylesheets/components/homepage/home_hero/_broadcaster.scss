@@ -1,4 +1,10 @@
 .home-hero{
+  .broadcaster-wrapper{
+    position: relative;
+  }
+  .broadcaster{
+    position: relative;
+  }
   .stage{
     video{
       width: 400px;
@@ -8,7 +14,8 @@
       // transform: perspective(4px) rotateX(0.9deg) skew(0deg, 10deg);
       // transform: skew(0deg, 10deg) rotateZ(14deg);
       &.rotate{
-        width: 200px;
+        padding-left: 20px;
+        width: 130px;
         height: 100px;
         transform: perspective(4px) rotateX(0.2deg) rotateZ(17deg);
       }

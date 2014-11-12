@@ -32,27 +32,31 @@ module.exports = React.createClass({
     var playersClassname = cx(playersClassnameOptions);
     return (
       <div className='home-hero'>
-        <div className="hero-item broadcaster">
-          <div className="hero-image broadcast">
-            <img src="/images/home-hero/cine-broadcast.png" />
+        <div className="hero-item">
+          <div className='table-row broadcaster-wrapper'>
+            <div className="hero-item broadcaster">
+              <div className="hero-image broadcast">
+                <img src="/images/home-hero/cine-broadcast.png" />
+              </div>
+            </div>
+            <div className="hero-item stage">
+              <video className={stageClassName} muted={true} autoPlay={true} loop={true}>
+                <source src="/videos/fireworks.mp4" type="video/mp4" />
+              </video>
+            </div>
           </div>
           <h3>Broadcast</h3>
-          <p>Broadcast using our native SDKs or popular broadcast technologies</p>
+          <p>Broadcast using our native SDKs or popular broadcast software.</p>
         </div>
 
-        <div className="hero-item stage">
-          <video className={stageClassName} muted={true} autoPlay={true} loop={true}>
-            <source src="/videos/fireworks.mp4" type="video/mp4" />
-          </video>
-        </div>
 
         <div className="hero-item arrow">
-          <div className="hero-image arrow">
+          <div className="hero-image">
             <img src="/images/home-hero/cine-arrow.png" />
           </div>
         </div>
         <div className="hero-item cloud">
-          <div className="hero-image cloud">
+          <div className="hero-image">
             <img src="/images/home-hero/cine-cloud.png" />
           </div>
           <h3>Transcode, Record, Distribute</h3>
@@ -60,7 +64,7 @@ module.exports = React.createClass({
         </div>
 
         <div className="hero-item arrow">
-          <div className="hero-image arrow">
+          <div className="hero-image">
             <img src="/images/home-hero/cine-arrow.png" />
           </div>
         </div>

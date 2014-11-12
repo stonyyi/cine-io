@@ -4,7 +4,11 @@
     display: table-cell;
     vertical-align: middle;
   }
+  .table-row{
+    display: table-row;
+  }
 }
 
+@import "home_hero/broadcaster";
+@import "home_hero/cloud";
 @import "home_hero/players";
-@import "home_hero/stage";
