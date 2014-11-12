@@ -1,0 +1,55 @@
+#pricing {
+  background: white;
+  padding-bottom: 2em;
+
+  .info {
+    @include grid-column(12);
+    padding-top: 1.5em;
+
+    h2 {
+      text-align: center;
+    }
+
+    .prices {
+      @include grid-row();
+      margin-top: 1.5em;
+
+      table {
+        width: 100%;
+        th {
+          text-align: center;
+        }
+        td {
+          white-space: nowrap;
+        }
+        td:first-child {
+          font-weight: bold;
+        }
+        td:last-child {
+          .button {
+            width: 100%;
+            margin: 0;
+          }
+        }
+      }
+
+      .overage {
+        font-size: 0.75em;
+      }
+      .cost {
+        font-weight: bold;
+      }
+    }
+
+    .postscript {
+      @include grid-row();
+      div {
+        @include grid-column(6);
+      }
+      .features {
+        text-align: left;
+      }
+    }
+  }
+}
+

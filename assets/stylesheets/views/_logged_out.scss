@@ -168,34 +168,6 @@
       @include block-grid(5);
     }
   }
-  #pricing {
-    background: white;
-    padding-bottom: 2em;
-
-    .info {
-      @include grid-column(12);
-      padding-top: 1.5em;
-
-      .pitch {
-        margin-top: 1em;
-        div {
-          margin-bottom: 2em;
-        }
-
-        .features {
-          text-align: left;
-        }
-      }
-
-      .prices {
-        @include grid-row();
-        margin-top: 1.5em;
-        .plan {
-          @include grid-column(12);
-        }
-      }
-    }
-  }
 
   #consulting {
     background: $scheme-color-north;
@@ -287,30 +259,6 @@
 
       .icon-list {
         @include block-grid(7);
-      }
-    }
-  }
-}
-
-@media #{$large-up} {
-  #homepage-logged-out {
-    #pricing {
-      .info {
-        @include grid-column(10, true, true, 1);
-
-        .pitch {
-          margin-top: 1em;
-          @include grid-column(8, true, true, 2);
-          div {
-            margin-bottom: 2em;
-          }
-        }
-
-        .prices {
-          .plan {
-            @include grid-column(4);
-          }
-        }
       }
     }
   }

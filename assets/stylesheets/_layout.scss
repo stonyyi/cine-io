@@ -8,6 +8,17 @@ html, body {
   -webkit-overflow-scrolling: touch;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: $distinct-font-family;
+}
+
+h1 { font-size: 1.4rem; }
+h2 { font-size: 1.3rem; }
+h3 { font-size: 1.2rem; }
+h4 { font-size: 1.15rem; }
+h5 { font-size: 1.10rem; }
+h6 { font-size: 1.05rem; }
+
 #content, #content > div, #page-layout {
   height: 100%;
 }
