@@ -35,7 +35,9 @@ module.exports = React.createClass({
     }else{
       return (
         <PageWrapper app={this.props.app} wide={true} fixedNav={true} className="homepage-logged-out">
+          <div className="row top-margin-2">
           <HomeHero app={this.props.app} />
+          </div>
           <About />
           <Libraries />
           <Example app={this.props.app}/>

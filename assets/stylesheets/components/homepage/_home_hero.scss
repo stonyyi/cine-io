@@ -1,4 +1,4 @@
-.home-hero{
+.hero-row{
   display: table-row;
   .hero-item{
     display: table-cell;
@@ -10,5 +10,6 @@
 }
 
 @import "home_hero/broadcaster";
+@import "home_hero/arrow";
 @import "home_hero/cloud";
 @import "home_hero/players";
