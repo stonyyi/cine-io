@@ -21,18 +21,6 @@ module.exports = React.createClass({
   getInitialState: function(){
     return {showingLogo: false};
   },
-  // handleScroll: function(event){
-  //   // console.log("scrolling", $(this.refs.pageWrapper.getDOMNode()).scrollTop());
-  //   $(this.refs.pageWrapper.getDOMNode()).scrollTop()
-  // },
-  // componentDidMount: function() {
-  //   console.log("mounting");
-  //   $(this.refs.pageWrapper.getDOMNode()).on('scroll', this.handleScroll);
-  // },
-  // componentWillUnmount: function() {
-  //   console.log("unmounting");
-  //   $(this.refs.pageWrapper.getDOMNode()).off('scroll', this.handleScroll);
-  // },
   onScroll: function(){
     var
       wrapper = this.refs.pageWrapper.getDOMNode(),
