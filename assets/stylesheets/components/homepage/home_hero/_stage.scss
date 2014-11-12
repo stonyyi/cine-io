@@ -1,0 +1,17 @@
+.home-hero{
+  .stage{
+    video{
+      width: 400px;
+      height: 200px;
+      // transform: perspective(4px) rotateX(0.9deg);
+      // transition: 3s;
+      // transform: perspective(4px) rotateX(0.9deg) skew(0deg, 10deg);
+      // transform: skew(0deg, 10deg) rotateZ(14deg);
+      &.rotate{
+        width: 200px;
+        height: 100px;
+        transform: perspective(4px) rotateX(0.2deg) rotateZ(17deg);
+      }
+    }
+  }
+}
