@@ -82,15 +82,15 @@ module.exports = React.createClass({
                   <tr>
                     <td>Startup</td>
                     <td>Unlimited</td>
-                    <td>3 TiB</td>
-                    <td>200 GiB</td>
-                    <td className="cost">$1,000</td>
+                    <td>5 TiB</td>
+                    <td>250 GiB</td>
+                    <td className="cost">$2,000</td>
                     <td><a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'startup', 6)}>Select</a></td>
                   </tr>
                   <tr>
                     <td>Enterprise</td>
                     <td>Unlimited</td>
-                    <td>10 TiB</td>
+                    <td>15 TiB</td>
                     <td>500 GiB</td>
                     <td className="cost">$5,000</td>
                     <td><a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'enterprise', 7)}>Select</a></td>
