@@ -1,3 +1,10 @@
+.home-hero{
+  position: relative;
+  color: white;
+  h3{
+    color: white;
+  }
+}
 .hero-row{
   display: table-row;
   .hero-item{
@@ -9,6 +16,7 @@
   }
 }
 
+@import "home_hero/background";
 @import "home_hero/broadcaster";
 @import "home_hero/arrow";
 @import "home_hero/cloud";

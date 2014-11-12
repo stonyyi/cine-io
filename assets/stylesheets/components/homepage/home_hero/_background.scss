@@ -1,0 +1,16 @@
+.home-hero{
+  .background video{
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    image-fit: fill;
+    object-fit: cover;
+    -webkit-transform:scaleX(2);
+    -moz-transform:scaleX(2);
+    -ms-transform:scaleX(2);
+    transform:scaleX(2);
+  }
+}

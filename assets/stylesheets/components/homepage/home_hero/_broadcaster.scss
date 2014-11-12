@@ -2,10 +2,13 @@
   .broadcast{
     img{
       width: 90px;
+      z-index: 1;
+      position: relative;
     }
   }
   .stage{
     video{
+      border: 1px solid white;
       width: 400px;
       height: 200px;
       // transform: perspective(4px) rotateX(0.9deg);
@@ -13,9 +16,11 @@
       // transform: perspective(4px) rotateX(0.9deg) skew(0deg, 10deg);
       // transform: skew(0deg, 10deg) rotateZ(14deg);
       &.rotate{
+        position: relative;
+        z-index: 0;
         padding-left: 20px;
         width: 130px;
-        height: 100px;
+        height: 73px;
         transform: perspective(4px) rotateX(0.2deg) rotateZ(17deg);
       }
     }

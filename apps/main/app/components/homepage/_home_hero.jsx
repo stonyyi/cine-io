@@ -32,79 +32,89 @@ module.exports = React.createClass({
     var playersClassname = cx(playersClassnameOptions);
     return (
       <div className='home-hero'>
-        <div className="nothing">
-          <div className="hero-row hero-flow">
-            <div className="hero-item">
-              <div className='table-row broadcaster-wrapper'>
-                <div className="hero-item broadcaster">
-                  <div className="hero-image broadcast">
-                    <img src="/images/home-hero/cine-broadcast.png" />
+        <div className="hero-item background">
+          <video muted={true} autoPlay={true} loop={true}>
+            <source src="http://vod.cine.io/homepage/fireworks.webm" type="video/webm" />
+            <source src="http://vod.cine.io/homepage/fireworks2.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        <div className="row">
+
+          <div className="nothing">
+            <div className="hero-row hero-flow">
+              <div className="hero-item">
+                <div className='table-row broadcaster-wrapper'>
+                  <div className="hero-item broadcaster">
+                    <div className="hero-image broadcast">
+                      <img src="/images/home-hero/cine-broadcast.png" />
+                    </div>
+                  </div>
+                  <div className="hero-item stage">
+                    <video className={stageClassName} muted={true} autoPlay={true} loop={true}>
+                      <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
+                      <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
+                    </video>
                   </div>
                 </div>
-                <div className="hero-item stage">
-                  <video className={stageClassName} muted={true} autoPlay={true} loop={true}>
-                    <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
-                    <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
-                  </video>
+              </div>
+              <div className="hero-item arrow">
+                <div className="hero-image">
+                  <img src="/images/home-hero/cine-arrow.png" />
                 </div>
               </div>
-            </div>
-            <div className="hero-item arrow">
-              <div className="hero-image">
-                <img src="/images/home-hero/cine-arrow.png" />
+              <div className="hero-item cloud">
+                <div className="hero-image">
+                  <img src="/images/home-hero/cine-cloud.png" />
+                </div>
               </div>
-            </div>
-            <div className="hero-item cloud">
-              <div className="hero-image">
-                <img src="/images/home-hero/cine-cloud.png" />
-              </div>
-            </div>
 
-            <div className="hero-item arrow">
-              <div className="hero-image">
-                <img src="/images/home-hero/cine-arrow.png" />
+              <div className="hero-item arrow">
+                <div className="hero-image">
+                  <img src="/images/home-hero/cine-arrow.png" />
+                </div>
               </div>
-            </div>
 
-            <div className="hero-item watch">
-              <div className={playersClassname}>
-                <div className="hero-image laptop-video">
-                  <video muted={true} autoPlay={true} loop={true}>
-                    <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
-                    <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
-                  </video>
-                  <img src="/images/home-hero/laptop.png" />
-                </div>
-                <div className="hero-image tablet-video">
-                  <video muted={true} autoPlay={true} loop={true}>
-                    <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
-                    <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
-                  </video>
-                  <img src="/images/home-hero/tablet.png" />
-                </div>
-                <div className="hero-image phone-video">
-                  <video muted={true} autoPlay={true} loop={true}>
-                    <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
-                    <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
-                  </video>
-                  <img src="/images/home-hero/phone.png" />
+              <div className="hero-item watch">
+                <div className={playersClassname}>
+                  <div className="hero-image laptop-video">
+                    <video muted={true} autoPlay={true} loop={true}>
+                      <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
+                      <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
+                    </video>
+                    <img src="/images/home-hero/laptop.png" />
+                  </div>
+                  <div className="hero-image tablet-video">
+                    <video muted={true} autoPlay={true} loop={true}>
+                      <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
+                      <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
+                    </video>
+                    <img src="/images/home-hero/tablet.png" />
+                  </div>
+                  <div className="hero-image phone-video">
+                    <video muted={true} autoPlay={true} loop={true}>
+                      <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
+                      <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
+                    </video>
+                    <img src="/images/home-hero/phone.png" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className='hero-row hero-text'>
-          <div className="hero-item">
-            <h3>Broadcast</h3>
-            <p>Broadcast using our native SDKs or popular broadcast software.</p>
-          </div>
-          <div className='hero-item'>
-            <h3>Transcode, Record, Distribute</h3>
-            <p>Automatic transcoding and transmuxing for playback on any device. Record directly to the cloud.</p>
-          </div>
-          <div className='hero-item'>
-            <h3>Watch</h3>
-            <p>View your content live or at a later time on any device.</p>
+          <div className='hero-row hero-text'>
+            <div className="hero-item">
+              <h3>Broadcast</h3>
+              <p>Broadcast using our native SDKs or popular broadcast software.</p>
+            </div>
+            <div className='hero-item'>
+              <h3>Transcode, Record, Distribute</h3>
+              <p>Automatic transcoding and transmuxing for playback on any device. Record directly to the cloud.</p>
+            </div>
+            <div className='hero-item'>
+              <h3>Watch</h3>
+              <p>View your content live or at a later time on any device.</p>
+            </div>
           </div>
         </div>
       </div>
