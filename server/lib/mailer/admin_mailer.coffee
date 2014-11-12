@@ -30,13 +30,16 @@ exports.throttledAccount = (account, callback=noop)->
     """
   sendAdminEmail mailOptions, callback
 
-exports.newUser = (user, context, callback=noop)->
+exports.newUser = (account, user, context, callback=noop)->
+  userAttributes = _.pick user, 'name', 'email', 'githubData', 'appdirectData', 'createdAtIP'
+  accountAttributes = _.pick account, 'name', 'billingEmail', 'plans', 'herokuId', 'engineyardId'
   mailOptions =
     subject: '[KPI] New User'
     content: """
     <p>A new user just signed up!</p>
     <p>Context: #{context}!</p>
-    <p><pre>#{util.inspect(user)}</pre></p>
+    <p>User:<pre>#{util.inspect(userAttributes)}</pre></p>
+    <p>Account:<pre>#{util.inspect(accountAttributes)}</pre></p>
     """
   sendAdminEmail mailOptions, callback
 

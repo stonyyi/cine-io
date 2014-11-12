@@ -7,6 +7,7 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 login = Cine.require 'test/helpers/login_helper'
 expectSentryLog = Cine.require('test/helpers/expect_sentry_log')
+assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 
 describe 'local authentication', ->
 
@@ -48,6 +49,15 @@ describe 'local authentication', ->
             expect(response.email).to.equal('the email')
             done(err)
 
+    it 'issues a remember me token on success', (done)->
+      login @agent, @user, 'the pass', (err, res)=>
+        remember_me = res.headers['set-cookie'][0]
+        token = remember_me.match(/remember_me=([^;]+)/)[1]
+        expect(token.length).to.equal(64)
+        RememberMeToken.findOne token: token, (err, rmt)=>
+          expect(rmt._user.toString()).to.equal(@user._id.toString())
+          done(err)
+
     describe 'failure', ->
 
       expectSentryLog()
@@ -62,15 +72,6 @@ describe 'local authentication', ->
             expect(res.text).to.equal('Incorrect email/password.')
             done(err)
 
-    it 'issues a remember me token on success', (done)->
-      login @agent, @user, 'the pass', (err, res)=>
-        remember_me = res.headers['set-cookie'][0]
-        token = remember_me.match(/remember_me=([^;]+)/)[1]
-        expect(token.length).to.equal(64)
-        RememberMeToken.findOne token: token, (err, rmt)=>
-          expect(rmt._user.toString()).to.equal(@user._id.toString())
-          done(err)
-
 
   describe 'new user', ->
 
@@ -79,6 +80,7 @@ describe 'local authentication', ->
       @stream.save done
 
     stubEdgecast()
+    assertEmailSent.admin 'newUser'
 
     it 'returns the user', (done)->
       login @agent, 'new email', 'new pass', 'solo', (err, res)->

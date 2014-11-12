@@ -52,7 +52,7 @@ createNewUser = (profile, plan, accessToken, req, callback)->
     createNewAccount accountAttributes, userAttributes, (err, results)->
       # console.log("CREATED GITHUB ACCOUNT", err, results)
       mailer.welcomeEmail(results.user)
-      mailer.admin.newUser(results.user, 'github')
+      mailer.admin.newUser(results.account, results.user, 'github')
       callback(err, results.user)
 
   return saveUser() if email

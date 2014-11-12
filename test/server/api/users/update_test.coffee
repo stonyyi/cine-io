@@ -87,7 +87,6 @@ describe 'Users#update', ->
 
   describe 'completedsignup', ->
     assertEmailSent 'welcomeEmail'
-    assertEmailSent.admin 'newUser'
 
     it 'updates the account name', (done)->
       params = {id: @user._id, name: 'My Name', completedsignup: 'local'}
@@ -106,8 +105,6 @@ describe 'Users#update', ->
       callback = (err, response)=>
         expect(@mailerSpies[0].calledOnce).to.be.true
         expect(@mailerSpies[0].firstCall.args[0].name).to.equal("My Name")
-        expect(@mailerSpies[1].calledOnce).to.be.true
-        expect(@mailerSpies[1].firstCall.args[0].name).to.equal("My Name")
         done()
 
       UpdateUser params, session, callback

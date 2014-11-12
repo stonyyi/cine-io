@@ -15,7 +15,7 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
     it 'sends a welcome email', (done)->
       findOrCreateResourcesFromHerokuAndEngineYard.newHerokuAccount 'new-heroku-user@heroku.com', 'pro', (err, @user, @project)=>
         expect(@mailerSpies[0].firstCall.args[0].name).to.equal("new-heroku-user")
-        expect(@mailerSpies[0].firstCall.args[1]).to.equal("heroku")
+        expect(@mailerSpies[0].firstCall.args[2]).to.equal("heroku")
         done(err)
 
     describe "without a new stream", ->
@@ -67,7 +67,7 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
     it 'sends a welcome email', (done)->
       findOrCreateResourcesFromHerokuAndEngineYard.newEngineYardAccount '9141-cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp', 'pro', (err, @user, @project)=>
         expect(@mailerSpies[0].firstCall.args[0].name).to.equal("cine.io_cineiosinatraexampleapp_cineiosinatraexampleapp")
-        expect(@mailerSpies[0].firstCall.args[1]).to.equal("engineyard")
+        expect(@mailerSpies[0].firstCall.args[2]).to.equal("engineyard")
         done(err)
 
     describe "without a new stream", ->

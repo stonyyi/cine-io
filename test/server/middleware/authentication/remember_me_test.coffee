@@ -4,6 +4,7 @@ RememberMeToken = Cine.server_model('remember_me_token')
 User = Cine.server_model('user')
 app = Cine.require('app').app
 login = Cine.require 'test/helpers/login_helper'
+assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 
 describe 'RememberMe', ->
 
@@ -11,6 +12,8 @@ describe 'RememberMe', ->
 
     app.get '/whoami', (req, res)->
       res.send(req.currentUser)
+
+    assertEmailSent.admin 'newUser'
 
     beforeEach (done)->
       @agent = supertest.agent(app)

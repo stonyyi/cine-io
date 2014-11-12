@@ -5,6 +5,7 @@ createNewToken = Cine.middleware('authentication/remember_me').createNewToken
 ProjectCreate = Cine.api('projects/create')
 createNewAccount = Cine.server_lib('create_new_account')
 fullCurrentUserJSON = Cine.server_lib('full_current_user_json')
+mailer = Cine.server_lib('mailer')
 
 createNewUser = (email, cleartextPassword, req, callback)->
   accountAttributes =
@@ -17,6 +18,7 @@ createNewUser = (email, cleartextPassword, req, callback)->
     createdAtIP: req.ip
   createNewAccount accountAttributes, userAttributes, (err, results)->
     return callback(err) if err
+    mailer.admin.newUser(results.account, results.user, 'local')
     callback(null, results.user)
 
 validatePasswordOfExistingUser = (user, cleartextPassword, req, callback)->

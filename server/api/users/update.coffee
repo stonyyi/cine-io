@@ -36,7 +36,6 @@ updateUser.doUpdate = (params, callback)->
           callback(err, fullCurrentUserJson)
       if params.completedsignup
         mailer.welcomeEmail(user)
-        mailer.admin.newUser(user, params.completedsignup)
         updateAccountName user, done
       else
         done()

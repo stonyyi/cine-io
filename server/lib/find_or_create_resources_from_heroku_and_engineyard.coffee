@@ -29,7 +29,7 @@ exports.newHerokuAccount = (herokuId, plan, callback)->
   userAttributes = {}
   createNewAccount accountAttributes, userAttributes, projectAttributes, (err, results)->
     return callback(err) if err
-    mailer.admin.newUser(results.account, 'heroku')
+    mailer.admin.newUser(results.account, null, 'heroku')
     callback(null, results.account, results.project)
 
 exports.newEngineYardAccount = (engineyardId, plan, callback)->
@@ -43,7 +43,7 @@ exports.newEngineYardAccount = (engineyardId, plan, callback)->
   userAttributes = {}
   createNewAccount accountAttributes, userAttributes, projectAttributes, (err, results)->
     return callback(err) if err
-    mailer.admin.newUser(results.account, 'engineyard')
+    mailer.admin.newUser(results.account, null, 'engineyard')
     callback(null, results.account, results.project)
 
 # callback(err, user)

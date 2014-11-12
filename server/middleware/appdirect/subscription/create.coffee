@@ -33,7 +33,7 @@ createSubscription = (req, res)->
       console.log("DONE", err, result)
       return sendAppdirectResponse(res, 'unknownError') if err
       mailer.welcomeEmail(result.user)
-      mailer.admin.newUser(result.user, 'appdirect')
+      mailer.admin.newUser(result.account, result.user, 'appdirect')
       sendAppdirectResponse(res, 'accountCreated', result.account)
 
 module.exports = (app)->
