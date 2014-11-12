@@ -43,7 +43,7 @@ module.exports = React.createClass({
                 </div>
                 <div className="hero-item stage">
                   <video className={stageClassName} muted={true} autoPlay={true} loop={true}>
-                    <source src="/videos/fireworks.mp4" type="video/mp4" />
+                    <source src="http://vod.cine.io/homepage/fireworks.mp4" type="video/mp4" />
                   </video>
                 </div>
               </div>
@@ -69,19 +69,19 @@ module.exports = React.createClass({
               <div className={playersClassname}>
                 <div className="hero-image laptop-video">
                   <video muted={true} autoPlay={true} loop={true}>
-                    <source src="/videos/fireworks.mp4" type="video/mp4" />
+                    <source src="http://vod.cine.io/homepage/fireworks.mp4" type="video/mp4" />
                   </video>
                   <img src="/images/home-hero/laptop.png" />
                 </div>
                 <div className="hero-image tablet-video">
                   <video muted={true} autoPlay={true} loop={true}>
-                    <source src="/videos/fireworks.mp4" type="video/mp4" />
+                    <source src="http://vod.cine.io/homepage/fireworks.mp4" type="video/mp4" />
                   </video>
                   <img src="/images/home-hero/tablet.png" />
                 </div>
                 <div className="hero-image phone-video">
                   <video muted={true} autoPlay={true} loop={true}>
-                    <source src="/videos/fireworks.mp4" type="video/mp4" />
+                    <source src="http://vod.cine.io/homepage/fireworks.mp4" type="video/mp4" />
                   </video>
                   <img src="/images/home-hero/phone.png" />
                 </div>
