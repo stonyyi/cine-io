@@ -4,6 +4,11 @@ module.exports =
   'cine.io':
     url: 'https://www.cine.io'
     plans:
+      free:
+        streams: 1
+        price: 0
+        bandwidth: humanizeBytes.GiB
+        storage: 0
       developer:
         order: 10
         streams: 1

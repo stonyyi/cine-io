@@ -67,8 +67,9 @@ module.exports = React.createClass({
   render: function() {
 
     var
+      planOptions = _.chain(ProvidersAndPlans['cine.io'].plans).pairs().filter(function(planNameDetails){return planNameDetails[1].order}).value(),
       cinePlans = _.sortBy(
-        _.map(_.pairs(ProvidersAndPlans['cine.io'].plans), function(nameValue) {
+        _.map(planOptions, function(nameValue) {
           nameValue[1].name = nameValue[0];
           return nameValue[1];
         }),
