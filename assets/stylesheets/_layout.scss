@@ -234,6 +234,25 @@ header {
     line-height: $topbar-height;
     color: $topbar-dropdown-link-color;
   }
+
+  .top-bar-section {
+    .outlined {
+      margin: 5px;
+      border: 1px solid white;
+      border-radius: 3px;
+      a:not(.button), a:not(.button):hover {
+        background: transparent;
+        display: inline-block;
+        margin: -6px 5px;
+      }
+      a:not(.button):hover {
+        color: $scheme-color-north-bright;
+      }
+    }
+    .outlined:hover {
+      border-color: $scheme-color-north-bright;
+    }
+  }
 }
 
 footer {

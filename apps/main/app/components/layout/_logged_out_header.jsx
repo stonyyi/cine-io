@@ -20,7 +20,9 @@ module.exports = React.createClass({
     return (
       <section className="top-bar-section">
         <ul className="right show-for-large-up">
-          <li className="active"><a onClick={this.login}>Sign In or Sign Up</a></li>
+          <li className="outlined">
+            <a onClick={this.login}>Sign In or Sign Up</a>
+          </li>
         </ul>
         <ul className="right show-for-large-up">
         <li className={productsClass}><a href="/products">Products</a></li>
