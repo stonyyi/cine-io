@@ -76,6 +76,8 @@ $scheme-color-southwest-bright: scale-color($scheme-color-southwest, $lightness:
 $scheme-color-west-bright: scale-color($scheme-color-west, $lightness: 25%);
 $scheme-color-northwest-bright: scale-color($scheme-color-northwest, $lightness: 25%);
 
+$light-green-color: #90c9c6;
+
 // We use these as default colors throughout
 // $primary-color: #008CBA;
 $primary-color: $scheme-color-north;

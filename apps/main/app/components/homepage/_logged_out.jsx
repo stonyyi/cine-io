@@ -7,55 +7,6 @@ var React = require('react'),
   PublishCodeExample = Cine.component('homepage/code_examples/_publish');
 
 
-exports.HomeHero = React.createClass({
-  displayName: 'HomeHero',
-  mixins: [Cine.lib('requires_app')],
-
-  getApiKey: function(e){
-    e.preventDefault();
-
-    this.props.app.tracker.getApiKey({value: 0});
-    this.props.app.trigger('show-login');
-  },
-  showSignIn: function(e){
-    e.preventDefault();
-    this.props.app.trigger('show-login');
-  },
-  revealAbout: function(e){
-    e.preventDefault();
-    $('#homepage-logged-out').scrollTo('#about', 250);
-    window.history.pushState(null, "#about", "#about");
-  },
-  render: function() {
-    var squareSize = 32;
-
-    return (
-      <section id="home-hero">
-        <div className="row">
-          <div className="info">
-            <a href="/" title="cine.io">
-              <h1 className="brand">cine.io</h1>
-            </a>
-            <h2 className="subtitle">Build powerful live-streaming apps.</h2>
-            <h3 className="pitch">Get started for free.</h3>
-            <div className="actions">
-              <a href="" onClick={this.getApiKey} className="button radius">Get API Key</a><br/>
-              <a href="" className="sign-in-link" onClick={this.showSignIn}>Already a customer? Sign in.</a>
-            </div>
-          </div>
-        </div>
-
-        <div className="scrollhint">
-          <a href="" onClick={this.revealAbout}>
-            Learn More<br/>
-            <i className="fa fa-caret-down"></i>
-          </a>
-        </div>
-      </section>
-    );
-  }
-});
-
 exports.About = React.createClass({
   displayName: 'About',
   render: function() {

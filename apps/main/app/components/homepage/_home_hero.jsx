@@ -7,12 +7,6 @@ module.exports = React.createClass({
   displayName: 'HomeHero',
   mixins: [],
   render: function() {
-    // <div className="hero-image broadcast"><img src="/images/home-hero/cine-broadcast.png" /></div>
-    // <div className="hero-image arrow"><img src="/images/home-hero/cine-arrow.png" /></div>
-    // <div className="hero-image cloud"><img src="/images/home-hero/cine-cloud.png" /></div>
-    // <div className="hero-image arrow"><img src="/images/home-hero/cine-arrow.png" /></div>
-    // <div className="hero-image play"><img src="/images/home-hero/cine-play.png" /></div>
-
     var arrows = (
       <div className="hero-item arrows">
         <div className="arrow"></div>
@@ -28,10 +22,9 @@ module.exports = React.createClass({
           <a href="/" title="cine.io">
             <h1 className="brand">cine.io</h1>
           </a>
-          <h3>Build powerful video apps. Like fer all yer porn.</h3>
+          <h3>Build powerful video apps.</h3>
         </div>
         <div className="row">
-
           <div>
             <div className="hero-row hero-flow">
               <div className="hero-item broadcaster-wrapper">
@@ -87,26 +80,33 @@ module.exports = React.createClass({
               </div>
             </div>
           </div>
+
           <div className="hero-text-wrapper">
             <div className='hero-row hero-text'>
               <div className="hero-item broadcaster-wrapper">
                 <div>
-                  <h3>Broadcast</h3>
-                  <p>Broadcast using our native SDKs or popular broadcast software.</p>
+                  <h4>Broadcast</h4>
+                  <p>Broadcast using our native SDKs or any broadcast software that supports RTMP.</p>
                 </div>
               </div>
               <div className='hero-item cloud'>
                 <div>
-                  <h3>Transcode, Record, Distribute</h3>
-                  <p>Automatic transcoding and transmuxing for playback on any device. Record directly to the cloud.</p>
+                  <h4>Transcode and Store</h4>
+                  <p>Automatic transcoding and transmuxing for mobile playback. Record directly to the cloud.</p>
                 </div>
               </div>
               <div className='hero-item players'>
                 <div>
-                  <h3>Watch</h3>
-                  <p>View your content live or at a later time on any device.</p>
+                  <h4>Watch Anywhere</h4>
+                  <p>View your content live or at a later time on any device using our global CDN.</p>
                 </div>
               </div>
+            </div>
+
+            <div className="text-center">
+               <a className="button radius secondary" href="#">
+                 Get Free API Key
+               </a>
             </div>
           </div>
         </div>

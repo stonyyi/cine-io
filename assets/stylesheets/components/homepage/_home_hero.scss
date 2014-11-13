@@ -2,8 +2,12 @@
   position: relative;
   color: white;
   background: #128c87;
-  h3{
+  h3, h4 {
+    font-family: $distinct-font-family;
     color: white;
+  }
+  h4 {
+    text-transform: uppercase;
   }
   .row{
     padding-top: 50px;
@@ -31,10 +35,14 @@
     }
     $grid-item-width: 146px;
     .broadcaster-wrapper{
-      width: $grid-item-width * 2;
+      width: $grid-item-width * 3;
+      text-align: center;
+      div {
+        display: inline-block;
+      }
     }
     .arrows {
-      width: $grid-item-width;
+      width: $grid-item-width + 20px;
       padding: 0px 20px;
     }
     .cloud{
@@ -43,16 +51,17 @@
   }
   &.hero-text{
     $grid-item-width: 146px;
+    color: $light-green-color;
     text-align: center;
     padding-top: 20px;
     .broadcaster-wrapper{
-      width: $grid-item-width * 2 + 20px;
+      width: $grid-item-width * 3;
       padding-right: 20px;
     }
     .cloud {
       width: $grid-item-width * 4;
-      padding-left: 84px;
-      padding-right: 55px;
+      padding-left: 60px;
+      padding-right: 60px;
     }
     .players{
       width: $grid-item-width * 3;
