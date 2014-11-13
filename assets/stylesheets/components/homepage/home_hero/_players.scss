@@ -1,5 +1,5 @@
 .home-hero{
-  $full-width: 300px;
+  $full-width: 146px * 2;
 
   $full-height: $full-width * 0.65;
   $laptop-width: $full-width * 0.76;
@@ -11,9 +11,6 @@
     width: $full-width;
     height: $full-height;
     position: relative;
-    &.invisible{
-      visibility: hidden;
-    }
     img, video{
       position: absolute;
       top: 0;

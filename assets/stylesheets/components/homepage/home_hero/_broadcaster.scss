@@ -8,20 +8,10 @@
   }
   .stage{
     video{
-      border: 1px solid white;
-      width: 400px;
-      height: 200px;
-      // transform: perspective(4px) rotateX(0.9deg);
-      // transition: 3s;
-      // transform: perspective(4px) rotateX(0.9deg) skew(0deg, 10deg);
-      // transform: skew(0deg, 10deg) rotateZ(14deg);
-      &.rotate{
-        position: relative;
-        z-index: 0;
-        width: 130px;
-        height: 73px;
-        transform: perspective(4px) rotateX(0.2deg) rotateZ(17deg);
-      }
+      width: 93px;
+      height: 49px;
+      transform: perspective(6px) rotateY(-3deg);
     }
   }
+
 }

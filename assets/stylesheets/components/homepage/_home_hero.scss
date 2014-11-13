@@ -1,6 +1,7 @@
 .home-hero{
   position: relative;
   color: white;
+  background: #128c87;
   h3{
     color: white;
   }
@@ -8,20 +9,58 @@
     padding-top: 50px;
     padding-bottom: 35px;
   }
+  .hero-text-wrapper{
+    margin-top: 20px;
+  }
+
 }
 .hero-row{
   display: table-row;
   .hero-item{
     display: table-cell;
-    vertical-align: middle;
   }
   .table-row{
     display: table-row;
+  }
+  &.hero-flow{
+    .hero-item{
+      vertical-align: middle;
+    }
+    $grid-item-width: 146px;
+    .broadcaster-wrapper{
+      width: $grid-item-width * 2;
+    }
+    .rings {
+      width: $grid-item-width;
+      padding: 0px 20px;
+    }
+    .cloud{
+      width: $grid-item-width * 4;
+    }
+  }
+  &.hero-text{
+    $grid-item-width: 146px;
+    text-align: center;
+    padding-top: 20px;
+    .broadcaster-wrapper{
+      width: $grid-item-width * 2 + 20px;
+      padding-right: 20px;
+    }
+    .cloud {
+      width: $grid-item-width * 4;
+      padding-left: 84px;
+      padding-right: 55px;
+    }
+    .players{
+      width: $grid-item-width * 3;
+      padding-left: 76px;
+    }
   }
 }
 
 @import "home_hero/background";
 @import "home_hero/broadcaster";
 @import "home_hero/arrow";
+@import "home_hero/rings";
 @import "home_hero/cloud";
 @import "home_hero/players";
