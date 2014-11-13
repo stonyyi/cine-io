@@ -26,7 +26,7 @@ module.exports = React.createClass({
                 <li><a target="_blank" href="http://devchat.cine.io/">Developer Chat</a></li>
                 <li><a target="_blank" href="https://cineio.uservoice.com/">Get Support</a></li>
                 <li><a target="_blank" href="https://cineio.uservoice.com/">Give us Feedback</a></li>
-                <li><a href="https://status.cine.io/">API Status</a></li>
+                <li><a href="http://status.cine.io/1228453">API Status</a></li>
               </ul>
             </div>
             <div className="developers">
