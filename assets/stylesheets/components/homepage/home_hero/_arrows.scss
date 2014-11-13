@@ -1,8 +1,8 @@
 .home-hero{
-  // .rings{
+  // .arrows{
   //   padding-left: 27px;
   // }
-  .ring {
+  .arrow {
   width: 0;
   height: 0;
   border-top: 18px solid transparent;
@@ -14,20 +14,20 @@
   border-left: 18px solid;
 }
 
-  .ring:nth-child(3n+1) {
+  .arrow:nth-child(3n+1) {
     -webkit-animation-delay: 0s;
     -moz-animation-delay: 0s;
   }
-  .ring:nth-child(3n+2) {
+  .arrow:nth-child(3n+2) {
     -webkit-animation-delay: 0.5s;
     -moz-animation-delay: 0.5s;
   }
-  .ring:nth-child(3n+3) {
+  .arrow:nth-child(3n+3) {
     -webkit-animation-delay: 1s;
     -moz-animation-delay: 1s;
   }
 
-  .ring:nth-child(3n+4) {
+  .arrow:nth-child(3n+4) {
     -webkit-animation-delay: 1.5s;
     -moz-animation-delay: 1.5s;
   }

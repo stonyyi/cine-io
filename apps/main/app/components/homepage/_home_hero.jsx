@@ -13,12 +13,12 @@ module.exports = React.createClass({
     // <div className="hero-image arrow"><img src="/images/home-hero/cine-arrow.png" /></div>
     // <div className="hero-image play"><img src="/images/home-hero/cine-play.png" /></div>
 
-    var rings = (
-      <div className="hero-item rings">
-        <div className="ring"></div>
-        <div className="ring"></div>
-        <div className="ring"></div>
-        <div className="ring"></div>
+    var arrows = (
+      <div className="hero-item arrows">
+        <div className="arrow"></div>
+        <div className="arrow"></div>
+        <div className="arrow"></div>
+        <div className="arrow"></div>
       </div>
     );
     return (
@@ -49,14 +49,16 @@ module.exports = React.createClass({
                   </div>
                 </div>
               </div>
-              {rings}
+
+              {arrows}
+
               <div className="hero-item cloud">
                 <div className="hero-image">
                   <img src="/images/home-hero/cine-cloud.png" />
                 </div>
               </div>
 
-              {rings}
+              {arrows}
 
               <div className="hero-item watch">
                 <div className="players">
