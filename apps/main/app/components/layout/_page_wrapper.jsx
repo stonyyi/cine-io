@@ -47,6 +47,7 @@ module.exports = React.createClass({
     }
     if (this.props.fixedNav){
       classNameOptions['show-logo'] = this.state.showingLogo;
+      classNameOptions['hide-logo'] = !this.state.showingLogo;
       scrollHandler = this.onScroll;
     } else {
       classNameOptions['show-logo'] = true;

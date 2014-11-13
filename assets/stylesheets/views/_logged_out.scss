@@ -1,273 +1,288 @@
 .homepage-logged-out {
-  header{
-    margin-bottom: 0;
-  }
+//   header{
+//     margin-bottom: 0;
+//   }
   .wide-container{
     padding: 0 !important;
   }
-
-
-  &.move-right{
-    overflow: hidden;
-  }
-
-  .gist table{
-    width: 100%;
-    margin-bottom: 0;
-  }
-
-  h3 {
-    font-family: $distinct-font-family;
-    font-weight: bold;
-  }
-
-
-  #about {
-    background: $scheme-color-north;
-    color: white;
-    padding-bottom: 2em;
-
-    iframe {
-      min-height: 178px;
-      width: 100%;
+  &.hide-logo{
+    header{
+      z-index: 5;
+      background-color: $scheme-color-north;
     }
-
-    .info {
-      @include grid-column(12);
-      padding-top: 1.5em;
-
-      h2, h2 * {
-        color: $scheme-color-north-bright;
-      }
-    }
-
-    .hook {
-      text-transform: uppercase;
-      a {
-        color: white;
-        text-shadow: 0px 2px 2px black;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-    }
-
-    .video {
-      position: relative;
-      width: 100%;
-      background: black;
-
-      .aspect-ratio {
-        padding-top: 75%;
-      }
-
-      p {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        text-align: center;
-        color: white;
-        text-transform: uppercase;
-        padding-top: 30%;
-      }
+    .top-bar, .top-bar-section ul, .top-links li a{
+      background-color: $scheme-color-north;
+      transition: background-color 500ms ease;
     }
   }
-
-  #example {
-    padding-top: 1.5em;
-
-    background: #ccc;
-    pre {
-      border: 2px solid white;
-      border-radius: 6px;
-    }
-
-    .head-script {
-      @include grid-column(12);
-    }
-
-    .publish-script {
-      @include grid-column(12);
-    }
-
-    .play-script {
-      @include grid-column(12);
-    }
-    .aspect-wrapper{
-      display: inline-block;
-      position: relative;
-      width: 100%;
-      &:after {
-        padding-top: 56.25%; // 16:9 ratio
-        display: block;
-        content: '';
-      }
-      .main {
-        position: absolute;
-        top: 0; bottom: 0; right: 0; left: 0; // fill parent
-        background-color: black;
-      }
-      .center-wrapper{
-        display: table;
-        height: 100%;
-        width: 100%
-      }
-      .center-content{
-        display: table-cell;
-        vertical-align: middle;
-        text-align: center;
-      }
-      p{
-        color: white;
-      }
-    }
-  }
-
-  #libraries, #marketplaces{
-    padding-top: 1.5em;
-
-    .developer-actions {
-      @include grid-row();
-      div {
-        @include grid-column(12);
-        a.button {
-          width: 100%;
-        }
-      }
-    }
-  }
-  #libraries {
-    position: relative;
-    background-color: white;
-    ul{
-      li{
-        img{
-          width: 32px;
-          height: 32px;
-        }
-      }
-    }
-
-    .icon-list {
-      @include block-grid(6);
-    }
-  }
-  #marketplaces {
-    background: #ccc;
-    ul{
-      li{
-        img{
-          width: 48px;
-          height: 48px;
-        }
-      }
-    }
-    .icon-list {
-      @include block-grid(5);
-    }
-  }
-
-  #consulting {
-    background: $scheme-color-north;
-    color: white;
-
-    .info {
-      @include grid-column(12);
-      padding-top: 1.5em;
-
-      a, h2, h2 * {
-        color: $scheme-color-north-bright;
-      }
-
-      a.button {
-        color: black;
-      }
+  &.show-logo{
+    .top-bar, .top-bar-section ul, .top-links li a{
+      transition: background-color 500ms ease;
     }
   }
 }
 
+//   &.move-right{
+//     overflow: hidden;
+//   }
 
-@media #{$medium-up} {
-  #homepage-logged-out {
-    #home-hero {
-      background-image: url(/images/home-hero-tablet.jpg);
+//   .gist table{
+//     width: 100%;
+//     margin-bottom: 0;
+//   }
 
-      .info {
-        @include grid-column(8, true);
-        padding-top: 5em;
+//   h3 {
+//     font-family: $distinct-font-family;
+//     font-weight: bold;
+//   }
 
-        .pitch {
-          font-size: $h1-font-size;
-        }
-      }
-    }
 
-    #about {
-      .info {
-        @include grid-column(8, true, true, 2);
-      }
-    }
+//   #about {
+//     background: $scheme-color-north;
+//     color: white;
+//     padding-bottom: 2em;
 
-    #example {
-      .head-script {
-        @include grid-column(12);
-      }
+//     iframe {
+//       min-height: 178px;
+//       width: 100%;
+//     }
 
-      .publish-script {
-        @include grid-column(6);
-      }
+//     .info {
+//       @include grid-column(12);
+//       padding-top: 1.5em;
 
-      .play-script {
-        @include grid-column(6);
-      }
-    }
+//       h2, h2 * {
+//         color: $scheme-color-north-bright;
+//       }
+//     }
 
-    #libraries {
-      .developer-actions {
-        div {
-          @include grid-column(4, false, false, 2);
-          a.button {
-            width: 100%;
-          }
-        }
-        div:last-child {
-          @include grid-column(4, true, false, 0);
-        }
-      }
-    }
-    #marketplaces{
-      ul {
-        li {
-          img {
-            width: 96px;
-            height: 96px;
-          }
-        }
-      }
-    }
-    #libraries {
-      ul {
-        li {
-          img {
-            width: 64px;
-            height: 64px;
-          }
-        }
-      }
+//     .hook {
+//       text-transform: uppercase;
+//       a {
+//         color: white;
+//         text-shadow: 0px 2px 2px black;
+//       }
+//       a:hover {
+//         text-decoration: underline;
+//       }
+//     }
 
-      .icon-list {
-        @include block-grid(7);
-      }
-    }
-  }
-}
+//     .video {
+//       position: relative;
+//       width: 100%;
+//       background: black;
 
-@media #{$large-up} {
-  #homepage-logged-out {
-    #home-hero {
-      background-image: url(/images/home-hero-desktop.jpg);
-    }
-  }
-}
+//       .aspect-ratio {
+//         padding-top: 75%;
+//       }
+
+//       p {
+//         position: absolute;
+//         top: 0;
+//         bottom: 0;
+//         left: 0;
+//         right: 0;
+//         text-align: center;
+//         color: white;
+//         text-transform: uppercase;
+//         padding-top: 30%;
+//       }
+//     }
+//   }
+
+//   #example {
+//     padding-top: 1.5em;
+
+//     background: #ccc;
+//     pre {
+//       border: 2px solid white;
+//       border-radius: 6px;
+//     }
+
+//     .head-script {
+//       @include grid-column(12);
+//     }
+
+//     .publish-script {
+//       @include grid-column(12);
+//     }
+
+//     .play-script {
+//       @include grid-column(12);
+//     }
+//     .aspect-wrapper{
+//       display: inline-block;
+//       position: relative;
+//       width: 100%;
+//       &:after {
+//         padding-top: 56.25%; // 16:9 ratio
+//         display: block;
+//         content: '';
+//       }
+//       .main {
+//         position: absolute;
+//         top: 0; bottom: 0; right: 0; left: 0; // fill parent
+//         background-color: black;
+//       }
+//       .center-wrapper{
+//         display: table;
+//         height: 100%;
+//         width: 100%
+//       }
+//       .center-content{
+//         display: table-cell;
+//         vertical-align: middle;
+//         text-align: center;
+//       }
+//       p{
+//         color: white;
+//       }
+//     }
+//   }
+
+//   #libraries, #marketplaces{
+//     padding-top: 1.5em;
+
+//     .developer-actions {
+//       @include grid-row();
+//       div {
+//         @include grid-column(12);
+//         a.button {
+//           width: 100%;
+//         }
+//       }
+//     }
+//   }
+//   #libraries {
+//     position: relative;
+//     background-color: white;
+//     ul{
+//       li{
+//         img{
+//           width: 32px;
+//           height: 32px;
+//         }
+//       }
+//     }
+
+//     .icon-list {
+//       @include block-grid(6);
+//     }
+//   }
+//   #marketplaces {
+//     background: #ccc;
+//     ul{
+//       li{
+//         img{
+//           width: 48px;
+//           height: 48px;
+//         }
+//       }
+//     }
+//     .icon-list {
+//       @include block-grid(5);
+//     }
+//   }
+
+//   #consulting {
+//     background: $scheme-color-north;
+//     color: white;
+
+//     .info {
+//       @include grid-column(12);
+//       padding-top: 1.5em;
+
+//       a, h2, h2 * {
+//         color: $scheme-color-north-bright;
+//       }
+
+//       a.button {
+//         color: black;
+//       }
+//     }
+//   }
+// }
+
+
+// @media #{$medium-up} {
+//   #homepage-logged-out {
+//     #home-hero {
+//       background-image: url(/images/home-hero-tablet.jpg);
+
+//       .info {
+//         @include grid-column(8, true);
+//         padding-top: 5em;
+
+//         .pitch {
+//           font-size: $h1-font-size;
+//         }
+//       }
+//     }
+
+//     #about {
+//       .info {
+//         @include grid-column(8, true, true, 2);
+//       }
+//     }
+
+//     #example {
+//       .head-script {
+//         @include grid-column(12);
+//       }
+
+//       .publish-script {
+//         @include grid-column(6);
+//       }
+
+//       .play-script {
+//         @include grid-column(6);
+//       }
+//     }
+
+//     #libraries {
+//       .developer-actions {
+//         div {
+//           @include grid-column(4, false, false, 2);
+//           a.button {
+//             width: 100%;
+//           }
+//         }
+//         div:last-child {
+//           @include grid-column(4, true, false, 0);
+//         }
+//       }
+//     }
+//     #marketplaces{
+//       ul {
+//         li {
+//           img {
+//             width: 96px;
+//             height: 96px;
+//           }
+//         }
+//       }
+//     }
+//     #libraries {
+//       ul {
+//         li {
+//           img {
+//             width: 64px;
+//             height: 64px;
+//           }
+//         }
+//       }
+
+//       .icon-list {
+//         @include block-grid(7);
+//       }
+//     }
+//   }
+// }
+
+// @media #{$large-up} {
+//   #homepage-logged-out {
+//     #home-hero {
+//       background-image: url(/images/home-hero-desktop.jpg);
+//     }
+//   }
+// }

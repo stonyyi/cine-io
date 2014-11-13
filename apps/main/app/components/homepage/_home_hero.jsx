@@ -23,6 +23,13 @@ module.exports = React.createClass({
     );
     return (
       <div className='home-hero'>
+
+        <div className="container">
+          <a href="/" title="cine.io">
+            <h1 className="brand">cine.io</h1>
+          </a>
+          <h3>Build powerful video apps. Like fer all yer porn.</h3>
+        </div>
         <div className="row">
 
           <div>

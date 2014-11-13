@@ -24,11 +24,11 @@ module.exports = React.createClass({
             <a onClick={this.login}>Sign In or Sign Up</a>
           </li>
         </ul>
-        <ul className="right show-for-large-up">
-        <li className={productsClass}><a href="/products">Products</a></li>
-        <li className={solutionsClass}><a href="/solutions">Solutions</a></li>
-        <li className={pricingClass}><a href="/pricing">Pricing</a></li>
-        <li className={docsClass}><a href='/docs'>Docs</a></li>
+        <ul className="right show-for-large-up top-links">
+          <li className={productsClass}><a href="/products">Products</a></li>
+          <li className={solutionsClass}><a href="/solutions">Solutions</a></li>
+          <li className={pricingClass}><a href="/pricing">Pricing</a></li>
+          <li className={docsClass}><a href='/docs'>Docs</a></li>
         </ul>
       </section>
     );
