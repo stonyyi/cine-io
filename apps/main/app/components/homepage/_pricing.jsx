@@ -3,6 +3,7 @@ var
   React = require('react'),
   _ = require('underscore'),
   ProvidersAndPlans = Cine.require('config/providers_and_plans'),
+  UsageReport = Cine.model('usage_report'),
   humanizeBytes = Cine.lib('humanize_bytes');
 
 module.exports = React.createClass({
@@ -66,15 +67,7 @@ module.exports = React.createClass({
 
   render: function() {
 
-    var
-      planOptions = _.chain(ProvidersAndPlans['cine.io'].plans).pairs().filter(function(planNameDetails){return planNameDetails[1].order}).value(),
-      cinePlans = _.sortBy(
-        _.map(planOptions, function(nameValue) {
-          nameValue[1].name = nameValue[0];
-          return nameValue[1];
-        }),
-        "order"
-      ),
+    var cinePlans = UsageReport.sortedCinePlans(),
       mobilePlanRows = this.getPlanRows(cinePlans, true),
       planRows = this.getPlanRows(cinePlans, false);
 
