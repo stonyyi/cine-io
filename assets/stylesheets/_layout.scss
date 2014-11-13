@@ -1,4 +1,3 @@
-// sticky footer
 * {
   margin: 0;
 }
@@ -27,21 +26,24 @@ h6 { font-size: 1.05rem; }
   -webkit-overflow-scrolling: touch;
 }
 
-$footer-height: 103px;
-$footer-height-neg: $footer-height * -1;
+// sticky footer
+@media #{$large-up} {
+  $footer-height: 300px;
+  $footer-height-neg: $footer-height * -1;
 
-.main-wrapper {
-  min-height: 100%;
-  height: auto !important;
-  height: 100%;
-  margin: 0 auto $footer-height-neg; /* the bottom margin is the negative value of the footer's height */
-}
-footer, .push {
-  height: $footer-height; /* '.push' must be the same height as 'footer' */
-}
+  .main-wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto $footer-height-neg; /* the bottom margin is the negative value of the footer's height */
+  }
+  footer, .push {
+    height: $footer-height; /* '.push' must be the same height as 'footer' */
+  }
 
-footer {
-  position: relative;
+  footer {
+    position: relative;
+  }
 }
 //end sticky footer
 
@@ -256,41 +258,65 @@ header {
 }
 
 footer {
+  @include grid-column(12);
   background: #4e4e4e;
-  color: #ccc;
+  padding-top: 2em;
 
-  .info {
-    @include grid-column(12);
-    margin: 1em 0 0 0;
-    text-align: center;
+  .links {
+    @include grid-row();
+    background: #4e4e4e;
+    // margin: 0;
+
+    .links-box {
+      @include grid-column(12);
+
+      div {
+        h4 {
+          color: white;
+          font-size: 0.8em;
+          text-transform: uppercase;
+        }
+
+        ul {
+          margin-left: 0;
+          li {
+            list-style-type: none;
+            a {
+              color: #ccc;
+              font-size: 0.9em;
+
+              i {
+                text-align: center;
+                width: 11px;
+                margin-right: 5px;
+              }
+            }
+          }
+        }
+      }
+
+    }
   }
 
-  .legal-links {
+  .copyright {
     @include grid-column(12);
+    padding: 1em 0;
+    background: #4e4e4e;
+    color: #ccc;
     text-align: center;
-    font-size: 0.75em;
-    margin: 0;
-    li {
-      list-style-type: none;
-      display: inline-block;
-    }
-    li:after {
-      margin: 0 0.5em;
-      content: " \00B7 "; // unicode middle dot
-    }
-    li:last-child:after {
-      content: "";
-    }
+    font-size: 0.75rem;
   }
 }
-@media #{$medium-up} {
-  footer {
-    .info {
-      margin: 2em 0 0 0;
-    }
-    .legal-links {
-      margin: 1em 0 2em 0;
-    }
+
+@media #{$small-up} {
+  footer .links-box div {
+    @include grid-column(12);
+  }
+}
+
+@media #{$large-up} {
+  footer .links-box div {
+    @include grid-column(3);
   }
 }
 
