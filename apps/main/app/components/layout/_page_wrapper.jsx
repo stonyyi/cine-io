@@ -58,14 +58,12 @@ module.exports = React.createClass({
 
     return (
       <div ref="pageWrapper" id="page-layout" onScroll={scrollHandler} className={className}>
-        <ModalHolder app={this.props.app} />
         <div className={this.canvasClasses('main-wrapper')}>
+          <ModalHolder app={this.props.app} />
           <LeftNav app={this.props.app} showing={this.state.showingLeftNav}/>
           <FlashHolder app={this.props.app} />
-          <div className="inner-wrap">
-            <Header ref="header" selected={this.props.selected} app={this.props.app} />
-            {children}
-          </div>
+          <Header ref="header" selected={this.props.selected} app={this.props.app} />
+          {children}
           <div className='push'/>
         </div>
         <Footer />
