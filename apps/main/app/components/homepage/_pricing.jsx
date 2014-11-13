@@ -24,7 +24,7 @@ module.exports = React.createClass({
   },
 
   getPlanRows: function(plans, mobile) {
-    console.log("plans=", plans);
+    // console.log("plans=", plans);
     var
       self = this,
       rows = plans.map(function(plan, i) {
