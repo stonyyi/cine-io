@@ -11,7 +11,7 @@ module.exports = React.createClass({
   },
   render: function() {
     return (
-      <PageWrapper selected="docs" app={this.props.app} wide={true}>
+      <PageWrapper selected="docs" fixedNav={true} app={this.props.app} wide={true}>
         <Static document={this.props.model.get('document')} />
       </PageWrapper>
     );

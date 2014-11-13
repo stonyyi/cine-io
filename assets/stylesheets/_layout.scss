@@ -197,13 +197,15 @@ ul.dropdown li a.current{
   }
 
   &.fixed {
-    padding-top: 45px;
     header {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       z-index: 100;
+    }
+    .main-wrapper{
+      margin-top: 45px;
     }
   }
   header{
@@ -231,7 +233,6 @@ ul.dropdown li a.current{
 }
 
 header {
-  margin-bottom: 1em;
   .plan-name{
     line-height: $topbar-height;
     color: $topbar-dropdown-link-color;
