@@ -1,9 +1,14 @@
 /** @jsx React.DOM */
-var React = require('react');
+var
+  React = require('react'),
+  _ = require('underscore'),
+  ProvidersAndPlans = Cine.require('config/providers_and_plans'),
+  humanizeBytes = Cine.lib('humanize_bytes');
 
 module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
   displayName: 'Pricing',
+
   getApiKey: function(plan, value, e){
     e.preventDefault();
 
@@ -11,15 +16,67 @@ module.exports = React.createClass({
     this.props.app.trigger('set-signup-plan', plan);
     this.props.app.trigger('show-login');
   },
-  showCalculatorModal: function(e){
+
+  showCalculatorModal: function(e) {
     e.preventDefault();
     this.props.app.trigger('show-modal', 'homepage/_bandwidth_calculator');
   },
-  showToolTip: function(e){
-    e.preventDefault();
-    console.log(this, e.target);
+
+  getPlanRows: function(plans, mobile) {
+    console.log("plans=", plans);
+    var
+      self = this,
+      rows = plans.map(function(plan, i) {
+        var
+          planName = plan.name.charAt(0).toUpperCase() + plan.name.slice(1),
+          streams = (typeof(plan.streams) === "string") ? plan.streams.charAt(0).toUpperCase() + plan.streams.slice(1) : plan.streams;
+          bandwidth = humanizeBytes(plan.bandwidth, ',', 0),
+          storage = humanizeBytes(plan.storage, ',', 0),
+          cost = (plan.price === 0) ? "Free" : "$" + plan.price.toFixed(0).replace(/\d(?=(\d{3})+$)/g, '$&,');
+
+        if (mobile) {
+          return (
+            <tr>
+              <td className="plan-name">{planName}</td>
+              <td>
+                <strong>Streams:</strong> {streams}<br/>
+                <strong>Xfer:</strong> {bandwidth}<br/>
+                <strong>Storage:</strong> {storage}<br/>
+                <strong>Cost:</strong> {cost}<br/><br/>
+                <a className="button tiny radius" href="" onClick={self.getApiKey.bind(self, plan.name, i+1)}>Select</a><br/>
+              </td>
+            </tr>
+          )
+        } else {
+          return (
+            <tr>
+              <td className="plan-name">{planName}</td>
+              <td>{streams}</td>
+              <td>{bandwidth}</td>
+              <td>{storage}</td>
+              <td className="cost">{cost}</td>
+              <td><a className="button tiny radius" href="" onClick={self.getApiKey.bind(self, plan.name, i+1)}>Select</a></td>
+            </tr>
+          )
+        }
+      });
+
+    return rows;
   },
+
   render: function() {
+
+    var
+      cinePlans = _.sortBy(
+        _.map(_.pairs(ProvidersAndPlans['cine.io'].plans), function(nameValue) {
+          nameValue[1].name = nameValue[0];
+          return nameValue[1];
+        }),
+        "order"
+      ),
+      mobilePlanRows = this.getPlanRows(cinePlans, true),
+      planRows = this.getPlanRows(cinePlans, false);
+
     return (
       <div>
        <section id="pricing">
@@ -29,76 +86,7 @@ module.exports = React.createClass({
             <div className="prices">
               <table className="hide-for-medium-up">
                 <tbody>
-                  <tr>
-                    <td className="plan-name">Developer</td>
-                    <td>
-                      <strong>Streams:</strong> 1<br/>
-                      <strong>Xfer:</strong> 1 GiB<br/>
-                      <strong>Storage:</strong> 500 MiB<br/>
-                      <strong>Cost:</strong> Free<br/><br/>
-                      <a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'free', 1)}>Select</a><br/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="plan-name">Solo</td>
-                    <td>
-                      <strong>Streams:</strong> 5<br/>
-                      <strong>Xfer:</strong> 20 GiB<br/>
-                      <strong>Storage:</strong> 5 GiB<br/>
-                      <strong>Cost:</strong> $20<br/><br/>
-                      <a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'solo', 2)}>Select</a><br/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="plan-name">Basic</td>
-                    <td>
-                      <strong>Streams:</strong> 25<br/>
-                      <strong>Xfer:</strong> 150 GiB<br/>
-                      <strong>Storage:</strong> 25 GiB<br/>
-                      <strong>Cost:</strong> $100<br/><br/>
-                      <a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'basic', 3)}>Select</a><br/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="plan-name">Premium</td>
-                    <td>
-                      <strong>Streams:</strong> 100<br/>
-                      <strong>Xfer:</strong> 500 GiB<br/>
-                      <strong>Storage:</strong> 50 GiB<br/>
-                      <strong>Cost:</strong> $300<br/><br/>
-                      <a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'premium', 4)}>Select</a><br/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="plan-name">Pro</td>
-                    <td>
-                      <strong>Streams:</strong> 500<br/>
-                      <strong>Xfer:</strong> 1 TiB<br/>
-                      <strong>Storage:</strong> 100 GiB<br/>
-                      <strong>Cost:</strong> $500<br/><br/>
-                      <a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'pro', 5)}>Select</a><br/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="plan-name">Startup</td>
-                    <td>
-                      <strong>Streams:</strong> Unlimited<br/>
-                      <strong>Xfer:</strong> 5 TiB<br/>
-                      <strong>Storage:</strong> 250 GiB<br/>
-                      <strong>Cost:</strong> $2,000<br/><br/>
-                      <a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'startup', 6)}>Select</a><br/>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="plan-name">Enterprise</td>
-                    <td>
-                      <strong>Streams:</strong> Unlimited<br/>
-                      <strong>Xfer:</strong> 15 GiB<br/>
-                      <strong>Storage:</strong> 500 GiB<br/>
-                      <strong>Cost:</strong> $5,000<br/><br/>
-                      <a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'enterprise', 7)}>Select</a><br/>
-                    </td>
-                  </tr>
+                  {mobilePlanRows}
                   <tr>
                     <td className="plan-name">Custom</td>
                     <td>
@@ -123,62 +111,7 @@ module.exports = React.createClass({
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td className="plan-name">Developer</td>
-                    <td>1</td>
-                    <td>1 GiB</td>
-                    <td>500 MiB</td>
-                    <td className="cost">Free</td>
-                    <td><a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'free', 1)}>Select</a></td>
-                  </tr>
-                  <tr>
-                    <td className="plan-name">Solo</td>
-                    <td>5</td>
-                    <td>20 GiB</td>
-                    <td>5 GiB</td>
-                    <td className="cost">$20</td>
-                    <td><a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'solo', 2)}>Select</a></td>
-                  </tr>
-                  <tr>
-                    <td className="plan-name">Basic</td>
-                    <td>25</td>
-                    <td>150 GiB</td>
-                    <td>25 GiB</td>
-                    <td className="cost">$100</td>
-                    <td><a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'basic', 3)}>Select</a></td>
-                  </tr>
-                  <tr>
-                    <td className="plan-name">Premium</td>
-                    <td>100</td>
-                    <td>500 GiB</td>
-                    <td>50 GiB</td>
-                    <td className="cost">$300</td>
-                    <td><a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'premium', 4)}>Select</a></td>
-                  </tr>
-                  <tr>
-                    <td className="plan-name">Pro</td>
-                    <td>500</td>
-                    <td>1 TiB</td>
-                    <td>100 GiB</td>
-                    <td className="cost">$500</td>
-                    <td><a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'pro', 5)}>Select</a></td>
-                  </tr>
-                  <tr>
-                    <td className="plan-name">Startup</td>
-                    <td>Unlimited</td>
-                    <td>5 TiB</td>
-                    <td>250 GiB</td>
-                    <td className="cost">$2,000</td>
-                    <td><a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'startup', 6)}>Select</a></td>
-                  </tr>
-                  <tr>
-                    <td className="plan-name">Enterprise</td>
-                    <td>Unlimited</td>
-                    <td>15 TiB</td>
-                    <td>500 GiB</td>
-                    <td className="cost">$5,000</td>
-                    <td><a className="button tiny radius" href="" onClick={this.getApiKey.bind(this, 'enterprise', 7)}>Select</a></td>
-                  </tr>
+                  {planRows}
                   <tr>
                     <td className="plan-name">Custom</td>
                     <td>Unlimited</td>

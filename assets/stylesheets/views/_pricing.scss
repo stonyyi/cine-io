@@ -26,8 +26,9 @@
         }
       }
       table.hide-for-medium-up {
-        td {
-        }
+        /* this is an ugly hack */
+        td:first-child { width: 25%; }
+        td:last-child { width: 60%; }
       }
       table.show-for-medium-up {
         th {
@@ -57,7 +58,7 @@
   #pricing {
     .prices {
       table {
-        @include grid-column(10, false, false, 1);
+        @include grid-column(12);
         padding-left: 0;
         padding-right: 0;
         td {

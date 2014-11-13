@@ -4,30 +4,54 @@ module.exports =
   'cine.io':
     url: 'https://www.cine.io'
     plans:
-      free:
+      developer:
+        order: 10
+        streams: 1
         price: 0
         bandwidth: humanizeBytes.GiB
         storage: 0
-        bandwidthOverage: 0
-        storageOverage: 0
       solo:
+        order: 20
+        streams: 5
         price: 20
         bandwidth: humanizeBytes.GiB * 20
         storage: humanizeBytes.GiB * 5
-        bandwidthOverage: 0.9
-        storageOverage: 0.9
       basic:
+        order: 30
+        streams: 25
         price: 100
         bandwidth: humanizeBytes.GiB * 150
         storage: humanizeBytes.GiB * 25
-        bandwidthOverage: 0.8
-        storageOverage: 0.8
+      premium:
+        order: 40
+        streams: 100
+        price: 300
+        bandwidth: humanizeBytes.GiB * 500
+        storage: humanizeBytes.GiB * 50
       pro:
+        order: 50
+        streams: 500
         price: 500
-        bandwidth: humanizeBytes.TiB
+        bandwidth: humanizeBytes.TiB * 1
         storage: humanizeBytes.GiB * 100
-        bandwidthOverage: 0.7
-        storageOverage: 0.7
+      startup:
+        order: 60
+        streams: "unlimited"
+        price: 1000
+        bandwidth: humanizeBytes.TiB * 2
+        storage: humanizeBytes.GiB * 150
+      business:
+        order: 70
+        streams: "unlimited"
+        price: 2000
+        bandwidth: humanizeBytes.TiB * 5
+        storage: humanizeBytes.GiB * 250
+      enterprise:
+        order: 80
+        streams: "unlimited"
+        price: 5000
+        bandwidth: humanizeBytes.TiB * 15
+        storage: humanizeBytes.GiB * 500
   heroku:
     url: 'https://addons.heroku.com/cine'
     plans:
