@@ -98,7 +98,7 @@ describe "calculateAccountBill", ->
         calculateAccountBill @account, @month, (err, result)->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
-          expect(result.billing).to.deep.equal(plan: 10000, bandwidthOverage: 240, storageOverage: 160, prorated: false)
+          expect(result.billing).to.deep.equal(plan: 10000, bandwidthOverage: 0, storageOverage: 0, prorated: false)
           expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, bandwidthOverage: humanizeBytes.GiB * 3, storageOverage: humanizeBytes.GiB * 2)
           done()
 
@@ -110,7 +110,7 @@ describe "calculateAccountBill", ->
         calculateAccountBill @account, @month, (err, result)->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
-          expect(result.billing).to.deep.equal(plan: 60000, bandwidthOverage: 350, storageOverage: 280, prorated: false)
+          expect(result.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0, prorated: false)
           expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
           done()
 
@@ -142,7 +142,7 @@ describe "calculateAccountBill", ->
         calculateAccountBill @account, @month, (err, result)->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
-          expect(result.billing).to.deep.equal(plan: 60000, bandwidthOverage: 350, storageOverage: 280, prorated: false)
+          expect(result.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0, prorated: false)
           expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
           done()
 
@@ -150,9 +150,9 @@ describe "calculateAccountBill", ->
   describe '.cheapestOverageCost', ->
     it 'returns the cheapest cost for an account with one plan', ->
       account = new Account(billingProvider: 'cine.io', plans: ['basic'])
-      expect(calculateAccountBill.cheapestOverageCost(account, 'bandwidth')).to.equal(80)
-      expect(calculateAccountBill.cheapestOverageCost(account, 'storage')).to.equal(80)
+      expect(calculateAccountBill.cheapestOverageCost(account, 'bandwidth')).to.equal(0)
+      expect(calculateAccountBill.cheapestOverageCost(account, 'storage')).to.equal(0)
     it 'returns the cheapest cost for an account with two plans', ->
       account = new Account(billingProvider: 'cine.io', plans: ['basic', 'pro'])
-      expect(calculateAccountBill.cheapestOverageCost(account, 'bandwidth')).to.equal(70)
-      expect(calculateAccountBill.cheapestOverageCost(account, 'storage')).to.equal(70)
+      expect(calculateAccountBill.cheapestOverageCost(account, 'bandwidth')).to.equal(0)
+      expect(calculateAccountBill.cheapestOverageCost(account, 'storage')).to.equal(0)
