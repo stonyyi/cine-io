@@ -12,8 +12,9 @@ module.exports = React.createClass({
         window.location = logoutUrl;
       }
     }else{
+      self = this;
       return function(){
-        this.props.app.router.redirectTo('/');
+        self.props.app.router.redirectTo('/');
       }
     }
   },
