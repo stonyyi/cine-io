@@ -15,14 +15,7 @@
       margin-top: 1.5em;
 
       table {
-        width: 100%;
-        th {
-          text-align: center;
-        }
-        td {
-          white-space: nowrap;
-        }
-        td:first-child {
+        td.plan-name, td.cost {
           font-weight: bold;
         }
         td:last-child {
@@ -32,24 +25,62 @@
           }
         }
       }
-
-      .overage {
-        font-size: 0.75em;
+      table.hide-for-medium-up {
+        td {
+        }
       }
-      .cost {
-        font-weight: bold;
+      table.show-for-medium-up {
+        th {
+          text-align: center;
+        }
+        td {
+          text-align: center;
+        }
+        td:first-child {
+          text-align: left;
+        }
       }
     }
+  }
 
-    .postscript {
-      @include grid-row();
-      div {
-        @include grid-column(6);
-      }
-      .features {
-        text-align: left;
+  .postscript {
+    @include grid-row();
+    div.limits { @include grid-column(12); }
+    div.included { @include grid-column(12); }
+    .features {
+      text-align: left;
+    }
+  }
+}
+
+@media #{$medium-up} {
+  #pricing {
+    .prices {
+      table {
+        @include grid-column(10, false, false, 1);
+        padding-left: 0;
+        padding-right: 0;
+        td {
+          white-space: nowrap;
+        }
       }
     }
   }
 }
 
+@media #{$large-up} {
+  #pricing {
+    .prices {
+      table {
+        @include grid-column(8, false, false, 2);
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    .postscript {
+      div.limits { @include grid-column(5, false, false, 1); }
+      div.included { @include grid-column(5, false, false, 1); }
+    }
+  }
+}
