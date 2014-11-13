@@ -6,7 +6,7 @@ ReactView = RendrView.extend
     throw new Error("You must override Component()")
 
   getInnerHtml: ->
-    React.renderComponentToString @_renderComponent()
+    React.renderToString @_renderComponent()
 
   remove: ->
     RendrView.prototype.remove.call(this)
@@ -19,10 +19,10 @@ ReactView = RendrView.extend
     @_renderReact()
 
   _renderReact: ->
-    React.renderComponent @_renderComponent(), @el
+    React.render @_renderComponent(), @el
 
   _renderComponent: ->
-    @renderedComponent = @Component @_renderOptions()
+    @renderedComponent = React.createFactory(@Component)(@_renderOptions())
 
   _renderOptions: ->
     options = app: @app, options: @options
