@@ -28,7 +28,7 @@ h6 { font-size: 1.05rem; }
 
 // sticky footer
 @media #{$large-up} {
-  $footer-height: 300px;
+  $footer-height: 340px;
   $footer-height-neg: $footer-height * -1;
 
   .main-wrapper {
@@ -197,7 +197,7 @@ ul.dropdown li a.current{
   }
 
   &.fixed {
-    margin-top: 45px;
+    padding-top: 45px;
     header {
       position: fixed;
       top: 0;
