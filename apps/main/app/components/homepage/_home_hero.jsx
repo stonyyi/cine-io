@@ -32,13 +32,6 @@ module.exports = React.createClass({
     var playersClassname = cx(playersClassnameOptions);
     return (
       <div className='home-hero'>
-        <div className="hero-item background">
-          <video muted={true} autoPlay={true} loop={true}>
-            <source src="http://vod.cine.io/homepage/fireworks.webm" type="video/webm" />
-            <source src="http://vod.cine.io/homepage/fireworks2.mp4" type="video/mp4" />
-          </video>
-        </div>
-
         <div className="row">
 
           <div className="nothing">
