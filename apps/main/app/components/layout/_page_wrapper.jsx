@@ -16,7 +16,8 @@ module.exports = React.createClass({
       wide: React.PropTypes.bool,
       className: React.PropTypes.string,
       selected: React.PropTypes.string,
-      fixedNav: React.PropTypes.bool
+      fixedNav: React.PropTypes.bool,
+      fadeLogo: React.PropTypes.bool
   },
   getInitialState: function(){
     return {showingLogo: false};
@@ -45,7 +46,8 @@ module.exports = React.createClass({
     if (this.props.className){
       classNameOptions[this.props.className] = true;
     }
-    if (this.props.fixedNav){
+
+    if (this.props.fadeLogo){
       classNameOptions['show-logo'] = this.state.showingLogo;
       classNameOptions['hide-logo'] = !this.state.showingLogo;
       scrollHandler = this.onScroll;

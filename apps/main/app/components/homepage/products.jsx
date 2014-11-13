@@ -10,7 +10,7 @@ module.exports = React.createClass({
   render: function() {
 
     return (
-      <PageWrapper selected='products' app={this.props.app}>
+      <PageWrapper selected='products' fixedNav={true} app={this.props.app}>
         <h1>I am products</h1>
         <Libraries />
       </PageWrapper>
