@@ -25,8 +25,12 @@ module.exports = React.createClass({
     var
       wrapper = this.refs.pageWrapper.getDOMNode(),
       header = this.refs.header.getDOMNode(),
-      scrollOffset = wrapper.scrollTop;
-    this.setState({showingLogo: scrollOffset >= 45});
+      scrollOffset = wrapper.scrollTop,
+      showingLogo = scrollOffset >= 45;
+    if (showingLogo != this.state.showingLogo){
+      this.setState({showingLogo: showingLogo});
+    }
+
   },
   render: function() {
     var
