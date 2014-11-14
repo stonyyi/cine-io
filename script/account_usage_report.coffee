@@ -35,7 +35,7 @@ logOutput = (account, response, callback)->
     accountUsage.bandwidth = if shouldHumanize then humanizeBytes(bandwidthBytes) else "#{bandwidthBytes} bytes"
   if storageBytes != 0
     accountUsage.storage = if shouldHumanize then humanizeBytes(storageBytes) else "#{storageBytes} bytes"
-  console.log("Total account usage for", account._id, account.billingEmail || account.herokuId, account.billingProvider, accountUsage)
+  console.log("Total account usage for", account._id, account.createdAt, account.billingEmail || account.herokuId, account.billingProvider, accountUsage)
   totalAccountsLogged += 1
   callback()
 
