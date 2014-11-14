@@ -1,9 +1,13 @@
 /** @jsx React.DOM */
 var React = require('react'),
   authentication = Cine.lib('authentication'),
+  cx = Cine.lib('cx'),
   _ = require('underscore');
 module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
+  getInitialState: function(){
+    return {linksMoved: false};
+  },
   _createLogoutSuccess: function(){
     var ca = this.props.app.currentAccount();
     if (ca.isAppdirect()){
@@ -33,6 +37,10 @@ module.exports = React.createClass({
   changeAccount: function(account, e){
     e.preventDefault();
     this.props.app.changeAccount(account);
+  },
+  toggleLinksMoved: function(e){
+    e.preventDefault();
+    this.setState({linksMoved: !this.state.linksMoved});
   },
   render: function() {
     var
@@ -76,13 +84,13 @@ module.exports = React.createClass({
         <li><a href={userUrl} target="_blank">User Management</a></li>
       )];
     }
-
+    var linksClass = cx({'has-dropdown': true, 'not-click': true, moved: this.state.linksMoved});
     return (
       <section className="top-bar-section">
         <ul className="right account-drop-down">
           {accountDropDown}
-          <li className="has-dropdown not-click">
-            <a href="" onClick={this.doNothing}>{name}</a>
+          <li ref="links" className={linksClass}>
+            <a href="" onClick={this.toggleLinksMoved}>{name}</a>
             <ul className="dropdown">
               <li><a href='/'>Home</a></li>
               {additionalListItems}

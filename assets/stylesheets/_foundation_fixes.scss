@@ -1,0 +1,9 @@
+.top-bar-section .has-dropdown.moved>.dropdown{
+  position: static !important;
+}
+
+@media #{$medium-up} {
+  .top-bar-section .has-dropdown.moved>.dropdown{
+    position: absolute !important;
+  }
+}
