@@ -6,6 +6,12 @@ var
 module.exports = React.createClass({
   displayName: 'HomeHero',
   mixins: [],
+  getApiKey: function(e){
+    e.preventDefault();
+
+    this.props.app.tracker.getApiKey({value: 0});
+    this.props.app.trigger('show-login');
+  },
   render: function() {
     var arrows = (
       <div className="hero-item arrows">
@@ -125,7 +131,7 @@ module.exports = React.createClass({
           </div>
           <div className="call-to-action">
             <span className="api-key-button">
-              <a className="button radius secondary" href="#">
+              <a className="button radius secondary" href="" onClick={this.getApiKey}>
                 Get Free API Key
               </a>
             </span>
