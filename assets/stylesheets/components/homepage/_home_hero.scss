@@ -20,14 +20,32 @@
     margin: 0;
     font-size: 2.75rem;
   }
+  .table-row{
+    .hero-item{
+      display: table-cell;
+      vertical-align: middle;
+
+    }
+
+  }
 }
 .hero-row{
-  display: table-row;
-  .hero-item{
-    display: table-cell;
+  .broadcaster-wrapper{
+    .table-row{
+      margin: auto;
+      width: 208px;
+    }
   }
+}
+@media #{$medium-up} {
+.hero-row{
+  display: table-row;
   .table-row{
     display: table-row;
+    width: auto;
+  }
+  .hero-item{
+    display: table-cell;
   }
   &.hero-flow{
     .hero-item{
@@ -69,10 +87,10 @@
     }
   }
 }
+}
 
 @import "home_hero/background";
 @import "home_hero/broadcaster";
-@import "home_hero/arrow";
 @import "home_hero/arrows";
 @import "home_hero/cloud";
 @import "home_hero/players";

@@ -1,18 +1,19 @@
+$arrow-border-visible: 18px solid;
+$arrow-border-transparent: $arrow-border-visible transparent;
+
 .home-hero{
-  // .arrows{
-  //   padding-left: 27px;
-  // }
   .arrow {
-  width: 0;
-  height: 0;
-  border-top: 18px solid transparent;
-  border-bottom: 18px solid transparent;
-  -webkit-animation: pulsate 2s ease-out;
-  -webkit-animation-iteration-count: infinite;
-  opacity: 0.0;
-  display: inline-block;
-  border-left: 18px solid;
-}
+    width: 0;
+    height: 0;
+    opacity: 0.0;
+    margin: auto;
+    -webkit-animation: pulsate-down 2s ease-out;
+    -webkit-animation-iteration-count: infinite;
+    border-left: $arrow-border-transparent;
+    border-right: $arrow-border-transparent;
+    border-top: $arrow-border-visible;
+
+  }
 
   .arrow:nth-child(3n+1) {
     -webkit-animation-delay: 0s;
@@ -33,8 +34,43 @@
   }
 
 }
-@-webkit-keyframes pulsate {
-  0% {-webkit-transform: scale(0.1, 0.1); opacity: 1.0; border-left-color: #128c87;}
+
+@media #{$medium-up} {
+  .home-hero{
+    .arrow {
+      display: inline-block;
+      border-top: $arrow-border-transparent;
+      border-bottom: $arrow-border-transparent;
+      border-right: none;
+
+      -webkit-animation: pulsate-right 2s ease-out;
+      -webkit-animation-iteration-count: infinite;
+      border-left: $arrow-border-visible;
+    }
+  }
+}
+
+
+@-webkit-keyframes pulsate-down {
+  0% {-webkit-transform: scale(0.1, 0.1); opacity: 1.0; border-top-color: $scheme-color-north;}
+  /*50% {opacity: 1.0; border-color: red;}*/
+  100% {-webkit-transform: scale(1.2, 1.2); opacity: 0.0; border-top-color: white;}
+}
+
+@-webkit-keyframes pulsate-right {
+  0% {-webkit-transform: scale(0.1, 0.1); opacity: 1.0; border-left-color: $scheme-color-north;}
+  /*50% {opacity: 1.0; border-color: red;}*/
+  100% {-webkit-transform: scale(1.2, 1.2); opacity: 0.0; border-left-color: white;}
+}
+
+@keyframes pulsate-down {
+  0% {-webkit-transform: scale(0.1, 0.1); opacity: 1.0; border-top-color: $scheme-color-north;}
+  /*50% {opacity: 1.0; border-color: red;}*/
+  100% {-webkit-transform: scale(1.2, 1.2); opacity: 0.0; border-top-color: white;}
+}
+
+@keyframes pulsate-right {
+  0% {-webkit-transform: scale(0.1, 0.1); opacity: 1.0; border-left-color: $scheme-color-north;}
   /*50% {opacity: 1.0; border-color: red;}*/
   100% {-webkit-transform: scale(1.2, 1.2); opacity: 0.0; border-left-color: white;}
 }
