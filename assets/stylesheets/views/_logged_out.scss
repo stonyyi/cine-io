@@ -10,13 +10,13 @@
       z-index: 5;
       background-color: $scheme-color-north;
     }
-    .top-bar, .top-bar-section ul, .top-links li a{
+    .top-bar, .top-bar.expanded .title-area, .top-bar-section ul, .top-links li a{
       background-color: $scheme-color-north;
       transition: background-color 500ms ease;
     }
   }
   &.show-logo{
-    .top-bar, .top-bar-section ul, .top-links li a{
+    .top-bar, .top-bar.expanded .title-area, .top-bar-section ul, .top-links li a{
       transition: background-color 500ms ease;
     }
   }
