@@ -3,6 +3,7 @@ var React = require('react'),
   PageWrapper = Cine.component('layout/_page_wrapper'),
   SubmitButton = Cine.component('shared/_submit_button'),
   Account = Cine.model('account'),
+  UsageReport = Cine.model('usage_report'),
   _ = require('underscore'),
   capitalize = Cine.lib('capitalize');
 
@@ -48,8 +49,8 @@ module.exports = React.createClass({
     });
   },
   render: function() {
-    var planOptions = _.map(Account.plans, function(plan) {
-      return (<option key={plan} value={plan}>{capitalize(plan)}</option>);
+    var planOptions = _.map(UsageReport.sortedCinePlans(), function(plan) {
+      return (<option key={plan.name} value={plan.name}>{capitalize(plan.name)}</option>);
     });
 
     return (
