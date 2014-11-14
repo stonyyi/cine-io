@@ -12,6 +12,9 @@ $arrow-border-transparent: $arrow-border-visible transparent;
     margin: auto;
     -webkit-animation: pulsate-down 2s ease-out;
     -webkit-animation-iteration-count: infinite;
+
+    animation: pulsate-down 2s ease-out;
+    animation-iteration-count: infinite;
     border-left: $arrow-border-transparent;
     border-right: $arrow-border-transparent;
     border-top: $arrow-border-visible;
@@ -50,6 +53,9 @@ $arrow-border-transparent: $arrow-border-visible transparent;
 
       -webkit-animation: pulsate-right 2s ease-out;
       -webkit-animation-iteration-count: infinite;
+
+      animation: pulsate-right 2s ease-out;
+      animation-iteration-count: infinite;
       border-left: $arrow-border-visible;
     }
   }
@@ -69,13 +75,13 @@ $arrow-border-transparent: $arrow-border-visible transparent;
 }
 
 @keyframes pulsate-down {
-  0% {-webkit-transform: scale(0.1, 0.1); opacity: 1.0; border-top-color: $scheme-color-north;}
+  0% {transform: scale(0.1, 0.1); opacity: 1.0; border-top-color: $scheme-color-north;}
   /*50% {opacity: 1.0; border-color: red;}*/
-  100% {-webkit-transform: scale(1.2, 1.2); opacity: 0.0; border-top-color: white;}
+  100% {transform: scale(1.2, 1.2); opacity: 0.0; border-top-color: white;}
 }
 
 @keyframes pulsate-right {
-  0% {-webkit-transform: scale(0.1, 0.1); opacity: 1.0; border-left-color: $scheme-color-north;}
+  0% {transform: scale(0.1, 0.1); opacity: 1.0; border-left-color: $scheme-color-north;}
   /*50% {opacity: 1.0; border-color: red;}*/
-  100% {-webkit-transform: scale(1.2, 1.2); opacity: 0.0; border-left-color: white;}
+  100% {transform: scale(1.2, 1.2); opacity: 0.0; border-left-color: white;}
 }
