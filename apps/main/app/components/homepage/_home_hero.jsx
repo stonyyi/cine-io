@@ -49,7 +49,7 @@ module.exports = React.createClass({
     return (
       <div className='home-hero'>
 
-        <div className="container">
+        <div className="row">
           <a href="/" title="cine.io">
             <h1 className="brand">cine.io</h1>
           </a>
