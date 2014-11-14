@@ -19,13 +19,9 @@ exports.About = React.createClass({
               <em> by </em> and
               <em> for </em> developers.
             </h2>
-
             <p>
               You do not want to think about configuring a CDN, building a
               cross-platform viewing experience, or learning a new tool.
-            </p>
-            <p className="hook">
-              Build ... ship ... <a target="_blank" href="https://www.youtube.com/watch?v=zS1cLOIxsQ8&amp;t=28s">do the happy dance</a>.
             </p>
           </div>
         </div>
@@ -210,7 +206,7 @@ exports.Consulting = React.createClass({
             </p>
 
             <p>
-               <a className="button radius secondary" target="_blank" href="mailto:support@cine.io?subject=Business+Inquiry">
+               <a className="button radius primary" target="_blank" href="mailto:support@cine.io?subject=Business+Inquiry">
                  Talk to us
                </a>
             </p>
