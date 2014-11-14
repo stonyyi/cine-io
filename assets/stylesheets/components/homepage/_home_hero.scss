@@ -2,6 +2,10 @@
   position: relative;
   color: white;
   background: #128c87;
+
+  p {
+    line-height: 1.2;
+  }
   h3, h4 {
     font-family: $distinct-font-family;
     color: white;
