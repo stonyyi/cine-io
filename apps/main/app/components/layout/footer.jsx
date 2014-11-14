@@ -11,7 +11,6 @@ module.exports = React.createClass({
             <div className="company-legal">
               <h4>Company</h4>
               <ul>
-                <li><a href="/about">About Us</a></li>
                 <li><a href="http://blog.cine.io/">Blog</a></li>
               </ul>
               <h4>Legal</h4>
