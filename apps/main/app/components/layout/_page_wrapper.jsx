@@ -55,7 +55,6 @@ module.exports = React.createClass({
       classNameOptions['show-logo'] = true;
       scrollHandler = false;
     }
-    console.log('classNameOptions', classNameOptions)
     className = cx(classNameOptions);
 
     return (
