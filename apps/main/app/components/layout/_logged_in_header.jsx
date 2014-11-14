@@ -6,7 +6,7 @@ var React = require('react'),
 module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
   getInitialState: function(){
-    return {linksMoved: false};
+    return {linksMoved: false, accountMoved: false};
   },
   _createLogoutSuccess: function(){
     var ca = this.props.app.currentAccount();
@@ -42,6 +42,10 @@ module.exports = React.createClass({
     e.preventDefault();
     this.setState({linksMoved: !this.state.linksMoved});
   },
+  toggleAccountMoved: function(e){
+    e.preventDefault();
+    this.setState({accountMoved: !this.state.accountMoved});
+  },
   render: function() {
     var
       self = this,
@@ -63,10 +67,10 @@ module.exports = React.createClass({
           </li>
         );
       });
-
+      var accountClasses = cx({'has-dropdown': true, 'not-click': true, moved: this.state.accountMoved});
       accountDropDown = (
-        <li className="has-dropdown not-click">
-          <a href="" onClick={this.doNothing}>{currentAccount.displayName()}</a>
+        <li className={accountClasses}>
+          <a href="" onClick={this.toggleAccountMoved}>{currentAccount.displayName()}</a>
           <ul className="dropdown">
             {accountList}
           </ul>
