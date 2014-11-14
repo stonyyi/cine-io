@@ -61,7 +61,6 @@ $arrow-border-transparent: $arrow-border-visible transparent;
   }
 }
 
-
 @-webkit-keyframes pulsate-down {
   0% {-webkit-transform: scale(0.1, 0.1); opacity: 1.0; border-top-color: $scheme-color-north;}
   /*50% {opacity: 1.0; border-color: red;}*/

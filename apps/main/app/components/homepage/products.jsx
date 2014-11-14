@@ -11,8 +11,6 @@ module.exports = React.createClass({
 
     return (
       <PageWrapper selected='products' fixedNav={true} app={this.props.app}>
-        <h1>I am products</h1>
-        <Libraries />
       </PageWrapper>
     );
   }

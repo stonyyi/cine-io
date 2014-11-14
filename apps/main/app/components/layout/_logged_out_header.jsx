@@ -25,8 +25,6 @@ module.exports = React.createClass({
           </li>
         </ul>
         <ul className="right top-links">
-          <li className={productsClass}><a href="/products">Products</a></li>
-          <li className={solutionsClass}><a href="/solutions">Solutions</a></li>
           <li className={pricingClass}><a href="/pricing">Pricing</a></li>
           <li className={docsClass}><a href='/docs'>Docs</a></li>
         </ul>
