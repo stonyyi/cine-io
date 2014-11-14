@@ -41,7 +41,7 @@ module.exports = React.createClass({
         (<div className="container"> {this.props.children} </div>)
       ),
       classNameOptions = {
-        fixed: !!this.props.fixedNav
+        'fixed-nav': !!this.props.fixedNav
       }, className;
     if (this.props.className){
       classNameOptions[this.props.className] = true;

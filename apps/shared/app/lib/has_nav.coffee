@@ -26,6 +26,6 @@ exports.toggleLeftNav = (e)->
   @setState(showingLeftNav: !@state.showingLeftNav)
 
 exports.canvasClasses = (extraClassName)->
-  classes = 'off-canvas-wrap': true, 'move-right': @state.showingLeftNav
+  classes = 'move-right': @state.showingLeftNav
   classes[extraClassName] = true
   cx(classes)

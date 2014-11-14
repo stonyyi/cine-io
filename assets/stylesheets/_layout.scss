@@ -207,7 +207,7 @@ ul.dropdown li a.current{
       }
     }
   }
-  &.fixed{
+  &.fixed-nav{
     header{
       margin-bottom: 0;
     }
@@ -237,7 +237,7 @@ ul.dropdown li a.current{
       @include grid-column(12);
     }
 
-    &.fixed {
+    &.fixed-nav {
       header {
         position: fixed;
         top: 0;
