@@ -195,19 +195,6 @@ ul.dropdown li a.current{
   .wide-container {
     @include grid-column(12);
   }
-
-  &.fixed {
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-    }
-    .main-wrapper{
-      margin-top: 45px;
-    }
-  }
   header{
     margin-bottom: 1em;
     .brand {
@@ -219,6 +206,12 @@ ul.dropdown li a.current{
       }
     }
   }
+  &.fixed{
+    header{
+      margin-bottom: 0;
+    }
+  }
+
   &.show-logo{
     header  {
     .brand {
@@ -230,7 +223,32 @@ ul.dropdown li a.current{
       }
     }
   }
+}
 
+@media #{$medium-up} {
+  #page-layout {
+
+    .container {
+      @include grid-column(8, true, true, 2);
+    }
+
+    .wide-container {
+      @include grid-column(12);
+    }
+
+    &.fixed {
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+      }
+      .main-wrapper{
+        margin-top: 45px;
+      }
+    }
+  }
 }
 
 header {
