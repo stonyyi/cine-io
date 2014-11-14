@@ -88,7 +88,7 @@ module.exports = React.createClass({
                       <strong>Xfer:</strong> &gt;15 TiB<br/>
                       <strong>Storage:</strong> &gt;=1 TiB<br/>
                       <strong>Cost:</strong> Negotiable<br/><br/>
-                      <a className="button tiny radius" href="http://cineio.uservoice.com/">Contact Us</a><br/>
+                      <a className="button tiny radius" target="_blank" href="mailto:support@cine.io?subject=Business+Inquiry">Talk to Us</a><br/>
                     </td>
                   </tr>
                 </tbody>
@@ -112,7 +112,7 @@ module.exports = React.createClass({
                     <td>&gt; 15 TiB</td>
                     <td>&gt;= 1 TiB</td>
                     <td className="cost">Negotiable</td>
-                    <td><a className="button tiny radius" href="http://cineio.uservoice.com/">Contact Us</a></td>
+                    <td><a className="button tiny radius" target="_blank" href="mailto:support@cine.io?subject=Business+Inquiry">Talk to Us</a></td>
                   </tr>
                 </tbody>
               </table>
