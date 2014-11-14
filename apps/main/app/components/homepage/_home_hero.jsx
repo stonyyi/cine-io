@@ -15,6 +15,25 @@ module.exports = React.createClass({
         <div className="arrow"></div>
       </div>
     );
+
+    var broadcastText = (
+      <div>
+        <h4>Broadcast</h4>
+        <p>Broadcast using our native SDKs or any broadcast software that supports RTMP.</p>
+      </div>
+    );
+    var transcodeText = (
+      <div>
+        <h4>Transcode and Store</h4>
+        <p>Automatic transcoding and transmuxing for mobile playback. Record directly to the cloud.</p>
+      </div>
+    );
+    var watchText = (
+      <div>
+        <h4>Watch Anywhere</h4>
+        <p>View your content live or at a later time on any device using our global CDN.</p>
+      </div>
+    );
     return (
       <div className='home-hero'>
 
@@ -84,22 +103,13 @@ module.exports = React.createClass({
           <div className="hero-text-wrapper">
             <div className='hero-row hero-text'>
               <div className="hero-item broadcaster-wrapper">
-                <div>
-                  <h4>Broadcast</h4>
-                  <p>Broadcast using our native SDKs or any broadcast software that supports RTMP.</p>
-                </div>
+                {broadcastText}
               </div>
               <div className='hero-item cloud'>
-                <div>
-                  <h4>Transcode and Store</h4>
-                  <p>Automatic transcoding and transmuxing for mobile playback. Record directly to the cloud.</p>
-                </div>
+                {transcodeText}
               </div>
               <div className='hero-item players'>
-                <div>
-                  <h4>Watch Anywhere</h4>
-                  <p>View your content live or at a later time on any device using our global CDN.</p>
-                </div>
+                {watchText}
               </div>
             </div>
 
