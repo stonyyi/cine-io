@@ -7,11 +7,13 @@
   $phone-width: $full-width * 0.31;
   $tablet-bottom: $full-width * 0.09;
   $phone-right: $full-width * 0.26;
-  .players{
+  .hero-flow .players{
     width: $full-width;
     height: $full-height;
     position: relative;
     margin: auto;
+  }
+  .players{
     img, video{
       position: absolute;
       top: 0;

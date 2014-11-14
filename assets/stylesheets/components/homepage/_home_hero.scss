@@ -89,6 +89,30 @@
 }
 }
 
+.call-to-action {
+  margin-top: -42px;
+  text-align: center;
+
+  .api-key-button {
+    display: inline-block;
+    padding: 6px;
+    background: white;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    position: relative;
+    bottom: -42px;
+    margin-bottom: -42px;
+    .button {
+      background: $scheme-color-south-bright;
+      color: white;
+      margin-bottom: 0;
+    }
+    .button:hover {
+      background: $scheme-color-south;
+    }
+  }
+}
+
 @import "home_hero/background";
 @import "home_hero/broadcaster";
 @import "home_hero/arrows";

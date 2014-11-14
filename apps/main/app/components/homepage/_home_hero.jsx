@@ -103,10 +103,12 @@ module.exports = React.createClass({
               </div>
             </div>
 
-            <div className="text-center">
-               <a className="button radius secondary" href="#">
-                 Get Free API Key
-               </a>
+            <div className="call-to-action">
+              <span className="api-key-button">
+                <a className="button radius secondary" href="#">
+                  Get Free API Key
+                </a>
+              </span>
             </div>
           </div>
         </div>
