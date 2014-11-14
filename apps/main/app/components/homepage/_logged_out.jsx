@@ -11,7 +11,7 @@ exports.About = React.createClass({
   displayName: 'About',
   render: function() {
     return (
-      <section id="about">
+      <section id="about" className='top-margin-2'>
         <div className="row">
           <div className="info text-center">
             <h2>
