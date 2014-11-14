@@ -7,60 +7,11 @@ var React = require('react'),
   PublishCodeExample = Cine.component('homepage/code_examples/_publish');
 
 
-exports.HomeHero = React.createClass({
-  displayName: 'HomeHero',
-  mixins: [Cine.lib('requires_app')],
-
-  getApiKey: function(e){
-    e.preventDefault();
-
-    this.props.app.tracker.getApiKey({value: 0});
-    this.props.app.trigger('show-login');
-  },
-  showSignIn: function(e){
-    e.preventDefault();
-    this.props.app.trigger('show-login');
-  },
-  revealAbout: function(e){
-    e.preventDefault();
-    $('#homepage-logged-out').scrollTo('#about', 250);
-    window.history.pushState(null, "#about", "#about");
-  },
-  render: function() {
-    var squareSize = 32;
-
-    return (
-      <section id="home-hero">
-        <div className="row">
-          <div className="info">
-            <a href="/" title="cine.io">
-              <h1 className="brand">cine.io</h1>
-            </a>
-            <h2 className="subtitle">Build powerful live-streaming apps.</h2>
-            <h3 className="pitch">Get started for free.</h3>
-            <div className="actions">
-              <a href="" onClick={this.getApiKey} className="button radius">Get API Key</a><br/>
-              <a href="" className="sign-in-link" onClick={this.showSignIn}>Already a customer? Sign in.</a>
-            </div>
-          </div>
-        </div>
-
-        <div className="scrollhint">
-          <a href="" onClick={this.revealAbout}>
-            Learn More<br/>
-            <i className="fa fa-caret-down"></i>
-          </a>
-        </div>
-      </section>
-    );
-  }
-});
-
 exports.About = React.createClass({
   displayName: 'About',
   render: function() {
     return (
-      <section id="about">
+      <section id="about" className='top-margin-2'>
         <div className="row">
           <div className="info text-center">
             <h2>
@@ -68,82 +19,10 @@ exports.About = React.createClass({
               <em> by </em> and
               <em> for </em> developers.
             </h2>
-
             <p>
               You do not want to think about configuring a CDN, building a
               cross-platform viewing experience, or learning a new tool.
             </p>
-            <p className="hook">
-              Build ... ship ... <a target="_blank" href="https://www.youtube.com/watch?v=zS1cLOIxsQ8&amp;t=28s">do the happy dance</a>.
-            </p>
-          </div>
-        </div>
-      </section>
-    );
-  }
-});
-
-exports.Libraries = React.createClass({
-  displayName: 'Libraries',
-  render: function() {
-    var squareSize = 32;
-      multiplier = 2;
-    squareSize *= multiplier;
-    return (
-      <section id="libraries">
-        <div className="row text-center">
-          <div className="medium-12 columns">
-            <h2 className="bottom-margin-2">
-              We speak your language.
-            </h2>
-            <ul className="icon-list">
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/js-sdk'>
-                  <img src="/images/code-logos/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-ios'>
-                  <img src="/images/code-logos/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-android'>
-                  <img src="/images/code-logos/android-logo.png" alt="Android logo" title="The Android SDK" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-ruby'>
-                  <img src="/images/code-logos/ruby-logo.png" alt="Ruby logo" title="The Ruby Gem" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-python'>
-                  <img src="/images/code-logos/python-logo.png" alt="Python logo" title="The Python Egg" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-node'>
-                  <img src="/images/code-logos/nodejs-logo.png" alt="Node.js logo" title="The Node.js Package" />
-                </a>
-              </li>
-              <li className="show-for-medium-up">
-                <a target="_blank" href='https://github.com/cine-io'>
-                  <img src="/images/code-logos/github-logo.png" alt="GitHub logo" title="Find us on GitHub" />
-                </a>
-              </li>
-            </ul>
-            <div>
-              <p>Working in another framework / language? Don&apos;t sweat it. Our <a href="/docs">REST API</a> has you covered.</p>
-            </div>
-            <div className="developer-actions">
-              <div>
-                <a href="/docs" className="button radius">View documentation</a>
-              </div>
-              <div>
-                <a href="https://www.hipchat.com/gZCLRQ9Ih" className="button radius">Developer chat</a>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -299,121 +178,6 @@ exports.Marketplaces = React.createClass({
   }
 });
 
-exports.Pricing = React.createClass({
-  mixins: [Cine.lib('requires_app')],
-
-  displayName: 'Pricing',
-  getApiKey: function(plan, value, e){
-    e.preventDefault();
-
-    this.props.app.tracker.getApiKey({value: value});
-    this.props.app.trigger('set-signup-plan', plan);
-    this.props.app.trigger('show-login');
-  },
-  showCalculatorModal: function(e){
-    e.preventDefault();
-    this.props.app.trigger('show-modal', 'homepage/_bandwidth_calculator');
-  },
-  render: function() {
-    return (
-       <section id="pricing">
-          <div className="row">
-            <div className="info text-center">
-              <h2>Simple, developer-friendly pricing.</h2>
-
-              <i className="fa fa-2x fa-smile-o"></i>
-
-              <div className="pitch">
-                <h4>All plans include:</h4>
-                <ul className="features">
-                  <li>HD live-streaming <strong>to and from any
-                  device</strong> (web, iOS, Android)</li>
-                  <li>archiving / recording of streams</li>
-                  <li>distribution via our <strong>global CDN</strong></li>
-                  <li><strong>no ads</strong> of any kind</li>
-                  <li><a href="http://cineio.uservoice.com">email</a> {" + "}
-                  <strong><a href="https://www.hipchat.com/gZCLRQ9Ih">live chat support</a></strong>
-                  &nbsp;from our developers</li>
-                </ul>
-              </div>
-
-              <div className="prices">
-                <div className="plan">
-                  <ul className="pricing-table">
-                    <li className="title">Solo</li>
-                    <li className="price">
-                      <span className="currency">$</span>
-                      <span className="amount">20 / mo</span>
-                    </li>
-                    <li className="description">Great for starting out.</li>
-                    <li className="bullet-item">5 simultaneous streams</li>
-                    <li className="bullet-item">20 GiB transferred</li>
-                    <li className="bullet-item">5 GiB storage</li>
-                    <li className="bullet-item">$0.90 per additional GiB transferred</li>
-                    <li className="bullet-item">$0.90 per additional GiB storage</li>
-                    <li className="cta-button"><a className="button radius" href="" onClick={this.getApiKey.bind(this, 'solo', 2)}>Select</a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="plan">
-                  <ul className="pricing-table">
-                    <li className="title">Basic</li>
-                    <li className="price">
-                      <span className="currency">$</span>
-                      <span className="amount">100 / mo</span>
-                    </li>
-                    <li className="description">Affordable, with few limits.</li>
-                    <li className="bullet-item">unlimited streams</li>
-                    <li className="bullet-item">150 GiB transferred</li>
-                    <li className="bullet-item">25 GiB storage</li>
-                    <li className="bullet-item">$0.80 per additional GiB transferred</li>
-                    <li className="bullet-item">$0.80 per additional GiB storage</li>
-                    <li className="cta-button">
-                      <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'basic', 3)}>Select</a>
-                    </li>
-                  </ul>
-                </div>
-                <div className="plan">
-                  <ul className="pricing-table">
-                    <li className="title">Pro</li>
-                    <li className="price">
-                      <span className="currency">$</span>
-                      <span className="amount">500 / mo</span>
-                    </li>
-                    <li className="description">For heavy-lifting apps.</li>
-                    <li className="bullet-item">unlimited streams</li>
-                    <li className="bullet-item">1 TiB transferred</li>
-                    <li className="bullet-item">100 GiB storage</li>
-                    <li className="bullet-item">$0.70 per additional GiB transferred</li>
-                    <li className="bullet-item">$0.70 per additional GiB storage</li>
-                    <li className="cta-button">
-                      <a className="button radius" href="" onClick={this.getApiKey.bind(this, 'pro', 4)}>Select</a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="postscript">
-                <div>
-                  <p>Or, <a href="" onClick={this.getApiKey.bind(this, 'free', 1)}>try for free</a>.</p>
-                </div>
-                <div>
-                  <p>Need more than our <strong>Professional</strong> plan offers?&nbsp;&nbsp;
-                  <a href="http://cineio.uservoice.com/">Contact us.</a></p>
-                </div>
-              </div>
-            </div>
-            <div className="row show-for-medium-up">
-              <div className="column-12 columns text-center">
-                <a className="button radius" href="" onClick={this.showCalculatorModal}>Bandwidth Calculator</a>
-              </div>
-            </div>
-          </div>
-        </section>
-    );
-  }
-});
-
-
 exports.Consulting = React.createClass({
   displayName: 'Consulting',
   render: function() {
@@ -442,7 +206,7 @@ exports.Consulting = React.createClass({
             </p>
 
             <p>
-               <a className="button radius secondary" target="_blank" href="mailto:support@cine.io?subject=Business+Inquiry">
+               <a className="button radius primary" target="_blank" href="mailto:support@cine.io?subject=Business+Inquiry">
                  Talk to us
                </a>
             </p>

@@ -19,12 +19,20 @@ module.exports = class UsageReport extends Base
   @maxUsagePerAccount: (account, type)->
     _.inject account.get('plans'), usagePerPlanAggregator(account.get('provider'), type), 0
 
+  @sortedCinePlans: ->
+    planOptions = _.chain(ProvidersAndPlans['cine.io'].plans).pairs().filter((planNameDetails)-> planNameDetails[1].order ).value()
+    mappedPlans = _.map planOptions, (nameValue)->
+      nameValue[1].name = nameValue[0]
+      nameValue[1]
+    cinePlans = _.sortBy mappedPlans, "order"
+
   @lowestPlanPerUsage: (bytes, includeStarter=false)->
-    switch
-      when includeStarter && bytes <= humanizeBytes.GiB then 'starter'
-      when bytes <= humanizeBytes.GiB * 20 then 'solo'
-      when bytes <= humanizeBytes.GiB * 150 then 'basic'
-      else 'pro'
+    cinePlans = @sortedCinePlans()
+    thing = _.find cinePlans, (planDetails)->
+      return false if planDetails.price == 0 && !includeStarter
+      planDetails.bandwidth >= bytes
+    thing ||= _.last(cinePlans.name)
+    return thing.name
 
   @lastThreeMonths: ->
     thisMonth = new Date

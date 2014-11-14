@@ -4,13 +4,13 @@ GiB = 1073741824
 MiB = 1048576
 KiB = 1024
 
-module.exports = (filesize, thousand=',') ->
+module.exports = (filesize, thousand=',', places=2) ->
   if filesize >= TiB
-    sizeStr = formatNumber(filesize / TiB, 2, thousand) + " TiB"
+    sizeStr = formatNumber(filesize / TiB, places, thousand) + " TiB"
   else if filesize >= GiB
-    sizeStr = formatNumber(filesize / GiB, 2, thousand) + " GiB"
+    sizeStr = formatNumber(filesize / GiB, places, thousand) + " GiB"
   else if filesize >= MiB
-    sizeStr = formatNumber(filesize / MiB, 2, thousand) + " MiB"
+    sizeStr = formatNumber(filesize / MiB, places, thousand) + " MiB"
   else if filesize >= KiB
     sizeStr = formatNumber(filesize / KiB, 0, thousand) + " KiB"
   else

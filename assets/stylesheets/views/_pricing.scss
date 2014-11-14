@@ -1,0 +1,87 @@
+#pricing {
+  background: white;
+  padding-bottom: 2em;
+
+  .info {
+    @include grid-column(12);
+    padding-top: 1.5em;
+
+    h2 {
+      text-align: center;
+    }
+
+    .prices {
+      @include grid-row();
+      margin-top: 1.5em;
+
+      table {
+        td.plan-name, td.cost {
+          font-weight: bold;
+        }
+        td:last-child {
+          .button {
+            width: 100%;
+            margin: 0;
+          }
+        }
+      }
+      table.hide-for-medium-up {
+        /* this is an ugly hack */
+        td:first-child { width: 25%; }
+        td:last-child { width: 60%; }
+      }
+      table.show-for-medium-up {
+        th {
+          text-align: center;
+        }
+        td {
+          text-align: center;
+        }
+        td:first-child {
+          text-align: left;
+        }
+      }
+    }
+  }
+
+  .postscript {
+    @include grid-row();
+    div.limits { @include grid-column(12); }
+    div.included { @include grid-column(12); }
+    .features {
+      text-align: left;
+    }
+  }
+}
+
+@media #{$medium-up} {
+  #pricing {
+    .prices {
+      table {
+        @include grid-column(12);
+        padding-left: 0;
+        padding-right: 0;
+        td {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+}
+
+@media #{$large-up} {
+  #pricing {
+    .prices {
+      table {
+        @include grid-column(8, false, false, 2);
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    .postscript {
+      div.limits { @include grid-column(5, false, false, 1); }
+      div.included { @include grid-column(5, false, false, 1); }
+    }
+  }
+}

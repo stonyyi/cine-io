@@ -123,8 +123,8 @@ describe 'accountMailer', ->
       results =
         billing:
           plan: 500
-          bandwidthOverage: 340
-          storageOverage: 290
+          bandwidthOverage: 0
+          storageOverage: 0
         usage:
           bandwidth: humanizeBytes.TiB
           storage: humanizeBytes.GiB * 2
@@ -155,10 +155,10 @@ describe 'accountMailer', ->
         header_blurb: "Thank you for using cine.io."
         ACCOUNT_NAME: "my account name"
         BILLING_MONTH: month
-        BILL_BANDWIDTH_OVERAGE: "0 bytes @ $0.70 / GiB = $3.40"
-        BILL_OVERAGE_TOTAL: "$6.30"
-        BILL_STORAGE_OVERAGE: "0 bytes @ $0.70 / GiB = $2.90"
-        BILL_TOTAL: "$11.30"
+        BILL_BANDWIDTH_OVERAGE: "0 bytes @ $0.00 / GiB = $0.00"
+        BILL_OVERAGE_TOTAL: "$0.00"
+        BILL_STORAGE_OVERAGE: "0 bytes @ $0.00 / GiB = $0.00"
+        BILL_TOTAL: "$5.00"
         PLAN_BANDWIDTH: "1.15 TiB"
         PLAN_COST: "$5.00"
         PLAN_STORAGE: "125.00 GiB"

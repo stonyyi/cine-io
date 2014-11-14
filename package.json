@@ -72,11 +72,11 @@
     "xmlbuilder": "2.4.4"
   },
   "devDependencies": {
-    "aglio": "1.16.1",
+    "aglio": "1.14.0",
     "chai": "1.10.0",
     "coffeelint": "1.6.1",
     "grunt": "~0.4.2",
-    "grunt-aglio": "0.3.1",
+    "grunt-aglio": "0.2.1",
     "grunt-concurrent": "1.0.0",
     "grunt-contrib-watch": "0.6.1",
     "grunt-markdown": "0.6.1",

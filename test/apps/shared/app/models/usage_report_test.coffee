@@ -1,7 +1,10 @@
+_ = require('underscore')
 basicModel = Cine.require 'test/helpers/basic_model'
 UsageReport = Cine.model('usage_report')
 Account = Cine.model('account')
 humanizeBytes = Cine.lib('humanize_bytes')
+ProvidersAndPlans = Cine.config('providers_and_plans')
+
 basicModel('usage_report', urlAttributes: ['masterKey'], id: 'masterKey')
 
 
@@ -45,20 +48,36 @@ describe 'UsageReport', ->
         account.attributes.plans = ['free', 'solo', 'basic']
         expect(UsageReport.maxUsagePerAccount(account, 'storage')).to.equal(0 + 5368709120 + 26843545600)
 
-  describe 'lowestPlanPerUsage', ->
-    it 'returns the lowest plan with allowing', ->
+  describe '.lowestPlanPerUsage', ->
+    it 'returns the lowest plan', ->
       expect(UsageReport.lowestPlanPerUsage(humanizeBytes.MiB * 10)).to.equal('solo')
       expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB - 100)).to.equal('solo')
       expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB + 100)).to.equal('solo')
       expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 20 - 100)).to.equal('solo')
       expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 150 - 100)).to.equal('basic')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 500 - 100)).to.equal('premium')
       expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB - 100)).to.equal('pro')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB * 2 - 100)).to.equal('startup')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB * 5 - 100)).to.equal('business')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB * 5 + 100)).to.equal('enterprise')
 
-    it 'returns the lowest plan with allowing for starter', ->
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.MiB * 10, true)).to.equal('starter')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB - 100, true)).to.equal('starter')
+    it 'returns the lowest plan with allowing for free', ->
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.MiB * 10, true)).to.equal('free')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB - 100, true)).to.equal('free')
 
-  describe 'lastThreeMonths', ->
+  describe '.sortedCinePlans', ->
+    it 'includes the cine plans', ->
+      plans = UsageReport.sortedCinePlans()
+      expect(plans).to.have.length(_.pairs(ProvidersAndPlans['cine.io'].plans).length)
+
+    it 'sorts the plans based on order', ->
+      plans = UsageReport.sortedCinePlans()
+      expect(plans[0].name).to.equal('free')
+      expect(plans[0].price).to.equal(0)
+      expect(plans[7].name).to.equal('enterprise')
+      expect(plans[7].price).to.equal(5000)
+
+  describe '.lastThreeMonths', ->
     beforeEach ->
       @thisMonth = new Date
       @lastMonth = new Date

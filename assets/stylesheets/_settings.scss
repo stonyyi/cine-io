@@ -18,7 +18,7 @@
 // Since the typical default browser font-size is 16px, that makes the calculation for grid size.
 // If you want your base font-size to be different and not have it affect the grid breakpoints,
 // set $rem-base to $base-font-size and make sure $base-font-size is a px value.
-// $base-font-size: 100%;
+$base-font-size: 110%;
 
 // The $base-line-height is 100% while $base-font-size is 150%
 // $base-line-height: 150%;
@@ -43,12 +43,12 @@
 $body-bg: white;
 // $body-font-color: #222;
 // $body-font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-$body-font-family: Cabin, "Helvetica Neue", Helvetica, Arial, sans-serif;
+$body-font-family: "Quattrocento Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 // $body-font-weight: normal;
 // $body-font-style: normal;
 
 //$body-bg: rgba(170, 182, 255, 0.5);
-$distinct-font-family: Cardo, Georgia, serif;
+$distinct-font-family: "Varela Round", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 // We use this to control font-smoothing
 // $font-smoothing: antialiased;
@@ -75,6 +75,8 @@ $scheme-color-south-bright: scale-color($scheme-color-south, $lightness: 25%);
 $scheme-color-southwest-bright: scale-color($scheme-color-southwest, $lightness: 25%);
 $scheme-color-west-bright: scale-color($scheme-color-west, $lightness: 25%);
 $scheme-color-northwest-bright: scale-color($scheme-color-northwest, $lightness: 25%);
+
+$light-green-color: #90c9c6;
 
 // We use these as default colors throughout
 // $primary-color: #008CBA;

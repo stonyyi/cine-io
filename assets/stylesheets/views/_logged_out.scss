@@ -1,125 +1,46 @@
-#homepage-logged-out {
-
-  height: 100%;
-  overflow: auto;
-
-  &.move-right{
-    overflow: hidden;
+.homepage-logged-out {
+//   header{
+//     margin-bottom: 0;
+//   }
+  .wide-container{
+    padding: 0 !important;
   }
-  .inner-wrap{
-    height: 100%;
-  }
-
-  .gist table{
-    width: 100%;
-    margin-bottom: 0;
-  }
-
-  h3 {
-    font-family: $distinct-font-family;
-    font-weight: bold;
-  }
-
-  #home-hero {
-    position: relative;
-    background: black;
-    background: url(/images/home-hero-mobile.jpg) center center no-repeat;
-    background-size: cover;
-    min-height: 100%;
-    height: 100%;
-    padding-top: 0;
-    text-align: left;
-
-    * {
-      color: white;
+  &.hide-logo{
+    header{
+      z-index: 5;
+      background-color: $scheme-color-north;
     }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    a.button:hover {
-      text-decoration: none;
-    }
-
-    .info {
-      @include grid-column(12);
-      padding-top: 2em;
-
-      .pitch {
-        margin-bottom: 1em;
-      }
-
-      .actions {
-        margin-top: 1em;
-        .sign-in-link {
-          text-shadow: 0px 2px 2px black;
-        }
-      }
-    }
-
-    .scrollhint {
-      position: absolute;
-      bottom: 1em;
-      left: 0;
-      right: 0;
-      text-transform: uppercase;
-      text-align: center;
-      // http://stackoverflow.com/questions/11258877/fixed-element-disappears-in-chrome
-      -webkit-transform: translateZ(0);
+    .top-bar, .top-bar.expanded .title-area, .top-bar-section ul, .top-links li a{
+      background-color: $scheme-color-north;
+      transition: background-color 500ms ease;
     }
   }
+  &.show-logo{
+    .top-bar, .top-bar.expanded .title-area, .top-bar-section ul, .top-links li a{
+      transition: background-color 500ms ease;
+    }
+  }
+}
+
+//   &.move-right{
+//     overflow: hidden;
+//   }
+
+//   .gist table{
+//     width: 100%;
+//     margin-bottom: 0;
+//   }
+
+//   h3 {
+//     font-family: $distinct-font-family;
+//     font-weight: bold;
+//   }
+
 
   #about {
-    background: $scheme-color-north;
-    color: white;
-    padding-bottom: 2em;
-
-    iframe {
-      min-height: 178px;
-      width: 100%;
-    }
-
+    padding-top: 1.5em;
     .info {
       @include grid-column(12);
-      padding-top: 1.5em;
-
-      h2, h2 * {
-        color: $scheme-color-north-bright;
-      }
-    }
-
-    .hook {
-      text-transform: uppercase;
-      a {
-        color: white;
-        text-shadow: 0px 2px 2px black;
-      }
-      a:hover {
-        text-decoration: underline;
-      }
-    }
-
-    .video {
-      position: relative;
-      width: 100%;
-      background: black;
-
-      .aspect-ratio {
-        padding-top: 75%;
-      }
-
-      p {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        text-align: center;
-        color: white;
-        text-transform: uppercase;
-        padding-top: 30%;
-      }
     }
   }
 
@@ -173,20 +94,10 @@
     }
   }
 
-  #libraries, #marketplaces{
-    padding-top: 1.5em;
-
-    .developer-actions {
-      @include grid-row();
-      div {
-        @include grid-column(12);
-        a.button {
-          width: 100%;
-        }
-      }
-    }
-  }
   #libraries {
+    padding-top: 1.5em;
+    position: relative;
+    background-color: white;
     ul{
       li{
         img{
@@ -199,9 +110,21 @@
     .icon-list {
       @include block-grid(6);
     }
+    .developer-actions {
+      @include grid-row();
+      div {
+        @include grid-column(12);
+        a.button {
+          width: 100%;
+        }
+      }
+    }
   }
+
   #marketplaces {
-    background: #ccc;
+    padding-top: 1.5em;
+    background: $scheme-color-north;
+    color: $light-green-color;
     ul{
       li{
         img{
@@ -210,79 +133,43 @@
         }
       }
     }
+    h2 {
+      color: white;
+    }
     .icon-list {
       @include block-grid(5);
     }
   }
-  #pricing {
-    background: white;
-    padding-bottom: 2em;
-
-    .info {
-      @include grid-column(12);
-      padding-top: 1.5em;
-
-      .pitch {
-        margin-top: 1em;
-        div {
-          margin-bottom: 2em;
-        }
-
-        .features {
-          text-align: left;
-        }
-      }
-
-      .prices {
-        @include grid-row();
-        margin-top: 1.5em;
-        .plan {
-          @include grid-column(12);
-        }
-      }
-    }
-  }
 
   #consulting {
-    background: $scheme-color-north;
-    color: white;
-
+    padding-top: 1.5em;
     .info {
       @include grid-column(12);
-      padding-top: 1.5em;
-
-      a, h2, h2 * {
-        color: $scheme-color-north-bright;
-      }
-
-      a.button {
-        color: black;
-      }
     }
   }
-}
+
 
 
 @media #{$medium-up} {
-  #homepage-logged-out {
-    #home-hero {
-      background-image: url(/images/home-hero-tablet.jpg);
+  .homepage-logged-out {
+//     #home-hero {
+//       background-image: url(/images/home-hero-tablet.jpg);
 
-      .info {
-        @include grid-column(8, true);
-        padding-top: 5em;
+//       .info {
+//         @include grid-column(8, true);
+//         padding-top: 5em;
 
-        .pitch {
-          font-size: $h1-font-size;
-        }
-      }
-    }
+//         .pitch {
+//           font-size: $h1-font-size;
+//         }
+//       }
+//     }
 
-    #about {
-      .info {
-        @include grid-column(8, true, true, 2);
-      }
-    }
+//     #about {
+//       .info {
+//         @include grid-column(8, true, true, 2);
+//       }
+//     }
 
     #example {
       .head-script {
@@ -338,34 +225,10 @@
   }
 }
 
-@media #{$large-up} {
-  #homepage-logged-out {
-    #pricing {
-      .info {
-        @include grid-column(10, true, true, 1);
-
-        .pitch {
-          margin-top: 1em;
-          @include grid-column(8, true, true, 2);
-          div {
-            margin-bottom: 2em;
-          }
-        }
-
-        .prices {
-          .plan {
-            @include grid-column(4);
-          }
-        }
-      }
-    }
-  }
-}
-
-@media #{$large-up} {
-  #homepage-logged-out {
-    #home-hero {
-      background-image: url(/images/home-hero-desktop.jpg);
-    }
-  }
-}
+// @media #{$large-up} {
+//   #homepage-logged-out {
+//     #home-hero {
+//       background-image: url(/images/home-hero-desktop.jpg);
+//     }
+//   }
+// }

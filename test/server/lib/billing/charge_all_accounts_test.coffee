@@ -65,7 +65,7 @@ describe 'chargeAllAccounts', ->
     assertEmailSent 'monthlyBill'
 
     beforeEach ->
-      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 10000 + (5*80) + (4*80))
+      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 10000)
 
     stubDate = ->
       @firstOfMonth = new Date
