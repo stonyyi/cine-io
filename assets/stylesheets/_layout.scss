@@ -189,12 +189,13 @@ ul.dropdown li a.current{
 #page-layout {
 
   .container {
-    @include grid-column(8, true, true, 2);
+    @include grid-column(12, true, true);
   }
 
   .wide-container {
     @include grid-column(12);
   }
+
   header{
     margin-bottom: 1em;
     .brand {
