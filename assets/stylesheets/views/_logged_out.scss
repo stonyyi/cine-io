@@ -79,14 +79,6 @@
     padding-top: 1.5em;
     position: relative;
     background-color: white;
-    ul{
-      li{
-        img{
-          width: 32px;
-          height: 32px;
-        }
-      }
-    }
 
     .icon-list {
       @include block-grid(6);
@@ -106,14 +98,6 @@
     padding-top: 1.5em;
     background: $scheme-color-north;
     color: $light-green-color;
-    ul{
-      li{
-        img{
-          width: 48px;
-          height: 48px;
-        }
-      }
-    }
     h2 {
       color: white;
     }
