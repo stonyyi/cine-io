@@ -9,8 +9,7 @@
   h4 {
     text-transform: uppercase;
   }
-  .row{
-    padding-top: 50px;
+  .hero-content{
     padding-bottom: 35px;
   }
   .hero-text-wrapper{
@@ -40,6 +39,9 @@
 @media #{$medium-up} {
 .hero-row{
   display: table-row;
+  .hero-content{
+    padding-top: 50px;
+  }
   .table-row{
     display: table-row;
     width: auto;

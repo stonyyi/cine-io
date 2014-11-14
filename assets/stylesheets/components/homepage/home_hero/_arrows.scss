@@ -2,6 +2,9 @@ $arrow-border-visible: 18px solid;
 $arrow-border-transparent: $arrow-border-visible transparent;
 
 .home-hero{
+  .arrow.extra-arrow{
+    display: none;
+  }
   .arrow {
     width: 0;
     height: 0;
@@ -12,7 +15,6 @@ $arrow-border-transparent: $arrow-border-visible transparent;
     border-left: $arrow-border-transparent;
     border-right: $arrow-border-transparent;
     border-top: $arrow-border-visible;
-
   }
 
   .arrow:nth-child(3n+1) {
@@ -37,6 +39,9 @@ $arrow-border-transparent: $arrow-border-visible transparent;
 
 @media #{$medium-up} {
   .home-hero{
+    .arrow.extra-arrow{
+      display: inline-block;
+    }
     .arrow {
       display: inline-block;
       border-top: $arrow-border-transparent;

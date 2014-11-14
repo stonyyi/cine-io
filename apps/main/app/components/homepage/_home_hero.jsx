@@ -11,8 +11,8 @@ module.exports = React.createClass({
       <div className="hero-item arrows">
         <div className="arrow"></div>
         <div className="arrow"></div>
-        <div className="arrow"></div>
-        <div className="arrow"></div>
+        <div className="arrow extra-arrow"></div>
+        <div className="arrow extra-arrow"></div>
       </div>
     );
 
@@ -43,8 +43,17 @@ module.exports = React.createClass({
           </a>
           <h3>Build powerful video apps.</h3>
         </div>
-        <div className="row">
-          <div>
+        <div className="show-for-small-only">
+          <div className='text-center'>
+            <h4>Broadcast</h4>
+            {arrows}
+            <h4>Transcode and Store</h4>
+            {arrows}
+            <h4>Watch Anywhere</h4>
+          </div>
+        </div>
+        <div className="hero-content row">
+          <div className="show-for-medium-up">
             <div className="hero-row hero-flow">
               <div className="hero-item broadcaster-wrapper">
                 <div className='table-row'>
@@ -100,7 +109,7 @@ module.exports = React.createClass({
             </div>
           </div>
 
-          <div className="hero-text-wrapper">
+          <div className="hero-text-wrapper show-for-medium-up">
             <div className='hero-row hero-text'>
               <div className="hero-item broadcaster-wrapper">
                 {broadcastText}
@@ -113,13 +122,13 @@ module.exports = React.createClass({
               </div>
             </div>
 
-            <div className="call-to-action">
-              <span className="api-key-button">
-                <a className="button radius secondary" href="#">
-                  Get Free API Key
-                </a>
-              </span>
-            </div>
+          </div>
+          <div className="call-to-action">
+            <span className="api-key-button">
+              <a className="button radius secondary" href="#">
+                Get Free API Key
+              </a>
+            </span>
           </div>
         </div>
       </div>
