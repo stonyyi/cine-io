@@ -53,18 +53,18 @@
     }
     $grid-item-width: 146px;
     .broadcaster-wrapper{
-      width: $grid-item-width * 3;
+      width: 370px;
       text-align: center;
       div {
         display: inline-block;
       }
     }
     .arrows {
-      width: $grid-item-width + 20px;
-      padding: 0px 20px;
+      width: $grid-item-width + 30px;
+      padding: 0px 18px;
     }
     .cloud{
-      width: $grid-item-width * 4;
+      width: 280px;
     }
   }
   &.hero-text{

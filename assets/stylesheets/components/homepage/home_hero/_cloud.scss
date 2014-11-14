@@ -1,10 +1,13 @@
 .home-hero{
+  $cloud-width: 280px;
   .cloud{
     .hero-image{
       text-align: center;
+      width: $cloud-width;
+      margin: auto;
     }
     img{
-      width: 320px;
+      width: $cloud-width;
     }
   }
 }
