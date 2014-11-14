@@ -1,7 +1,4 @@
 .homepage-logged-out {
-//   header{
-//     margin-bottom: 0;
-//   }
   .wide-container{
     padding: 0 !important;
   }
@@ -20,22 +17,6 @@
       transition: background-color 500ms ease;
     }
   }
-}
-
-//   &.move-right{
-//     overflow: hidden;
-//   }
-
-//   .gist table{
-//     width: 100%;
-//     margin-bottom: 0;
-//   }
-
-//   h3 {
-//     font-family: $distinct-font-family;
-//     font-weight: bold;
-//   }
-
 
   #about {
     padding-top: 1.5em;
@@ -147,29 +128,11 @@
       @include grid-column(12);
     }
   }
-
+}
 
 
 @media #{$medium-up} {
   .homepage-logged-out {
-//     #home-hero {
-//       background-image: url(/images/home-hero-tablet.jpg);
-
-//       .info {
-//         @include grid-column(8, true);
-//         padding-top: 5em;
-
-//         .pitch {
-//           font-size: $h1-font-size;
-//         }
-//       }
-//     }
-
-//     #about {
-//       .info {
-//         @include grid-column(8, true, true, 2);
-//       }
-//     }
 
     #example {
       .head-script {
@@ -225,10 +188,3 @@
   }
 }
 
-// @media #{$large-up} {
-//   #homepage-logged-out {
-//     #home-hero {
-//       background-image: url(/images/home-hero-desktop.jpg);
-//     }
-//   }
-// }
