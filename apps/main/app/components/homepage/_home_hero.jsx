@@ -40,6 +40,12 @@ module.exports = React.createClass({
         <p>View your content live or at a later time on any device using our global CDN.</p>
       </div>
     );
+    var video = (
+      <video muted={true} autoPlay={true} loop={true}>
+        <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
+        <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
+      </video>
+    );
     return (
       <div className='home-hero'>
 
@@ -69,10 +75,7 @@ module.exports = React.createClass({
                     </div>
                   </div>
                   <div className="hero-item stage">
-                    <video muted={true} autoPlay={true} loop={true}>
-                      <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
-                      <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
-                    </video>
+                    {video}
                   </div>
                 </div>
               </div>
@@ -90,24 +93,15 @@ module.exports = React.createClass({
               <div className="hero-item watch">
                 <div className="players">
                   <div className="hero-image laptop-video">
-                    <video muted={true} autoPlay={true} loop={true}>
-                      <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
-                      <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
-                    </video>
+                    {video}
                     <img src="/images/home-hero/laptop.png" />
                   </div>
                   <div className="hero-image tablet-video">
-                    <video muted={true} autoPlay={true} loop={true}>
-                      <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
-                      <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
-                    </video>
+                    {video}
                     <img src="/images/home-hero/tablet.png" />
                   </div>
                   <div className="hero-image phone-video">
-                    <video muted={true} autoPlay={true} loop={true}>
-                      <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
-                      <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
-                    </video>
+                    {video}
                     <img src="/images/home-hero/phone.png" />
                   </div>
                 </div>
