@@ -56,7 +56,7 @@ module.exports = React.createClass({
             </div>
             <div className="developer-actions">
               <div>
-                <a href="/docs" className="button radius">View documentation</a>
+                <a href="/docs" className="button radius">View Docs</a>
               </div>
               <div>
                 <a href="https://www.hipchat.com/gZCLRQ9Ih" className="button radius">Developer chat</a>
