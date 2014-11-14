@@ -3,6 +3,13 @@
   color: white;
   background: #128c87;
 
+  .brand-wrapper{
+    text-align: center;
+    .brand{
+      background-position: center center;
+    }
+  }
+
   p {
     line-height: 1.2;
   }
@@ -41,8 +48,20 @@
   }
 }
 @media #{$medium-up} {
+  .home-hero{
+    .brand-wrapper{
+      text-align: left;
+      .brand{
+        background-position: left center;
+      }
+    }
+  }
+}
+@media #{$medium-up} {
 .hero-row{
   display: table-row;
+
+
   .hero-content{
     padding-top: 50px;
   }
