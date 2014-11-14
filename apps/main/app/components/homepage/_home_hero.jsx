@@ -42,8 +42,8 @@ module.exports = React.createClass({
     );
     var video = (
       <video muted={true} autoPlay={true} loop={true}>
-        <source src="http://vod.cine.io/homepage/fireworks_320.webm" type="video/webm" />
-        <source src="http://vod.cine.io/homepage/fireworks_320.mp4" type="video/mp4" />
+        <source src="http://vod.cine.io/homepage/sunset-clouds.webm" type="video/webm" />
+        <source src="http://vod.cine.io/homepage/sunset-clouds.mp4" type="video/mp4" />
       </video>
     );
     return (
