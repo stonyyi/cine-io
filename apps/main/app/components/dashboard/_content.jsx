@@ -1,10 +1,10 @@
 /** @jsx React.DOM */
 var
   React = require('react'),
-  NewProject = Cine.component('homepage/_new_project'),
-  ListItem = Cine.component('homepage/_project_list_item'),
+  NewProject = Cine.component('dashboard/_new_project'),
+  ListItem = Cine.component('dashboard/_project_list_item'),
   Projects = Cine.collection('projects'),
-  ProjectStreamsWrapper = Cine.component('homepage/_project_streams_wrapper'),
+  ProjectStreamsWrapper = Cine.component('dashboard/_project_streams_wrapper'),
   FlashMessage = Cine.component('layout/_flash_message'),
   cx = Cine.lib('cx');
 

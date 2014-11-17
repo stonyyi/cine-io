@@ -31,7 +31,7 @@ module.exports = React.createClass({
       return (
         <header>
           <nav className={topBarClasses}>
-            <Brand app={this.props.app} toggleExpandMenu={this.toggleExpandMenu}/>
+            <Brand app={this.props.app} toggleExpandMenu={this.toggleExpandMenu} location="/dashboard" />
             <LoggedInHeader app={this.props.app} />
           </nav>
         </header>

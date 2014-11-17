@@ -23,4 +23,7 @@ module.exports = class User extends Base
     @createdAt() > twoMinutesAgo
 
   accounts: ->
-    @_accounts ||= new Accounts(@get('accounts'), app: @app)
+    return @_accounts if @_accounts
+    accounts = @get('accounts')
+    return new Accounts([], app: @app) unless accounts
+    @_accounts = new Accounts(accounts, app: @app)

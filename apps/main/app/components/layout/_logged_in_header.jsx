@@ -96,7 +96,7 @@ module.exports = React.createClass({
           <li ref="links" className={linksClass}>
             <a href="" onClick={this.toggleLinksMoved}>{name}</a>
             <ul className="dropdown">
-              <li><a href='/'>Home</a></li>
+              <li><a href='/dashboard'>Dashboard</a></li>
               {additionalListItems}
               <li><a href='/profile'>Profile</a></li>
               <li><a href='/account'>Account</a></li>

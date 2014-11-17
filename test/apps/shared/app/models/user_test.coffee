@@ -38,3 +38,6 @@ describe 'User', ->
       d.setSeconds(d.getSeconds() + 27)
       c = new User(createdAt: d.toISOString())
       expect(c.isNew()).to.be.true
+
+  describe 'accounts', ->
+    it 'is tested'

@@ -1,5 +1,5 @@
 module.exports = (match) ->
-  match "", "homepage#show"
+  match "/", "homepage#show"
   match "/products", "homepage#products"
   match "/solutions", "homepage#solutions"
   match "/pricing", "homepage#pricing"
@@ -9,6 +9,7 @@ module.exports = (match) ->
   match '/404',        'errors#not_found'
   match '/500',        'errors#server_error'
 
+  match "/dashboard", "dashboard#show"
   match "/profile", "profile#edit"
   match "/usage", "usage_reports#show"
   match "/account", "account#show"
