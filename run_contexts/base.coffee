@@ -12,7 +12,8 @@ jobs = null
 exports._recreateQueue = ->
   jobs = createQueue(force: jobs?)
 
-exports._recreateQueue()
+getJobs = ->
+  jobs || exports._recreateQueue()
 
 exports.app = ->
   app = express()
@@ -33,7 +34,7 @@ exports.listen = (app, defaultPort)->
 # scheduleJob("process-video", {file: "some-file"})
 exports.scheduleJob = (queue, details={}, callback=noop)->
   console.log("scheduling job in", queue, details)
-  job = jobs.create(queue, details)
+  job = getJobs().create(queue, details)
   job.save callback
 
 
@@ -45,9 +46,9 @@ processJobs = (queue, options, callback)->
     options = {}
   console.log("processing jobs for", queue)
   if options.concurrency
-    jobs.process(queue, options.concurrency, callback)
+    getJobs().process(queue, options.concurrency, callback)
   else
-    jobs.process(queue, callback)
+    getJobs().process(queue, callback)
 
 # eventually we need a per-machine specific name
 exports.getQueueName = (runContext)->
