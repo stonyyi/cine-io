@@ -13,6 +13,7 @@ Project = Cine.server_model('project')
 streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
 client = Cine.server_lib('redis_client')
 uploadFileToS3 = Cine.server_lib('./upload_file_to_s3')
+redisKeyForM3U8 = Cine.server_lib('hls/redis_key_for_m3u8')
 
 module.exports = hlsSender = (event, filename, callback=noop)->
   console.log('event is: ' + event)
@@ -59,11 +60,8 @@ modifyM3U8FileForCloudfront = (fileContents, project)->
   _.chain(fileContents.split("\n")).map(prependCloudfrontAndProjectToTSFile).value().join("\n")
 
 
-redisKeyForStream = (project, stream)->
-  "hls:#{project.publicKey}/#{stream.streamName}.m3u8"
-
 addHLSFileToRedis = (fileContents, stream, project, callback)->
-  redisKey = redisKeyForStream(project, stream)
+  redisKey = redisKeyForM3U8.withObjects(project, stream)
   cloudfrontM3U8 = modifyM3U8FileForCloudfront(fileContents, project)
   console.log("Setting redis", redisKey, cloudfrontM3U8)
   client.set(redisKey, cloudfrontM3U8, callback)
