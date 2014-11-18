@@ -1,8 +1,8 @@
 /** @jsx React.DOM */
 var
   React = require('react'),
-  StreamDeetsAndActions = Cine.component('homepage/_stream_deets_and_actions'),
-  NewStreamButton = Cine.component('homepage/_new_stream_button'),
+  StreamDeetsAndActions = Cine.component('dashboard/_stream_deets_and_actions'),
+  NewStreamButton = Cine.component('dashboard/_new_stream_button'),
   Streams = Cine.collection('streams'),
   Project = Cine.model('project'),
   InitializeCodeExample = Cine.component('homepage/code_examples/_initialize'),
