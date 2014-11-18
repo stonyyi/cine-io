@@ -4,13 +4,12 @@ os = require("os")
 express = require 'express'
 morgan = require('morgan')
 bodyParser = require('body-parser')
-createQueue = Cine.server_lib('create_queue')
 
 noop = ->
 
 jobs = null
 exports._recreateQueue = ->
-  jobs = createQueue(force: jobs?)
+  jobs = Cine.server_lib('create_queue')(force: jobs?)
 
 getJobs = ->
   jobs || exports._recreateQueue()
