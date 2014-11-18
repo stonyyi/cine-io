@@ -1,5 +1,6 @@
 Base = Cine.run_context('base')
 os = require("os")
+fs = require("fs")
 
 describe 'Base', ->
 
@@ -31,6 +32,23 @@ describe 'Base', ->
 
     it 'includes the hostname', ->
       expect(Base.getQueueName('my-run-context')).to.equal("the computer host-my-run-context-incoming")
+
+  describe 'watch', ->
+    beforeEach ->
+      @watchSpy = sinon.spy fs, 'watch'
+    afterEach ->
+      @watchSpy.restore()
+
+    it 'delegates to fs.watch', ->
+      path = Cine.path("test/fixtures/file.txt")
+      cbFunction = ->
+      watcher = Base.watch(path, cbFunction)
+      expect(@watchSpy.calledOnce).to.be.true
+      args = @watchSpy.firstCall.args
+      expect(args).to.have.length(2)
+      expect(args[0]).to.equal(path)
+      expect(args[1]).to.equal(cbFunction)
+      watcher.close()
 
   describe 'listen', ->
     beforeEach ->

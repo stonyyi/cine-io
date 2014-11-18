@@ -1,10 +1,10 @@
 env = require '../config/environment'
-
+fs = require('fs')
+os = require("os")
 express = require 'express'
 morgan = require('morgan')
 bodyParser = require('body-parser')
 createQueue = Cine.server_lib('create_queue')
-os = require("os")
 
 noop = ->
 
@@ -56,3 +56,6 @@ exports.getQueueName = (runContext)->
 exports.processJobs = (runContext, callback)->
   queueName = exports.getQueueName(runContext)
   processJobs(queueName, callback)
+
+exports.watch = (dir, cb)->
+  fs.watch(dir,cb)
