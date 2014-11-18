@@ -43,6 +43,16 @@ describe 'streamRecordingNameEnforcer', ->
     it 'works with a dot and underscore numbers', ->
       expect(streamRecordingNameEnforcer.extractStreamName("e1RIjedUEg.1412521527733_4694.mp4")).to.equal('e1RIjedUEg')
 
+  describe 'extractStreamNameFromHlsFile', ->
+    it 'takes off the timestamp', ->
+      fileName = "some-stream-1416271565425.ts"
+      streamName = streamRecordingNameEnforcer.extractStreamNameFromHlsFile(fileName)
+      expect(streamName).to.equal("some-stream")
+    it 'works with a directory', ->
+      fileName = "https://cine-io-hls.s3.amazonaws.com/some-stream-1416271565425.ts"
+      streamName = streamRecordingNameEnforcer.extractStreamNameFromHlsFile(fileName)
+      expect(streamName).to.equal("some-stream")
+
   describe 'extractStreamNameFromDirectory', ->
     it 'takes a full directory', ->
       expect(streamRecordingNameEnforcer.extractStreamNameFromDirectory("/some/full/path/abc.mp4")).to.equal('abc')
