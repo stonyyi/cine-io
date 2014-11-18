@@ -48,6 +48,7 @@
     @include grid-row();
     div.limits { @include grid-column(12); }
     div.included { @include grid-column(12); }
+    div.byo-cdn { @include grid-column(12); }
     .features {
       text-align: left;
     }
@@ -82,6 +83,7 @@
     .postscript {
       div.limits { @include grid-column(5, false, false, 1); }
       div.included { @include grid-column(5, false, false, 1); }
+      div.byo-cdn { @include grid-column(10, false, false, 1); }
     }
   }
 }

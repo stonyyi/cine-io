@@ -152,6 +152,20 @@ module.exports = React.createClass({
                 &nbsp;from our developers</li>
               </ul>
             </div>
+
+            <div className="byo-cdn">
+              <h4>Already paying for a CDN?</h4>
+              <p>
+                If you already have an RTMP-capable CDN configured (such as
+                Akamai, EdgeCast, or Level3), we can probably help you integrate
+                it with our infrastructure so that you can save on bandwidth
+                costs. Consulting fees may apply.
+
+                <div className="text-center">
+                  <a className="button radius" target="_blank" href="mailto:support@cine.io?subject=Business+Inquiry">Talk to Us</a>
+                </div>
+              </p>
+            </div>
           </div>
 
         </section>
