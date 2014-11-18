@@ -4,6 +4,7 @@ Cine.config('connect_to_mongo')
 runMe = !module.parent
 
 EdgecastStream = Cine.server_model('edgecast_stream')
+Project = Cine.server_model('project')
 
 app = exports.app = Base.app()
 
@@ -24,15 +25,19 @@ app.get '/', (req, res)->
 
 app.post '/', (req, res)->
   console.log("got request", req.body)
+  streamName = req.body.name
 
-  return res.status(404).send("no stream name provided") unless req.body.name
-
+  return res.status(404).send("no stream name provided") unless streamName
   query =
-    streamName: req.body.name
+    streamName: streamName
   EdgecastStream.findOne query, (err, stream)->
     return res.status(400).send(err) if err
-    return res.status(404).send("invalid stream: #{req.body.name}") unless stream
+    return res.status(404).send("invalid stream: #{streamName}") unless stream
     return res.status(401).send("unauthorized") unless _.has(req.body, stream.streamKey)
-    res.send("OK")
+    Project.findById stream._project, (err, project)->
+      return res.status(400).send(err) if err
+      return res.status(404).send("could not find project: #{stream._project}") unless project
+      return res.status(402).send("project is disabled") if project.throttledAt
+      res.send("OK")
 
 Base.listen app, 8183 if runMe
