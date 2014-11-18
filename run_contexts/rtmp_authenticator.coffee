@@ -27,6 +27,10 @@ app.post '/', (req, res)->
   console.log("got request", req.body)
   streamName = req.body.name
 
+  # if '0ffa=true' is passed, we're coming from the rtmp-stylist to the rtmp-
+  # replicator and want to avoid double-authentication
+  return res.send("OK") if req.body["0ffa"] == "true"
+
   return res.status(404).send("no stream name provided") unless streamName
   query =
     streamName: streamName

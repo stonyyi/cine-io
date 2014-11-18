@@ -77,6 +77,16 @@ describe 'RtmpAuthenticator', ->
 
     describe 'success', ->
 
+      it "succeeds if authentication is bypassed", (done)->
+        @agent
+          .post('/')
+          .send({"0ffa" : "true"})
+          .expect(200)
+          .end (err, res)->
+            expect(err).to.be.null
+            expect(res.text).to.contain("OK")
+            done()
+
       it "succeeds with the right stream name and key", (done)->
         @agent
           .post('/')
