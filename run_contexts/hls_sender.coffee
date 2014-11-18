@@ -16,7 +16,6 @@ uploadFileToS3 = Cine.server_lib('./upload_file_to_s3')
 redisKeyForM3U8 = Cine.server_lib('hls/redis_key_for_m3u8')
 
 module.exports = hlsSender = (event, filename, callback=noop)->
-  console.log('event is: ' + event)
   return callback() unless filename && path.extname(filename) == '.m3u8'
   checkAndUpdateM3U8 filename, (err)->
     console.log("DONE!", err)
