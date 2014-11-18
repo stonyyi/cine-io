@@ -6,4 +6,4 @@ module.exports = (fileName, fileContents)->
     date: 'Tue, 18 Nov 2014 02:51:09 GMT',
     etag: '"26bb73556ceb32a5df30b733c5355ee5"',
     'content-length': '0',
-    server: 'AmazonS3' });
+    server: 'AmazonS3' })

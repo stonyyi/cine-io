@@ -7,4 +7,4 @@ module.exports = (fileName, fileContents)->
     'transfer-encoding': 'chunked',
     date: 'Tue, 18 Nov 2014 03:01:13 GMT',
     connection: 'close',
-    server: 'AmazonS3' });
+    server: 'AmazonS3' })
