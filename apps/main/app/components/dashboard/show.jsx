@@ -1,16 +1,8 @@
 /** @jsx React.DOM */
 var React = require('react'),
 PageWrapper = Cine.component('layout/_page_wrapper'),
-LoggedOut = Cine.component('homepage/_logged_out'),
-LoggedIn = Cine.component('homepage/_logged_in'),
-HomeHero = Cine.component('homepage/_home_hero'),
-About = LoggedOut.About,
-Example = LoggedOut.Example,
-Libraries = Cine.component('homepage/_libraries'),
-Consulting = LoggedOut.Consulting,
-Marketplaces = LoggedOut.Marketplaces,
-NoAccount = Cine.component('shared/_no_account'),
-Projects = Cine.collection('projects');
+LoggedIn = Cine.component('dashboard/_content'),
+NoAccount = Cine.component('shared/_no_account');
 
 module.exports = React.createClass({
   displayName: 'DashboardShow',
