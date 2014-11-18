@@ -20,6 +20,7 @@ app.use Cine.require('apps/main', app).handle
 app.use '/admin/kue', Cine.require('apps/kue')
 app.use '/admin', Cine.require('apps/admin', app).handle
 app.use '/embed', Cine.require('apps/embed')
+app.use '/hls', Cine.require('apps/m3u8')
 
 # Serve static assets
 app.use express.static "#{Cine.root}/public"
