@@ -1,20 +1,9 @@
 connect_redis = require('connect-redis')
 _ = require('underscore')
-express = require 'express'
-compression = require('compression')
-morgan = require('morgan')
 session = require('express-session')
-bodyParser = require('body-parser')
-methodOverride = require('method-override')
 cookieParser = require('cookie-parser')
 
 module.exports = (app) ->
-
-  # Use compression
-  app.use compression(threshold: 512)
-
-  # log requests
-  app.use morgan((if app.settings.env is "development" then "dev" else "combined"))
 
   # populates req.cookies
   # cookie secret
@@ -28,22 +17,6 @@ module.exports = (app) ->
     saveUninitialized: true
     resave: true
   )
-
-  # # parse form data
-  app.use(bodyParser.urlencoded(extended: false))
-  app.use(bodyParser.json())
-
-  # for fake DELETE and PUT requests
-  app.use methodOverride()
-
-  # CSRF protection, populates req.csrfToken()
-  # if app.settings.env isnt "test"
-  #   app.use(express.csrf())
-
-  #   app.use (req, res, next)->
-  #     return next() if req.xhr
-  #     req._myCSRF = req.csrfToken()
-  #     next()
 
   # generic force https and www
   app.use Cine.middleware('force_https_and_www') if app.settings.env is "production"

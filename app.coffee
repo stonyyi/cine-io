@@ -12,15 +12,19 @@ app.enable('trust proxy')
 
 app.set 'title', 'Cine.io'
 
-Cine.middleware 'middleware', app
+Cine.middleware 'middleware_base', app
 
-Cine.server 'api_routes', app
+if process.env.RUN_AS == 'hls'
+  app.use '/', Cine.require('apps/m3u8')
+else
+  Cine.middleware 'middleware', app
 
-app.use Cine.require('apps/main', app).handle
-app.use '/admin/kue', Cine.require('apps/kue')
-app.use '/admin', Cine.require('apps/admin', app).handle
-app.use '/embed', Cine.require('apps/embed')
-app.use '/hls', Cine.require('apps/m3u8')
+  Cine.server 'api_routes', app
+
+  app.use Cine.require('apps/main', app).handle
+  app.use '/admin/kue', Cine.require('apps/kue')
+  app.use '/admin', Cine.require('apps/admin', app).handle
+  app.use '/embed', Cine.require('apps/embed')
 
 # Serve static assets
 app.use express.static "#{Cine.root}/public"
