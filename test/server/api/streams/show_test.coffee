@@ -51,7 +51,7 @@ describe 'Streams#Show', ->
       Show params, (err, response, options)=>
         expect(err).to.be.null
         expectedPlayResponse =
-          hls: "http://hls.cine.io/my-pub/cine1.m3u8"
+          hls: "http://hls2.cine.io/cines/cine1ENAME/cine1.m3u8"
           rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
         expect(_.keys(response).sort()).to.deep.equal(['id', 'name', 'play', 'streamName'])
         expect(response.play).to.deep.equal(expectedPlayResponse)
@@ -75,7 +75,7 @@ describe 'Streams#Show', ->
       Show params, (err, response, options)=>
         expect(err).to.be.null
         expectedPlayResponse =
-          hls: "http://hls.cine.io/my-pub/cine1.m3u8"
+          hls: "http://hls2.cine.io/cines/cine1ENAME/cine1.m3u8"
           rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
         expectedPublishResponse =
           url: "rtmp://publish-sfo1.cine.io/live"

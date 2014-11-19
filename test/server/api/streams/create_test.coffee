@@ -36,7 +36,7 @@ describe 'Streams#Create', ->
       Create params, (err, response, options)=>
         expect(err).to.be.null
         expectedPlayResponse =
-          hls: "http://hls.cine.io/some-pub/cine1.m3u8"
+          hls: "http://hls2.cine.io/cines/cine1ENAME/cine1.m3u8"
           rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
         expectedPublishResponse =
           url: "rtmp://publish-sfo1.cine.io/live"
