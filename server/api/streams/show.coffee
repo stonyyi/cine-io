@@ -24,24 +24,24 @@ fmleProfile = (stream, options, callback)->
       .replace(/EVENT_NAME/g, stream.eventName)
     callback(null, content: content)
 
-playJSON = (stream, callback)->
+playJSON = (project, stream, callback)->
   streamJSON =
     id: stream._id.toString()
     name: stream.name
     streamName: stream.streamName
     play:
-      hls: "http://hls.cine.io/#{stream.instanceName}/#{stream.eventName}/#{stream.streamName}.m3u8"
+      hls: "http://hls.cine.io/#{project.publicKey}/#{stream.streamName}.m3u8"
       rtmp: "#{BASE_URL}/#{stream.instanceName}/#{stream.streamName}?adbe-live-event=#{stream.eventName}"
   callback(null, streamJSON)
 
-fullJSON = (stream, options, callback)->
+fullJSON = (project, stream, options, callback)->
   if typeof options == "function"
     callback = options
     options = {}
 
   options.server ||= NearestServer.default.server
 
-  playJSON stream, (err, streamJSON)->
+  playJSON project, stream, (err, streamJSON)->
     streamJSON.publish =
       url: options.server
       stream: "#{stream.streamName}?#{stream.streamKey}&amp;adbe-live-event=#{stream.eventName}"
@@ -75,9 +75,9 @@ Show = (params, callback)->
         return callback("secret key required", null, status: 401) unless options.secure
         addEdgecastServerToStreamOptions(streamOptions, params)
         return fmleProfile(stream, streamOptions, callback)
-      return playJSON(stream, callback) unless options.secure
+      return playJSON(project, stream, callback) unless options.secure
       addEdgecastServerToStreamOptions(streamOptions, params)
-      fullJSON(stream, streamOptions, callback)
+      fullJSON(project, stream, streamOptions, callback)
 
 module.exports = Show
 module.exports.fullJSON = fullJSON

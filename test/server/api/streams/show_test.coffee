@@ -10,7 +10,7 @@ describe 'Streams#Show', ->
   now = new Date
 
   beforeEach (done)->
-    @project = new Project(name: 'my project')
+    @project = new Project(name: 'my project', publicKey: 'my-pub')
     @project.save done
 
   beforeEach (done)->
@@ -51,7 +51,7 @@ describe 'Streams#Show', ->
       Show params, (err, response, options)=>
         expect(err).to.be.null
         expectedPlayResponse =
-          hls: "http://hls.cine.io/cines/cine1ENAME/cine1.m3u8"
+          hls: "http://hls.cine.io/my-pub/cine1.m3u8"
           rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
         expect(_.keys(response).sort()).to.deep.equal(['id', 'name', 'play', 'streamName'])
         expect(response.play).to.deep.equal(expectedPlayResponse)
@@ -75,7 +75,7 @@ describe 'Streams#Show', ->
       Show params, (err, response, options)=>
         expect(err).to.be.null
         expectedPlayResponse =
-          hls: "http://hls.cine.io/cines/cine1ENAME/cine1.m3u8"
+          hls: "http://hls.cine.io/my-pub/cine1.m3u8"
           rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
         expectedPublishResponse =
           url: "rtmp://publish-sfo1.cine.io/live"
@@ -149,13 +149,13 @@ describe 'Streams#Show', ->
         expect(response).to.be.null
         expect(options).to.deep.equal(status: 404)
         done()
+    describe '#fullJSON', ->
+      it 'will be returned in the full json when used', (done)->
+        StreamsShow.fullJSON @project, @projectStream, (err, streamJSON)->
+          expect(streamJSON.deletedAt).to.be.instanceOf(Date)
+          done()
 
-    it 'will be returned in the full json when used', (done)->
-      StreamsShow.fullJSON @projectStream, (err, streamJSON)->
-        expect(streamJSON.deletedAt).to.be.instanceOf(Date)
-        done()
-
-    it 'will be not returned in the play json when used', (done)->
-      StreamsShow.playJSON @projectStream, (err, streamJSON)->
-        expect(streamJSON.deletedAt).to.be.undefined
-        done()
+      it 'will be not returned in the play json when used', (done)->
+        StreamsShow.playJSON @project, @projectStream, (err, streamJSON)->
+          expect(streamJSON.deletedAt).to.be.undefined
+          done()

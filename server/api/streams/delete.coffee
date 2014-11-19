@@ -1,7 +1,7 @@
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
 getProject = Cine.server_lib('get_project')
-StreamShow = Cine.api('projects/show')
+StreamShow = Cine.api('streams/show')
 
 module.exports = (params, callback)->
   getProject params, requires: 'secret', userOverride: true, (err, project, options)->
@@ -20,4 +20,4 @@ module.exports = (params, callback)->
         return callback(err, null, status: 400) if err
         Project.decrement project, 'streamsCount', 1,  (err, updatedAttributes)->
           return callback(err, null, status: 400) if err
-          StreamShow.toJSON(stream, callback)
+          StreamShow.fullJSON(project, stream, callback)

@@ -18,8 +18,11 @@ module.exports = (params, callback)->
       Show.addEdgecastServerToStreamOptions(streamOptions, params) if options.secure
 
       fullJsonFunction = (stream, callback)->
-        Show.fullJSON(stream, streamOptions, callback)
+        Show.fullJSON(project, stream, streamOptions, callback)
 
-      jsonFunction = if options.secure then fullJsonFunction else Show.playJSON
+      playJsonFunction = (stream, callback)->
+        Show.playJSON(project, stream, callback)
+
+      jsonFunction = if options.secure then fullJsonFunction else playJsonFunction
       async.map streams, jsonFunction, (err, response)->
         callback(err, response)

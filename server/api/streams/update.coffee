@@ -19,4 +19,4 @@ module.exports = (params, callback)->
       stream.record = params.record if _.has(params, 'record')
       stream.save (err, stream)->
         return callback(err, null, status: 400) if err
-        StreamShow.fullJSON(stream, callback)
+        StreamShow.fullJSON(project, stream, callback)

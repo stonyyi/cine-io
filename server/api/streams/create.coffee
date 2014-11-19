@@ -11,4 +11,4 @@ module.exports = (params, callback)->
       return callback(err, null, status: 400) if err
       streamOptions = {}
       Show.addEdgecastServerToStreamOptions(streamOptions, params)
-      Show.fullJSON(stream, streamOptions, callback)
+      Show.fullJSON(project, stream, streamOptions, callback)
