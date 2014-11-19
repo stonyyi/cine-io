@@ -10,4 +10,5 @@ app.get '/:publicKey/:streamName.m3u8', (req, res)->
   client.get redisKeyForM3U8.withAttributes(req.param('publicKey'), req.param('streamName')), (err, result)->
     return res.status(400).send(400) if err
     return res.status(404).end() unless result
+    res.set('Content-Type', 'application/x-mpegurl');
     res.send(result)

@@ -23,7 +23,7 @@ describe 'm3u8', ->
   it 'serves an m3u8 file', (done)->
     @agent
     .get('/pub-key/stream-name.m3u8')
-    .expect('Content-Type', /html/)
+    .expect('Content-Type', "application/x-mpegurl; charset=utf-8")
     .expect(200)
     .end (err, res)->
       expect(err).to.be.null
