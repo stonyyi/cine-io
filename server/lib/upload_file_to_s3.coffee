@@ -22,7 +22,7 @@ module.exports = (localFile, bucket, remoteFile, options={}, callback)->
       Key: remoteFile
       ACL: options.ACL
 
-  console.log("uploading", params)
+  # console.log("uploading", params)
 
   uploader = s3Client.uploadFile(params)
 
@@ -34,7 +34,7 @@ module.exports = (localFile, bucket, remoteFile, options={}, callback)->
   #   console.log("progress", uploader.progressMd5Amount, uploader.progressAmount, uploader.progressTotal)
 
   uploader.on 'end', ->
-    console.log("done uploading")
+    # console.log("done uploading")
     callback()
 
 module.exports._s3Client = s3Client
