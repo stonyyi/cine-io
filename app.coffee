@@ -1,5 +1,4 @@
 env     = require './config/environment'
-Cine.config('connect_to_mongo')
 express = require 'express'
 http = require 'http'
 
@@ -17,6 +16,8 @@ Cine.middleware 'middleware_base', app
 if process.env.RUN_AS == 'hls'
   app.use '/', Cine.require('apps/m3u8')
 else
+  Cine.config('connect_to_mongo')
+
   Cine.middleware 'middleware', app
 
   Cine.server 'api_routes', app
