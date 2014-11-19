@@ -1,8 +1,10 @@
 Heroku = require('heroku').Heroku
-
+herokuConfig = Cine.config('variables/heroku')
 module.exports = (app) ->
   app.get '/deployinfo', (req, res)->
-    herokuClient = new Heroku key:"8442fe9b-f97e-44ad-9423-41d45bb46098"
+
+    herokuClient = new Heroku key: herokuConfig.accessKey
+
     herokuClient.get_releases "cine-io", (err, result)->
       if err
         console.log err
