@@ -1,13 +1,13 @@
 # These lat/lng points are just close pins I was able to drop in google maps
 # the rtmpCDNCode refers to edgecast/cine endpoints such as stream.ams.cine.io
 module.exports = [
-  {
-    name: "North America - Ashburn"
-    rtmpCDNCode: "dca"
-    cineioEndpointCode: 'sfo1'
-    lat: 39.043427
-    lng: -77.487938
-  }
+  # {
+  #   name: "North America - Ashburn"
+  #   rtmpCDNCode: "dca"
+  #   cineioEndpointCode: 'sfo1'
+  #   lat: 39.043427
+  #   lng: -77.487938
+  # }
 
   {
     name: "North America - Los Angeles"

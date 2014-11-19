@@ -17,7 +17,7 @@ describe 'nearestEdgecastServer', ->
     raleighNorthCarolina =
       lat: 35.780289
       lng: -78.640936
-    test(raleighNorthCarolina, 'sfo1', 'dca')
+    test(raleighNorthCarolina, 'sfo1', 'lax')
 
   it 'returns ams for paris, france', ->
     parisFrance =
