@@ -14,11 +14,15 @@ app.set 'title', 'Cine.io'
 Cine.middleware 'middleware_base', app
 
 if process.env.RUN_AS == 'hls'
+  Cine.middleware('health_check', app)
+  Cine.middleware('deploy_info', app)
   app.use '/', Cine.require('apps/m3u8')
 else
   Cine.config('connect_to_mongo')
 
   Cine.middleware 'middleware', app
+  Cine.middleware('health_check', app)
+  Cine.middleware('deploy_info', app)
 
   Cine.server 'api_routes', app
 

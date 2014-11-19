@@ -35,5 +35,3 @@ module.exports = (app) ->
 
   Cine.middleware('authentication', app)
   Cine.middleware('appdirect', app)
-  Cine.middleware('health_check', app)
-  Cine.middleware('deploy_info', app)
