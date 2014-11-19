@@ -18,7 +18,7 @@ redisKeyForM3U8 = Cine.server_lib('hls/redis_key_for_m3u8')
 hlsSender = (event, filename, callback=noop)->
   return callback() unless filename && path.extname(filename) == '.m3u8'
   checkAndUpdateM3U8 filename, (err)->
-    # console.log("DONE!", err)
+    console.log("finished parsing", filename)
     callback(err)
 
 hlsSender._hlsDirectory = process.env.HLS_DIRECTORY || "/Users/thomas/work/tmp/hls"
