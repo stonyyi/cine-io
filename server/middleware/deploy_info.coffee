@@ -5,7 +5,7 @@ module.exports = (app) ->
 
     herokuClient = new Heroku key: herokuConfig.accessKey
 
-    herokuClient.get_releases "cine-io", (err, result)->
+    herokuClient.get_releases herokuConfig.app, (err, result)->
       if err
         console.log err
         res.send({error: err})

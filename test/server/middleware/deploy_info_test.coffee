@@ -1,7 +1,7 @@
 supertest = require('supertest')
 app = Cine.require('app').app
 
-describe 'test', ->
+describe 'deployinfo', ->
   beforeEach ->
     @agent = supertest.agent(app)
     @herokuResponse = requireFixture('nock/heroku_releases_response')()
