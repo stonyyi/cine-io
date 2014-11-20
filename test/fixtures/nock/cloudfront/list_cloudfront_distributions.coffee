@@ -86,7 +86,7 @@ response =
     </DistributionSummary>
     <DistributionSummary>
       <Id>E3T3CQG8HMMR6N</Id>
-      <Status>Deployed</Status>
+      <Status>InProgress</Status>
       <LastModifiedTime>2014-11-18T22:08:05.196Z</LastModifiedTime>
       <DomainName>d1653xd9cyk7nd.cloudfront.net</DomainName>
       <Aliases>
