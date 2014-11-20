@@ -25,13 +25,9 @@ describe 'Base', ->
       expect(app.listen).to.be.a('function')
 
   describe 'getQueueName', ->
-    beforeEach ->
-      @hostSpy = sinon.stub(os, 'hostname').returns('the computer host')
-    afterEach ->
-      @hostSpy.restore()
 
     it 'includes the hostname', ->
-      expect(Base.getQueueName('my-run-context')).to.equal("the computer host-my-run-context-incoming")
+      expect(Base.getQueueName('my-run-context')).to.equal("TEST-HOST-my-run-context-incoming")
 
   describe 'watch', ->
     beforeEach ->
