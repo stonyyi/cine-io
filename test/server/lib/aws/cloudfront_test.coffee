@@ -2,6 +2,47 @@ cloudfront = Cine.server_lib("aws/cloudfront")
 shortId = require('shortid')
 describe 'cloudfront', ->
 
+
+  describe 'ensureDistributionForOrigin', ->
+    describe 'with an existing deployed distro', ->
+      it 'returns a distro if it is deployed'
+    describe 'with an existing distro that is new', ->
+      it 'waits for the distro to be deployed if being created now'
+    describe 'without an existing distro', ->
+      it 'creates a new distro and waits for the distro to be deployed'
+
+  describe 'distrubtionForOrigin', ->
+    beforeEach ->
+      @cloudfrontNock = requireFixture('nock/cloudfront/list_cloudfront_distributions')()
+
+    it 'finds a distribution for the origin', (done)->
+      cloudfront.distrubtionForOrigin "cine-io-production.s3.amazonaws.com", (err, distro)=>
+        expect(err).to.be.null
+        expect(distro.Id).to.equal("E3A4KOLOH12OAV")
+        expect(@cloudfrontNock.isDone()).to.be.true
+        done()
+
+    it 'returns null if there is no distro', (done)->
+      cloudfront.distrubtionForOrigin "NO_DISTRO", (err, distro)=>
+        expect(err).to.be.null
+        expect(distro).to.be.undefined
+        expect(@cloudfrontNock.isDone()).to.be.true
+        done()
+
+
+  describe 'listDistributions', ->
+    beforeEach ->
+      @cloudfrontNock = requireFixture('nock/cloudfront/list_cloudfront_distributions')()
+
+    it 'lists the distribution', (done)->
+      cloudfront.listDistributions (err, response)=>
+        expect(err).to.be.null
+        expect(response.Quantity).to.equal(2)
+        expect(response.Items[0].Id).to.equal("E3A4KOLOH12OAV")
+        expect(response.Items[1].Id).to.equal("E3T3CQG8HMMR6N")
+        expect(@cloudfrontNock.isDone()).to.be.true
+        done()
+
   describe 'createDistribution', ->
     beforeEach ->
       @shortIDSpy = sinon.stub(shortId, 'generate').returns("short-id-generated")
@@ -10,8 +51,9 @@ describe 'cloudfront', ->
 
     describe 'default options', ->
       beforeEach ->
-        fixture = requireFixture('nock/create_cloudfront_distribution')
+        fixture = requireFixture('nock/cloudfront/create_cloudfront_distribution')
         @cloudfrontNock = fixture(callerReference: 'short-id-generated', origin: "test-origin.cine.io")
+
       it 'creates a distribution', (done)->
         cloudfront.createDistribution "test-origin.cine.io", (err, response)=>
           expect(err).to.be.null
@@ -21,7 +63,7 @@ describe 'cloudfront', ->
 
     describe 'with options', ->
       beforeEach ->
-        fixture = requireFixture('nock/create_cloudfront_distribution')
+        fixture = requireFixture('nock/cloudfront/create_cloudfront_distribution')
         @cloudfrontNock = fixture(logging: {bucket: 'hls-logging.s3.amazonaws.com', prefix: 'www-cine'}, callerReference: 'short-id-generated', origin: "test-origin.cine.io")
 
       it 'creates a with options', (done)->
@@ -36,9 +78,9 @@ describe 'cloudfront', ->
           done()
   describe 'getDistribution', ->
     beforeEach ->
-      @cloudfrontNock = requireFixture('nock/get_cloudfront_distribution')(id: 'EQGIDG4E7DZCZ')
+      @cloudfrontNock = requireFixture('nock/cloudfront/get_cloudfront_distribution')(id: 'EQGIDG4E7DZCZ')
 
-    it 'creates a distribution', (done)->
+    it 'gets a distribution', (done)->
       cloudfront.getDistribution "EQGIDG4E7DZCZ", (err, response)=>
         expect(err).to.be.null
         expect(response.Id).to.equal('E3A4KOLOH12OAV')
