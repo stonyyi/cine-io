@@ -50,7 +50,6 @@ class SaveStreamRecording
           name: @fileName
           size: stats.size
           date: new Date
-          vodBookkeeperTest: true
 
         streamRecordings.recordings.push newRecording
         streamRecordings.save (err)->

@@ -5,7 +5,7 @@ EdgecastRecordings = Cine.server_model('edgecast_recordings')
 async = require('async')
 
 isDeleted = (item)->
-  item.deletedAt || item.vodBookkeeperTest
+  item.deletedAt
 
 module.exports = (params, callback)->
   getProject params, requires: 'either', userOverride: true, (err, project, options)->

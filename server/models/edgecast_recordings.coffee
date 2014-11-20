@@ -8,7 +8,6 @@ EdgecastRecording = new Schema
   size: Number
   date: Date
   deletedAt: Date
-  vodBookkeeperTest: Boolean
 
 EdgecastRecordingsSchema = new Schema
   _edgecastStream:
@@ -45,7 +44,7 @@ EdgecastRecordingsSchema.methods.bytesForMonth = (dateToCheck)->
       accum + entry.size
     else
       accum
-   _.chain(@recordings).where(vodBookkeeperTest: undefined).reduce(addBytesIfSameMonth, 0).value()
+   _.chain(@recordings).reduce(addBytesIfSameMonth, 0).value()
 
 EdgecastRecordingsSchema.methods.totalBytes = ->
   accumEntryBytes = (accum, entry)->
@@ -53,7 +52,6 @@ EdgecastRecordingsSchema.methods.totalBytes = ->
 
   _.chain(@recordings)
     .where(deletedAt: undefined)
-    .where(vodBookkeeperTest: undefined)
     .reduce(accumEntryBytes, 0)
     .value()
 
