@@ -1,12 +1,19 @@
 async = require('async')
+fs = require('fs')
+shortId = require('shortid')
 Base = Cine.run_context('base')
 HlsSender = Cine.run_context('hls_sender')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
 client = Cine.server_lib('redis_client')
-fs = require('fs')
+cloudfront = Cine.server_lib("aws/cloudfront")
 
 describe 'hls_sender', ->
+
+  beforeEach ->
+    @shortIDSpy = sinon.stub(shortId, 'generate').returns("short-id-generated")
+  afterEach ->
+    @shortIDSpy.restore()
 
   beforeEach ->
     @oldDirectory = HlsSender._hlsDirectory
@@ -41,36 +48,52 @@ describe 'hls_sender', ->
       @stream.save done
 
 
-    describe 'single call', ->
-      beforeEach ->
-        @s3Nock = requireFixture('nock/upload_file_to_s3_success')("my-pub-key/some_stream-1234567890123.ts", "this is a fake ts file\n")
+    describe 'without cloudfront', ->
+
       beforeEach (done)->
         HlsSender 'rename', 'fake_hls.m3u8', done
 
-      it 'uploads the hls_file to s3', ->
-        expect(@s3Nock.isDone()).to.be.true
-
-      it 'writes the cloudfront url m3u8 file to redis', (done)->
+      it 'writes the local url m3u8 file to redis', (done)->
         client.get "hls:my-pub-key/some_stream.m3u8", (err, m3u8contents)->
           expect(err).to.be.null
-          expected = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-MEDIA-SEQUENCE:9\n#EXT-X-TARGETDURATION:5\n#EXTINF:5.013,\nhttps://cine-io-hls.s3.amazonaws.com/my-pub-key/some_stream-0987654321098.ts\n#EXTINF:5.013,\nhttps://cine-io-hls.s3.amazonaws.com/my-pub-key/some_stream-1234567890123.ts\n"
+          expected = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-MEDIA-SEQUENCE:9\n#EXT-X-TARGETDURATION:5\n#EXTINF:5.013,\nhttp://TEST-HOST.cine.io/hls/my-pub-key/some_stream-0987654321098.ts\n#EXTINF:5.013,\nhttp://TEST-HOST.cine.io/hls/my-pub-key/some_stream-1234567890123.ts\n"
+          expect(m3u8contents).to.equal(expected)
+          done()
+
+    describe 'with cloudfront', ->
+
+      beforeEach (done)->
+        fixture = requireFixture('nock/cloudfront/create_cloudfront_distribution')
+        @cloudfrontNock = fixture(callerReference: 'short-id-generated', origin: "TEST-HOST.cine.io")
+        @cloudfrontNock2 = requireFixture('nock/cloudfront/get_cloudfront_distribution')(id: 'EQGIDG4E7DZCZ')
+        @oldCloudfront = HlsSender._cloudFrontURL
+        HlsSender._setupCloudfrontForHls(done)
+
+      afterEach ->
+        HlsSender._cloudFrontURL = @oldCloudfront
+
+      beforeEach (done)->
+        HlsSender 'rename', 'fake_hls.m3u8', done
+
+      it 'writes the local url m3u8 file to redis', (done)->
+        client.get "hls:my-pub-key/some_stream.m3u8", (err, m3u8contents)->
+          expect(err).to.be.null
+          expected = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-MEDIA-SEQUENCE:9\n#EXT-X-TARGETDURATION:5\n#EXTINF:5.013,\nhttp://d28ayna0xo97kz.cloudfront.net/hls/my-pub-key/some_stream-0987654321098.ts\n#EXTINF:5.013,\nhttp://d28ayna0xo97kz.cloudfront.net/hls/my-pub-key/some_stream-1234567890123.ts\n"
           expect(m3u8contents).to.equal(expected)
           done()
 
     describe 'queueing', ->
-      beforeEach ->
-        @s3Nock = requireFixture('nock/upload_file_to_s3_success')("my-pub-key/some_stream-1234567890123.ts", "this is a fake ts file\n")
 
       beforeEach ->
-        @s3Nock2 = requireFixture('nock/upload_file_to_s3_success')("my-pub-key/some_stream-0987654321098.ts", "this is a second fake ts file\n", delay: true)
+        callCount = 0
+        @clientStub = sinon.stub client, 'set', (key, value, callback)->
+          if callCount == 0
+            callCount += 1
+            setTimeout callback, 50
+          else callback()
 
-      beforeEach ->
-        originalReadFileSync = fs.readFile
-        @fsStub = sinon.stub fs, 'readFile', (name, cb)=>
-          if name == Cine.path("test/fixtures/fake_hls.m3u8")
-            name = Cine.path("test/fixtures/fake_hls_1.m3u8")
-            @fsStub.restore()
-          originalReadFileSync.call(fs, name, cb)
+      afterEach ->
+        @clientStub.restore()
 
       it 'goes one at a time', (done)->
         hls_1_sent = false

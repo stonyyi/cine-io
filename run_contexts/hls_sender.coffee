@@ -1,35 +1,44 @@
 Base = require('./base')
 Cine.config('connect_to_mongo')
 fs = require('fs')
+os = require('os')
 path = require 'path'
 async = require 'async'
 _ = require 'underscore'
 runMe = !module.parent
-
+cloudfront = Cine.server_lib("aws/cloudfront")
 noop=->
 
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
 streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
 client = Cine.server_lib('redis_client')
-uploadFileToS3 = Cine.server_lib('./upload_file_to_s3')
+
 redisKeyForM3U8 = Cine.server_lib('hls/redis_key_for_m3u8')
+localHostname = os.hostname()
+localUrl = "#{localHostname}.cine.io"
 
 hlsSender = (event, filename, callback=noop)->
   return callback() unless filename && path.extname(filename) == '.m3u8'
   checkAndUpdateM3U8 filename, (err)->
     console.log("finished parsing", filename)
+    console.error("got err checking m3u8", err) if err
     callback(err)
 
 hlsSender._hlsDirectory = process.env.HLS_DIRECTORY || "/Users/thomas/work/tmp/hls"
-# finalDirectory = "/Users/thomas/work/tmp"
 
-s3Bucket = Cine.config('variables/s3').hlsBucket
-cloudFrontURL = Cine.config('variables/s3').hlsCloudfrontUrl
-
-uploadTSFileToS3 = (tsFilename, project, callback)->
-  fullPath = path.join(hlsSender._hlsDirectory, tsFilename)
-  uploadFileToS3(fullPath, s3Bucket, "#{project.publicKey}/#{tsFilename}", callback)
+hlsSender._cloudFrontURL = null #replaced by setupCloudfrontForHls
+hlsSender._setupCloudfrontForHls = (callback=noop)->
+  cloudfrontOptions =
+    logging:
+      bucket: 'cine-cloudfront-logging.s3.amazonaws.com'
+      prefix: localHostname
+  console.log("Creating cloudfront distro", localUrl, cloudfrontOptions)
+  cloudfront.ensureDistributionForOrigin localUrl, (err, distribution)->
+    return console.error("got err setting up cloudfront", err) if err
+    return console.error("could not setup distribution") unless distribution
+    hlsSender._cloudFrontURL = "#{distribution.DomainName}"
+    callback()
 
 isTSFile = (line)->
   path.extname(line) == '.ts'
@@ -55,7 +64,9 @@ projectForTSFile = (tsFile, callback)->
 modifyM3U8FileForCloudfront = (fileContents, project)->
   prependCloudfrontAndProjectToTSFile = (m3u8Line)->
     return m3u8Line if !isTSFile(m3u8Line)
-    "#{cloudFrontURL}#{project.publicKey}/#{m3u8Line}"
+    # use cloudfront once it is setup
+    urlPrefix = hlsSender._cloudFrontURL || localUrl
+    "http://#{urlPrefix}/hls/#{project.publicKey}/#{m3u8Line}"
   _.chain(fileContents.split("\n")).map(prependCloudfrontAndProjectToTSFile).value().join("\n")
 
 
@@ -71,14 +82,7 @@ updatesS3withNewTSFiles = (filename, fileContents, callback)->
   return callback("no ts files found") unless tsFile
   projectForTSFile tsFile, (err, stream, project)->
     return callback(err) if err
-    asyncCalls =
-      uploadToS3: (callback)->
-        uploadTSFileToS3(tsFile, project, callback)
-      updateRedisHLS: (callback)->
-        addHLSFileToRedis(fileContents, stream, project, callback)
-    async.series asyncCalls, (err)->
-      # console.log("uploaded ts files", err)
-      callback(err)
+    addHLSFileToRedis(fileContents, stream, project, callback)
 
 
 queueTask = (task, callback)->
@@ -107,7 +111,10 @@ checkAndUpdateM3U8 = (filename, callback)->
   queue = getQueue(filename)
   queue.push filename: filename, callback
 
+
 Base.watch hlsSender._hlsDirectory, hlsSender if runMe
+
+hlsSender._setupCloudfrontForHls() if process.env.NODE_ENV in ['production']
 
 module.exports = hlsSender
 
