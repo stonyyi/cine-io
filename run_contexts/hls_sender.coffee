@@ -62,12 +62,12 @@ projectForTSFile = (tsFile, callback)->
       callback(null, stream, project)
 
 
-modifyM3U8FileForCloudfront = (fileContents, project)->
+modifyM3U8FileForCloudfront = (fileContents)->
   prependCloudfrontAndProjectToTSFile = (m3u8Line)->
     return m3u8Line if !isTSFile(m3u8Line)
     # use cloudfront once it is setup
     if hlsSender._cloudFrontURL
-      "http://#{hlsSender._cloudFrontURL}/hls/#{project.publicKey}/#{m3u8Line}"
+      "http://#{hlsSender._cloudFrontURL}/hls/#{m3u8Line}"
     else
       "http://#{localUrl}/hls/#{m3u8Line}"
   _.chain(fileContents.split("\n")).map(prependCloudfrontAndProjectToTSFile).value().join("\n")
@@ -75,7 +75,7 @@ modifyM3U8FileForCloudfront = (fileContents, project)->
 
 addHLSFileToRedis = (fileContents, stream, project, callback)->
   redisKey = redisKeyForM3U8.withObjects(project, stream)
-  cloudfrontM3U8 = modifyM3U8FileForCloudfront(fileContents, project)
+  cloudfrontM3U8 = modifyM3U8FileForCloudfront(fileContents)
   # console.log("Setting redis", redisKey, cloudfrontM3U8)
   client.set(redisKey, cloudfrontM3U8, callback)
 

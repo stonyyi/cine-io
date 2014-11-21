@@ -78,7 +78,7 @@ describe 'hls_sender', ->
       it 'writes the local url m3u8 file to redis', (done)->
         client.get "hls:my-pub-key/some_stream.m3u8", (err, m3u8contents)->
           expect(err).to.be.null
-          expected = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-MEDIA-SEQUENCE:9\n#EXT-X-TARGETDURATION:5\n#EXTINF:5.013,\nhttp://d28ayna0xo97kz.cloudfront.net/hls/my-pub-key/some_stream-0987654321098.ts\n#EXTINF:5.013,\nhttp://d28ayna0xo97kz.cloudfront.net/hls/my-pub-key/some_stream-1234567890123.ts\n"
+          expected = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-MEDIA-SEQUENCE:9\n#EXT-X-TARGETDURATION:5\n#EXTINF:5.013,\nhttp://d28ayna0xo97kz.cloudfront.net/hls/some_stream-0987654321098.ts\n#EXTINF:5.013,\nhttp://d28ayna0xo97kz.cloudfront.net/hls/some_stream-1234567890123.ts\n"
           expect(m3u8contents).to.equal(expected)
           done()
 
