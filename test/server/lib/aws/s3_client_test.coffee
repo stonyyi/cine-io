@@ -122,7 +122,7 @@ describe 's3Client', ->
     describe 'success', ->
       beforeEach ->
         @s3Bucket = 'cine-io-hls'
-        @s3Nock = requireFixture('nock/aws/delete_file_s3_success')()
+        @s3Nock = requireFixture('nock/aws/delete_file_s3_success')('cine-io-hls', 'some-stream-1416429958807.ts')
 
       it 'deletes a file a directory in s3', (done)->
         s3Client.delete @s3Bucket, 'some-stream-1416429958807.ts', (err)=>
