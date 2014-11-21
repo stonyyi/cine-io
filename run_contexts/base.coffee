@@ -58,4 +58,5 @@ exports.processJobs = (runContext, callback)->
   processJobs(queueName, callback)
 
 exports.watch = (dir, cb)->
+  console.log("watching directory", dir)
   fs.watch(dir,cb)
