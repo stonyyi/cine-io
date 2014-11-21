@@ -2,15 +2,19 @@ FtpClient = require('ftp')
 
 edgecastFtpClientFactory = (originalCallback, readyCallback)->
   ftpClient = edgecastFtpClientFactory.builder()
-
-  ftpClient.on "ready", readyCallback
+  calledBack = false
+  ftpClient.on "ready", ->
+    calledBack = true
+    readyCallback()
 
   ftpClient.on "error", (error)->
     console.log("FTP ERROR", error)
+    calledBack = true
     originalCallback(error)
 
   ftpClient.on "end", ->
     console.log("FTP END")
+    return originalCallback("ended before ready or error") unless calledBack
 
   ftpClient.on "greeting", (msg)->
     console.log('got ftp greeting', msg)
