@@ -12,6 +12,8 @@ Project = Cine.server_model('project')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
 makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
+s3Client = Cine.server_lib('aws/s3_client')
+VOD_BUCKET = Cine.config('variables/s3').vodBucket
 
 class SaveStreamRecording
   constructor: (@fullFilePath, @stream)->
@@ -22,7 +24,7 @@ class SaveStreamRecording
     @ftpClient = edgecastFtpClientFactory @callback, @_waterfall
 
   _waterfall: =>
-    waterfallCalls = [@_findStreamProject, @_mkProjectDir, @_uploadToProjectDir, @_addRecordingToEdgecastRecordings, @_deleteOriginal, @_closeConnection]
+    waterfallCalls = [@_findStreamProject, @_mkProjectDir, @_uploadToEdgecastProjectDir, @_uploadToS3ProjectDir, @_addRecordingToEdgecastRecordings, @_deleteOriginal, @_closeConnection]
     async.waterfall waterfallCalls, @callback
 
   _findStreamProject: (callback)=>
@@ -37,10 +39,15 @@ class SaveStreamRecording
     streamFolder = @project.publicKey
     projectDir = "/#{EdgecastFtpInfo.vodDirectory}/#{streamFolder}"
 
-  _uploadToProjectDir: (callback)=>
+  _uploadToEdgecastProjectDir: (callback)=>
     ftpLocation = "#{@_projectDir()}/#{@fileName}"
-    console.log("uploading file", @fullFilePath, ftpLocation)
+    console.log("uploading file to edgecast", @fullFilePath, ftpLocation)
     @ftpClient.put @fullFilePath, ftpLocation, callback
+
+  _uploadToS3ProjectDir: (callback)=>
+    s3Location = "#{@_projectDir()}/#{@fileName}"
+    console.log("uploading file to s3", @fullFilePath, s3Location)
+    s3Client.uploadFile @fullFilePath, VOD_BUCKET, "cines/#{@project.publicKey}/#{@fileName}", callback
 
   _addRecordingToEdgecastRecordings: (callback)=>
     EdgecastRecordings.findOrCreate _edgecastStream: @stream._id, (err, streamRecordings, created)=>

@@ -7,6 +7,7 @@ original = (fileName, fileContents, options)->
     etag: '"26bb73556ceb32a5df30b733c5355ee5"',
     'content-length': '0',
     server: 'AmazonS3' })
+
 first = (fileName, fileContents, options)->
   thing = nock('https://cine-io-hls.s3.amazonaws.com:443').put('/my-pub-key/some_stream-1234567890123.ts', "this is a fake ts file\n")
   if options.delay
@@ -18,6 +19,7 @@ first = (fileName, fileContents, options)->
     etag: '"9b483a2f1df944e1e00d5ed402048cca"',
     'content-length': '0',
     server: 'AmazonS3'
+
 second = (fileName, fileContents, options)->
   thing = nock('https://cine-io-hls.s3.amazonaws.com:443').put('/my-pub-key/some_stream-0987654321098.ts', "this is a second fake ts file\n")
   if options.delay
@@ -30,11 +32,22 @@ second = (fileName, fileContents, options)->
     'content-length': '0',
     server: 'AmazonS3'
 
+third = (fileName, fileContents, options)->
+  nock('https://cine-io-vod.s3.amazonaws.com:443')
+    .put('/cines/this-pub-key/mystream.20141008T191601.mp4', "this is a fake video file\n")
+    .reply(200, "", { 'x-amz-id-2': 'h0+goGUKOtgfiXSfdvAk4Ai4bGzotjhdjjl2yMIG2xYxdjWL9ZVicSTC0rEQlC/E',
+    'x-amz-request-id': 'EFCA1E2CB3563896',
+    date: 'Fri, 21 Nov 2014 22:07:11 GMT',
+    etag: '"b60f2176fb6ee89c8242fcb28a95233e"',
+    'content-length': '0',
+    server: 'AmazonS3' })
 module.exports = (fileName, fileContents, options={})->
   # I have NO CLUE why this doesn't work using the original s3 nock
   if fileName == 'my-pub-key/some_stream-1234567890123.ts'
     first(fileName, fileContents, options)
   else if fileName == 'my-pub-key/some_stream-0987654321098.ts'
     second(fileName, fileContents, options)
+  else if fileName == 'cines/this-pub-key/mystream.20141008T191601.mp4'
+    third(fileName, fileContents, options)
   else
     original(fileName, fileContents, options)

@@ -104,6 +104,9 @@ describe 'VodBookkeeper', ->
           .onSecondCall().callsArgWith(1, directoryAlreadyExists)
 
       beforeEach ->
+        @s3Nock = requireFixture('nock/aws/upload_file_to_s3_success')("cines/this-pub-key/mystream.20141008T191601.mp4", "this is a fake video file\n")
+
+      beforeEach ->
         @putStub = @fakeFtpClient.stub('put').callsArg(2)
 
       beforeEach ->
@@ -115,6 +118,14 @@ describe 'VodBookkeeper', ->
         job.on 'complete', (err)=>
           expect(err).to.be.null
           assertFileDeleted(@targetFile, done)
+
+      it  "uploads the file to s3", (done)->
+        job = Base.scheduleJob Base.getQueueName('vod_bookkeeper'), file: @targetFile
+
+        job.on 'complete', (err)=>
+          expect(err).to.be.null
+          expect(@s3Nock.isDone()).to.be.true
+          done()
 
       it  "uploads to the project directory place", (done)->
         job = Base.scheduleJob Base.getQueueName('vod_bookkeeper'), file: @targetFile
