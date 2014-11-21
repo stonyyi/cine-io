@@ -242,14 +242,14 @@ project <code>secretKey</code>.</p>
 </span>}
 </code></pre></li></ul></section></div></div><div><div class="resource-panel"><h3 id="recording">Recording&nbsp;</h3><h4 id="recording-recordings">Recordings&nbsp;<a href="#recording-recordings"><i class="fa fa-link"></i></a></h4><section id="recording-recordings-get" class="resource-panel panel"><div style="float:right"><span style="text-transform: lowercase">Get Recordings for a Stream</span></div><div style="float:left"><a href="#recording-recordings-get">GET</a></div><div style="overflow:hidden">&nbsp;<code>/stream/recordings</code></div><div><p>Get the list of recordings associated with a stream.</p>
 <h5 id="example">Example</h5>
-<pre><code class="lang-bash">curl -X GET <span class="hljs-string">"https://www.cine.io/api/1/-/stream/recordings?secretKey=PROJECT_SECRET_KEY&amp;id=STREAM_ID"</span>
+<pre><code class="lang-bash">curl -X GET <span class="hljs-string">"https://www.cine.io/api/1/-/stream/recordings?publicKey=PROJECT_PUBLIC_KEY&amp;id=STREAM_ID"</span>
 </code></pre>
-</div><ul class="no-bullet"><li><strong>Parameters</strong></li><li><dl><dt>secretKey</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="label secondary"><strong>e.g.:&nbsp;</strong><span>abcd1234abcd1234abcd1234abcd1234</span></span><p>The <code>secretKey</code> associated with the project</p>
+</div><ul class="no-bullet"><li><strong>Parameters</strong></li><li><dl><dt>publicKey</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="label secondary"><strong>e.g.:&nbsp;</strong><span>abcd1234abcd1234abcd1234abcd1234</span></span><p>The <code>publicKey</code> associated with the project</p>
 </dd><dt>id</dt><dd><code>string</code>&nbsp;<span class="required">(required)</span>&nbsp;<span class="label secondary"><strong>e.g.:&nbsp;</strong><span>abcd1234abcd1234abcd1234</span></span><p>The <code>id</code> associated with the given stream</p>
 </dd></dl></li></ul><ul class="no-bullet"><li><strong>Response&nbsp;&nbsp;<code>200</code></strong></li><li><div class="description"></div><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span><br/></code></pre><h5>Body</h5><pre><code>[
    {
       "<span class="hljs-attribute">date</span>" : <span class="hljs-value"><span class="hljs-string">"2014-08-18T21:45:00.000Z"</span></span>,
-      "<span class="hljs-attribute">url</span>" : <span class="hljs-value"><span class="hljs-string">"http://vod.cine.io/cines/bdf20265f4d796452ea264002d26a7c1/abc123.mp4"</span></span>,
+      "<span class="hljs-attribute">url</span>" : <span class="hljs-value"><span class="hljs-string">"http://vod.cine.io/cines/abcd1234abcd1234abcd1234abcd1234/abc123.mp4"</span></span>,
       "<span class="hljs-attribute">name</span>" : <span class="hljs-value"><span class="hljs-string">"abc123.mp4"</span></span>,
       "<span class="hljs-attribute">size</span>" : <span class="hljs-value"><span class="hljs-number">202623953</span>
    </span>}

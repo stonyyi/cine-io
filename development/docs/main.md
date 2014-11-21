@@ -381,12 +381,12 @@ Get the list of recordings associated with a stream.
 
 ##### Example
 ```bash
-curl -X GET "https://www.cine.io/api/1/-/stream/recordings?secretKey=PROJECT_SECRET_KEY&id=STREAM_ID"
+curl -X GET "https://www.cine.io/api/1/-/stream/recordings?publicKey=PROJECT_PUBLIC_KEY&id=STREAM_ID"
 ```
 
 + Parameters
 
-    + secretKey (required, string `abcd1234abcd1234abcd1234abcd1234`) ... The `secretKey` associated with the project
+    + publicKey (required, string `abcd1234abcd1234abcd1234abcd1234`) ... The `publicKey` associated with the project
     + id (required, string `abcd1234abcd1234abcd1234`) ... The `id` associated with the given stream
 
 + Response 200 (application/json)
@@ -396,7 +396,7 @@ curl -X GET "https://www.cine.io/api/1/-/stream/recordings?secretKey=PROJECT_SEC
         [
            {
               "date" : "2014-08-18T21:45:00.000Z",
-              "url" : "http://vod.cine.io/cines/bdf20265f4d796452ea264002d26a7c1/abc123.mp4",
+              "url" : "http://vod.cine.io/cines/abcd1234abcd1234abcd1234abcd1234/abc123.mp4",
               "name" : "abc123.mp4",
               "size" : 202623953
            }
