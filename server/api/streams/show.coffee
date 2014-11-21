@@ -30,9 +30,9 @@ playJSON = (project, stream, callback)->
     name: stream.name
     streamName: stream.streamName
     play:
-      # hls: "http://hls.cine.io/#{project.publicKey}/#{stream.streamName}.m3u8" # ours
-      hls: "http://hls2.cine.io/#{stream.instanceName}/#{stream.eventName}/#{stream.streamName}.m3u8" #edgecast
-      rtmp: "#{BASE_URL}/#{stream.instanceName}/#{stream.streamName}?adbe-live-event=#{stream.eventName}"
+      hls: "http://hls.cine.io/#{project.publicKey}/#{stream.streamName}.m3u8" # ours
+      # hls: "http://hls2.cine.io/#{stream.instanceName}/#{stream.eventName}/#{stream.streamName}.m3u8" #edgecast
+      rtmp: "#{BASE_URL}/#{stream.instanceName}/#{stream.streamName}"
   callback(null, streamJSON)
 
 fullJSON = (project, stream, options, callback)->
@@ -45,7 +45,7 @@ fullJSON = (project, stream, options, callback)->
   playJSON project, stream, (err, streamJSON)->
     streamJSON.publish =
       url: options.server
-      stream: "#{stream.streamName}?#{stream.streamKey}&amp;adbe-live-event=#{stream.eventName}"
+      stream: "#{stream.streamName}?#{stream.streamKey}"
     streamJSON.password = stream.streamKey
     streamJSON.expiration = stream.expiration
     streamJSON.record = stream.record

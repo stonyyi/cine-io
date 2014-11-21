@@ -51,8 +51,8 @@ describe 'Streams#Show', ->
       Show params, (err, response, options)=>
         expect(err).to.be.null
         expectedPlayResponse =
-          hls: "http://hls2.cine.io/cines/cine1ENAME/cine1.m3u8"
-          rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
+          hls: "http://hls.cine.io/my-pub/cine1.m3u8"
+          rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1"
         expect(_.keys(response).sort()).to.deep.equal(['id', 'name', 'play', 'streamName'])
         expect(response.play).to.deep.equal(expectedPlayResponse)
         expect(response.streamName).to.deep.equal('cine1')
@@ -75,11 +75,11 @@ describe 'Streams#Show', ->
       Show params, (err, response, options)=>
         expect(err).to.be.null
         expectedPlayResponse =
-          hls: "http://hls2.cine.io/cines/cine1ENAME/cine1.m3u8"
-          rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
+          hls: "http://hls.cine.io/my-pub/cine1.m3u8"
+          rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1"
         expectedPublishResponse =
           url: "rtmp://publish-sfo1.cine.io/live"
-          stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
+          stream: "cine1?bass35"
         expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish', 'record', 'streamName'])
         expect(response.streamName).to.deep.equal('cine1')
         expect(response.name).to.deep.equal('my fun name')
@@ -97,7 +97,7 @@ describe 'Streams#Show', ->
         expect(err).to.be.null
         expectedPublishResponse =
           url: "rtmp://publish-ams1.cine.io/live"
-          stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
+          stream: "cine1?bass35"
         expect(response.publish).to.deep.equal(expectedPublishResponse)
         done()
 
@@ -108,7 +108,7 @@ describe 'Streams#Show', ->
         expect(err).to.be.null
         expectedPublishResponse =
           url: "rtmp://publish-ams1.cine.io/live"
-          stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
+          stream: "cine1?bass35"
         expect(response.publish).to.deep.equal(expectedPublishResponse)
         done()
 
@@ -118,7 +118,7 @@ describe 'Streams#Show', ->
         Show params, (err, response, options)->
           expect(err).to.be.null
           expect(_.keys(response)).to.deep.equal(['content'])
-          expect(response.content).to.contain('<stream>cine1?bass35&amp;adbe-live-event=cine1ENAME</stream>')
+          expect(response.content).to.contain('<stream>cine1?bass35</stream>')
           expect(response.content).to.contain('<url>rtmp://publish-sfo1.cine.io/live</url>')
           done()
 

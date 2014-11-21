@@ -194,12 +194,12 @@ curl -X GET "https://www.cine.io/api/1/-/streams?secretKey=PROJECT_SECRET_KEY"
            {
               "name" : "Stream 1",
               "play" : {
-                 "rtmp" : "rtmp://fml.cine.io/20C45E/cines/abc123?adbe-live-event=abc123",
-                 "hls" : "http://hls.cine.io/cines/abc123/abc123.m3u8"
+                 "rtmp" : "rtmp://fml.cine.io/20C45E/cines/abc123",
+                 "hls" : "http://hls.cine.io/PUBLIC_KEY/abc123.m3u8"
               },
               "publish" : {
-                 "stream" : "abc123?pass&amp;adbe-live-event=abc123",
-                 "url" : "rtmp://stream.lax.cine.io/20C45E/cines"
+                 "stream" : "abc123?pass",
+                 "url" : "rtmp://publish-sfo.cine.io/live"
               },
               "password" : "pass",
               "record" : true,
@@ -211,12 +211,12 @@ curl -X GET "https://www.cine.io/api/1/-/streams?secretKey=PROJECT_SECRET_KEY"
            {
               "name" : "Stream 2",
               "play" : {
-                 "rtmp" : "rtmp://fml.cine.io/20C45E/cines/zyx987?adbe-live-event=zyx987",
+                 "rtmp" : "rtmp://fml.cine.io/20C45E/cines/zyx987",
                  "hls" : "http://hls.cine.io/cines/zyx987/zyx987.m3u8"
               },
               "publish" : {
-                 "stream" : "zyx987?pass&amp;adbe-live-event=zyx987",
-                 "url" : "rtmp://stream.lax.cine.io/20C45E/cines"
+                 "stream" : "zyx987?pass&amp",
+                 "url" : "rtmp://publish-sfo.cine.io/live"
               },
               "password" : "pass",
               "record" : true,
@@ -250,12 +250,12 @@ curl -X GET "https://www.cine.io/api/1/-/stream?secretKey=PROJECT_SECRET_KEY&id=
         {
            "name" : "my stream name",
            "play" : {
-              "rtmp" : "rtmp://fml.cine.io/20C45E/cines/abc123?adbe-live-event=abc123",
-              "hls" : "http://hls.cine.io/cines/abc123/abc123.m3u8"
+              "rtmp" : "rtmp://fml.cine.io/20C45E/cines/abc123",
+              "hls" : "http://hls.cine.io/PUBLIC_KEY/abc123.m3u8"
            },
            "publish" : {
-              "stream" : "abc123?pass&amp;adbe-live-event=abc123",
-              "url" : "rtmp://stream.lax.cine.io/20C45E/cines"
+              "stream" : "abc123?pass",
+              "url" : "rtmp://publish-sfo.cine.io/live"
            },
            "password" : "pass",
            "record" : true,
@@ -290,12 +290,12 @@ curl -X POST \
         {
            "name" : "my stream name",
            "play" : {
-              "rtmp" : "rtmp://fml.cine.io/20C45E/cines/abc123?adbe-live-event=abc123",
-              "hls" : "http://hls.cine.io/cines/abc123/abc123.m3u8"
+              "rtmp" : "rtmp://fml.cine.io/20C45E/cines/abc123",
+              "hls" : "http://hls.cine.io/PUBLIC_KEY/abc123.m3u8"
            },
            "publish" : {
-              "stream" : "abc123?pass&amp;adbe-live-event=abc123",
-              "url" : "rtmp://stream.lax.cine.io/20C45E/cines"
+              "stream" : "abc123?pass",
+              "url" : "rtmp://publish-sfo.cine.io/live"
            },
            "password" : "pass",
            "record" : true,
@@ -330,12 +330,12 @@ curl -X PUT \
         {
            "name" : "my new stream name",
            "play" : {
-              "rtmp" : "rtmp://fml.cine.io/20C45E/cines/abc123?adbe-live-event=abc123",
-              "hls" : "http://hls.cine.io/cines/abc123/abc123.m3u8"
+              "rtmp" : "rtmp://fml.cine.io/20C45E/cines/abc123",
+              "hls" : "http://hls.cine.io/PUBLIC_KEY/abc123.m3u8"
            },
            "publish" : {
-              "stream" : "abc123?pass&amp;adbe-live-event=abc123",
-              "url" : "rtmp://stream.lax.cine.io/20C45E/cines"
+              "stream" : "abc123?pass",
+              "url" : "rtmp://publish-sfo.cine.io/live"
            },
            "password" : "pass",
            "record" : false,

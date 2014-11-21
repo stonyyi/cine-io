@@ -36,11 +36,11 @@ describe 'Streams#Create', ->
       Create params, (err, response, options)=>
         expect(err).to.be.null
         expectedPlayResponse =
-          hls: "http://hls2.cine.io/cines/cine1ENAME/cine1.m3u8"
-          rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1?adbe-live-event=cine1ENAME"
+          hls: "http://hls.cine.io/some-pub/cine1.m3u8"
+          rtmp: "rtmp://fml.cine.io/20C45E/cines/cine1"
         expectedPublishResponse =
           url: "rtmp://publish-sfo1.cine.io/live"
-          stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
+          stream: "cine1?bass35"
         expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish', 'record', 'streamName'])
         expect(response.play).to.deep.equal(expectedPlayResponse)
         expect(response.publish).to.deep.equal(expectedPublishResponse)
@@ -60,7 +60,7 @@ describe 'Streams#Create', ->
         expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish', 'record', 'streamName'])
         expectedPublishResponse =
           url: "rtmp://publish-ams1.cine.io/live"
-          stream: "cine1?bass35&amp;adbe-live-event=cine1ENAME"
+          stream: "cine1?bass35"
         expect(response.publish).to.deep.equal(expectedPublishResponse)
         expect(options).to.be.undefined
         done()

@@ -120,12 +120,12 @@ project <code>secretKey</code>.</p>
    {
       "<span class="hljs-attribute">name</span>" : <span class="hljs-value"><span class="hljs-string">"Stream 1"</span></span>,
       "<span class="hljs-attribute">play</span>" : <span class="hljs-value">{
-         "<span class="hljs-attribute">rtmp</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://fml.cine.io/20C45E/cines/abc123?adbe-live-event=abc123"</span></span>,
-         "<span class="hljs-attribute">hls</span>" : <span class="hljs-value"><span class="hljs-string">"http://hls.cine.io/cines/abc123/abc123.m3u8"</span>
+         "<span class="hljs-attribute">rtmp</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://fml.cine.io/20C45E/cines/abc123"</span></span>,
+         "<span class="hljs-attribute">hls</span>" : <span class="hljs-value"><span class="hljs-string">"http://hls.cine.io/PUBLIC_KEY/abc123.m3u8"</span>
       </span>}</span>,
       "<span class="hljs-attribute">publish</span>" : <span class="hljs-value">{
-         "<span class="hljs-attribute">stream</span>" : <span class="hljs-value"><span class="hljs-string">"abc123?pass&amp;amp;adbe-live-event=abc123"</span></span>,
-         "<span class="hljs-attribute">url</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://stream.lax.cine.io/20C45E/cines"</span>
+         "<span class="hljs-attribute">stream</span>" : <span class="hljs-value"><span class="hljs-string">"abc123?pass"</span></span>,
+         "<span class="hljs-attribute">url</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://publish-sfo.cine.io/live"</span>
       </span>}</span>,
       "<span class="hljs-attribute">password</span>" : <span class="hljs-value"><span class="hljs-string">"pass"</span></span>,
       "<span class="hljs-attribute">record</span>" : <span class="hljs-value"><span class="hljs-literal">true</span></span>,
@@ -137,12 +137,12 @@ project <code>secretKey</code>.</p>
    {
       "<span class="hljs-attribute">name</span>" : <span class="hljs-value"><span class="hljs-string">"Stream 2"</span></span>,
       "<span class="hljs-attribute">play</span>" : <span class="hljs-value">{
-         "<span class="hljs-attribute">rtmp</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://fml.cine.io/20C45E/cines/zyx987?adbe-live-event=zyx987"</span></span>,
+         "<span class="hljs-attribute">rtmp</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://fml.cine.io/20C45E/cines/zyx987"</span></span>,
          "<span class="hljs-attribute">hls</span>" : <span class="hljs-value"><span class="hljs-string">"http://hls.cine.io/cines/zyx987/zyx987.m3u8"</span>
       </span>}</span>,
       "<span class="hljs-attribute">publish</span>" : <span class="hljs-value">{
-         "<span class="hljs-attribute">stream</span>" : <span class="hljs-value"><span class="hljs-string">"zyx987?pass&amp;amp;adbe-live-event=zyx987"</span></span>,
-         "<span class="hljs-attribute">url</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://stream.lax.cine.io/20C45E/cines"</span>
+         "<span class="hljs-attribute">stream</span>" : <span class="hljs-value"><span class="hljs-string">"zyx987?pass&amp;amp"</span></span>,
+         "<span class="hljs-attribute">url</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://publish-sfo.cine.io/live"</span>
       </span>}</span>,
       "<span class="hljs-attribute">password</span>" : <span class="hljs-value"><span class="hljs-string">"pass"</span></span>,
       "<span class="hljs-attribute">record</span>" : <span class="hljs-value"><span class="hljs-literal">true</span></span>,
@@ -161,12 +161,12 @@ project <code>secretKey</code>.</p>
 </dd></dl></li></ul><ul class="no-bullet"><li><strong>Response&nbsp;&nbsp;<code>200</code></strong></li><li><div class="description"></div><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span><br/></code></pre><h5>Body</h5><pre><code>{
    "<span class="hljs-attribute">name</span>" : <span class="hljs-value"><span class="hljs-string">"my stream name"</span></span>,
    "<span class="hljs-attribute">play</span>" : <span class="hljs-value">{
-      "<span class="hljs-attribute">rtmp</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://fml.cine.io/20C45E/cines/abc123?adbe-live-event=abc123"</span></span>,
-      "<span class="hljs-attribute">hls</span>" : <span class="hljs-value"><span class="hljs-string">"http://hls.cine.io/cines/abc123/abc123.m3u8"</span>
+      "<span class="hljs-attribute">rtmp</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://fml.cine.io/20C45E/cines/abc123"</span></span>,
+      "<span class="hljs-attribute">hls</span>" : <span class="hljs-value"><span class="hljs-string">"http://hls.cine.io/PUBLIC_KEY/abc123.m3u8"</span>
    </span>}</span>,
    "<span class="hljs-attribute">publish</span>" : <span class="hljs-value">{
-      "<span class="hljs-attribute">stream</span>" : <span class="hljs-value"><span class="hljs-string">"abc123?pass&amp;amp;adbe-live-event=abc123"</span></span>,
-      "<span class="hljs-attribute">url</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://stream.lax.cine.io/20C45E/cines"</span>
+      "<span class="hljs-attribute">stream</span>" : <span class="hljs-value"><span class="hljs-string">"abc123?pass"</span></span>,
+      "<span class="hljs-attribute">url</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://publish-sfo.cine.io/live"</span>
    </span>}</span>,
    "<span class="hljs-attribute">password</span>" : <span class="hljs-value"><span class="hljs-string">"pass"</span></span>,
    "<span class="hljs-attribute">record</span>" : <span class="hljs-value"><span class="hljs-literal">true</span></span>,
@@ -187,12 +187,12 @@ project <code>secretKey</code>.</p>
 </dd></dl></li></ul><ul class="no-bullet"><li><strong>Response&nbsp;&nbsp;<code>200</code></strong></li><li><div class="description"></div><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span><br/></code></pre><h5>Body</h5><pre><code>{
    "<span class="hljs-attribute">name</span>" : <span class="hljs-value"><span class="hljs-string">"my stream name"</span></span>,
    "<span class="hljs-attribute">play</span>" : <span class="hljs-value">{
-      "<span class="hljs-attribute">rtmp</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://fml.cine.io/20C45E/cines/abc123?adbe-live-event=abc123"</span></span>,
-      "<span class="hljs-attribute">hls</span>" : <span class="hljs-value"><span class="hljs-string">"http://hls.cine.io/cines/abc123/abc123.m3u8"</span>
+      "<span class="hljs-attribute">rtmp</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://fml.cine.io/20C45E/cines/abc123"</span></span>,
+      "<span class="hljs-attribute">hls</span>" : <span class="hljs-value"><span class="hljs-string">"http://hls.cine.io/PUBLIC_KEY/abc123.m3u8"</span>
    </span>}</span>,
    "<span class="hljs-attribute">publish</span>" : <span class="hljs-value">{
-      "<span class="hljs-attribute">stream</span>" : <span class="hljs-value"><span class="hljs-string">"abc123?pass&amp;amp;adbe-live-event=abc123"</span></span>,
-      "<span class="hljs-attribute">url</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://stream.lax.cine.io/20C45E/cines"</span>
+      "<span class="hljs-attribute">stream</span>" : <span class="hljs-value"><span class="hljs-string">"abc123?pass"</span></span>,
+      "<span class="hljs-attribute">url</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://publish-sfo.cine.io/live"</span>
    </span>}</span>,
    "<span class="hljs-attribute">password</span>" : <span class="hljs-value"><span class="hljs-string">"pass"</span></span>,
    "<span class="hljs-attribute">record</span>" : <span class="hljs-value"><span class="hljs-literal">true</span></span>,
@@ -214,12 +214,12 @@ project <code>secretKey</code>.</p>
 </dd></dl></li></ul><ul class="no-bullet"><li><strong>Response&nbsp;&nbsp;<code>200</code></strong></li><li><div class="description"></div><h5>Headers</h5><pre><code><span class="hljs-attribute">Content-Type</span>: <span class="hljs-string">application/json</span><br/></code></pre><h5>Body</h5><pre><code>{
    "<span class="hljs-attribute">name</span>" : <span class="hljs-value"><span class="hljs-string">"my new stream name"</span></span>,
    "<span class="hljs-attribute">play</span>" : <span class="hljs-value">{
-      "<span class="hljs-attribute">rtmp</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://fml.cine.io/20C45E/cines/abc123?adbe-live-event=abc123"</span></span>,
-      "<span class="hljs-attribute">hls</span>" : <span class="hljs-value"><span class="hljs-string">"http://hls.cine.io/cines/abc123/abc123.m3u8"</span>
+      "<span class="hljs-attribute">rtmp</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://fml.cine.io/20C45E/cines/abc123"</span></span>,
+      "<span class="hljs-attribute">hls</span>" : <span class="hljs-value"><span class="hljs-string">"http://hls.cine.io/PUBLIC_KEY/abc123.m3u8"</span>
    </span>}</span>,
    "<span class="hljs-attribute">publish</span>" : <span class="hljs-value">{
-      "<span class="hljs-attribute">stream</span>" : <span class="hljs-value"><span class="hljs-string">"abc123?pass&amp;amp;adbe-live-event=abc123"</span></span>,
-      "<span class="hljs-attribute">url</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://stream.lax.cine.io/20C45E/cines"</span>
+      "<span class="hljs-attribute">stream</span>" : <span class="hljs-value"><span class="hljs-string">"abc123?pass"</span></span>,
+      "<span class="hljs-attribute">url</span>" : <span class="hljs-value"><span class="hljs-string">"rtmp://publish-sfo.cine.io/live"</span>
    </span>}</span>,
    "<span class="hljs-attribute">password</span>" : <span class="hljs-value"><span class="hljs-string">"pass"</span></span>,
    "<span class="hljs-attribute">record</span>" : <span class="hljs-value"><span class="hljs-literal">false</span></span>,
