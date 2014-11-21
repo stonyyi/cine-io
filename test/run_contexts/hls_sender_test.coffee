@@ -22,11 +22,11 @@ describe 'hls_sender', ->
   afterEach ->
     HlsSender._hlsDirectory = @oldDirectory
 
+  beforeEach (done)->
+    @project = new Project(publicKey: 'my-pub-key')
+    @project.save done
+
   describe 'failure', ->
-    it 'fails when it cannot find the file', (done)->
-      HlsSender 'rename', 'no-file.m3u8', (err)->
-        expect(err.code).to.equal('ENOENT')
-        done()
 
     it 'fails when there are no ts files in the m3u8', (done)->
       HlsSender 'rename', 'no_ts_files.m3u8', (err)->
@@ -38,15 +38,38 @@ describe 'hls_sender', ->
         expect(err).to.equal('stream not found')
         done()
 
-  describe 'success', ->
-    beforeEach (done)->
-      @project = new Project(publicKey: 'my-pub-key')
-      @project.save done
+  describe 'deleting m3u8 files', ->
 
     beforeEach (done)->
       @stream = new EdgecastStream(streamName: 'some_stream', streamKey: 'some-key', _project: @project._id)
       @stream.save done
 
+    beforeEach ->
+      @redisSpy = sinon.spy(client, 'del')
+
+    afterEach ->
+      @redisSpy.restore()
+
+    it 'fails when it cannot find the file', (done)->
+      HlsSender 'rename', 'no-stream.m3u8', (err)->
+        expect(err).to.equal('stream not found')
+        done()
+
+    it 'removes the key from redis', (done)->
+      HlsSender 'rename', 'some_stream.m3u8', (err)=>
+        expect(err).to.be.null
+        expect(@redisSpy.calledOnce).to.be.true
+        args = @redisSpy.firstCall.args
+        expect(args).to.have.length(2)
+        expect(args[0]).to.equal('hls:my-pub-key/some_stream.m3u8')
+        expect(args[1]).to.be.a('function')
+        done()
+
+  describe 'success', ->
+
+    beforeEach (done)->
+      @stream = new EdgecastStream(streamName: 'some_stream', streamKey: 'some-key', _project: @project._id)
+      @stream.save done
 
     describe 'without cloudfront', ->
 

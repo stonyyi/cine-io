@@ -22,7 +22,9 @@ hlsSender = (event, filename, callback=noop)->
   return callback() unless filename && path.extname(filename) == '.m3u8'
   checkAndUpdateM3U8 filename, (err)->
     console.log("finished parsing", filename)
-    console.error("got err checking m3u8", err) if err
+    if err
+      return removeM3U8FromRedis(filename, callback) if err.code == 'ENOENT'
+      console.error("got err checking m3u8", err)
     callback(err)
 
 hlsSender._hlsDirectory = process.env.HLS_DIRECTORY || "/Users/thomas/work/tmp/hls"
@@ -48,8 +50,7 @@ lastTSFile = (fileContents)->
   lines = fileContents.split("\n").reverse()
   _.find lines, isTSFile
 
-projectForTSFile = (tsFile, callback)->
-  streamName = streamRecordingNameEnforcer.extractStreamNameFromHlsFile(tsFile)
+projectForStreamName = (streamName, callback)->
   query =
     streamName: streamName
   EdgecastStream.findOne query, (err, stream)->
@@ -61,6 +62,13 @@ projectForTSFile = (tsFile, callback)->
       return callback("project not found", stream) unless project
       callback(null, stream, project)
 
+removeM3U8FromRedis = (filename, callback)->
+  streamName = streamRecordingNameEnforcer.extractStreamName(filename)
+  projectForStreamName streamName, (err, stream, project)->
+    return callback(err) if err
+    redisKey = redisKeyForStream(project, stream)
+    console.log("deleting m3u8 from redis", redisKey)
+    client.del(redisKey, callback)
 
 modifyM3U8FileForCloudfront = (fileContents)->
   prependCloudfrontAndProjectToTSFile = (m3u8Line)->
@@ -72,6 +80,8 @@ modifyM3U8FileForCloudfront = (fileContents)->
       "http://#{localUrl}/hls/#{m3u8Line}"
   _.chain(fileContents.split("\n")).map(prependCloudfrontAndProjectToTSFile).value().join("\n")
 
+redisKeyForStream = (project, stream)->
+  "hls:#{project.publicKey}/#{stream.streamName}.m3u8"
 
 addHLSFileToRedis = (fileContents, stream, project, callback)->
   redisKey = redisKeyForM3U8.withObjects(project, stream)
@@ -83,7 +93,8 @@ updatesS3withNewTSFiles = (filename, fileContents, callback)->
   tsFile = lastTSFile(fileContents)
   # console.log("new ts file", tsFile)
   return callback("no ts files found") unless tsFile
-  projectForTSFile tsFile, (err, stream, project)->
+  streamName = streamRecordingNameEnforcer.extractStreamNameFromHlsFile(tsFile)
+  projectForStreamName streamName, (err, stream, project)->
     return callback(err) if err
     addHLSFileToRedis(fileContents, stream, project, callback)
 
