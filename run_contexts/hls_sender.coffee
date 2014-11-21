@@ -38,6 +38,7 @@ hlsSender._setupCloudfrontForHls = (callback=noop)->
     return console.error("got err setting up cloudfront", err) if err
     return console.error("could not setup distribution") unless distribution
     hlsSender._cloudFrontURL = "#{distribution.DomainName}"
+    console.log("Changing from local to cloudfront", localUrl, hlsSender._cloudFrontURL)
     callback()
 
 isTSFile = (line)->
