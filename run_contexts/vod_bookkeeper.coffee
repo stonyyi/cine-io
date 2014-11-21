@@ -17,9 +17,8 @@ class SaveStreamRecording
   constructor: (@fullFilePath, @stream)->
     @fileName = _.last(@fullFilePath.split('/'))
 
-
   process: (@callback)=>
-    return callback('stream not assigned to project') unless @stream._project
+    return @callback('stream not assigned to project') unless @stream._project
     @ftpClient = edgecastFtpClientFactory @callback, @_waterfall
 
   _waterfall: =>
@@ -66,7 +65,6 @@ class VodBookkeeper
   constructor: (@fileName)->
 
   process: (callback)=>
-    console.log("HELLO")
     @_findEdgecastStream (err, stream)=>
       return callback(err) if err
       return callback("stream not found") unless stream
@@ -97,4 +95,4 @@ exports.jobProcessor = (job, done)->
         console.log("processed file", file)
         done()
 
-Base.processJobs 'vod_bookkeeper', exports.jobProcessor if runMe
+Base.processJobs 'vod_bookkeeper', concurrency: 5, exports.jobProcessor if runMe
