@@ -12,7 +12,7 @@ describe 'StreamRecordings#Delete', ->
   now = new Date
 
   beforeEach (done)->
-    @project = new Project(name: 'my project')
+    @project = new Project(name: 'my project', publicKey: 'this-pub')
     @project.save done
 
   beforeEach (done)->
@@ -94,15 +94,29 @@ describe 'StreamRecordings#Delete', ->
     afterEach ->
       @fakeFtpClient.restore()
 
+    beforeEach ->
+      @s3Nock = requireFixture('nock/aws/delete_file_s3_success')('cine-io-vod', 'cines/this-pub/abc')
+
     it 'returns a deleted at flag', (done)->
       params = secretKey: @project.secretKey, id: @projectStream._id, name: "abc"
       Delete params, (err, response, options)=>
-        expect(@deleteStub.calledOnce).to.be.true
-        expect(@deleteStub.args[0][0]).to.equal('/cines/abc')
         expect(err).to.be.null
         expect(options).to.be.undefined
         expect(_.keys(response)).to.deep.equal(['deletedAt'])
         expect(response.deletedAt).to.be.instanceOf(Date)
+        done()
+
+    it 'returns deletes on edgecast', (done)->
+      params = secretKey: @project.secretKey, id: @projectStream._id, name: "abc"
+      Delete params, (err, response, options)=>
+        expect(@deleteStub.calledOnce).to.be.true
+        expect(@deleteStub.args[0][0]).to.equal('/cines/abc')
+        done()
+
+    it 'returns deletes on s3', (done)->
+      params = secretKey: @project.secretKey, id: @projectStream._id, name: "abc"
+      Delete params, (err, response, options)=>
+        expect(@s3Nock.isDone()).to.be.true
         done()
 
     it 'deletes the stream recording entry', (done)->
