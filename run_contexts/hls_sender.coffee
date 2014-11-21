@@ -33,7 +33,7 @@ hlsSender._setupCloudfrontForHls = (callback=noop)->
     logging:
       bucket: 'cine-cloudfront-logging.s3.amazonaws.com'
       prefix: localHostname
-  console.log("Creating cloudfront distro", localUrl, cloudfrontOptions)
+  console.log("Ensuring cloudfront distro", localUrl, cloudfrontOptions)
   cloudfront.ensureDistributionForOrigin localUrl, (err, distribution)->
     return console.error("got err setting up cloudfront", err) if err
     return console.error("could not setup distribution") unless distribution
