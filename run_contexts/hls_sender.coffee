@@ -66,8 +66,10 @@ modifyM3U8FileForCloudfront = (fileContents, project)->
   prependCloudfrontAndProjectToTSFile = (m3u8Line)->
     return m3u8Line if !isTSFile(m3u8Line)
     # use cloudfront once it is setup
-    urlPrefix = hlsSender._cloudFrontURL || localUrl
-    "http://#{urlPrefix}/hls/#{project.publicKey}/#{m3u8Line}"
+    if hlsSender._cloudFrontURL
+      "http://#{hlsSender._cloudFrontURL}/hls/#{project.publicKey}/#{m3u8Line}"
+    else
+      "http://#{localUrl}/hls/#{m3u8Line}"
   _.chain(fileContents.split("\n")).map(prependCloudfrontAndProjectToTSFile).value().join("\n")
 
 
