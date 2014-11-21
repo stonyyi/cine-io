@@ -136,7 +136,8 @@ module.exports = (grunt) ->
 
       production:
         files:
-          "public/compiled/mergedAssets.js": ["public/compiled/mergedAssets.js"]
+          "public/compiled/main/mergedAssets.js": ["public/compiled/main/mergedAssets.js"]
+          "public/compiled/admin/mergedAssets.js": ["public/compiled/admin/mergedAssets.js"]
 
     aglio:
       docs:
