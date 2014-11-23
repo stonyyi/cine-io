@@ -10,13 +10,13 @@ moment = require('moment')
 VOD_BUCKET = "cine-io-vod"
 
 FILES_TO_SKIP = [
-  'lk3koZUnbl.1.mp4'
-  'xkMOUbRPZl.10.mp4'
-  'xkMOUbRPZl.15.mp4'
-  'l1cgwV1Pex.1.mp4'
-  'l1cgwV1Pex.3.mp4'
-  'xkqP2_asJx.2.mp4'
-  'Z1X2MbDHE.1412775837755.mp4'
+  # 'lk3koZUnbl.1.mp4'
+  # 'xkMOUbRPZl.10.mp4'
+  # 'xkMOUbRPZl.15.mp4'
+  # 'l1cgwV1Pex.1.mp4'
+  # 'l1cgwV1Pex.3.mp4'
+  # 'xkqP2_asJx.2.mp4'
+  # 'Z1X2MbDHE.1412775837755.mp4'
 ]
 
 logMe = (args...)->
@@ -44,6 +44,10 @@ class EnsureRecordingsOnS3
     lister.on 'end', =>
       logMe("GOT KEYS", existingS3Keys)
       keysToUpload = _.difference(edgecastRecordingFiles, existingS3Keys)
+      intersection = _.intersection(keysToUpload, FILES_TO_SKIP)
+      if intersection.length > 0
+        _.each intersection, (file)=>
+          console.log("you need to download", "http://vod.cine.io/cines/#{@publicKey}/#{file}")
       keysToUpload = _.difference(keysToUpload, FILES_TO_SKIP)
       logMe("PROCESSING KEYS", keysToUpload)
       async.eachSeries keysToUpload, @_processRecording, callback
