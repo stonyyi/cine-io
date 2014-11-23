@@ -93,8 +93,8 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
         expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0, prorated: false)
-        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
+        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
         done()
 
     it 'charges stripe', ->
@@ -117,8 +117,8 @@ describe 'chargeAccountForMonth', ->
   describe 'with a non integer charge amount', ->
     beforeEach ->
       @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
-      usedBandwidth = 21913433823
-      usedStorage = humanizeBytes.GiB * 10
+      usedBandwidth = humanizeBytes.GiB * 0.8
+      usedStorage = humanizeBytes.GiB * 0.5
       @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
 
     afterEach ->
@@ -127,13 +127,13 @@ describe 'chargeAccountForMonth', ->
     beforeEach (done)->
       @account.plans = ['basic']
       @account.createdAt = new Date(@now.toString())
-      @account.createdAt.setDate(2)
+      @account.createdAt.setDate(5)
       @account.stripeCustomer.stripeCustomerId = "cus_2ghmxawfvEwXkw"
       @account.stripeCustomer.cards.push stripeCardId: "card_102gkI2AL5avr9E4geO0PpkC"
       @account.save done
 
     beforeEach ->
-      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 9666)
+      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 8666)
       @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
       @mailerSpy = sinon.spy mailer, 'monthlyBill'
 
@@ -156,8 +156,8 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
         expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 9666.666666666666, bandwidthOverage: 0, storageOverage: 0, prorated: true)
-        expect(lastCharge.details.usage).to.deep.equal(bandwidth: 21913433823, storage: humanizeBytes.GiB * 10, bandwidthOverage: 0, storageOverage: 0)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 8666.666666666666, prorated: true)
+        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.8, storage: humanizeBytes.GiB * 0.5)
         done()
 
   describe 'with < 1 GiB of usage', ->
@@ -196,8 +196,8 @@ describe 'chargeAccountForMonth', ->
           expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
           expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
           expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-          expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0, prorated: false)
-          expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.9, storage: humanizeBytes.GiB * 0.9, bandwidthOverage: 0, storageOverage: 0)
+          expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
+          expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.9, storage: humanizeBytes.GiB * 0.9)
           done()
 
       it 'sends an email that they were not charged', (done)->
@@ -274,8 +274,8 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.chargeError).to.equal('Error: Your card was declined.')
         expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0, prorated: false)
-        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
+        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
         done()
 
     it 'throttles the account in four days', (done)->
@@ -348,8 +348,8 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.chargeError).to.equal('Error: Invalid token id: fake_token')
         expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0, prorated: false)
-        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
+        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
         done()
 
     it 'sends an email to the admins', (done)->
@@ -433,8 +433,8 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
         expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, bandwidthOverage: 0, storageOverage: 0, prorated: false)
-        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, bandwidthOverage: humanizeBytes.GiB * 5, storageOverage: humanizeBytes.GiB * 4)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
+        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
         done()
 
     it 'charges stripe', ->

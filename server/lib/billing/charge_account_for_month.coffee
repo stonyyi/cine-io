@@ -43,7 +43,7 @@ findPrimaryCard = (account)->
   _.findWhere account.stripeCustomer.cards, deletedAt: undefined
 
 chargeStripe = (account, results, callback)->
-  amount = results.billing.plan + results.billing.bandwidthOverage + results.billing.storageOverage
+  amount = results.billing.plan
   console.log("charging stripe for account", account._id, amount)
   stripeData =
     amount: Math.floor(amount)
