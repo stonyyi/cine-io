@@ -99,7 +99,7 @@ describe 'StreamRecordings#Delete', ->
 
     it 'returns a deleted at flag', (done)->
       params = secretKey: @project.secretKey, id: @projectStream._id, name: "abc"
-      Delete params, (err, response, options)=>
+      Delete params, (err, response, options)->
         expect(err).to.be.null
         expect(options).to.be.undefined
         expect(_.keys(response)).to.deep.equal(['deletedAt'])
