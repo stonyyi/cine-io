@@ -5,9 +5,11 @@ async = require('async')
 _ = require('underscore')
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 s3Client = Cine.server_lib('aws/s3_client')
+s3Credentials = Cine.config('variables/s3')
+
 moment = require('moment')
 
-VOD_BUCKET = "cine-io-vod"
+VOD_BUCKET = s3Credentials.vodBucket
 
 FILES_TO_SKIP = [
   # 'lk3koZUnbl.1.mp4'
