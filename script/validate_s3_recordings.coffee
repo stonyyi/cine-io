@@ -119,7 +119,7 @@ validateEveryRecording = (publicKey, callback)->
     _.each data.Contents, (item)->
       recordings.push name: item.Key.replace(directory,''), size: item.Size, date: item.LastModified
 
-  lister.on 'end', =>
+  lister.on 'end', ->
     logMe("GOT KEYS", recordings)
     grouped = groupByStreamName(recordings)
     logMe("GOT grouped", grouped)
@@ -157,7 +157,7 @@ goThroughPublicKeys = ->
     _.each data.CommonPrefixes, (item)->
       publicKeys.push item.Prefix.replace(directory,'').replace('/', '')
 
-  lister.on 'end', =>
+  lister.on 'end', ->
     logMe("GOT KEYS", publicKeys)
 
     console.log("No directories.") if publicKeys.length == 0
