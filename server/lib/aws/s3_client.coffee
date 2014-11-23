@@ -47,7 +47,7 @@ exports.list = (bucket, directory='')->
       Bucket: bucket
       Prefix: directory
       Delimiter: '/'
-  console.log("Calling listObjects", params)
+  # console.log("Calling listObjects", params)
   lister = s3Client.listObjects(params)
 
 fileNameToDeleteObject = (fileName)->
@@ -59,7 +59,7 @@ exports.delete = (bucket, files..., callback)->
     Delete:
       Objects: _.map(files, fileNameToDeleteObject)
 
-  console.log("Calling deleteObjects", params)
+  # console.log("Calling deleteObjects", params)
 
   deleter = s3Client.deleteObjects(params)
   deleter.on 'error', (err)->
