@@ -416,12 +416,6 @@
                                                                 <li>Bandwidth: *|USAGE_BANDWIDTH|*</li>
                                                                 <li>Storage: *|USAGE_STORAGE|*</li>
                                                                 </ul>
-                                                                <strong>Overages:</strong>
-                                                                <ul>
-                                                                  <li>Bandwidth: *|BILL_BANDWIDTH_OVERAGE|*</li>
-                                                                  <li>Storage: *|BILL_STORAGE_OVERAGE|*</li>
-                                                                  <li>Total: *|BILL_OVERAGE_TOTAL|*</li>
-                                                                </ul>
                                                                 <strong>Charged to your card:</strong> *|BILL_TOTAL|*
                                                                 <br/>
                                                                 <br/>

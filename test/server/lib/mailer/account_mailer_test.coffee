@@ -1,4 +1,5 @@
 _ = require('underscore')
+
 accountMailer = Cine.server_lib('mailer/account_mailer')
 mandrill = Cine.server_lib('mailer/mandrill_template_mailer')._mandrill
 User = Cine.server_model('user')
@@ -155,9 +156,6 @@ describe 'accountMailer', ->
         header_blurb: "Thank you for using cine.io."
         ACCOUNT_NAME: "my account name"
         BILLING_MONTH: month
-        BILL_BANDWIDTH_OVERAGE: "0 bytes @ $0.00 / GiB = $0.00"
-        BILL_OVERAGE_TOTAL: "$0.00"
-        BILL_STORAGE_OVERAGE: "0 bytes @ $0.00 / GiB = $0.00"
         BILL_TOTAL: "$5.00"
         PLAN_BANDWIDTH: "1.15 TiB"
         PLAN_COST: "$5.00"

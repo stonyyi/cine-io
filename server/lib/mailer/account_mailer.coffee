@@ -77,12 +77,8 @@ exports.monthlyBill = (account, accountBillingHistory, recordId, billingMonthDat
         # Monthly Usage
         USAGE_BANDWIDTH: humanizeBytes(usage.bandwidth)
         USAGE_STORAGE: humanizeBytes(usage.storage)
-        # Overage
-        BILL_BANDWIDTH_OVERAGE: "#{humanizeBytes(usage.bandwidthOverage)} @ #{displayCurrency calculateAccountBill.cheapestOverageCost(account, 'bandwidth')} / GiB = #{displayCurrency(billing.bandwidthOverage)}"
-        BILL_STORAGE_OVERAGE: "#{humanizeBytes(usage.storageOverage)} @ #{displayCurrency calculateAccountBill.cheapestOverageCost(account, 'storage')} / GiB = #{displayCurrency(billing.storageOverage)}"
-        BILL_OVERAGE_TOTAL: displayCurrency(billing.bandwidthOverage + billing.storageOverage)
         # TOTAL
-        BILL_TOTAL: displayCurrency(billing.plan + billing.bandwidthOverage + billing.storageOverage)
+        BILL_TOTAL: displayCurrency(billing.plan)
     sendMail mailOptions, callback
 
 exports.underOneGibBill = (account, accountBillingHistory, billingMonthDate, callback=noop)->
