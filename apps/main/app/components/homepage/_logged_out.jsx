@@ -20,8 +20,10 @@ exports.About = React.createClass({
               <em> for </em> developers.
             </h2>
             <p>
-              You do not want to think about configuring a CDN, building a
-              cross-platform viewing experience, or learning a new tool.
+              Leave the CDN and cross-platform viewing experience to us.
+              Launch your live- streaming and video-conferencing apps in a
+              matter of minutes using our APIs and SDKs for iOS, Android, and
+              the web. We handle all of your RTC, RTMP, and HLS needs.
             </p>
           </div>
         </div>
