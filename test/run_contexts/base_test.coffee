@@ -71,3 +71,6 @@ describe 'Base', ->
       expect(listenStub.calledOnce).to.be.true
       args = listenStub.firstCall.args
       expect(args).to.deep.equal(["env port"])
+
+  describe 'processJobs', ->
+    it 'is tested'
