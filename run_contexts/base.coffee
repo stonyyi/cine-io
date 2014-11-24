@@ -53,9 +53,9 @@ processJobs = (queue, options, callback)->
 exports.getQueueName = (runContext)->
   "#{os.hostname()}-#{runContext}-incoming"
 
-exports.processJobs = (runContext, options, callback)->
+exports.processJobs = (runContext, callback)->
   queueName = exports.getQueueName(runContext)
-  processJobs(queueName, options, callback)
+  processJobs(queueName, callback)
 
 exports.watch = (dir, cb)->
   console.log("watching directory", dir)
