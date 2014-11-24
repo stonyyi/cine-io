@@ -8,7 +8,7 @@ runMe = !module.parent
 streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
-EdgecastRecordings = Cine.server_model('edgecast_recordings')
+StreamRecordings = Cine.server_model('stream_recordings')
 s3Client = Cine.server_lib('aws/s3_client')
 VOD_BUCKET = Cine.config('variables/s3').vodBucket
 
@@ -18,7 +18,7 @@ class SaveStreamRecording
 
   process: (@callback)=>
     return @callback('stream not assigned to project') unless @stream._project
-    waterfallCalls = [@_findStreamProject, @_uploadToS3ProjectDir, @_addRecordingToEdgecastRecordings, @_deleteOriginal, @_closeConnection]
+    waterfallCalls = [@_findStreamProject, @_uploadToS3ProjectDir, @_addRecordingToStreamRecordings, @_deleteOriginal, @_closeConnection]
     async.waterfall waterfallCalls, @callback
 
   _findStreamProject: (callback)=>
@@ -30,8 +30,8 @@ class SaveStreamRecording
     console.log("uploading file to s3", @fullFilePath, s3Location)
     s3Client.uploadFile @fullFilePath, VOD_BUCKET, s3Location, callback
 
-  _addRecordingToEdgecastRecordings: (callback)=>
-    EdgecastRecordings.findOrCreate _edgecastStream: @stream._id, (err, streamRecordings, created)=>
+  _addRecordingToStreamRecordings: (callback)=>
+    StreamRecordings.findOrCreate _edgecastStream: @stream._id, (err, streamRecordings, created)=>
       fs.stat @fullFilePath, (err, stats)=>
         newRecording =
           name: @fileName

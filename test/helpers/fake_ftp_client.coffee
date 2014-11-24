@@ -15,7 +15,7 @@ writeExampleFmsFile = (outputStream, callback)->
       callback()
 
 copyMp4Example = (outputStream, callback)->
-  badStreamExample = Cine.path('test/fixtures/edgecast_recordings/bad_stream_example.mp4')
+  badStreamExample = Cine.path('test/fixtures/stream_recordings/bad_stream_example.mp4')
   copyFile badStreamExample, outputStream.path, (err)->
     expect(err).to.be.undefined
     callback()

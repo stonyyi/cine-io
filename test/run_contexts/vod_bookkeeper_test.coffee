@@ -2,7 +2,7 @@ Base = Cine.run_context('base')
 VodBookkeeper = Cine.run_context('vod_bookkeeper')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
-EdgecastRecordings = Cine.server_model('edgecast_recordings')
+StreamRecordings = Cine.server_model('stream_recordings')
 copyFile = Cine.require('test/helpers/copy_file')
 assertFileDeleted = Cine.require('test/helpers/assert_file_deleted')
 fs = require('fs')
@@ -66,12 +66,12 @@ describe 'VodBookkeeper', ->
           expect(@s3Nock.isDone()).to.be.true
           done()
 
-      it "creates an entry in EdgecastRecordings", (done)->
+      it "creates an entry in StreamRecordings", (done)->
         job = Base.scheduleJob Base.getQueueName('vod_bookkeeper'), file: @targetFile
 
         job.on 'complete', (err)=>
           expect(err).to.be.null
-          EdgecastRecordings.find _edgecastStream: @stream._id, (err, allRecordingsForStream)=>
+          StreamRecordings.find _edgecastStream: @stream._id, (err, allRecordingsForStream)=>
             expect(err).to.be.null
             expect(allRecordingsForStream).to.have.length(1)
             edgecastRecordings = allRecordingsForStream[0]

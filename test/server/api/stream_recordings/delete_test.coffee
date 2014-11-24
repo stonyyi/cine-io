@@ -3,7 +3,7 @@ FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
 Delete = testApi Cine.api('stream_recordings/delete')
 Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')
-EdgecastRecordings = Cine.server_model('edgecast_recordings')
+StreamRecordings = Cine.server_model('stream_recordings')
 
 describe 'StreamRecordings#Delete', ->
 
@@ -31,7 +31,7 @@ describe 'StreamRecordings#Delete', ->
     @notProjectStream.save done
 
   beforeEach (done)->
-    @recordings = new EdgecastRecordings(_edgecastStream: @projectStream._id)
+    @recordings = new StreamRecordings(_edgecastStream: @projectStream._id)
     @recordings.recordings.push name: "rec1.mp4", size: 12345, date: new Date
     @recordings.recordings.push name: "abc", size: 67890, date: new Date
     @recordings.recordings.push name: "rec3.mp4", size: 98765, date: new Date
@@ -65,7 +65,7 @@ describe 'StreamRecordings#Delete', ->
 
     describe 'invalid name', ->
       beforeEach (done)->
-        @recordings = new EdgecastRecordings(_edgecastStream: @projectStream._id)
+        @recordings = new StreamRecordings(_edgecastStream: @projectStream._id)
         @recordings.recordings.push name: "rec1.mp4", size: 12345, date: new Date
         @recordings.recordings.push name: "abc", size: 67890, date: new Date
         @recordings.save done
@@ -111,7 +111,7 @@ describe 'StreamRecordings#Delete', ->
       expect(firstRecording.deletedAt).to.be.undefined
       params = secretKey: @project.secretKey, id: @projectStream._id, name: "abc"
       Delete params, (err, response, options)=>
-        EdgecastRecordings.findById @recordings._id, (err, recordings)->
+        StreamRecordings.findById @recordings._id, (err, recordings)->
           expect(recordings.recordings).to.have.length(4)
           firstRecording = recordings.recordings[1]
           expect(firstRecording.name).to.equal("abc")

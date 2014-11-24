@@ -1,7 +1,7 @@
 _ = require('underscore')
 EdgecastStream = Cine.server_model('edgecast_stream')
 getProject = Cine.server_lib('get_project')
-EdgecastRecordings = Cine.server_model('edgecast_recordings')
+StreamRecordings = Cine.server_model('stream_recordings')
 async = require('async')
 
 isDeleted = (item)->
@@ -36,7 +36,7 @@ module.exports = (params, callback)->
       findRecordings: (cb)->
         query =
           _edgecastStream: params.id
-        EdgecastRecordings.findOne query, (err, edgecastRecordings)->
+        StreamRecordings.findOne query, (err, edgecastRecordings)->
           return cb("findRecordings", err, null, status: 400) if err
           return cb(null, null, []) unless edgecastRecordings
           response = _.chain(edgecastRecordings.recordings)

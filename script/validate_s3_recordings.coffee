@@ -12,7 +12,7 @@ Cine.config('connect_to_mongo')
 async = require('async')
 _ = require('underscore')
 Project = Cine.server_model('project')
-EdgecastRecordings = Cine.server_model('edgecast_recordings')
+StreamRecordings = Cine.server_model('stream_recordings')
 EdgecastStream = Cine.server_model('edgecast_stream')
 streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
 s3Client = Cine.server_lib('aws/s3_client')
@@ -33,7 +33,7 @@ endFunction = (err)->
 
 directoryType = 'd'
 
-processedEdgecastRecordingIds = {}
+processedStreamRecordingIds = {}
 
 # removes directories, and groups by streamName ie abc.12.mp4 goes into group abc
 groupByStreamName = (list)->
@@ -98,11 +98,11 @@ validateStreamRecordings = (streamRecordingsTuple, callback)->
     unless stream
       console.error("stream not found", streamName)
       return callback()
-    EdgecastRecordings.findOne _edgecastStream: stream._id, (err, recordings)->
+    StreamRecordings.findOne _edgecastStream: stream._id, (err, recordings)->
       unless recordings
         console.error("no recordings for stream", stream._id)
         return callback()
-      processedEdgecastRecordingIds[recordings._id.toString()] = true
+      processedStreamRecordingIds[recordings._id.toString()] = true
       return callback(err) if err
       # console.log("got recordings", recordings)
       validateSameRecordings(edgecastStreamRecordingsList, recordings, callback)
@@ -132,10 +132,10 @@ validateEveryRecording = (publicKey, callback)->
 
 ensureWeProcessedEveryRecording = (err)->
   return endFunction(err) if err
-  EdgecastRecordings.find {}, '_id', (err, recordings)->
+  StreamRecordings.find {}, '_id', (err, recordings)->
     return endFunction(err) if err
     edgecastRecordingIdsFromDb = _.chain(recordings).pluck('_id').invoke('toString').value().sort()
-    processedRecordings = _.keys(processedEdgecastRecordingIds).sort()
+    processedRecordings = _.keys(processedStreamRecordingIds).sort()
     # happy case
     if _.isEqual(edgecastRecordingIdsFromDb, processedRecordings)
       console.log("Happily processed every #{processedRecordings.length} recordings entry. All complete!")

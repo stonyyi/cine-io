@@ -1,7 +1,7 @@
 EdgecastStream = Cine.server_model('edgecast_stream')
 getProject = Cine.server_lib('get_project')
 deleteStreamRecordingOnS3 = Cine.server_lib('stream_recordings/delete_stream_recording_on_s3')
-EdgecastRecordings = Cine.server_model('edgecast_recordings')
+StreamRecordings = Cine.server_model('stream_recordings')
 _ = require('underscore')
 
 findRecording = (recordings, name)->
@@ -23,7 +23,7 @@ module.exports = (params, callback)->
       return callback("stream not found", null, status: 404) unless stream
       return callback("name required", null, status: 404) unless params.name
       query = _edgecastStream: stream._id
-      EdgecastRecordings.findOne query, (err, recordings)->
+      StreamRecordings.findOne query, (err, recordings)->
         return callback(err, null, status: 400) if err
         return callback("recording not found", null, status: 404) unless recordings
         savedRecordingEntry = findRecording(recordings, params.name)

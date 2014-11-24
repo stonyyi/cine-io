@@ -1,8 +1,8 @@
-EdgecastRecordings = Cine.server_model('edgecast_recordings')
+StreamRecordings = Cine.server_model('stream_recordings')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
-describe 'EdgecastRecordings', ->
-  modelTimestamps EdgecastRecordings, name: 'some name'
+describe 'StreamRecordings', ->
+  modelTimestamps StreamRecordings, name: 'some name'
 
   addRecording = (recording, thisMonth, thisMonth2, lastMonth, twoMonthsAgo)->
 
@@ -29,7 +29,7 @@ describe 'EdgecastRecordings', ->
       deletedAt: thisMonth
 
   beforeEach (done)->
-    @recording = new EdgecastRecordings
+    @recording = new StreamRecordings
     @thisMonth = new Date
     console.log("This month", @thisMonth)
     @thisMonth2 = new Date

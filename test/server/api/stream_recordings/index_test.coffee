@@ -2,7 +2,7 @@ _ = require('underscore')
 Index = testApi Cine.api('stream_recordings/index')
 Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')
-EdgecastRecordings = Cine.server_model('edgecast_recordings')
+StreamRecordings = Cine.server_model('stream_recordings')
 
 describe 'StreamRecordings#Index', ->
 
@@ -57,7 +57,7 @@ describe 'StreamRecordings#Index', ->
 
   describe 'with recordings', ->
     beforeEach (done)->
-      @recordings = new EdgecastRecordings(_edgecastStream: @projectStream._id)
+      @recordings = new StreamRecordings(_edgecastStream: @projectStream._id)
       @recordings.recordings.push name: "rec1.mp4", size: 12345, date: new Date
       @recordings.recordings.push name: "rec2.mp4", size: 67890, date: new Date
       @recordings.recordings.push name: "rec3.mp4", size: 98765, date: new Date

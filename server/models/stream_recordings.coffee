@@ -3,21 +3,21 @@ Schema = mongoose.Schema
 findOrCreate = require('mongoose-findorcreate')
 _ = require('underscore')
 
-EdgecastRecording = new Schema
+StreamRecording = new Schema
   name: String
   size: Number
   date: Date
   deletedAt: Date
 
-EdgecastRecordingsSchema = new Schema
+StreamRecordingsSchema = new Schema
   _edgecastStream:
     type: mongoose.Schema.Types.ObjectId
     ref: 'EdgecastStream'
-  recordings: [EdgecastRecording]
+  recordings: [StreamRecording]
 
-EdgecastRecordingsSchema.plugin(Cine.server_lib('mongoose_timestamps'))
+StreamRecordingsSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
-EdgecastRecordingsSchema.plugin(findOrCreate)
+StreamRecordingsSchema.plugin(findOrCreate)
 
 # if the entry was created after this month then false
 # if the entry was created before this month but deleted before this month then false
@@ -38,7 +38,7 @@ activeInSameMonth = (entry, dateToCheck)->
   return true
 
 # dateToCheck is a full date
-EdgecastRecordingsSchema.methods.bytesForMonth = (dateToCheck)->
+StreamRecordingsSchema.methods.bytesForMonth = (dateToCheck)->
   addBytesIfSameMonth = (accum, entry)->
     if activeInSameMonth(entry, dateToCheck)
       accum + entry.size
@@ -46,7 +46,7 @@ EdgecastRecordingsSchema.methods.bytesForMonth = (dateToCheck)->
       accum
    _.chain(@recordings).reduce(addBytesIfSameMonth, 0).value()
 
-EdgecastRecordingsSchema.methods.totalBytes = ->
+StreamRecordingsSchema.methods.totalBytes = ->
   accumEntryBytes = (accum, entry)->
     accum + entry.size
 
@@ -55,6 +55,6 @@ EdgecastRecordingsSchema.methods.totalBytes = ->
     .reduce(accumEntryBytes, 0)
     .value()
 
-EdgecastRecordings = mongoose.model 'EdgecastRecordings', EdgecastRecordingsSchema
+StreamRecordings = mongoose.model 'StreamRecordings', StreamRecordingsSchema, 'edgecastrecordings'
 
-module.exports = EdgecastRecordings
+module.exports = StreamRecordings

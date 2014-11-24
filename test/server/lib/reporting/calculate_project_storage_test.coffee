@@ -1,6 +1,6 @@
 Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')
-EdgecastRecordings = Cine.server_model('edgecast_recordings')
+StreamRecordings = Cine.server_model('stream_recordings')
 CalculateProjectStorage = Cine.server_lib('reporting/calculate_project_storage')
 
 describe 'CalculateProjectStorage', ->
@@ -36,7 +36,7 @@ describe 'CalculateProjectStorage', ->
       date: lastMonth
 
   createRecordingsForStream = (stream, thisMonth, lastMonth, done)->
-    recordings = new EdgecastRecordings(_edgecastStream: stream)
+    recordings = new StreamRecordings(_edgecastStream: stream)
     addRecordings(recordings, thisMonth, lastMonth)
     recordings.save done
 
