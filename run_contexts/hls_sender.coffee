@@ -9,7 +9,6 @@ runMe = !module.parent
 cloudfront = Cine.server_lib("aws/cloudfront")
 noop=->
 
-EdgecastStream = Cine.server_model('edgecast_stream')
 streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
 client = Cine.server_lib('redis_client')
 
@@ -49,22 +48,11 @@ lastTSFile = (fileContents)->
   lines = fileContents.split("\n").reverse()
   _.find lines, isTSFile
 
-streamForStreamName = (streamName, callback)->
-  query =
-    streamName: streamName
-  EdgecastStream.findOne query, (err, stream)->
-    return callback(err) if err
-    return callback("stream not found") unless stream
-
-    callback(null, stream)
-
 removeM3U8FromRedis = (filename, callback)->
   streamName = streamRecordingNameEnforcer.extractStreamName(filename)
-  streamForStreamName streamName, (err, stream)->
-    return callback(err) if err
-    redisKey = redisKeyForM3U8.withObject(stream)
-    console.log("deleting m3u8 from redis", redisKey)
-    client.del(redisKey, callback)
+  redisKey = redisKeyForM3U8.withAttribute(streamName)
+  console.log("deleting m3u8 from redis", redisKey)
+  client.del(redisKey, callback)
 
 modifyM3U8FileForCloudfront = (fileContents)->
   prependCloudfrontAndProjectToTSFile = (m3u8Line)->
@@ -76,8 +64,8 @@ modifyM3U8FileForCloudfront = (fileContents)->
       "http://#{localUrl}/hls/#{m3u8Line}"
   _.chain(fileContents.split("\n")).map(prependCloudfrontAndProjectToTSFile).value().join("\n")
 
-addHLSFileToRedis = (fileContents, stream, callback)->
-  redisKey = redisKeyForM3U8.withObject(stream)
+addHLSFileToRedis = (fileContents, streamName, callback)->
+  redisKey = redisKeyForM3U8.withAttribute(streamName)
   cloudfrontM3U8 = modifyM3U8FileForCloudfront(fileContents)
   # console.log("Setting redis", redisKey, cloudfrontM3U8)
   client.set(redisKey, cloudfrontM3U8, callback)
@@ -87,9 +75,7 @@ updatesS3withNewTSFiles = (filename, fileContents, callback)->
   # console.log("new ts file", tsFile)
   return callback("no ts files found") unless tsFile
   streamName = streamRecordingNameEnforcer.extractStreamNameFromHlsFile(tsFile)
-  streamForStreamName streamName, (err, stream)->
-    return callback(err) if err
-    addHLSFileToRedis(fileContents, stream, callback)
+  addHLSFileToRedis(fileContents, streamName, callback)
 
 
 queueTask = (task, callback)->

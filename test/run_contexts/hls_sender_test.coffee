@@ -3,7 +3,6 @@ fs = require('fs')
 shortId = require('shortid')
 Base = Cine.run_context('base')
 HlsSender = Cine.run_context('hls_sender')
-EdgecastStream = Cine.server_model('edgecast_stream')
 client = Cine.server_lib('redis_client')
 cloudfront = Cine.server_lib("aws/cloudfront")
 
@@ -28,27 +27,13 @@ describe 'hls_sender', ->
         expect(err).to.equal('no ts files found')
         done()
 
-    it 'fails when there is no associated stream', (done)->
-      HlsSender 'rename', 'fake_hls.m3u8', (err)->
-        expect(err).to.equal('stream not found')
-        done()
-
   describe 'deleting m3u8 files', ->
-
-    beforeEach (done)->
-      @stream = new EdgecastStream(streamName: 'some_stream', streamKey: 'some-key')
-      @stream.save done
 
     beforeEach ->
       @redisSpy = sinon.spy(client, 'del')
 
     afterEach ->
       @redisSpy.restore()
-
-    it 'fails when it cannot find the file', (done)->
-      HlsSender 'rename', 'no-stream.m3u8', (err)->
-        expect(err).to.equal('stream not found')
-        done()
 
     it 'removes the key from redis', (done)->
       HlsSender 'rename', 'some_stream.m3u8', (err)=>
@@ -61,10 +46,6 @@ describe 'hls_sender', ->
         done()
 
   describe 'success', ->
-
-    beforeEach (done)->
-      @stream = new EdgecastStream(streamName: 'some_stream', streamKey: 'some-key')
-      @stream.save done
 
     describe 'without cloudfront', ->
 
