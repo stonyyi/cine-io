@@ -24,8 +24,6 @@ else
   Cine.middleware('health_check', app)
   Cine.middleware('deploy_info', app)
 
-  Cine.server 'api_routes', app
-
   app.use Cine.require('apps/main', app).handle
   app.use '/admin/kue', Cine.require('apps/kue')
   app.use '/admin', Cine.require('apps/admin', app).handle

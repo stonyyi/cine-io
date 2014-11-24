@@ -22,27 +22,22 @@ class FormatResponseForRendr
 # This class makes a "request" to an action in server/api
 # the callback must respond with (err, status, response).
 class InternalApiRequest
-  constructor: (@app, @method, @path, @params)->
+  constructor: (@routes, @method, @path, @params)->
     @method = 'get' if @method.toLowerCase() == 'head'
   request: (callback)->
     controller = @_controller()
     controller(@params, callback)
   _controller: ->
-    route = @_matchingRoute()
+    resource = @_matchingRoute()
     # add the interpolated params
-    throw new Error "no route for #{@path}!" unless route
-    _.extend(@params, route.params)
-    route.route.stack[0].handle
+    throw new Error "no route for #{@path}!" unless resource
+    resource
   _matchingRoute: ->
     method = @method.toLowerCase()
-    # verb_matching_routes = @app.routes[@method.toLowerCase()]
-    _.find @app._router.stack, (route)=>
-      return unless route.route
-      return unless route.route.methods[method]
-      route.match("/api#{@path}")
+    route = @routes[@method.toLowerCase()][@path]
 
 class DataAdapter
-  constructor: (@app) ->
+  constructor: (@routes) ->
 
   #
   # `req`: Actual request object from Express/Connect.
@@ -64,7 +59,7 @@ class DataAdapter
 
     console.log(clc.blueBright("[API]"), "#{method} #{path}", params)
 
-    apiReq = new InternalApiRequest(@app, method, path, params)
+    apiReq = new InternalApiRequest(@routes, method, path, params)
     rendrResponse = new FormatResponseForRendr(params.callback, callback, path, params)
     apiReq.request(rendrResponse.callback)
 

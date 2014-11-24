@@ -3,7 +3,7 @@ DataAdapter = Cine.server_lib('data_adapter')
 createServerOptions = (app)->
   serverOptions =
     defaultEngine: 'coffee'
-    dataAdapter: new DataAdapter(app)
+    dataAdapter: new DataAdapter(Cine.server('api_routes'))
     errorHandler: Cine.middleware('error_handling')
     appData: createServerOptions.appData(app)
 
