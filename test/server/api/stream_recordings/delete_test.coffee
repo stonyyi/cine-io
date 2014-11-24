@@ -86,13 +86,6 @@ describe 'StreamRecordings#Delete', ->
         done()
 
   describe 'success', ->
-    beforeEach ->
-      @fakeFtpClient = new FakeFtpClient
-      @deleteStub = @fakeFtpClient.stub('delete')
-      @deleteStub.callsArgWith 1, null
-
-    afterEach ->
-      @fakeFtpClient.restore()
 
     beforeEach ->
       @s3Nock = requireFixture('nock/aws/delete_file_s3_success')('cine-io-vod', 'cines/this-pub/abc')
@@ -104,13 +97,6 @@ describe 'StreamRecordings#Delete', ->
         expect(options).to.be.undefined
         expect(_.keys(response)).to.deep.equal(['deletedAt'])
         expect(response.deletedAt).to.be.instanceOf(Date)
-        done()
-
-    it 'returns deletes on edgecast', (done)->
-      params = secretKey: @project.secretKey, id: @projectStream._id, name: "abc"
-      Delete params, (err, response, options)=>
-        expect(@deleteStub.calledOnce).to.be.true
-        expect(@deleteStub.args[0][0]).to.equal('/cines/abc')
         done()
 
     it 'returns deletes on s3', (done)->

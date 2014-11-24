@@ -6,12 +6,9 @@ async = require('async')
 runMe = !module.parent
 
 streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
-EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
 EdgecastRecordings = Cine.server_model('edgecast_recordings')
-makeFtpDirectory = Cine.server_lib("stream_recordings/make_ftp_directory")
-edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 s3Client = Cine.server_lib('aws/s3_client')
 VOD_BUCKET = Cine.config('variables/s3').vodBucket
 
@@ -21,33 +18,17 @@ class SaveStreamRecording
 
   process: (@callback)=>
     return @callback('stream not assigned to project') unless @stream._project
-    @ftpClient = edgecastFtpClientFactory @callback, @_waterfall
-
-  _waterfall: =>
-    waterfallCalls = [@_findStreamProject, @_mkProjectDir, @_uploadToEdgecastProjectDir, @_uploadToS3ProjectDir, @_addRecordingToEdgecastRecordings, @_deleteOriginal, @_closeConnection]
+    waterfallCalls = [@_findStreamProject, @_uploadToS3ProjectDir, @_addRecordingToEdgecastRecordings, @_deleteOriginal, @_closeConnection]
     async.waterfall waterfallCalls, @callback
 
   _findStreamProject: (callback)=>
     Project.findById @stream._project, (err, @project)=>
       callback(err)
 
-  _mkProjectDir: (callback)=>
-    return callback('project not found') unless @project
-    makeFtpDirectory @ftpClient, @_projectDir(), callback
-
-  _projectDir: ->
-    streamFolder = @project.publicKey
-    projectDir = "/#{EdgecastFtpInfo.vodDirectory}/#{streamFolder}"
-
-  _uploadToEdgecastProjectDir: (callback)=>
-    ftpLocation = "#{@_projectDir()}/#{@fileName}"
-    console.log("uploading file to edgecast", @fullFilePath, ftpLocation)
-    @ftpClient.put @fullFilePath, ftpLocation, callback
-
   _uploadToS3ProjectDir: (callback)=>
-    s3Location = "#{@_projectDir()}/#{@fileName}"
+    s3Location = "cines/#{@project.publicKey}/#{@fileName}"
     console.log("uploading file to s3", @fullFilePath, s3Location)
-    s3Client.uploadFile @fullFilePath, VOD_BUCKET, "cines/#{@project.publicKey}/#{@fileName}", callback
+    s3Client.uploadFile @fullFilePath, VOD_BUCKET, s3Location, callback
 
   _addRecordingToEdgecastRecordings: (callback)=>
     EdgecastRecordings.findOrCreate _edgecastStream: @stream._id, (err, streamRecordings, created)=>
@@ -65,7 +46,6 @@ class SaveStreamRecording
     fs.unlink @fullFilePath, callback
 
   _closeConnection: (callback)=>
-    @ftpClient.end()
     callback()
 
 class VodBookkeeper
@@ -82,7 +62,6 @@ class VodBookkeeper
     streamName = streamRecordingNameEnforcer.extractStreamNameFromDirectory(@fileName)
     query =
       streamName: streamName
-      instanceName: EdgecastFtpInfo.vodDirectory
     EdgecastStream.findOne query, callback
 
 # json options
