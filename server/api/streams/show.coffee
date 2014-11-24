@@ -30,8 +30,7 @@ playJSON = (project, stream, callback)->
     name: stream.name
     streamName: stream.streamName
     play:
-      hls: "http://hls.cine.io/#{project.publicKey}/#{stream.streamName}.m3u8" # ours
-      # hls: "http://hls2.cine.io/#{stream.instanceName}/#{stream.eventName}/#{stream.streamName}.m3u8" #edgecast
+      hls: "http://hls.cine.io/#{stream.streamName}.m3u8" # ours
       rtmp: "#{BASE_URL}/#{stream.instanceName}/#{stream.streamName}"
   callback(null, streamJSON)
 
