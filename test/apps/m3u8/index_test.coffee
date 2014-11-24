@@ -8,7 +8,7 @@ describe 'm3u8', ->
     @agent = supertest.agent(app)
 
   beforeEach (done)->
-    client.set redisKeyForM3U8.withAttributes("pub-key", 'stream-name'), "my m3u8 file", done
+    client.set "hls:pub-key/stream-name.m3u8", "my m3u8 file", done
 
   it 'serves does not handle the root', (done)->
     @agent.get('/').expect(404).end(done)
