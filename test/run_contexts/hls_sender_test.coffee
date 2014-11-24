@@ -4,7 +4,6 @@ shortId = require('shortid')
 Base = Cine.run_context('base')
 HlsSender = Cine.run_context('hls_sender')
 EdgecastStream = Cine.server_model('edgecast_stream')
-Project = Cine.server_model('project')
 client = Cine.server_lib('redis_client')
 cloudfront = Cine.server_lib("aws/cloudfront")
 
@@ -22,10 +21,6 @@ describe 'hls_sender', ->
   afterEach ->
     HlsSender._hlsDirectory = @oldDirectory
 
-  beforeEach (done)->
-    @project = new Project(publicKey: 'my-pub-key')
-    @project.save done
-
   describe 'failure', ->
 
     it 'fails when there are no ts files in the m3u8', (done)->
@@ -41,7 +36,7 @@ describe 'hls_sender', ->
   describe 'deleting m3u8 files', ->
 
     beforeEach (done)->
-      @stream = new EdgecastStream(streamName: 'some_stream', streamKey: 'some-key', _project: @project._id)
+      @stream = new EdgecastStream(streamName: 'some_stream', streamKey: 'some-key')
       @stream.save done
 
     beforeEach ->
@@ -61,14 +56,14 @@ describe 'hls_sender', ->
         expect(@redisSpy.calledOnce).to.be.true
         args = @redisSpy.firstCall.args
         expect(args).to.have.length(2)
-        expect(args[0]).to.equal('hls:my-pub-key/some_stream.m3u8')
+        expect(args[0]).to.equal('hls:some_stream.m3u8')
         expect(args[1]).to.be.a('function')
         done()
 
   describe 'success', ->
 
     beforeEach (done)->
-      @stream = new EdgecastStream(streamName: 'some_stream', streamKey: 'some-key', _project: @project._id)
+      @stream = new EdgecastStream(streamName: 'some_stream', streamKey: 'some-key')
       @stream.save done
 
     describe 'without cloudfront', ->
@@ -77,7 +72,7 @@ describe 'hls_sender', ->
         HlsSender 'rename', 'fake_hls.m3u8', done
 
       it 'writes the local url m3u8 file to redis', (done)->
-        client.get "hls:my-pub-key/some_stream.m3u8", (err, m3u8contents)->
+        client.get "hls:some_stream.m3u8", (err, m3u8contents)->
           expect(err).to.be.null
           expected = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-MEDIA-SEQUENCE:9\n#EXT-X-TARGETDURATION:5\n#EXTINF:5.013,\nhttp://TEST-HOST.cine.io/hls/some_stream-0987654321098.ts\n#EXTINF:5.013,\nhttp://TEST-HOST.cine.io/hls/some_stream-1234567890123.ts\n"
           expect(m3u8contents).to.equal(expected)
@@ -99,7 +94,7 @@ describe 'hls_sender', ->
         HlsSender 'rename', 'fake_hls.m3u8', done
 
       it 'writes the local url m3u8 file to redis', (done)->
-        client.get "hls:my-pub-key/some_stream.m3u8", (err, m3u8contents)->
+        client.get "hls:some_stream.m3u8", (err, m3u8contents)->
           expect(err).to.be.null
           expected = "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-MEDIA-SEQUENCE:9\n#EXT-X-TARGETDURATION:5\n#EXTINF:5.013,\nhttp://d28ayna0xo97kz.cloudfront.net/hls/some_stream-0987654321098.ts\n#EXTINF:5.013,\nhttp://d28ayna0xo97kz.cloudfront.net/hls/some_stream-1234567890123.ts\n"
           expect(m3u8contents).to.equal(expected)

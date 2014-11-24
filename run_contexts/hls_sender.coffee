@@ -10,7 +10,6 @@ cloudfront = Cine.server_lib("aws/cloudfront")
 noop=->
 
 EdgecastStream = Cine.server_model('edgecast_stream')
-Project = Cine.server_model('project')
 streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
 client = Cine.server_lib('redis_client')
 
@@ -50,23 +49,20 @@ lastTSFile = (fileContents)->
   lines = fileContents.split("\n").reverse()
   _.find lines, isTSFile
 
-projectForStreamName = (streamName, callback)->
+streamForStreamName = (streamName, callback)->
   query =
     streamName: streamName
   EdgecastStream.findOne query, (err, stream)->
     return callback(err) if err
     return callback("stream not found") unless stream
 
-    Project.findById stream._project, (err, project)->
-      return callback(err, stream) if err
-      return callback("project not found", stream) unless project
-      callback(null, stream, project)
+    callback(null, stream)
 
 removeM3U8FromRedis = (filename, callback)->
   streamName = streamRecordingNameEnforcer.extractStreamName(filename)
-  projectForStreamName streamName, (err, stream, project)->
+  streamForStreamName streamName, (err, stream)->
     return callback(err) if err
-    redisKey = redisKeyForStream(project, stream)
+    redisKey = redisKeyForM3U8.withObject(stream)
     console.log("deleting m3u8 from redis", redisKey)
     client.del(redisKey, callback)
 
@@ -80,11 +76,8 @@ modifyM3U8FileForCloudfront = (fileContents)->
       "http://#{localUrl}/hls/#{m3u8Line}"
   _.chain(fileContents.split("\n")).map(prependCloudfrontAndProjectToTSFile).value().join("\n")
 
-redisKeyForStream = (project, stream)->
-  "hls:#{project.publicKey}/#{stream.streamName}.m3u8"
-
-addHLSFileToRedis = (fileContents, stream, project, callback)->
-  redisKey = redisKeyForM3U8.withObjects(project, stream)
+addHLSFileToRedis = (fileContents, stream, callback)->
+  redisKey = redisKeyForM3U8.withObject(stream)
   cloudfrontM3U8 = modifyM3U8FileForCloudfront(fileContents)
   # console.log("Setting redis", redisKey, cloudfrontM3U8)
   client.set(redisKey, cloudfrontM3U8, callback)
@@ -94,9 +87,9 @@ updatesS3withNewTSFiles = (filename, fileContents, callback)->
   # console.log("new ts file", tsFile)
   return callback("no ts files found") unless tsFile
   streamName = streamRecordingNameEnforcer.extractStreamNameFromHlsFile(tsFile)
-  projectForStreamName streamName, (err, stream, project)->
+  streamForStreamName streamName, (err, stream)->
     return callback(err) if err
-    addHLSFileToRedis(fileContents, stream, project, callback)
+    addHLSFileToRedis(fileContents, stream, callback)
 
 
 queueTask = (task, callback)->
