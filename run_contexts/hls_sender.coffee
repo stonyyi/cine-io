@@ -1,5 +1,4 @@
 Base = require('./base')
-Cine.config('connect_to_mongo')
 fs = require('fs')
 os = require('os')
 path = require 'path'
