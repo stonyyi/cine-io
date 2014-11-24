@@ -150,6 +150,7 @@ module.exports = React.createClass({
                 <li><a href="http://cineio.uservoice.com">email</a> {" + "}
                 <strong><a href="https://www.hipchat.com/gZCLRQ9Ih">live chat support</a></strong>
                 &nbsp;from our developers</li>
+                <li>Discounts for inbound links to cine.io.</li>
               </ul>
             </div>
 
