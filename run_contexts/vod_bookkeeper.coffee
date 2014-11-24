@@ -18,7 +18,7 @@ class SaveStreamRecording
 
   process: (@callback)=>
     return @callback('stream not assigned to project') unless @stream._project
-    waterfallCalls = [@_findStreamProject, @_uploadToS3ProjectDir, @_addRecordingToStreamRecordings, @_deleteOriginal, @_closeConnection]
+    waterfallCalls = [@_findStreamProject, @_uploadToS3ProjectDir, @_addRecordingToStreamRecordings, @_deleteOriginal]
     async.waterfall waterfallCalls, @callback
 
   _findStreamProject: (callback)=>
@@ -44,9 +44,6 @@ class SaveStreamRecording
 
   _deleteOriginal: (callback)=>
     fs.unlink @fullFilePath, callback
-
-  _closeConnection: (callback)=>
-    callback()
 
 class VodBookkeeper
   constructor: (@fileName)->
