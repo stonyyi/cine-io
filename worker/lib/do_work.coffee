@@ -6,7 +6,7 @@ scheduledTasks =
     [
       'reporting/download_and_parse_edgecast_logs'
       'stats/calculate_and_save_usage_stats'
-      'throttle_accounts_who_cannot_pay_for_overages'
+      'billing/update_or_throttle_accounts_who_cannot_pay_for_overages'
     ]
 
 runServerLib = (libraryName, payload, callback)->

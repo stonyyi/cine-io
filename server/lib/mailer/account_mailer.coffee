@@ -13,6 +13,10 @@ fullCurrentUserJson = Cine.server_lib('full_current_user_json')
 
 noop = ->
 
+ENJOY_AND_QUESTIONS = """
+<p>We hope you enjoy using <a href="https://www.cine.io">cine.io</a>. If you have any questions you can reply to this email, or send us an email at <a href="mailto:support@cine.io">support@cine.io</a>.</p>
+"""
+
 sendMail = (mailOptions, callback)->
   getMailerLogo (err, logoImageData)->
     images = []
@@ -101,6 +105,45 @@ exports.underOneGibBill = (account, accountBillingHistory, billingMonthDate, cal
       """
   sendMail mailOptions, callback
 
+exports.automaticallyUpgradedAccount = (account, oldPlans, callback=noop)->
+  name = account.name || account.billingEmail
+  newPlan = _.first account.plans
+  mailOptions =
+    templateName: 'blank-with-header-and-footer'
+    subject: 'Account upgraded your cine.io account plan based on usage.'
+    toEmail: account.billingEmail
+    toName: name
+    userTemplateVars:
+      header_blurb: "Account upgraded to #{newPlan}."
+      name: name
+      content: """
+      <p>We want to let you know that your account has exceeded the plan usage. We have upgraded your account to #{newPlan}.</p>
+      #{ENJOY_AND_QUESTIONS}
+      <p>Regards,<br/>
+      Thomas Shafer<br/>
+      Technical Officer, cine.io</p>
+      """
+  sendMail mailOptions, callback
+
+exports.willUpgradeAccount = (account, newPlan, callback=noop)->
+  name = account.name || account.billingEmail
+  mailOptions =
+    templateName: 'blank-with-header-and-footer'
+    subject: 'Account reaching usage limit.'
+    toEmail: account.billingEmail
+    toName: name
+    userTemplateVars:
+      header_blurb: "Account reaching usage limit."
+      name: name
+      content: """
+      <p>We want to let you know that your account is approaching the monthly usage limit. If this happens we will automatically upgrade your account to #{newPlan}.</p>
+      #{ENJOY_AND_QUESTIONS}
+      <p>Regards,<br/>
+      Thomas Shafer<br/>
+      Technical Officer, cine.io</p>
+      """
+  sendMail mailOptions, callback
+
 placetoUpgradeYourAccount = (account)->
   return account.appdirectData.marketplace.baseUrl if account.billingProvider == 'appdirect'
   returnUrl =
@@ -114,6 +157,7 @@ throttleReason = (reason)->
     overLimit: "The reason we've disabled your account is because you've exceeded the usage limits of your current plan."
     cardDeclined: "The reason we've disabled your account is because we were unable to charge your current card."
   reasons[reason]
+
 throttleSubject = (reason)->
   reasons =
     overLimit: 'Your account has been disabled (usage exceeded).'
@@ -141,7 +185,7 @@ exports.throttledAccount = (account, callback=noop)->
         name: name
         content: """
         <p>We wanted to let you know on <strong>#{throttleDate}</strong> your account will be disabled. All API requests will begin returning a 402 response. #{throttledReason} Please update your account at <a href="#{urlToUpgrade}">#{urlToUpgrade}</a>.</p>
-        <p>We hope you enjoy using <a href="https://www.cine.io">cine.io</a>. If you have any questions you can reply to this email, or send us an email at <a href="mailto:support@cine.io">support@cine.io</a>.</p>
+        #{ENJOY_AND_QUESTIONS}
         <p>Regards,<br/>
         Thomas Shafer<br/>
         Technical Officer, cine.io</p>

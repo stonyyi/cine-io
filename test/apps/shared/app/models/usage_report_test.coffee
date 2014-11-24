@@ -50,20 +50,20 @@ describe 'UsageReport', ->
 
   describe '.lowestPlanPerUsage', ->
     it 'returns the lowest plan', ->
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.MiB * 10)).to.equal('solo')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB - 100)).to.equal('solo')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB + 100)).to.equal('solo')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 20 - 100)).to.equal('solo')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 150 - 100)).to.equal('basic')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 500 - 100)).to.equal('premium')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB - 100)).to.equal('pro')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB * 2 - 100)).to.equal('startup')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB * 5 - 100)).to.equal('business')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB * 5 + 100)).to.equal('enterprise')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.MiB * 10, 'bandwidth')).to.equal('solo')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB - 100, 'bandwidth')).to.equal('solo')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB + 100, 'bandwidth')).to.equal('solo')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 20 - 100, 'bandwidth')).to.equal('solo')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 150 - 100, 'bandwidth')).to.equal('basic')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB * 500 - 100, 'bandwidth')).to.equal('premium')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB - 100, 'bandwidth')).to.equal('pro')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB * 2 - 100, 'bandwidth')).to.equal('startup')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB * 5 - 100, 'bandwidth')).to.equal('business')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.TiB * 5 + 100, 'bandwidth')).to.equal('enterprise')
 
     it 'returns the lowest plan with allowing for free', ->
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.MiB * 10, true)).to.equal('free')
-      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB - 100, true)).to.equal('free')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.MiB * 10, 'bandwidth', true)).to.equal('free')
+      expect(UsageReport.lowestPlanPerUsage(humanizeBytes.GiB - 100, 'bandwidth', true)).to.equal('free')
 
   describe '.sortedCinePlans', ->
     it 'includes the cine plans', ->
@@ -76,6 +76,15 @@ describe 'UsageReport', ->
       expect(plans[0].price).to.equal(0)
       expect(plans[7].name).to.equal('enterprise')
       expect(plans[7].price).to.equal(5000)
+
+
+  describe '.nextPlan', ->
+    it 'gives the next plan', ->
+      account = new Account(provider: 'cine.io')
+      account.attributes.plans = ['pro']
+      expect(UsageReport.nextPlan(account)).to.equal('startup')
+      account.attributes.plans = ['enterprise']
+      expect(UsageReport.nextPlan(account)).to.equal('enterprise')
 
   describe '.lastThreeMonths', ->
     beforeEach ->
