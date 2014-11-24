@@ -55,6 +55,6 @@ StreamRecordingsSchema.methods.totalBytes = ->
     .reduce(accumEntryBytes, 0)
     .value()
 
-StreamRecordings = mongoose.model 'StreamRecordings', StreamRecordingsSchema, 'edgecastrecordings'
+StreamRecordings = mongoose.model 'StreamRecordings', StreamRecordingsSchema
 
 module.exports = StreamRecordings
