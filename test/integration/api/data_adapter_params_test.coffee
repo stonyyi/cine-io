@@ -3,12 +3,16 @@ supertest = require('supertest')
 app = Cine.require('app').app
 User = Cine.server_model('user')
 login = Cine.require 'test/helpers/login_helper'
+routes = Cine.server("api_routes")
 
 describe 'data adapter params', ->
 
   beforeEach ->
-    app.post '/api/params', (params, callback)->
+    routes.post['/params'] = (params, callback)->
       callback(null, params)
+
+  afterEach ->
+    delete routes.post['/params']
 
   beforeEach ->
     @agent = supertest.agent(app)
