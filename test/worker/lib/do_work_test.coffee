@@ -19,7 +19,12 @@ describe 'doWork', ->
       schedulableJobs = [
         {
           name: 'once_an_hour_worker'
-          libs: 'reporting/download_and_parse_edgecast_logs'
+          libs: [
+            'reporting/download_and_parse_edgecast_logs'
+            'reporting/download_and_parse_cloudfront_logs'
+            'stats/calculate_and_save_usage_stats'
+            'billing/update_or_throttle_accounts_who_cannot_pay_for_overages'
+          ]
         }
       ]
       _.each schedulableJobs, (schedulableJob)->
@@ -32,7 +37,10 @@ describe 'doWork', ->
           jobStub = sinon.stub Cine, 'server_lib', -> justACallback
           jobStub.withArgs(schedulableJob.libs)
           doWork schedulableJob.name, {}, (err, response)->
-            expect(jobStub.firstCall.args).to.deep.equal([schedulableJob.libs])
+            expect(jobStub.firstCall.args).to.deep.equal([schedulableJob.libs[0]])
+            expect(jobStub.secondCall.args).to.deep.equal([schedulableJob.libs[1]])
+            expect(jobStub.thirdCall.args).to.deep.equal([schedulableJob.libs[2]])
+            expect(jobStub.getCall(3).args).to.deep.equal([schedulableJob.libs[3]])
             jobStub.restore()
             expect(err).be.undefined
             expect(response).to.be.undefined

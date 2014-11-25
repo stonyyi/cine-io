@@ -30,6 +30,34 @@ exports.throttledAccount = (account, callback=noop)->
     """
   sendAdminEmail mailOptions, callback
 
+exports.automaticallyUpgradedAccount = (account, callback=noop)->
+  options =
+    billingEmail: account.billingEmail
+    _id: account._id
+    plans: account.plans
+    billingProvider: account.billingProvider
+  mailOptions =
+    subject: '[Events] Audomatically Upgraded Account'
+    content: """
+    <p>An account was upgraded. The account owner received an email.</p>
+    <p><pre>#{util.inspect(options)}</pre></p>
+    """
+  sendAdminEmail mailOptions, callback
+
+exports.willUpgradeAccount = (account, nextPlan, callback=noop)->
+  options =
+    billingEmail: account.billingEmail
+    _id: account._id
+    plans: account.plans
+    billingProvider: account.billingProvider
+  mailOptions =
+    subject: '[Events] Notification about upcoming Account Upgrade'
+    content: """
+    <p>An account owner was notified that they will soon upgraded to #{nextPlan}. The account owner received an email.</p>
+    <p><pre>#{util.inspect(options)}</pre></p>
+    """
+  sendAdminEmail mailOptions, callback
+
 exports.newUser = (account, user, context, callback=noop)->
   userAttributes = _.pick user, 'name', 'email', 'githubData', 'appdirectData', 'createdAtIP'
   accountAttributes = _.pick account, 'name', 'billingEmail', 'plans', 'herokuId', 'engineyardId'

@@ -37,6 +37,23 @@ exports.uploadFile = (localFile, bucket, remoteFile, options={}, callback)->
     # console.log("done uploading")
     callback()
 
+exports.downloadFile = (localFile, bucket, remoteFile, callback)->
+  params =
+    localFile: localFile
+    s3Params:
+      Bucket: bucket
+      Key: remoteFile
+  downloader = s3Client.downloadFile(params)
+  downloader.on 'error', (err)->
+    console.error("unable to download:", err.stack)
+    callback(err)
+  # downloader.on 'progress', ->
+  #   console.log("progress", downloader.progressAmount, downloader.progressTotal)
+
+  downloader.on 'end', ->
+    # console.log("done downloading")
+    callback()
+
 # lister = list("bucket", 'hello/abc/')
 # lister.on 'data', (data)-> console.log("got data")
 # lister.on 'error', callback(err)

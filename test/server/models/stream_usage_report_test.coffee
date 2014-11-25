@@ -1,8 +1,8 @@
-EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
+StreamUsageReport = Cine.server_model('stream_usage_report')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
 
-describe 'EdgecastStreamReport', ->
-  modelTimestamps EdgecastStreamReport
+describe 'StreamUsageReport', ->
+  modelTimestamps StreamUsageReport
 
   addReportEntries = (report, thisMonth, thisMonth2, lastMonth)->
 
@@ -25,7 +25,7 @@ describe 'EdgecastStreamReport', ->
       kind: 'fms'
 
   beforeEach (done)->
-    @report = new EdgecastStreamReport
+    @report = new StreamUsageReport
     @thisMonth = new Date
     @thisMonth2 = new Date
     if @thisMonth.getDate() == 1

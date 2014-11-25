@@ -5,8 +5,9 @@ scheduledTasks =
   once_an_hour_worker:
     [
       'reporting/download_and_parse_edgecast_logs'
+      'reporting/download_and_parse_cloudfront_logs'
       'stats/calculate_and_save_usage_stats'
-      'throttle_accounts_who_cannot_pay_for_overages'
+      'billing/update_or_throttle_accounts_who_cannot_pay_for_overages'
     ]
 
 runServerLib = (libraryName, payload, callback)->

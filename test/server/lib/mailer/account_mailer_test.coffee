@@ -119,6 +119,46 @@ describe 'accountMailer', ->
         assertCorrectMergeVars userMergeVars(options, @user)
         assertMailSent.call(this, err, response, done)
 
+  describe 'automaticallyUpgradedAccount', ->
+    assertCorrectMergeVars = (mergeVars)->
+      expectedMergeVars =
+        header_blurb: "Account upgraded to basic."
+        name: "my account name"
+      expect(mergeVars.templateVars.content).to.include('We have upgraded your account to basic.')
+      expect(mergeVars.templateVars.content).to.include("If you have any questions")
+      # content is huge, don't want to include it here
+      expectedMergeVars.content = mergeVars.templateVars.content
+      expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
+      assertMergeVarsInVars(mergeVars, expectedMergeVars)
+
+    it 'sends the email', (done)->
+      accountMailer.automaticallyUpgradedAccount @account, "some-old-plan", (err, response)=>
+        options = getMailOptions.call(this)
+        expect(options.subject).to.equal("Account upgraded your cine.io account plan based on usage.")
+        assertToAccount(options, @account)
+        assertCorrectMergeVars accountMergeVars(options, @account)
+        assertMailSent.call(this, err, response, done)
+
+  describe 'willUpgradeAccount', ->
+    assertCorrectMergeVars = (mergeVars)->
+      expectedMergeVars =
+        header_blurb: "Account reaching usage limit."
+        name: "my account name"
+      expect(mergeVars.templateVars.content).to.include('upgrade your account to some-new-plan.')
+      expect(mergeVars.templateVars.content).to.include("If you have any questions")
+      # content is huge, don't want to include it here
+      expectedMergeVars.content = mergeVars.templateVars.content
+      expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
+      assertMergeVarsInVars(mergeVars, expectedMergeVars)
+
+    it 'sends the email', (done)->
+      accountMailer.willUpgradeAccount @account, "some-new-plan", (err, response)=>
+        options = getMailOptions.call(this)
+        expect(options.subject).to.equal("Account reaching usage limit.")
+        assertToAccount(options, @account)
+        assertCorrectMergeVars accountMergeVars(options, @account)
+        assertMailSent.call(this, err, response, done)
+
   describe 'monthlyBill', ->
     beforeEach (done)->
       results =

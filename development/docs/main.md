@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: https://www.cine.io/api/1/-
+HOST: https://www.cine.io/api/1/-/
 
 # cine.io API
 

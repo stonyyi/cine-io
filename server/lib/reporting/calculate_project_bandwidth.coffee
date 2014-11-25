@@ -1,5 +1,5 @@
 EdgecastStream = Cine.server_model('edgecast_stream')
-EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
+StreamUsageReport = Cine.server_model('stream_usage_report')
 _ = require('underscore')
 
 getReportsForProject = (projectId, callback)->
@@ -7,7 +7,7 @@ getReportsForProject = (projectId, callback)->
     return callback(err) if err
 
     query = _edgecastStream: {$in: _.pluck(streams, 'id')}
-    EdgecastStreamReport.find query, callback
+    StreamUsageReport.find query, callback
 
 exports.byMonth = (projectId, month, callback)->
   getReportsForProject projectId, (err, reports)->

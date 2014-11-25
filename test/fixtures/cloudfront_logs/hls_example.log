@@ -1,0 +1,7 @@
+#Version: 1.0
+#Fields: date time x-edge-location sc-bytes c-ip cs-method cs(Host) cs-uri-stem sc-status cs(Referer) cs(User-Agent) cs-uri-query cs(Cookie) x-edge-result-type x-edge-request-id x-host-header cs-protocol cs-bytes time-taken
+2014-11-24	19:26:35	SFO5	680099	24.18.84.223	GET	diibtb4zn1vsj.cloudfront.net	/hls/bkcFcqG0V-1416857182993.ts	206	-	VLC/2.1.5%2520LibVLC/2.1.5	-	-	Miss	fp3cx__5jc-YPpWSNbWov9JRqo-6h_8pmfZ6cFUEdZfuCKrwuwqmSg==	diibtb4zn1vsj.cloudfront.net	http	173	0.440
+2014-11-24	19:26:16	SFO5	406371	24.18.84.223	GET	diibtb4zn1vsj.cloudfront.net	/hls/bkcFcqG0V-1416857166200.ts	206	-	VLC/2.1.5%2520LibVLC/2.1.5	-	-	Miss	tlYOI8egHvkFYLdT_22Zs0qQcNtybMCBxabSKzkcSg8Zz4ZpA1RvYA==	diibtb4zn1vsj.cloudfront.net	http	173	0.310
+2014-11-24	19:26:29	SFO5	552071	24.18.84.223	GET	diibtb4zn1vsj.cloudfront.net	/hls/bkcFcqG0V-1416857176179.ts	206	-	VLC/2.1.5%2520LibVLC/2.1.5	-	-	Miss	4zqAETfP2qPtYONA4a_JlTWgPVfvrdYKr9Qk0I88uvsGusy0itYDaw==	diibtb4zn1vsj.cloudfront.net	http	173	0.405
+2014-11-24	19:26:22	SFO5	450551	24.18.84.223	GET	diibtb4zn1vsj.cloudfront.net	/hls/bkcFcqG0V-1416857169825.ts	206	-	VLC/2.1.5%2520LibVLC/2.1.5	-	-	Miss	WhndFo5g9QJHDPHq6Z5FHun7R8sZDCdmvQxwu6BmkMVeMiByEKFx6Q==	diibtb4zn1vsj.cloudfront.net	http	173	0.311
+2014-11-24	19:26:41	SFO5	682919	24.18.84.223	GET	diibtb4zn1vsj.cloudfront.net	/hls/bkcFcqG0V-1416857189159.ts	206	-	VLC/2.1.5%2520LibVLC/2.1.5	-	-	Miss	Zgq03gi0REjMo6ymaRjkpsTXv7mXgJakMyNlExxPcCaxgp-_r3Od4g==	diibtb4zn1vsj.cloudfront.net	http	173	0.455

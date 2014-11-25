@@ -46,12 +46,6 @@ describe 'createNewAccount', ->
         expect(user.appdirectUUID).to.equal("some appdirect uuid")
         done()
 
-    # TODO: DEPRECATED - need to wait until console app is updated
-    it 'creates a masterKey that is the same as the user', ->
-      expect(@results.account.masterKey).to.have.length(64)
-      expect(@results.user.masterKey).to.have.length(64)
-      expect(@results.account.masterKey).to.equal(@results.user.masterKey)
-
     it "adds a herokuId to the account", (done)->
       Account.findById @results.account._id, (err, account)->
         expect(err).to.be.null

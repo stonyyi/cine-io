@@ -1,53 +1,59 @@
-module.exports = (app)->
-  app.get '/api/', Cine.api "root"
+_ = require('underscore')
+methods = ['get', 'post', 'put', 'delete']
 
-  newApiRoute = (controllerAction, options, method)->
-    parts = controllerAction.split('#')
-    controller = parts[0]
-    action = parts[1]
-    url = options.url
-    route = "/api/#{url}"
-    resource = Cine.api "#{controller}/#{action}"
-    app[method](route, resource)
+routes = module.exports
+_.each methods, (method)->
+  routes[method] = {}
 
-  get = (controllerAction, options)-> newApiRoute(controllerAction, options, 'get')
-  post = (controllerAction, options)-> newApiRoute(controllerAction, options, 'post')
-  put = (controllerAction, options)-> newApiRoute(controllerAction, options, 'put')
-  # delete is a reserved keyword
-  destroy = (controllerAction, options)-> newApiRoute(controllerAction, options, 'delete')
+routes.get['/'] = Cine.api "root"
 
-  get 'server#nearest', url: 'nearest-server'
+newApiRoute = (controllerAction, options, method)->
+  parts = controllerAction.split('#')
+  controller = parts[0]
+  action = parts[1]
+  url = options.url
+  route = "/#{url}"
+  resource = Cine.api "#{controller}/#{action}"
+  routes[method][route] = resource
 
-  get 'health#index', url: 'health'
+get = (controllerAction, options)-> newApiRoute(controllerAction, options, 'get')
+post = (controllerAction, options)-> newApiRoute(controllerAction, options, 'post')
+put = (controllerAction, options)-> newApiRoute(controllerAction, options, 'put')
+# delete is a reserved keyword
+destroy = (controllerAction, options)-> newApiRoute(controllerAction, options, 'delete')
 
-  get 'stats#show', url: 'stats'
+get 'server#nearest', url: 'nearest-server'
 
-  get     'projects#index', url: 'projects'
-  get     'projects#show',   url: 'project'
-  post    'projects#create', url: 'project'
-  put     'projects#update', url: 'project'
-  destroy 'projects#delete', url: 'project'
+get 'health#index', url: 'health'
 
-  get     'streams#index', url: 'streams'
-  get     'streams#show',   url: 'stream'
-  post    'streams#create', url: 'stream'
-  put     'streams#update', url: 'stream'
-  destroy 'streams#delete', url: 'stream'
+get 'stats#show', url: 'stats'
 
-  get 'stream_recordings#index', url: 'stream/recordings'
-  destroy 'stream_recordings#delete', url: 'stream/recording'
+get     'projects#index', url: 'projects'
+get     'projects#show',   url: 'project'
+post    'projects#create', url: 'project'
+put     'projects#update', url: 'project'
+destroy 'projects#delete', url: 'project'
 
-  get 'static_documents#show', url: 'static-document'
+get     'streams#index', url: 'streams'
+get     'streams#show',   url: 'stream'
+post    'streams#create', url: 'stream'
+put     'streams#update', url: 'stream'
+destroy 'streams#delete', url: 'stream'
 
-  get 'usage_reports#show', url: 'usage-report'
+get 'stream_recordings#index', url: 'stream/recordings'
+destroy 'stream_recordings#delete', url: 'stream/recording'
 
-  get  'users#show', url: 'user'
-  post 'users#update_account', url: 'update-account'
-  put  'users#update', url: 'user'
+get 'static_documents#show', url: 'static-document'
 
-  get     'accounts#index', url: 'accounts'
-  put     'accounts#update', url: 'account'
-  destroy 'accounts#delete', url: 'account'
+get 'usage_reports#show', url: 'usage-report'
 
-  get  'password_change_requests#show', url: 'password-change-request'
-  post 'password_change_requests#create', url: 'password-change-request'
+get  'users#show', url: 'user'
+post 'users#update_account', url: 'update-account'
+put  'users#update', url: 'user'
+
+get     'accounts#index', url: 'accounts'
+put     'accounts#update', url: 'account'
+destroy 'accounts#delete', url: 'account'
+
+get  'password_change_requests#show', url: 'password-change-request'
+post 'password_change_requests#create', url: 'password-change-request'

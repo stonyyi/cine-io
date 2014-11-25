@@ -26,12 +26,23 @@ module.exports = class UsageReport extends Base
       nameValue[1]
     cinePlans = _.sortBy mappedPlans, "order"
 
-  @lowestPlanPerUsage: (bytes, includeStarter=false)->
+  @lowestPlanPerUsage: (bytes, type, includeStarter=false)->
     cinePlans = @sortedCinePlans()
     thing = _.find cinePlans, (planDetails)->
       return false if planDetails.price == 0 && !includeStarter
-      planDetails.bandwidth >= bytes
-    thing ||= _.last(cinePlans.name)
+      planDetails[type] >= bytes
+    thing ||= _.last(cinePlans)
+    return thing.name
+
+  @nextPlan: (account)->
+    foundAccountPlan = false
+    cinePlans = @sortedCinePlans()
+    thing = _.find cinePlans, (planDetails)->
+      if planDetails.name == account.firstPlan()
+        foundAccountPlan = true
+        return false
+      return foundAccountPlan
+    thing ||= _.last(cinePlans)
     return thing.name
 
   @lastThreeMonths: ->

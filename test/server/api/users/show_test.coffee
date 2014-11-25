@@ -10,16 +10,16 @@ describe 'Users#Show', ->
     @account.save done
 
   beforeEach (done)->
-    @user = new User name: 'Mah name', email: 'mah@example.com'
+    @user = new User name: 'Mah name', email: 'mah@example.com', masterKey: 'fuuuu'
     @user._accounts.push @account._id
     @user.save done
 
-  it 'returns the user when given a masterKey', (done)->
-    params = { masterKey: @user.masterKey }
-    callback = (err, response, options)=>
+  it 'returns the user when given a userToken', (done)->
+    params = { userToken: @user.masterKey }
+    callback = (err, response, options)->
       expect(err).to.equal(null)
       expect(response.email).to.equal('mah@example.com')
-      expect(response.masterKey).to.equal(@user.masterKey)
+      expect(response.userToken).to.equal('fuuuu')
       done()
 
     Show params, callback
@@ -29,7 +29,7 @@ describe 'Users#Show', ->
     callback = (err, response, options)=>
       expect(err).to.equal(null)
       expect(response.email).to.equal('mah@example.com')
-      expect(response.masterKey).to.equal(@user.masterKey)
+      expect(response.userToken).to.equal(@user.masterKey)
       expect(response.accounts).to.have.length(1)
       expect(response.accounts[0].name).to.equal('account name yo')
       done()

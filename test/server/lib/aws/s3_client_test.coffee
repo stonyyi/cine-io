@@ -1,3 +1,4 @@
+fs = require('fs')
 s3Client = Cine.server_lib('aws/s3_client')
 
 describe 's3Client', ->
@@ -48,6 +49,32 @@ describe 's3Client', ->
           args = @s3ClientSpy.firstCall.args[0]
           expect(args.s3Params.ACL).to.equal('private')
           done()
+
+  describe 'downloadFile', ->
+    beforeEach ->
+      @s3ClientSpy = sinon.spy s3Client._s3Client, 'downloadFile'
+
+    afterEach ->
+      @s3ClientSpy.restore()
+
+    describe 'failure', ->
+      it 'works' #I could not get this test to pass... It would always timeout.
+
+    describe 'success', ->
+      beforeEach ->
+        @localFile = Cine.path('test/fixtures/downloaded-file.txt')
+        @s3Bucket = 'cine-cloudfront-logging'
+        @s3Nock = requireFixture('nock/aws/download_file_from_s3_success')()
+
+      it 'downloads a file from s3', (done)->
+        s3Client.downloadFile @localFile, @s3Bucket, 'file.txt', (err)=>
+          expect(err).to.be.undefined
+          expect(@s3Nock.isDone()).to.be.true
+          expect(@s3ClientSpy.calledOnce).to.be.true
+          fs.readFile @localFile, (err, buf)=>
+            expect(err).to.be.null
+            expect(buf.toString()).to.equal("this is a file\n")
+            fs.unlink @localFile, done
 
   describe 'list', ->
     beforeEach ->
