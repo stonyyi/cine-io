@@ -7,9 +7,7 @@ describe 'SolutionsController', ->
   beforeEach ->
     SolutionsController.app = mainApp
 
-  AssertTitleAndDescription SolutionsController,
-    title: 'solutions-title-solutions/ios'
-    description: 'solutions-description-solutions/ios'
+  AssertTitleAndDescription SolutionsController, SolutionsController.titlesAndDescriptions.ios
 
   afterEach ->
     delete SolutionsController.app
