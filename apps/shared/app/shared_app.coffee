@@ -39,6 +39,9 @@ module.exports = class App extends BaseApp
       $('body').scrollTo('#content', 200, easing: 'easeOutQuart')
     ), this
 
+  getAppViewClass: ->
+    Cine.arch('shared_app_view')
+
   # assume a single account for now
   # will be able to be set later on
   currentAccount: ->
