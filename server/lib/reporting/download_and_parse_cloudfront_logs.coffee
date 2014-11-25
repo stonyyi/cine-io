@@ -3,7 +3,7 @@ fs = require("fs")
 path = require("path")
 _ = require('underscore')
 mkdirp = require('mkdirp')
-processCloudfrontHlsLog = Cine.server_lib('reporting/parse_cloudfront_hls_log')
+parseCloudfrontLog = Cine.server_lib('reporting/parse_cloudfront_log')
 unzipAndProcessFile = Cine.server_lib('reporting/unzip_and_process_file')
 ParsedLog = Cine.server_model('parsed_log')
 s3Client = Cine.server_lib('aws/s3_client')
@@ -14,7 +14,7 @@ parseLogFile = (logName, outputFile, callback)->
   parsedLog = new ParsedLog(hasStarted: true, logName: logName, source: 'cloudfront')
   parsedLog.save (err)->
     return callback(err) if err
-    unzipAndProcessFile outputFile, processCloudfrontHlsLog, (err)->
+    unzipAndProcessFile outputFile, parseCloudfrontLog, (err)->
       console.log("parsed cloudfront log file", logName, err)
       parsedLog.parseErrors = err if err
       parsedLog.isComplete = true

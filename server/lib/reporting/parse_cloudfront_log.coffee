@@ -4,6 +4,7 @@ StreamUsageReport = Cine.server_model('stream_usage_report')
 EdgecastStream = Cine.server_model('edgecast_stream')
 path = require('path')
 _ = require('underscore')
+_str = require('underscore.string')
 outPath = "/dev/null"
 streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
 
@@ -48,12 +49,22 @@ module.exports = (absoluteFileName, done)->
       headers = headerSplit.slice(1, headerSplit.length - 1)
       return callback()
     data = _.object(headers, rowData)
-
-    streamName = streamRecordingNameEnforcer.extractStreamNameFromHlsFile(data['cs-uri-stem'])
-    entryData =
-      bytes: Number(data['sc-bytes'])
-      entryDate: new Date "#{data.date} #{data.time}"
-      kind: 'hls'
+    uri = data['cs-uri-stem']
+    if _str.endsWith(uri, '.ts')
+      streamName = streamRecordingNameEnforcer.extractStreamNameFromHlsFile(uri)
+      entryData =
+        bytes: Number(data['sc-bytes'])
+        entryDate: new Date "#{data.date} #{data.time}"
+        kind: 'hls'
+    else if _str.endsWith(uri, '.mp4')
+      streamName = streamRecordingNameEnforcer.extractStreamNameFromDirectory(uri)
+      entryData =
+        bytes: Number(data['sc-bytes'])
+        entryDate: new Date "#{data.date} #{data.time}"
+        kind: 'vod'
+    else
+      errs.push(data: data, rowNumber: rowNumber, error: "unknown uri")
+      return callback()
     saveDataOnRecord streamName, entryData, (err)->
       # console.log('saved', err)
       errs.push(data: data, rowNumber: rowNumber, error: err) if err
@@ -90,5 +101,27 @@ HLS looks like:
   'x-host-header': 'diibtb4zn1vsj.cloudfront.net',
   'cs-protocol': 'http',
   'cs-bytes': '173'
+}
+
+VOD looks like:
+{
+  date: '2014-11-24',
+  time: '01:48:56',
+  'x-edge-location': 'SFO5',
+  'sc-bytes': '1627099',
+  'c-ip': '24.18.84.223',
+  'cs-method': 'GET',
+  'cs(Host)': 'd16tzlai5ag6m5.cloudfront.net',
+  'cs-uri-stem': '/cines/980cf5c2b95fe3b181645b4e4256a0bb/bkcFcqG0V.20141124T013843.mp4',
+  'sc-status': '206',
+  'cs(Referer)': 'http://vod.cine.io/cines/980cf5c2b95fe3b181645b4e4256a0bb/bkcFcqG0V.20141124T013843.mp4',
+  'cs(User-Agent)': 'Mozilla/5.0%2520(Macintosh;%2520Intel%2520Mac%2520OS%2520X%252010_10_1)%2520AppleWebKit/537.36%2520(KHTML,%2520like%2520Gecko)%2520Chrome/38.0.2125.122%2520Safari/537.36',
+  'cs-uri-query': '-',
+  'cs(Cookie)': '-',
+  'x-edge-result-type': 'Error',
+  'x-edge-request-id': 'M3Xh_mIm6NoEYNVjpQ_KhZB0Ni0ylFmB3p3w-yyjQJYfY6DphNN12g==',
+  'x-host-header': 'vod.cine.io',
+  'cs-protocol': 'http',
+  'cs-bytes': '821'
 }
 ###
