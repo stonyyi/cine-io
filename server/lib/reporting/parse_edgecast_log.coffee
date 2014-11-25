@@ -24,7 +24,6 @@ edgecastStreamReportByInstanceNameAndStreamName = (instanceName, streamName, cal
 isInvalidInstanceName = (instanceName)->
   instanceName == '20C45E'
 
-
 # data =
 #   bytes, entryDate, duration
 saveDataOnRecord = (instanceName, streamName, entryData, callback)->
@@ -114,7 +113,7 @@ module.exports = (absoluteFileName, done)->
 
   csv().from.path(absoluteFileName, inOpts)
     .to.stream(fs.createWriteStream(outPath))
-    .transform(processRecord)
+    .transform(processRecord, parallel: 1)
     .once("close", closeFunction)
     .on("error", errorFunction)
 
