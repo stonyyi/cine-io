@@ -19,6 +19,20 @@
     @include grid-column(10, false, false, 1);
   }
 
+  .hero .logo-img img {
+    width: 48px;
+  }
+
+  .hero .logo-img.ios {
+    @include grid-column(4);
+    text-align: center;
+  }
+
+  .hero .logo-img.android {
+    @include grid-column(3);
+    text-align: center;
+  }
+
   .detail {
     margin-top: 2em;
     padding: 2em 0;
@@ -33,18 +47,19 @@
     background: #ccc;
     padding: 2em 0 1em 0;
     text-align: center;
+    h2 {
+      padding-bottom: 1em;
+    }
   }
 }
 
 @media #{$large-up} {
   .solutions {
-    .overview {
-      .content div {
-        @include grid-column(6);
-      }
+    .overview .content > div {
+      @include grid-column(6);
     }
 
-    .detail .content div {
+    .detail .content > div {
       @include grid-column(4);
     }
 

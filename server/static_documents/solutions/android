@@ -3,12 +3,25 @@
   <div class="overview">
     <div class="inner">
       <div class="content">
-        <h1>Live Video-Streaming in Android</h1>
         <div class="pitch">
-          Do all the streaming.
+          <h1>Live Video-Streaming in Android</h1>
+          <p>
+            With the cine.io Android SDK, you can publish live RTMP streams
+            right from your Android-powered phone or tablet. The h.264 and AAC
+            encoding happens in a hardware-accelerated way, so you don't need
+            to worry about battery life. Our backend handles the conversion to
+            HLS for consumption on any compatible device. Write your code in
+            Java as you normally would.
+          </p>
         </div>
         <div class="hero">
           <img src="/images/solutions/android-hero.jpg"/>
+          <div>
+            <div class="logo-img android">&nbsp;</div>
+            <div class="logo-img android"><img src="/images/code-logos/android-logo.png"/></div>
+            <div class="logo-img android"><img src="/images/code-logos/java-logo.png"/></div>
+            <div class="logo-img android">&nbsp;</div>
+          </div>
         </div>
       </div>
     </div>

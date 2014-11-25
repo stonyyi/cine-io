@@ -3,12 +3,23 @@
   <div class="overview">
     <div class="inner">
       <div class="content">
-        <h1>Live Video-Streaming in iOS</h1>
         <div class="pitch">
-          Do all the streaming.
+          <h1>Live Video-Streaming in iOS</h1>
+          <p>
+            With the cine.io iOS SDK, you can publish live RTMP streams right
+            from your iPhone or iPad. The h.264 and AAC encoding happens in a
+            hardware-accelerated way, so you don't need to worry about battery
+            life. Our backend handles the conversion to HLS for consumption on
+            any compatible device. Both Objective-C and Swift are supported.
+          </p>
         </div>
         <div class="hero">
           <img src="/images/solutions/ios-hero.jpg"/>
+          <div>
+            <div class="logo-img ios"><img src="/images/code-logos/ios-logo.png"/></div>
+            <div class="logo-img ios"><img src="/images/code-logos/swift-logo.png"/></div>
+            <div class="logo-img ios"><img src="/images/code-logos/xcode-logo.png"/></div>
+          </div>
         </div>
       </div>
     </div>
