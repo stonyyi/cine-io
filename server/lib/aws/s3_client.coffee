@@ -2,17 +2,13 @@ s3 = require('s3')
 _ = require('underscore')
 s3Credentials = Cine.config('variables/s3')
 
-credentials = _.pick s3Credentials, 'accessKeyId', 'secretAccessKey'
-
-console.log("Creating client with credentials", credentials)
-
 s3Client = s3.createClient
   maxAsyncS3: 20                     # this is the default
   s3RetryCount: 3                    # this is the default
   s3RetryDelay: 1000                 # this is the default
   multipartUploadThreshold: 20971520 # this is the default (20 MB)
   multipartUploadSize: 15728640      # this is the default (15 MB)
-  s3Options: credentials
+  s3Options: _.pick s3Credentials, 'accessKeyId', 'secretAccessKey'
 
 exports.uploadFile = (localFile, bucket, remoteFile, options={}, callback)->
   if typeof options == 'function'
