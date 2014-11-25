@@ -10,4 +10,4 @@ module.exports = ->
     'content-type': 'text/plain',
     'content-length': '15',
     connection: 'close',
-    server: 'AmazonS3' });
+    server: 'AmazonS3' })

@@ -57,7 +57,7 @@ describe 's3Client', ->
     afterEach ->
       @s3ClientSpy.restore()
 
-    describe 'failure' ->
+    describe 'failure', ->
       it 'works' #I could not get this test to pass... It would always timeout.
 
     describe 'success', ->
@@ -66,7 +66,7 @@ describe 's3Client', ->
         @s3Bucket = 'cine-cloudfront-logging'
         @s3Nock = requireFixture('nock/aws/download_file_from_s3_success')()
 
-      it.only 'downloads a file from s3', (done)->
+      it 'downloads a file from s3', (done)->
         s3Client.downloadFile @localFile, @s3Bucket, 'file.txt', (err)=>
           expect(err).to.be.undefined
           expect(@s3Nock.isDone()).to.be.true

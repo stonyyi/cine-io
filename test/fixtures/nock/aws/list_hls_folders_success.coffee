@@ -20,4 +20,4 @@ module.exports = ->
     date: 'Tue, 25 Nov 2014 03:56:42 GMT',
     'content-type': 'application/xml',
     'transfer-encoding': 'chunked',
-    server: 'AmazonS3' });
+    server: 'AmazonS3' })

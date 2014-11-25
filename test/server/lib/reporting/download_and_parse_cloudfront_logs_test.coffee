@@ -74,8 +74,8 @@ describe 'downloadAndParseCloudfrontLogs', ->
               expect(reports).to.have.length(0)
               done()
 
-  it.only 'will save process errors', (done)->
-    downloadAndParseCloudfrontLogs (err)=>
+  it 'will save process errors', (done)->
+    downloadAndParseCloudfrontLogs (err)->
       expect(err).to.be.undefined
       ParsedLog.find (err, parsedLogs)->
         expect(parsedLogs).to.have.length(1)

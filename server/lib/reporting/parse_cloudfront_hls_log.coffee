@@ -71,21 +71,24 @@ module.exports = (absoluteFileName, done)->
 
 ###
 HLS looks like:
- { date: '2014-11-24',
-   time: '19:26:41',
-   'x-edge-location': 'SFO5',
-   'sc-bytes': '682919',
-   'c-ip': '24.18.84.223',
-   'cs-method': 'GET',
-   'cs(Host)': 'diibtb4zn1vsj.cloudfront.net',
-   'cs-uri-stem': '/hls/bkcFcqG0V-1416857189159.ts',
-   'sc-status': '206',
-   'cs(Referer)': '-',
-   'cs(User-Agent)': 'VLC/2.1.5%2520LibVLC/2.1.5',
-   'cs-uri-query': '-',
-   'cs(Cookie)': '-',
-   'x-edge-result-type': 'Miss',
-   'x-edge-request-id': 'Zgq03gi0REjMo6ymaRjkpsTXv7mXgJakMyNlExxPcCaxgp-_r3Od4g==',
-   'x-host-header': 'diibtb4zn1vsj.cloudfront.net',
-   'cs-protocol': 'http',
-   'cs-bytes': '173' }
+{
+  date: '2014-11-24',
+  time: '19:26:41',
+  'x-edge-location': 'SFO5',
+  'sc-bytes': '682919',
+  'c-ip': '24.18.84.223',
+  'cs-method': 'GET',
+  'cs(Host)': 'diibtb4zn1vsj.cloudfront.net',
+  'cs-uri-stem': '/hls/bkcFcqG0V-1416857189159.ts',
+  'sc-status': '206',
+  'cs(Referer)': '-',
+  'cs(User-Agent)': 'VLC/2.1.5%2520LibVLC/2.1.5',
+  'cs-uri-query': '-',
+  'cs(Cookie)': '-',
+  'x-edge-result-type': 'Miss',
+  'x-edge-request-id': 'Zgq03gi0REjMo6ymaRjkpsTXv7mXgJakMyNlExxPcCaxgp-_r3Od4g==',
+  'x-host-header': 'diibtb4zn1vsj.cloudfront.net',
+  'cs-protocol': 'http',
+  'cs-bytes': '173'
+}
+###
