@@ -24,9 +24,6 @@ describe 'downloadAndParseCloudfrontLogs', ->
       expect(localPath).to.equal(@outputPath)
       gzipFile.createNewFile Cine.path("test/fixtures/cloudfront_logs/hls_example.log"), @outputPath, callback
 
-  # afterEach (done)->
-  #   fs.unlink @outputPath
-
   afterEach ->
     @downloadStub.restore()
 
@@ -58,36 +55,40 @@ describe 'downloadAndParseCloudfrontLogs', ->
             expect(entry.kind).to.equal('hls')
             done()
 
-    describe "double processing logs", ->
-      beforeEach (done)->
-        parsedLog = new ParsedLog(hasStarted: true, logName: @logName)
-        parsedLog.save done
+  describe "double processing logs", ->
+    beforeEach (done)->
+      parsedLog = new ParsedLog(hasStarted: true, logName: @logName)
+      parsedLog.save done
 
-      it 'does not double process logs', (done)->
-        downloadAndParseCloudfrontLogs (err)->
-          expect(err).to.be.undefined
-          ParsedLog.find (err, parsedLogs)->
-            expect(parsedLogs).to.have.length(1)
+    it 'does not double process logs', (done)->
+      downloadAndParseCloudfrontLogs (err)->
+        expect(err).to.be.undefined
+        ParsedLog.find (err, parsedLogs)->
+          expect(parsedLogs).to.have.length(1)
 
-            StreamUsageReport.find (err, reports)->
-              expect(err).to.be.null
-              expect(reports).to.have.length(0)
-              done()
+          StreamUsageReport.find (err, reports)->
+            expect(err).to.be.null
+            expect(reports).to.have.length(0)
+            done()
 
-  it 'will save process errors', (done)->
-    downloadAndParseCloudfrontLogs (err)->
-      expect(err).to.be.undefined
-      ParsedLog.find (err, parsedLogs)->
-        expect(parsedLogs).to.have.length(1)
-        parsedLog = parsedLogs[0]
-        expect(parsedLog.hasStarted).to.be.true
-        expect(parsedLog.parseErrors).to.have.length(5)
-        firstError = parsedLog.parseErrors[0]
-        secondError = parsedLog.parseErrors[1]
-        expect(_.keys(firstError).sort()).to.deep.equal(["data", "error", "rowNumber"])
-        expect(firstError.error).to.equal("could not find stream: bkcFcqG0V")
-        expect(firstError.rowNumber).to.equal(2)
-        expect(secondError.error).to.equal("could not find stream: bkcFcqG0V")
-        expect(secondError.rowNumber).to.equal(3)
-        expect(parsedLog.isComplete).to.be.true
-        done()
+  describe 'stream not found', ->
+    afterEach (done)->
+      fs.unlink Cine.path("tmp/cloudfront_logs/EBXGNCBDF3ULO.2014-11-24-19.b5342c87"), done
+
+    it 'will save process errors', (done)->
+      downloadAndParseCloudfrontLogs (err)->
+        expect(err).to.be.undefined
+        ParsedLog.find (err, parsedLogs)->
+          expect(parsedLogs).to.have.length(1)
+          parsedLog = parsedLogs[0]
+          expect(parsedLog.hasStarted).to.be.true
+          expect(parsedLog.parseErrors).to.have.length(5)
+          firstError = parsedLog.parseErrors[0]
+          secondError = parsedLog.parseErrors[1]
+          expect(_.keys(firstError).sort()).to.deep.equal(["data", "error", "rowNumber"])
+          expect(firstError.error).to.equal("could not find stream: bkcFcqG0V")
+          expect(firstError.rowNumber).to.equal(2)
+          expect(secondError.error).to.equal("could not find stream: bkcFcqG0V")
+          expect(secondError.rowNumber).to.equal(3)
+          expect(parsedLog.isComplete).to.be.true
+          done()
