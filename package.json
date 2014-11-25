@@ -1,5 +1,5 @@
 {
-  "author": "Giving Stage Team",
+  "author": "BML Ventures Team",
   "name": "cine.io",
   "domains": [
     "cine.io"
@@ -10,7 +10,7 @@
     "postinstall": "./node_modules/grunt-cli/bin/grunt productionPostInstall",
     "test": "coffeelint apps/ config/ development/ run_contexts/ script/ server/ test/ worker/ app.coffee server.coffee app.coffee && mocha test/lint_test.coffee && mocha"
   },
-  "repository": "https://github.com/givingstage/cine",
+  "repository": "https://github.com/cine-io/cine",
   "dependencies": {
     "async": "0.9.0",
     "aws-sdk": "2.0.27",
