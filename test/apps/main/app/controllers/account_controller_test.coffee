@@ -1,5 +1,6 @@
 AccountController = Cine.controller 'account'
 ControllerTester = Cine.require('test/helpers/test_controller_action')
+AssertTitleAndDescription = Cine.require('test/helpers/assert_title_and_description')
 test = ControllerTester(AccountController)
 
 describe 'AccountController', ->
@@ -10,6 +11,9 @@ describe 'AccountController', ->
     delete AccountController.app
 
   describe '#show', ->
+
+    AssertTitleAndDescription AccountController
+
     it 'requires a current user', (done)->
       params = {}
       callback = (err, viewOptions)->

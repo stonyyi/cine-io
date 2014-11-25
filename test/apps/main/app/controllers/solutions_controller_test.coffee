@@ -1,8 +1,19 @@
 SolutionsController = Cine.controller 'solutions'
 ControllerTester = Cine.require('test/helpers/test_controller_action')
+AssertTitleAndDescription = Cine.require('test/helpers/assert_title_and_description')
 test = ControllerTester(SolutionsController)
 
 describe 'SolutionsController', ->
+  beforeEach ->
+    SolutionsController.app = mainApp
+
+  AssertTitleAndDescription SolutionsController,
+    title: 'solutions-title-solutions/ios'
+    description: 'solutions-description-solutions/ios'
+
+  afterEach ->
+    delete SolutionsController.app
+
   describe '#show', ->
     describe 'main usage', ->
       beforeEach ->

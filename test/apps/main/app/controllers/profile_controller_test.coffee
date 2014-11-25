@@ -1,10 +1,13 @@
 ProfileController = Cine.controller 'profile'
 ControllerTester = Cine.require('test/helpers/test_controller_action')
+AssertTitleAndDescription = Cine.require('test/helpers/assert_title_and_description')
 test = ControllerTester(ProfileController)
 
 describe 'ProfileController', ->
   beforeEach ->
     ProfileController.app = mainApp
+
+  AssertTitleAndDescription ProfileController
 
   afterEach ->
     delete ProfileController.app

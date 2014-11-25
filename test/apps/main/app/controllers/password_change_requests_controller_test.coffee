@@ -1,5 +1,6 @@
 RecoverPasswords = Cine.controller 'password_change_requests'
 ControllerTester = Cine.require('test/helpers/test_controller_action')
+AssertTitleAndDescription = Cine.require('test/helpers/assert_title_and_description')
 test = ControllerTester(RecoverPasswords)
 
 describe 'RecoverPasswords', ->
@@ -8,6 +9,8 @@ describe 'RecoverPasswords', ->
     @fetchStub = sinon.stub mainApp, "fetch", (spec, callback)->
       expect(spec).to.deep.equal(model: {model: 'PasswordChangeRequest', params: {identifier: 'the ident'}})
       callback(null, 'the pcr')
+
+  AssertTitleAndDescription RecoverPasswords
 
   afterEach ->
     delete RecoverPasswords.app

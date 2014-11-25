@@ -1,10 +1,13 @@
 DashboardController = Cine.controller 'dashboard'
 ControllerTester = Cine.require('test/helpers/test_controller_action')
+AssertTitleAndDescription = Cine.require('test/helpers/assert_title_and_description')
 test = ControllerTester(DashboardController)
 
 describe 'DashboardController', ->
   beforeEach ->
     DashboardController.app = mainApp
+
+  AssertTitleAndDescription DashboardController
 
   afterEach ->
     delete DashboardController.app

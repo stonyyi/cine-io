@@ -6,3 +6,11 @@ module.exports = class AppView extends BaseAppView
     @app.on "change:loading", ((app, loading) ->
       # $body.toggleClass "loading", loading
     ), this
+
+    @app.on "change:title", ((app, title) ->
+      document.title = title
+    ), this
+
+    @app.on "change:description", ((app, description) ->
+      $('head meta[name="description"]').attr('content', description)
+    ), this

@@ -1,5 +1,6 @@
 UsageReportsController = Cine.controller 'usage_reports'
 ControllerTester = Cine.require('test/helpers/test_controller_action')
+AssertTitleAndDescription = Cine.require('test/helpers/assert_title_and_description')
 test = ControllerTester(UsageReportsController)
 
 describe 'UsageReportsController', ->
@@ -9,6 +10,7 @@ describe 'UsageReportsController', ->
       expect(spec).to.deep.equal(model: {model: 'UsageReport', params: {masterKey: 'the master key'}})
       callback(null, 'the usage report')
 
+  AssertTitleAndDescription UsageReportsController
   afterEach ->
     delete UsageReportsController.app
     @fetchStub.restore()

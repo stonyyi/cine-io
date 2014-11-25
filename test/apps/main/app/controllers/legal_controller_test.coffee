@@ -1,5 +1,6 @@
 LegalController = Cine.controller 'legal'
 ControllerTester = Cine.require('test/helpers/test_controller_action')
+AssertTitleAndDescription = Cine.require('test/helpers/assert_title_and_description')
 test = ControllerTester(LegalController)
 
 describe 'LegalController', ->
@@ -10,6 +11,8 @@ describe 'LegalController', ->
         @fetchStub = sinon.stub mainApp, "fetch", (spec, callback)->
           expect(spec).to.deep.equal(model: {model: 'StaticDocument', params: {id: 'legal/privacy-policy'}})
           callback(null, 'some document')
+
+      AssertTitleAndDescription LegalController
 
       afterEach ->
         delete LegalController.app

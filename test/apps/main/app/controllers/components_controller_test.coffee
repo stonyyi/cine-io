@@ -1,27 +1,36 @@
-Components = Cine.controller 'components'
+ComponentsController = Cine.controller 'components'
 ControllerTester = Cine.require('test/helpers/test_controller_action')
-test = ControllerTester(Components)
+AssertTitleAndDescription = Cine.require('test/helpers/assert_title_and_description')
+test = ControllerTester(ComponentsController)
 
-describe 'Components', ->
-  beforeEach ->
-    Components.app = mainApp
-
-  afterEach ->
-    delete Components.app
+describe 'ComponentsController', ->
 
   describe '#show', ->
-    it 'fails when not development', (done)->
-      params = {}
-      callback = (err, viewOptions)->
-        expect(err.status).to.equal(404)
-        done()
-      test('show', params, callback)
+
+    describe 'in test', ->
+
+      beforeEach ->
+        ComponentsController.app = mainApp
+
+      AssertTitleAndDescription ComponentsController
+
+      afterEach ->
+        delete ComponentsController.app
+
+      it 'fails when not development', (done)->
+        params = {}
+        callback = (err, viewOptions)->
+          expect(err.status).to.equal(404)
+          done()
+        test('show', params, callback)
 
     describe 'in development', ->
       beforeEach ->
         app = newApp()
         app.attributes.env = 'development'
-        Components.app = app
+        ComponentsController.app = app
+
+      AssertTitleAndDescription ComponentsController
 
       it 'completes when logged in', (done)->
         params = {id: 'abc'}
