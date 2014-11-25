@@ -8,22 +8,15 @@ describe 'getUser', ->
     @user = new User
     @user.save done
 
-  it 'requires a sessionUserId or a masterKey', (done)->
+  it 'requires a sessionUserId or a userToken', (done)->
     getUser {}, (err, user, options)->
-      expect(err).to.equal('not logged in or masterKey not supplied')
+      expect(err).to.equal('not logged in or userToken not supplied')
       expect(user).to.be.null
       expect(options).to.deep.equal(status: 401)
       done()
 
   it 'can take a sessionUserId', (done)->
     getUser sessionUserId: @user._id, (err, user, options)=>
-      expect(err).to.be.null
-      expect(options).to.be.undefined
-      expect(user._id.toString()).to.equal(@user._id.toString())
-      done()
-
-  it 'can take a masterKey', (done)->
-    getUser masterKey: @user.masterKey, (err, user, options)=>
       expect(err).to.be.null
       expect(options).to.be.undefined
       expect(user._id.toString()).to.equal(@user._id.toString())

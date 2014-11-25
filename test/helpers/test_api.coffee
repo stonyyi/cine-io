@@ -50,7 +50,7 @@ testApi.requresApiKey = (testApiResource, requires)->
 testApi.requresLoggedIn = (testApiResource)->
   it 'requires a logged in user', (done)->
     testApiResource {}, (err, response, options)->
-      expect(err).to.equal('not logged in or masterKey not supplied')
+      expect(err).to.equal('not logged in or userToken not supplied')
       expect(response).to.be.null
       expect(options.status).to.equal(401)
       done()

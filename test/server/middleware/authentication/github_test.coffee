@@ -268,11 +268,11 @@ describe 'github auth', ->
             process.nextTick ->
               done(err)
 
-      it 'redirects to the iOS client with the masterKey', (done)->
+      it 'redirects to the iOS client with the userToken', (done)->
         @agent.get('/whoami').expect(200).end (err, res)=>
           expect(err).to.be.null
           currentUser = JSON.parse(res.text)
-          expect(currentUser.masterKey).to.have.length(64)
-          expect(@res.headers.location).to.equal("cineioconsole://login?masterKey=#{currentUser.masterKey}&userToken=#{currentUser.masterKey}")
-          expect(@res.text).to.equal("Moved Temporarily. Redirecting to cineioconsole://login?masterKey=#{currentUser.masterKey}&userToken=#{currentUser.masterKey}")
+          expect(currentUser.userToken).to.have.length(64)
+          expect(@res.headers.location).to.equal("cineioconsole://login?userToken=#{currentUser.userToken}")
+          expect(@res.text).to.equal("Moved Temporarily. Redirecting to cineioconsole://login?userToken=#{currentUser.userToken}")
           done()
