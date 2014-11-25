@@ -33,4 +33,4 @@ module.exports = (app)->
   app.get '/logout', (req, res)->
     res.clearCookie('remember_me')
     req.logout()
-    res.send(200)
+    res.status(200).end()
