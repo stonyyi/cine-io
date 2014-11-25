@@ -1,6 +1,6 @@
 _ = require('underscore')
 parseEdgecastLog = Cine.server_lib('reporting/unzip_and_process_edgecast_log')
-EdgecastParsedLog = Cine.server_model('edgecast_parsed_log')
+ParsedLog = Cine.server_model('parsed_log')
 downloadAndParseEdgecastLogs = Cine.server_lib('reporting/download_and_parse_edgecast_logs')
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
 EdgecastStream = Cine.server_model('edgecast_stream')
@@ -32,10 +32,11 @@ describe 'downloadAndParseEdgecastLogs', ->
         expect(@listStub.calledOnce).to.be.true
         expect(@listStub.firstCall.args[0]).to.equal('/logs')
         expect(err).to.be.undefined
-        EdgecastParsedLog.find (err, parsedLogs)=>
+        ParsedLog.find (err, parsedLogs)=>
           expect(parsedLogs).to.have.length(1)
           parsedLog = parsedLogs[0]
           expect(parsedLog.hasStarted).to.be.true
+          expect(parsedLog.source).to.equal('edgecast')
           expect(parsedLog.parseError).to.be.undefined
           expect(parsedLog.isComplete).to.be.true
 
@@ -51,13 +52,13 @@ describe 'downloadAndParseEdgecastLogs', ->
 
   describe "double processing logs", ->
     beforeEach (done)->
-      parsedLog = new EdgecastParsedLog(hasStarted: true, logName: @logName)
+      parsedLog = new ParsedLog(hasStarted: true, logName: @logName)
       parsedLog.save done
 
     it 'does not double process logs', (done)->
       downloadAndParseEdgecastLogs (err)->
         expect(err).to.be.undefined
-        EdgecastParsedLog.find (err, parsedLogs)->
+        ParsedLog.find (err, parsedLogs)->
           expect(parsedLogs).to.have.length(1)
 
           EdgecastStreamReport.find (err, reports)->
@@ -70,7 +71,7 @@ describe 'downloadAndParseEdgecastLogs', ->
       expect(err).to.be.undefined
       expect(@fakeFtpClient.connectStub.calledOnce).to.be.true
       expect(@fakeFtpClient.connectStub.firstCall.args).to.deep.equal([host: "ftp.vny.C45E.edgecastcdn.net", user: 'fake-account', password: 'fake-password', connTimeout: 30000])
-      EdgecastParsedLog.find (err, parsedLogs)->
+      ParsedLog.find (err, parsedLogs)->
         expect(parsedLogs).to.have.length(1)
         parsedLog = parsedLogs[0]
         expect(parsedLog.hasStarted).to.be.true
