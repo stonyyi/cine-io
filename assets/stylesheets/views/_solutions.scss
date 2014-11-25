@@ -6,7 +6,7 @@
   @include grid-row();
 }
 
-.solutions-ios {
+.solutions {
   .overview, .detail, .cta {
     @include grid-column(12);
   }
@@ -37,9 +37,11 @@
 }
 
 @media #{$large-up} {
-  .solutions-ios {
-    .overview .content div {
-      @include grid-column(6);
+  .solutions {
+    .overview {
+      .content div {
+        @include grid-column(6);
+      }
     }
 
     .detail .content div {

@@ -1,1 +1,52 @@
-<h1>Android Solutions</h1>
+<div class="solutions">
+
+  <div class="overview">
+    <div class="inner">
+      <div class="content">
+        <h1>Live Video-Streaming in Android</h1>
+        <div class="pitch">
+          Do all the streaming.
+        </div>
+        <div class="hero">
+          <img src="/images/solutions/android-hero.jpg"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail">
+    <div class="inner">
+      <div class="content">
+        <div class="xcode">
+          <h2>Android Studio</h2>
+          <p>
+            Fully Android Studio compatible.
+          </p>
+        </div>
+        <div class="protocols">
+          <h2>RTMP and HLS</h2>
+          <p>
+            Publish in RTMP. View in HLS.
+          </p>
+        </div>
+        <div class="cdn">
+          <h2>No CDN Required</h2>
+          <p>
+            We handle your backend.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <div class="inner">
+      <div class="content">
+        <a class="button radius primary" href="mailto:support@cine.io?subject=Android+Business+Inquiry">
+          Talk to Us
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
