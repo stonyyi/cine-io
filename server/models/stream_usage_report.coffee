@@ -1,7 +1,7 @@
 mongoose = require 'mongoose'
 _ = require('underscore')
 
-EdgecastStreamReportSchema = new mongoose.Schema
+StreamUsageReportSchema = new mongoose.Schema
   _edgecastStream:
     type: mongoose.Schema.Types.ObjectId
     ref: 'EdgecastStream'
@@ -20,23 +20,23 @@ EdgecastStreamReportSchema = new mongoose.Schema
       type: String
   ]
 
-EdgecastStreamReportSchema.plugin(Cine.server_lib('mongoose_timestamps'))
+StreamUsageReportSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
 isSameMonth = (date1, date2)->
   (date1.getFullYear() == date2.getFullYear()) &&
   (date1.getMonth() == date2.getMonth())
 
 # dateToCheck is a full date
-EdgecastStreamReportSchema.methods.bytesForMonth = (dateToCheck)->
+StreamUsageReportSchema.methods.bytesForMonth = (dateToCheck)->
   addBytesIfSameMonth = (accum, entry)->
     if isSameMonth(entry.entryDate, dateToCheck) then accum + entry.bytes else accum
   _.reduce @logEntries, addBytesIfSameMonth, 0
 
-EdgecastStreamReportSchema.methods.totalBytes = ->
+StreamUsageReportSchema.methods.totalBytes = ->
   accumEntryBytes = (accum, entry)->
     accum + entry.bytes
   _.reduce @logEntries, accumEntryBytes, 0
 
-EdgecastStreamReport = mongoose.model 'EdgecastStreamReport', EdgecastStreamReportSchema
+StreamUsageReport = mongoose.model 'StreamUsageReport', StreamUsageReportSchema
 
-module.exports = EdgecastStreamReport
+module.exports = StreamUsageReport

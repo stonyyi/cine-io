@@ -1,5 +1,5 @@
 parseEdgecastLog = Cine.server_lib('reporting/parse_edgecast_log')
-EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
+StreamUsageReport = Cine.server_model('stream_usage_report')
 EdgecastStream = Cine.server_model('edgecast_stream')
 _ = require('underscore')
 
@@ -28,7 +28,7 @@ describe 'parseEdgecastLog', ->
         expect(firstError.rowNumber).to.equal(0)
         expect(secondError.error).to.equal("could not find stream: i-name2, sName2")
         expect(secondError.rowNumber).to.equal(1)
-        EdgecastStreamReport.count (err, count)->
+        StreamUsageReport.count (err, count)->
           expect(err).to.be.null
           expect(count).to.equal(0)
           done()
@@ -37,10 +37,10 @@ describe 'parseEdgecastLog', ->
     describe 'success', ->
       createBothStreams()
 
-      it 'creates an EdgecastStreamReport when one is not found', (done)->
+      it 'creates an StreamUsageReport when one is not found', (done)->
         parseEdgecastLog @fileLocation, (err)=>
           expect(err).to.be.undefined
-          EdgecastStreamReport.findOne _edgecastStream: @stream._id, (err, report)->
+          StreamUsageReport.findOne _edgecastStream: @stream._id, (err, report)->
             expect(err).to.be.null
             expect(report.logEntries).to.have.length(1)
             entry = report.logEntries[0]
@@ -50,8 +50,8 @@ describe 'parseEdgecastLog', ->
             expect(entry.kind).to.equal('fms')
             done()
 
-      it 'appends to an existing EdgecastStreamReport', (done)->
-        initialReport = new EdgecastStreamReport(_edgecastStream: @stream._id)
+      it 'appends to an existing StreamUsageReport', (done)->
+        initialReport = new StreamUsageReport(_edgecastStream: @stream._id)
         initialReport.logEntries.push
           entryDate: new Date
           duration: 12345
@@ -61,7 +61,7 @@ describe 'parseEdgecastLog', ->
           expect(err).to.be.null
           parseEdgecastLog @fileLocation, (err)=>
             expect(err).to.be.undefined
-            EdgecastStreamReport.findOne _edgecastStream: @stream._id, (err, report)->
+            StreamUsageReport.findOne _edgecastStream: @stream._id, (err, report)->
               expect(report.logEntries).to.have.length(2)
               entry = report.logEntries[1]
               expect(entry.entryDate.toString()).to.equal(new Date('May 14 2014 04:17:00').toString())
@@ -81,7 +81,7 @@ describe 'parseEdgecastLog', ->
         expect(_.keys(firstError).sort()).to.deep.equal(["data", "error", "rowNumber"])
         expect(firstError.error).to.equal("could not find stream: i-name, sName")
         expect(firstError.rowNumber).to.equal(1)
-        EdgecastStreamReport.count (err, count)->
+        StreamUsageReport.count (err, count)->
           expect(err).to.be.null
           expect(count).to.equal(0)
           done()
@@ -89,10 +89,10 @@ describe 'parseEdgecastLog', ->
     describe 'success', ->
       createBothStreams()
 
-      it 'creates an EdgecastStreamReport when one is not found', (done)->
+      it 'creates an StreamUsageReport when one is not found', (done)->
         parseEdgecastLog @fileLocation, (err)=>
           expect(err).to.be.undefined
-          EdgecastStreamReport.findOne _edgecastStream: @stream._id, (err, report)->
+          StreamUsageReport.findOne _edgecastStream: @stream._id, (err, report)->
             expect(err).to.be.null
             expect(report.logEntries).to.have.length(1)
             entry = report.logEntries[0]
@@ -101,8 +101,8 @@ describe 'parseEdgecastLog', ->
             expect(entry.kind).to.equal('hls')
             done()
 
-      it 'appends to an existing EdgecastStreamReport', (done)->
-        initialReport = new EdgecastStreamReport(_edgecastStream: @stream._id)
+      it 'appends to an existing StreamUsageReport', (done)->
+        initialReport = new StreamUsageReport(_edgecastStream: @stream._id)
         initialReport.logEntries.push
           entryDate: new Date
           duration: 12345
@@ -112,7 +112,7 @@ describe 'parseEdgecastLog', ->
           expect(err).to.be.null
           parseEdgecastLog @fileLocation, (err)=>
             expect(err).to.be.undefined
-            EdgecastStreamReport.findOne _edgecastStream: @stream._id, (err, report)->
+            StreamUsageReport.findOne _edgecastStream: @stream._id, (err, report)->
               expect(report.logEntries).to.have.length(2)
               entry = report.logEntries[1]
               expect(entry.entryDate.toString()).to.equal(new Date('May 18 2014 06:55:07').toString())

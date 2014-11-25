@@ -1,6 +1,6 @@
 csv = require("csv")
 fs = require("fs")
-EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
+StreamUsageReport = Cine.server_model('stream_usage_report')
 EdgecastStream = Cine.server_model('edgecast_stream')
 path = require('path')
 _ = require('underscore')
@@ -12,10 +12,10 @@ edgecastStreamReportByInstanceNameAndStreamName = (streamName, callback)->
   EdgecastStream.findOne query, (err, stream)->
     return callback(err) if err
     return callback("could not find stream: #{streamName}") if !stream
-    EdgecastStreamReport.findOne _edgecastStream: stream._id, (err, esr)->
+    StreamUsageReport.findOne _edgecastStream: stream._id, (err, esr)->
       return callback(err) if err
       return callback null, esr if esr
-      return callback null, new EdgecastStreamReport _edgecastStream: stream._id
+      return callback null, new StreamUsageReport _edgecastStream: stream._id
 
 # data =
 #   bytes, entryDate, duration

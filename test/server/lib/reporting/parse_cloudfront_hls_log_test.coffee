@@ -1,6 +1,6 @@
 processCloudfrontHlsLog = Cine.server_lib('reporting/parse_cloudfront_hls_log')
 
-EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
+StreamUsageReport = Cine.server_model('stream_usage_report')
 EdgecastStream = Cine.server_model('edgecast_stream')
 _ = require('underscore')
 
@@ -17,7 +17,7 @@ describe 'processCloudfrontHlsLog', ->
         expect(_.keys(firstError).sort()).to.deep.equal(["data", "error", "rowNumber"])
         expect(firstError.error).to.equal("could not find stream: bkcFcqG0V")
         expect(firstError.rowNumber).to.equal(2)
-        EdgecastStreamReport.count (err, count)->
+        StreamUsageReport.count (err, count)->
           expect(err).to.be.null
           expect(count).to.equal(0)
           done()
@@ -27,10 +27,10 @@ describe 'processCloudfrontHlsLog', ->
         @stream = new EdgecastStream(streamName: 'bkcFcqG0V')
         @stream.save done
 
-      it 'creates an EdgecastStreamReport when one is not found', (done)->
+      it 'creates an StreamUsageReport when one is not found', (done)->
         processCloudfrontHlsLog @fileLocation, (err)=>
           expect(err).to.be.undefined
-          EdgecastStreamReport.findOne _edgecastStream: @stream._id, (err, report)->
+          StreamUsageReport.findOne _edgecastStream: @stream._id, (err, report)->
             expect(err).to.be.null
             expect(report.logEntries).to.have.length(5)
             entry = report.logEntries[0]
@@ -39,8 +39,8 @@ describe 'processCloudfrontHlsLog', ->
             expect(entry.kind).to.equal('hls')
             done()
 
-      it 'appends to an existing EdgecastStreamReport', (done)->
-        initialReport = new EdgecastStreamReport(_edgecastStream: @stream._id)
+      it 'appends to an existing StreamUsageReport', (done)->
+        initialReport = new StreamUsageReport(_edgecastStream: @stream._id)
         initialReport.logEntries.push
           entryDate: new Date
           duration: 12345
@@ -50,7 +50,7 @@ describe 'processCloudfrontHlsLog', ->
           expect(err).to.be.null
           processCloudfrontHlsLog @fileLocation, (err)=>
             expect(err).to.be.undefined
-            EdgecastStreamReport.findOne _edgecastStream: @stream._id, (err, report)->
+            StreamUsageReport.findOne _edgecastStream: @stream._id, (err, report)->
               expect(report.logEntries).to.have.length(6)
               entry = report.logEntries[1]
               expect(entry.entryDate.toString()).to.equal(new Date('Nov 24 2014 19:26:35').toString())

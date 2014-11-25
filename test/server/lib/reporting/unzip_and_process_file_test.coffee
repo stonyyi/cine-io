@@ -3,7 +3,7 @@ fs = require('fs')
 copyFile = Cine.require('test/helpers/copy_file')
 gzipFile = Cine.require('test/helpers/gzip_file')
 unzipAndProcessFile = Cine.server_lib('reporting/unzip_and_process_file')
-EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
+StreamUsageReport = Cine.server_model('stream_usage_report')
 EdgecastStream = Cine.server_model('edgecast_stream')
 parseEdgecastLog = Cine.server_lib('reporting/parse_edgecast_log')
 
@@ -37,7 +37,7 @@ describe 'unzipAndProcessFile', ->
   it 'unzips a file, runs it through parseEdgecastLog, then deletes the file', (done)->
     unzipAndProcessFile @gzippedFileName, parseEdgecastLog, (err)=>
       expect(err).to.be.undefined
-      EdgecastStreamReport.findOne _edgecastStream: @stream._id, (err, report)=>
+      StreamUsageReport.findOne _edgecastStream: @stream._id, (err, report)=>
         expect(err).to.be.null
         expect(report.logEntries).to.have.length(1)
         entry = report.logEntries[0]

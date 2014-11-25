@@ -1,6 +1,6 @@
 Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')
-EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
+StreamUsageReport = Cine.server_model('stream_usage_report')
 CalculateProjectBandwidth = Cine.server_lib('reporting/calculate_project_bandwidth')
 
 describe 'CalculateProjectBandwidth', ->
@@ -38,7 +38,7 @@ describe 'CalculateProjectBandwidth', ->
       kind: 'fms'
 
   createReportForStream = (stream, thisMonth, lastMonth, done)->
-    report = new EdgecastStreamReport(_edgecastStream: stream)
+    report = new StreamUsageReport(_edgecastStream: stream)
     addReportEntries(report, thisMonth, lastMonth)
     report.save done
 

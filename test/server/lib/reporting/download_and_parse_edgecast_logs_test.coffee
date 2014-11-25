@@ -3,7 +3,7 @@ ParsedLog = Cine.server_model('parsed_log')
 downloadAndParseEdgecastLogs = Cine.server_lib('reporting/download_and_parse_edgecast_logs')
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
 EdgecastStream = Cine.server_model('edgecast_stream')
-EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
+StreamUsageReport = Cine.server_model('stream_usage_report')
 
 describe 'downloadAndParseEdgecastLogs', ->
 
@@ -39,7 +39,7 @@ describe 'downloadAndParseEdgecastLogs', ->
           expect(parsedLog.parseError).to.be.undefined
           expect(parsedLog.isComplete).to.be.true
 
-          EdgecastStreamReport.findOne _edgecastStream: @stream._id, (err, report)->
+          StreamUsageReport.findOne _edgecastStream: @stream._id, (err, report)->
             expect(err).to.be.null
             expect(report.logEntries).to.have.length(1)
             entry = report.logEntries[0]
@@ -60,7 +60,7 @@ describe 'downloadAndParseEdgecastLogs', ->
         ParsedLog.find (err, parsedLogs)->
           expect(parsedLogs).to.have.length(1)
 
-          EdgecastStreamReport.find (err, reports)->
+          StreamUsageReport.find (err, reports)->
             expect(err).to.be.null
             expect(reports).to.have.length(0)
             done()

@@ -6,7 +6,7 @@ ParsedLog = Cine.server_model('parsed_log')
 downloadAndParseCloudfrontLogs = Cine.server_lib('reporting/download_and_parse_cloudfront_logs')
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
 EdgecastStream = Cine.server_model('edgecast_stream')
-EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
+StreamUsageReport = Cine.server_model('stream_usage_report')
 s3Client = Cine.server_lib('aws/s3_client')
 
 describe 'downloadAndParseCloudfrontLogs', ->
@@ -49,7 +49,7 @@ describe 'downloadAndParseCloudfrontLogs', ->
           expect(parsedLog.parseError).to.be.undefined
           expect(parsedLog.isComplete).to.be.true
 
-          EdgecastStreamReport.findOne _edgecastStream: @stream._id, (err, report)->
+          StreamUsageReport.findOne _edgecastStream: @stream._id, (err, report)->
             expect(err).to.be.null
             expect(report.logEntries).to.have.length(5)
             entry = report.logEntries[0]
@@ -69,7 +69,7 @@ describe 'downloadAndParseCloudfrontLogs', ->
           ParsedLog.find (err, parsedLogs)->
             expect(parsedLogs).to.have.length(1)
 
-            EdgecastStreamReport.find (err, reports)->
+            StreamUsageReport.find (err, reports)->
               expect(err).to.be.null
               expect(reports).to.have.length(0)
               done()
