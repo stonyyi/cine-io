@@ -43,7 +43,7 @@ downloadAndParseEdgecastLogs = (done)->
   directory = "#{Cine.root}/tmp/cloudfront_logs/"
   mkdirp.sync directory
 
-  processHlsFile = (file, callback)->
+  processCloudfrontFile = (file, callback)->
     console.log("PROCESSING", file)
     localPath = "#{directory}#{path.basename(file)}"
     s3Client.downloadFile localPath, LOG_BUCKET, file, (err)->
@@ -52,23 +52,29 @@ downloadAndParseEdgecastLogs = (done)->
         return callback(err)
       parseLogFile file, localPath, callback
 
-  processHlsLogFiles = (data, callback)->
+  processCloudfrontLogFiles = (data, callback)->
     files = _.pluck(data.Contents, 'Key')
     ParsedLog.find logName: {$in: files}, (err, parsedLogs)->
       return callback(err) if err
       parsedLogNames = _.pluck(parsedLogs, 'logName')
       toProcess = _.without(files, parsedLogNames...)
-      async.each toProcess, processHlsFile, callback
+      async.each toProcess, processCloudfrontFile, callback
 
-  processHlsFolder = (folder, callback)->
-    batchS3Lister folder, processHlsLogFiles, callback
+  processCloudfrontFolder = (folder, callback)->
+    batchS3Lister folder, processCloudfrontLogFiles, callback
 
-  # processHlsFile("hls/publish-sfo1/EBXGNCBDF3ULO.2014-11-24-19.b5342c87.gz", done)
-  processHlsFolders = (data, callback)->
+  # processCloudfrontFile("hls/publish-sfo1/EBXGNCBDF3ULO.2014-11-24-19.b5342c87.gz", done)
+  processCloudfrontFolders = (data, callback)->
     folders = _.pluck(data.CommonPrefixes, 'Prefix')
     console.log("PROCESSING hls folders", folders)
-    async.each folders, processHlsFolder, callback
+    async.each folders, processCloudfrontFolder, callback
 
-  batchS3Lister 'hls/', processHlsFolders, done
+  asyncCalls = [
+    # hls log files are in sub directories based on hostname directory
+    (callback)-> batchS3Lister('hls/', processCloudfrontFolders, callback)
+    # vod log files are in a single directory
+    (callback)-> batchS3Lister('vod/', processCloudfrontLogFiles, callback)
+  ]
+  async.series asyncCalls, done
 
 module.exports = downloadAndParseEdgecastLogs
