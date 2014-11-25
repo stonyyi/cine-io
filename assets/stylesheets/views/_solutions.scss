@@ -1,0 +1,50 @@
+.wide-container{
+  padding: 0 !important;
+}
+
+.sub-nav {
+  @include grid-row();
+}
+
+.solutions-ios {
+  .overview, .detail, .cta {
+    @include grid-column(12);
+  }
+
+  .inner {
+    @include grid-row();
+  }
+
+  .content {
+    @include grid-column(10, false, false, 1);
+  }
+
+  .detail {
+    margin-top: 2em;
+    padding: 2em 0;
+    background-color: $scheme-color-north;
+    color: $light-green-color;
+    h2 {
+      color: white;
+    }
+  }
+
+  .cta {
+    background: #ccc;
+    padding: 2em 0 1em 0;
+    text-align: center;
+  }
+}
+
+@media #{$large-up} {
+  .solutions-ios {
+    .overview .content div {
+      @include grid-column(6);
+    }
+
+    .detail .content div {
+      @include grid-column(4);
+    }
+
+  }
+}

@@ -22,11 +22,7 @@ module.exports = React.createClass({
     classNames[slug] = "active";
 
     return (
-      <PageWrapper app={this.props.app}>
-        <dl className="sub-nav">
-          <dd className={classNames['ios']}><a href="/solutions/ios">iOS</a></dd>
-          <dd className={classNames['android']}><a href="/solutions/android">Android</a></dd>
-        </dl>
+      <PageWrapper app={this.props.app} wide={true}>
         <Static document={this.props.model.get('document')} />
       </PageWrapper>
     );
