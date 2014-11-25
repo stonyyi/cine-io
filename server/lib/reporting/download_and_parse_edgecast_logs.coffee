@@ -2,7 +2,8 @@ async = require('async')
 fs = require("fs")
 _ = require('underscore')
 mkdirp = require('mkdirp')
-parseEdgecastLog = Cine.server_lib('reporting/unzip_and_process_edgecast_log')
+parseEdgecastLog = Cine.server_lib('reporting/parse_edgecast_log')
+unzipAndProcessFile = Cine.server_lib('reporting/unzip_and_process_file')
 ParsedLog = Cine.server_model('parsed_log')
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 
@@ -11,7 +12,7 @@ parseLogFile = (logName, outputFile, callback)->
   parsedLog = new ParsedLog(hasStarted: true, logName: logName, source: 'edgecast')
   parsedLog.save (err)->
     return callback(err) if err
-    parseEdgecastLog outputFile, (err)->
+    unzipAndProcessFile outputFile, parseEdgecastLog, (err)->
       console.log("parsed edgecast log file", logName, err)
       parsedLog.parseErrors = err if err
       parsedLog.isComplete = true

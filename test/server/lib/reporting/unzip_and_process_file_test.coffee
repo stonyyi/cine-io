@@ -2,11 +2,12 @@ spawn = require('child_process').spawn
 fs = require('fs')
 copyFile = Cine.require('test/helpers/copy_file')
 gzipFile = Cine.require('test/helpers/gzip_file')
-unzipAndProcessEdgecastLog = Cine.server_lib('reporting/unzip_and_process_edgecast_log')
+unzipAndProcessFile = Cine.server_lib('reporting/unzip_and_process_file')
 EdgecastStreamReport = Cine.server_model('edgecast_stream_report')
 EdgecastStream = Cine.server_model('edgecast_stream')
+parseEdgecastLog = Cine.server_lib('reporting/parse_edgecast_log')
 
-describe 'unzipAndProcessEdgecastLog', ->
+describe 'unzipAndProcessFile', ->
 
   beforeEach ->
     @originalFileName = Cine.path "test/fixtures/edgecast_logs/fms_example.log"
@@ -34,7 +35,7 @@ describe 'unzipAndProcessEdgecastLog', ->
     @stream.save done
 
   it 'unzips a file, runs it through parseEdgecastLog, then deletes the file', (done)->
-    unzipAndProcessEdgecastLog @gzippedFileName, (err)=>
+    unzipAndProcessFile @gzippedFileName, parseEdgecastLog, (err)=>
       expect(err).to.be.undefined
       EdgecastStreamReport.findOne _edgecastStream: @stream._id, (err, report)=>
         expect(err).to.be.null

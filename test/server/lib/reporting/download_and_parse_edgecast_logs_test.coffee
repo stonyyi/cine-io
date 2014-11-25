@@ -1,5 +1,4 @@
 _ = require('underscore')
-parseEdgecastLog = Cine.server_lib('reporting/unzip_and_process_edgecast_log')
 ParsedLog = Cine.server_model('parsed_log')
 downloadAndParseEdgecastLogs = Cine.server_lib('reporting/download_and_parse_edgecast_logs')
 FakeFtpClient = Cine.require('test/helpers/fake_ftp_client')
