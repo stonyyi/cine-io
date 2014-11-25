@@ -1,8 +1,9 @@
 module.exports = (match) ->
   match "/", "homepage#show"
   match "/products", "homepage#products"
-  match "/solutions", "homepage#solutions"
   match "/pricing", "homepage#pricing"
+
+  match "/solutions/:id", "solutions#show"
 
   # errors
   match '/401',        'errors#unauthorized'

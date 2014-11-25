@@ -8,9 +8,12 @@
       background-color: $scheme-color-north;
     }
     .top-bar, .top-bar.expanded .title-area, .top-bar-section ul, .top-links li a, .top-bar-section li:not(.outlined) a{
-
       background-color: $scheme-color-north;
       transition: background-color 500ms ease;
+    }
+    .top-links li a:hover, .top-links .dropdown li a{
+      background-color: rgba(51, 51, 51, 0.5);
+      transition: none;
     }
   }
   &.show-logo{
