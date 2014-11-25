@@ -30,22 +30,32 @@
   <div class="detail">
     <div class="inner">
       <div class="content">
-        <div class="xcode">
+        <div class="android-studio">
           <h2>Android Studio</h2>
           <p>
-            Fully Android Studio compatible.
+            Our SDK integrates directly into your Android Studio project using
+            <a target="_blank" href="http://maven.apache.org/">Apache
+            Maven.</a> Just install <a target="_blank"
+            href="https://github.com/cine-io /cineio-android">our library</a>
+            and you're up and running.
           </p>
         </div>
-        <div class="protocols">
-          <h2>RTMP and HLS</h2>
+        <div class="examples">
+          <h2>Example Code</h2>
           <p>
-            Publish in RTMP. View in HLS.
+            Get up and running quickly using our sample code. We include an <a
+            target="_blank" href="https://github.com/cine-io/cineio-
+            android/tree/master/CineIOExampleApp">example project</a> to
+            get you up and running as quickly as possible.
           </p>
         </div>
         <div class="cdn">
           <h2>No CDN Required</h2>
           <p>
-            We handle your backend.
+            Don't worry about setting up a CDN or writing any backend video
+            code. We handles everything for you. And our
+            <a href="/pricing">developer-friendly pricing</a> keeps your
+            costs low.
           </p>
         </div>
       </div>
@@ -56,7 +66,7 @@
     <div class="inner">
       <div class="content">
         <h2>Need something else? We can probably help.</h2>
-        <a class="button radius primary" href="mailto:support@cine.io?subject=Android+Business+Inquiry">
+        <a target="_blank" class="button radius primary" href="mailto:support@cine.io?subject=Android+Business+Inquiry">
           Talk to Us
         </a>
       </div>
