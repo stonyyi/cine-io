@@ -9,6 +9,3 @@ app.get '/', (req, res)->
 
 app.get '/chat-example', (req, res)->
   res.sendfile(Cine.path('apps/signaling/chat/chat.html'))
-
-app.get '/peer-client.js', (req, res)->
-  res.sendfile(Cine.path('apps/signaling/chat/peer-client.js'))
