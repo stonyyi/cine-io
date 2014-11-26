@@ -5,7 +5,7 @@ request = require('request')
 runMe = !module.parent
 
 streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recording_name_enforcer')
-EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
+EdgecastFmsInfo = Cine.config('edgecast_fms_info')
 EdgecastStream = Cine.server_model('edgecast_stream')
 
 app = exports.app = Base.app()
@@ -37,7 +37,7 @@ class NewRecordingHandler
     streamName = streamRecordingNameEnforcer.extractStreamNameFromDirectory(@fullFileName)
     query =
       streamName: streamName
-      instanceName: EdgecastFtpInfo.vodDirectory
+      instanceName: EdgecastFmsInfo.instanceName
     EdgecastStream.findOne query, callback
 
 # takes a /?file=/aboslute/path/to/file

@@ -3,7 +3,7 @@ moment = require('moment')
 async = require('async')
 _ = require('underscore')
 shortId = require('shortid')
-EdgecastFtpInfo = Cine.config('edgecast_ftp_info')
+EdgecastFmsInfo = Cine.config('edgecast_fms_info')
 
 EdgecastStream = Cine.server_model('edgecast_stream')
 
@@ -14,7 +14,7 @@ edgecastAccount = edgecastConfig.account
 hlsHdsUrl = "https://api.edgecast.com/v2/mcc/customers/#{edgecastAccount}/httpstreaming/livehlshds"
 flashMediaStreamingUrl = "https://api.edgecast.com/v2/mcc/customers/#{edgecastAccount}/fmsliveauth/streamkeys"
 
-instanceName = EdgecastFtpInfo.vodDirectory
+instanceName = EdgecastFmsInfo.instanceName
 passwordDictionary = ["go", "world", "earth", "music", "notes", "band", "group", "fans", "rock", "tune", "creative", "piano", "guitar", "drums", "song", "violin", "cello", "harp", "trumpet", "keyboard", "treble", "bass", "cleff", "chord", "encore", "harmony", "major", "minor", "pitch", "prelude", "sharp"]
 
 generatePassword = (callback)->
