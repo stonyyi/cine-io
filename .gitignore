@@ -9,7 +9,7 @@ compiled/*
 ignored/
 
 newrelic_agent.log
-node_modules/*
+node_modules
 npm-debug.log
 
 public/compiled/*
