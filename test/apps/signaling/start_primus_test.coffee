@@ -1,3 +1,4 @@
+_ = require('underscore')
 async = require('async')
 Primus = Cine.require('apps/signaling/node_modules/primus')
 Socket = Primus.createSocket({transformer: 'sockjs', parser: 'json'})
@@ -14,7 +15,11 @@ describe 'socket calls', ->
       return done(err) if err
       console.log("Found port", port)
       @availablePort = port
-      @child = cp.fork(Cine.path('server.coffee'), env: {PORT: @availablePort, NODE_ENV: process.env.NODE_ENV, RUN_AS: "signaling", NO_SPAWN: true})
+      newEnv = _.clone(process.env)
+      newEnv.PORT = @availablePort
+      newEnv.RUN_AS = "signaling"
+      newEnv.NO_SPAWN = true
+      @child = cp.fork(Cine.path('server.coffee'), env: newEnv)
       @child.on 'message', (m)->
         done() if m == 'listening'
 
