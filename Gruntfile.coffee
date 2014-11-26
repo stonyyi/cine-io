@@ -214,6 +214,6 @@ module.exports = (grunt) ->
         grunt.task.run('prepareProductionAssets')
 
   grunt.registerTask 'npmPostInstall', ->
-    return productionPostInstall.call(this) if process.env.NODE_ENV == 'production'
+    return productionPostInstall.call(this) if process.env.NODE_ENV in ['production', 'staging']
     cb = @async()
     npmInstallDirectory 'apps/signaling', cb
