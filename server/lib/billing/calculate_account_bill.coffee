@@ -2,7 +2,6 @@ _ = require('underscore')
 calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 ProvidersAndPlans = Cine.require('config/providers_and_plans')
 UsageReport = Cine.model('usage_report')
-BackboneAccount = Cine.model('account')
 humanizeBytes = Cine.lib('humanize_bytes')
 getDaysInMonth = Cine.server_lib('get_days_in_month')
 

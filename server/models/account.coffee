@@ -1,6 +1,5 @@
 mongoose = require 'mongoose'
 crypto = require('crypto')
-BackboneAccount = Cine.model('account')
 ProvidersAndPlans = Cine.config('providers_and_plans')
 _ = require("underscore")
 

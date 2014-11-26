@@ -1,7 +1,6 @@
 _ = require('underscore')
 User = Cine.server_model('user')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
-BackboneUser = Cine.model('user')
 Project = Cine.server_model('project')
 
 describe 'User', ->

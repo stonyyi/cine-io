@@ -2,7 +2,6 @@ Account = Cine.server_model('account')
 _ = require('underscore')
 modelTimestamps = Cine.require('test/helpers/model_timestamps')
 Project = Cine.server_model('project')
-BackboneAccount = Cine.model('account')
 ProvidersAndPlans = Cine.config('providers_and_plans')
 
 describe 'Account', ->

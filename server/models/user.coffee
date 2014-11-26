@@ -3,7 +3,6 @@ bcrypt = require 'bcrypt'
 _ = require 'underscore'
 _.str = require 'underscore.string'
 Schema = mongoose.Schema
-BackboneUser = Cine.model('user')
 crypto = require('crypto')
 findOrCreate = require('mongoose-findorcreate')
 
