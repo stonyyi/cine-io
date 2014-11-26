@@ -10,7 +10,6 @@ module.exports = class Account extends Base
   @id: 'Account'
   url: "/account?masterKey=:masterKey"
   idAttribute: 'masterKey'
-  @plans: ['free', 'solo', 'basic', 'pro']
 
   isHeroku: ->
     @get('provider') == 'heroku'
