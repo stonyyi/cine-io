@@ -45,8 +45,12 @@ describe 'socket calls', ->
 
 
   describe 'conversations', ->
-    joinTestRoom = (client)->
+    joinTestRoom = (client, callback)->
       client.write action: 'join', room: 'test-room'
+      if callback
+        client.on 'data', (data)->
+          return unless data.source == 'join'
+          callback()
 
     leaveTestRoom = (client)->
       client.write action: 'leave', room: 'test-room'
@@ -54,8 +58,8 @@ describe 'socket calls', ->
     beforeEach (done)->
       @otherClient = newClient.call(this, done)
 
-    beforeEach ->
-      joinTestRoom @client
+    beforeEach (done)->
+      joinTestRoom @client, done
 
     afterEach ->
       @otherClient.end()

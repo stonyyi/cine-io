@@ -161,30 +161,35 @@ module.exports = (server)->
           console.log "i am", spark.id
           console.log "sending ice to", data.sparkId, data.candidate
           sendToOtherSpark spark, data.sparkId, action: "ice", candidate: data.candidate
+          spark.write action: 'ack', source: 'ice'
 
         when "offer"
           # console.log "new offer", data
           console.log "i am", spark.id
           console.log "sending offer to", data.sparkId, data.offer
+          spark.write action: 'ack', source: 'offer'
           sendToOtherSpark spark, data.sparkId, action: "offer", offer: data.offer
 
         when "answer"
           # console.log "new answer", data
           console.log "i am", spark.id
           console.log "sending answer to", data.sparkId, data.answer
+          spark.write action: 'ack', source: 'answer'
           sendToOtherSpark spark, data.sparkId, action: "answer", answer: data.answer
         # END PeerConnection events
 
         # BEGIN room events
-        when 'join'
+        when "join"
           return if spark.connectedRooms[data.room]
           spark.connectedRooms[data.room] = true
           spark.join data.room
+          spark.write action: 'ack', source: 'join'
 
         when "leave"
           return unless spark.connectedRooms[data.room]
           delete spark.connectedRooms[data.room]
           spark.leave data.room
+          spark.write action: 'ack', source: 'leave'
         # END room events
 
         # BEGIN point-to-point calling
@@ -197,13 +202,15 @@ module.exports = (server)->
               spark.write action: 'error', error: "UNKNOWN_ERROR", message: err
             else
               spark.identityId = identity._id
+              spark.write action: 'ack', source: 'identify'
 
-        when 'call'
+        when "call"
           generateRoomName (err, roomName)->
             return if spark.connectedRooms[roomName]
             spark.connectedRooms[roomName] = true
             askSparkToJoinRoomByIdentity(spark, roomName, data)
             spark.join roomName
+            spark.write action: 'ack', source: 'call'
         # END point-to-point calling
 
         else
