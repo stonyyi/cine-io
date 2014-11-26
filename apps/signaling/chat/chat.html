@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Cine.io chat example</title>
-  <script src="/peer-client.js"></script>
+  <script src="//cine-io-production.s3.amazonaws.com/peer-client-dev.js"></script>
 
   <style type="text/css">
     #participants {
@@ -34,7 +34,7 @@
     // /chat-example?room=room-name
     // /chat-example?identity=thomas
     // /chat-example?identity=thomas&call=jeffrey
-    CineIOPeer.init({apiKey: "TEST_API_KEY"})
+    CineIOPeer.init({publicKey: "18b4c471bdc2bc1d16ad3cb338108a33"})
 
     CineIOPeer.on('media', function(data){
       if (data.media){
