@@ -1,5 +1,4 @@
 BaseApp = require('rendr/shared/app')
-window.Cine = require 'config/cine' if typeof window != 'undefined'
 qs = require('qs')
 isServer = typeof window is 'undefined'
 

@@ -1,6 +1,5 @@
-Cine = require('./cine')
 path = require('path')
-
+Cine = module.exports
 Cine.root = path.resolve()
 
 Cine.path = (pathName)->
@@ -35,5 +34,3 @@ Cine.middleware = (type, args...) ->
   response = Cine.require("/server/middleware/#{type}")
   response = response(args...) if args.length > 0
   response
-
-module.exports = Cine

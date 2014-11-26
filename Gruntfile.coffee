@@ -28,10 +28,11 @@ module.exports = (grunt) ->
             handlebars: '../rendr-handlebars/node_modules/handlebars/dist/handlebars.runtime.js'
             async: '../async/lib/async.js'
           aliases: [
-            from: "apps/#{rendrProject}/app/", to: 'app/'
+            from: "apps/home/#{rendrProject}/app/", to: 'app/'
             {from: "compiled/#{rendrProject}/components/", to: 'app/components/'}
             {from: "bower_components/react/react", to: 'react'}
-            {from: "apps/shared/", to: '/'}
+            {from: "apps/home/shared/", to: '/'}
+            {from: "apps/home/cine", to: 'cine'}
 
             {from: rendrDir + '/client', to: 'rendr/client'},
             {from: rendrDir + '/shared', to: 'rendr/shared'},
@@ -42,9 +43,9 @@ module.exports = (grunt) ->
           dest: "public/compiled/#{rendrProject}/mergedAssets.js"
           src: [
             'bower_components/react/react.js'
-            "apps/#{rendrProject}/app/**/*.coffee"
-            "apps/shared/**/*.coffee",
-            "config/cine.coffee"
+            "apps/home/#{rendrProject}/app/**/*.coffee"
+            "apps/home/shared/**/*.coffee",
+            "apps/home/cine.coffee"
             "config/providers_and_plans.coffee"
             "compiled/#{rendrProject}/components/**/*.js"
             rendrDir + '/client/**/*.js'
@@ -81,7 +82,7 @@ module.exports = (grunt) ->
       dev:
         script: "server.coffee"
         options:
-          watch: ["apps/**/*.coffee", "config/**/*.coffee", "server/**/*.coffee"]
+          watch: ["apps/home/**/*.coffee", "config/**/*.coffee", "server/**/*.coffee"]
           delay: 1000
 
     watch:
@@ -93,11 +94,11 @@ module.exports = (grunt) ->
         tasks: ["sass", "concat"]
 
       react:
-        files: ["apps/main/app/**/*.jsx", "apps/admin/app/**/*.jsx"]
+        files: ["apps/home/main/app/**/*.jsx", "apps/home/admin/app/**/*.jsx"]
         tasks: ["compile"]
 
       main:
-        files: ["apps/main/app/**/*.coffee", "apps/admin/app/**/*.coffee"]
+        files: ["apps/home/main/app/**/*.coffee", "apps/home/admin/app/**/*.coffee"]
         tasks: ["rendr_stitch"]
 
       aglio:
@@ -109,14 +110,14 @@ module.exports = (grunt) ->
         files: [
           {
             expand: true,
-            cwd: 'apps/main/app/components',
+            cwd: 'apps/home/main/app/components',
             src: ['**/*.jsx'],
             dest: 'compiled/main/components',
             ext: '.js'
           },
           {
             expand: true,
-            cwd: 'apps/admin/app/components',
+            cwd: 'apps/home/admin/app/components',
             src: ['**/*.jsx'],
             dest: 'compiled/admin/components',
             ext: '.js'

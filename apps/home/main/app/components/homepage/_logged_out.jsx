@@ -219,6 +219,3 @@ exports.Consulting = React.createClass({
     );
   }
 });
-
-
-
