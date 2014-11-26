@@ -1,4 +1,4 @@
-console.log('loaded hls app')
+console.log('loaded signaling app')
 
 Base = Cine.require('apps/base')
 Cine.config('connect_to_mongo')
