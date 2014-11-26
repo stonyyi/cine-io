@@ -50,19 +50,19 @@ generateRoomName = (callback)->
     return callback(err) if err
     callback(null, buf.toString('hex'))
 
-accountForApiKey = (apiKey, callback)->
-  accountParams = apiKey: apiKey
-  Account.findOne accountParams, (err, account)->
+projectForPublicKey = (publicKey, callback)->
+  projectParams = publicKey: publicKey
+  Project.findOne projectParams, (err, project)->
     return callback(err) if err
-    unless account
-      console.error("COULD NOT FIND ACCOUNT", apiKey)
-      return callback("account not found")
-    callback(null, account)
+    unless project
+      console.error("COULD NOT FIND PROJECT", publicKey)
+      return callback("project not found")
+    callback(null, project)
 
-findOrCreatePeerIdentity = (account, identityName, callback)->
+findOrCreatePeerIdentity = (project, identityName, callback)->
   identityParams =
     identity: identityName
-    _account: account._id
+    _project: project._id
   PeerIdentity.findOne identityParams, (err, identity)->
     return callback(err) if err
     return callback(null, identity) if identity
@@ -78,12 +78,12 @@ sendSparkIceServers = (spark)->
 
 setIdentity = (spark, data, callback)->
   identityName = data.identity
-  apiKey = data.apikey
-  accountForApiKey apiKey, (err, account)->
+  publicKey = data.publicKey
+  projectForPublicKey publicKey, (err, project)->
     return callback(err) if err
-    findOrCreatePeerIdentity account, identityName, (err, identity)->
+    findOrCreatePeerIdentity project, identityName, (err, identity)->
       if err
-        console.error("Could not get PeerIdentity", account, identityName)
+        console.error("Could not get PeerIdentity", project, identityName)
         return callback(err)
       identity.currentConnections.push
         sparkId: spark.id
@@ -117,15 +117,15 @@ module.exports = (server)->
   primus.use('metroplex', Metroplex)
 
   askSparkToJoinRoomByIdentity = (spark, roomName, data)->
-    apiKey = data.apikey
-    accountForApiKey apiKey, (err, account)->
+    publicKey = data.publicKey
+    projectForPublicKey publicKey, (err, project)->
       if err
-        spark.write action: 'error', error: "INVALID_API_KEY", message: "invalid api key: #{apiKey} provided"
+        spark.write action: 'error', error: "INVALID_PUBLIC_KEY", message: "invalid publicKey: #{publicKey} provided"
         return
 
       identityParams =
         identity: data.otheridentity
-        _account: account._id
+        _project: project._id
 
       PeerIdentity.findOne identityParams, (err, identity)->
         if err || !identity
@@ -191,8 +191,8 @@ module.exports = (server)->
         when "identify"
           console.log "i am", spark.id
           setIdentity spark, data, (err, identity)->
-            if err == 'account not found'
-              spark.write action: 'error', error: "INVALID_API_KEY", message: "invalid api key: #{data.apikey} provided"
+            if err == 'project not found'
+              spark.write action: 'error', error: "INVALID_PUBLIC_KEY", message: "invalid publicKey: #{data.publicKey} provided"
             else if err
               spark.write action: 'error', error: "UNKNOWN_ERROR", message: err
             else
@@ -230,4 +230,4 @@ module.exports = (server)->
     console.log('spark left all rooms', spark.id, rooms)
 
 PeerIdentity = Cine.server_model('peer_identity')
-Account = Cine.server_model('account')
+Project = Cine.server_model('project')

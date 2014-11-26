@@ -12,6 +12,7 @@ if process.env.NODE_ENV == "production"
 startMaster = ->
   _ = require 'underscore'
 
+  return startSpawn() if process.env.NO_SPAWN
   if process.env.NODE_ENV == "development"
     numberToSpawn = 1
   else
@@ -34,13 +35,14 @@ startSpawn = ->
   app = application.app
   if app
     server = application.server
-    server.workerId = cluster.worker.id
+    server.workerId = cluster.worker.id unless cluster.isMaster
 
     port = process.env.PORT or 8181
     console.log clc.yellow("[App]"), "Starting #{app.get('title')} in #{app.settings.env} on #{port} (worker #{server.workerId})"
 
     # start server and listen to socket.io
     server.listen port
+    process.send('listening')
 
 if cluster.isMaster
   startMaster()

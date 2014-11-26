@@ -1,6 +1,7 @@
 console.log('loaded hls app')
 
 Base = Cine.require('apps/base')
+Cine.config('connect_to_mongo')
 module.exports = app = Base.newApp('Cine.io Signaling Server')
 
 app.get '/', (req, res)->

@@ -19,6 +19,8 @@
     "sockjs": "0.3.9"
   },
   "devDependencies": {
+    "portfinder": "0.2.1",
+    "sockjs-client-node": "0.1.1"
   },
   "license": "Copyrighted / All Rights Reserved",
   "engines": {

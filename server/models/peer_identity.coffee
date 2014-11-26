@@ -1,9 +1,9 @@
 mongoose = require 'mongoose'
 
 PeerIdentitySchema = new mongoose.Schema
-  _account:
+  _project:
     type: mongoose.Schema.Types.ObjectId
-    ref: 'Account'
+    ref: 'Project'
   identity:
     type: String
     index: true
