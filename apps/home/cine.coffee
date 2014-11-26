@@ -2,10 +2,10 @@ Cine = {}
 
 if typeof window == 'undefined'
   clientOrServerRequire = (path, app)->
-    require "../apps/#{app}/#{path}"
+    Cine.require("apps/home/#{app}/#{path}")
 else
   clientOrServerRequire = (path, app)->
-    require path
+    Cine.require(path)
 
 # Client
 

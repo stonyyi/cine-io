@@ -13,7 +13,15 @@ else
   console.debug = noop
 
 # add global Cine requiring object
-Cine = require('./cine_server')
+
+
+# TEMP HACK TO GET THIS TO WORK INITIALLY
+CineServer = require('./cine_server')
+Cine = CineServer.require('apps/home/cine')
+for key of CineServer
+  Cine[key] = CineServer[key] if CineServer.hasOwnProperty(key)
+#END HACK
+
 global.Cine = Cine
 
 # init mongo

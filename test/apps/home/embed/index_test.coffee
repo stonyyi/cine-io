@@ -1,4 +1,4 @@
-app = Cine.require('apps/embed')
+app = Cine.require('apps/home/embed')
 supertest = require('supertest')
 
 describe 'embed', ->

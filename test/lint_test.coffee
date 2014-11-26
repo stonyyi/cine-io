@@ -32,14 +32,14 @@ describe 'the test suite', ->
 
   fullyTestedDirectories = [
     # shared
-    "apps/shared/app/models"
-    "apps/shared/app/collections"
+    "apps/home/shared/app/models"
+    "apps/home/shared/app/collections"
     # main
-    "apps/main/app/controllers"
-    "apps/main/app/views"
+    "apps/home/main/app/controllers"
+    "apps/home/main/app/views"
     #admin
-    "apps/admin/app/controllers"
-    "apps/admin/app/views"
+    "apps/home/admin/app/controllers"
+    "apps/home/admin/app/views"
     # server
     "server/api"
     "server/models"
@@ -54,11 +54,11 @@ describe 'the test suite', ->
 
   notDoneYet = [
     # admin
-    "apps/admin/app/components"
+    "apps/home/admin/app/components"
     # main
-    "apps/main/app/components"
+    "apps/home/main/app/components"
     # shared
-    "apps/shared/app/lib"
+    "apps/home/shared/app/lib"
     # server
     "server/lib"
     "server/middleware"

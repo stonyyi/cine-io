@@ -4,18 +4,22 @@ cluster = require('cluster')
 clc = require "cli-color"
 
 if process.env.NODE_ENV == "production"
-  newrelic = require 'newrelic'
+  try
+    require 'newrelic'
+  catch e
+    console.log "could not load newrelic"
 
 startMaster = ->
   _ = require 'underscore'
 
+  return startSpawn() if process.env.NO_SPAWN
   if process.env.NODE_ENV == "development"
     numberToSpawn = 1
   else
     # numberToSpawn = require('os').cpus().length
     # I tried 1,2,3,4 and two handled load best.
     # I think it's a combo of memory and cpu bottlenecks
-    numberToSpawn = 2
+    numberToSpawn = 1
     console.log('CPU count', numberToSpawn)
 
   _.times(numberToSpawn, cluster.fork)
@@ -29,14 +33,16 @@ startSpawn = ->
   # require the application
   application = require('./app')
   app = application.app
-  server = application.server
-  server.workerId = cluster.worker.id
+  if app
+    server = application.server
+    server.workerId = cluster.worker.id unless cluster.isMaster
 
-  port = process.env.PORT or 8181
-  console.log clc.yellow("[App]"), "Starting #{app.get('title')} in #{app.settings.env} on #{port} (worker #{server.workerId})"
+    port = process.env.PORT or 8181
+    console.log clc.yellow("[App]"), "Starting #{app.get('title')} in #{app.settings.env} on #{port} (worker #{server.workerId})"
 
-  # start server and listen to socket.io
-  server.listen port
+    # start server and listen to socket.io
+    server.listen port
+    process.send('listening')
 
 if cluster.isMaster
   startMaster()

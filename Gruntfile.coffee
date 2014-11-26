@@ -2,6 +2,7 @@ _ = require('underscore')
 rendrDir = 'node_modules/rendr';
 rendrHandlebarsDir = 'node_modules/rendr-handlebars';
 rendrModulesDir = rendrDir + '/node_modules';
+exec = require('child_process').exec
 
 module.exports = (grunt) ->
   rendrProjects = ['admin', 'main']
@@ -28,10 +29,11 @@ module.exports = (grunt) ->
             handlebars: '../rendr-handlebars/node_modules/handlebars/dist/handlebars.runtime.js'
             async: '../async/lib/async.js'
           aliases: [
-            from: "apps/#{rendrProject}/app/", to: 'app/'
+            from: "apps/home/#{rendrProject}/app/", to: 'app/'
             {from: "compiled/#{rendrProject}/components/", to: 'app/components/'}
             {from: "bower_components/react/react", to: 'react'}
-            {from: "apps/shared/", to: '/'}
+            {from: "apps/home/shared/", to: '/'}
+            {from: "apps/home/cine", to: 'cine'}
 
             {from: rendrDir + '/client', to: 'rendr/client'},
             {from: rendrDir + '/shared', to: 'rendr/shared'},
@@ -42,9 +44,9 @@ module.exports = (grunt) ->
           dest: "public/compiled/#{rendrProject}/mergedAssets.js"
           src: [
             'bower_components/react/react.js'
-            "apps/#{rendrProject}/app/**/*.coffee"
-            "apps/shared/**/*.coffee",
-            "config/cine.coffee"
+            "apps/home/#{rendrProject}/app/**/*.coffee"
+            "apps/home/shared/**/*.coffee",
+            "apps/home/cine.coffee"
             "config/providers_and_plans.coffee"
             "compiled/#{rendrProject}/components/**/*.js"
             rendrDir + '/client/**/*.js'
@@ -81,7 +83,7 @@ module.exports = (grunt) ->
       dev:
         script: "server.coffee"
         options:
-          watch: ["apps/**/*.coffee", "config/**/*.coffee", "server/**/*.coffee"]
+          watch: ["apps/home/**/*.coffee", "config/**/*.coffee", "server/**/*.coffee"]
           delay: 1000
 
     watch:
@@ -93,11 +95,11 @@ module.exports = (grunt) ->
         tasks: ["sass", "concat"]
 
       react:
-        files: ["apps/main/app/**/*.jsx", "apps/admin/app/**/*.jsx"]
+        files: ["apps/home/main/app/**/*.jsx", "apps/home/admin/app/**/*.jsx"]
         tasks: ["compile"]
 
       main:
-        files: ["apps/main/app/**/*.coffee", "apps/admin/app/**/*.coffee"]
+        files: ["apps/home/main/app/**/*.coffee", "apps/home/admin/app/**/*.coffee"]
         tasks: ["rendr_stitch"]
 
       aglio:
@@ -109,14 +111,14 @@ module.exports = (grunt) ->
         files: [
           {
             expand: true,
-            cwd: 'apps/main/app/components',
+            cwd: 'apps/home/main/app/components',
             src: ['**/*.jsx'],
             dest: 'compiled/main/components',
             ext: '.js'
           },
           {
             expand: true,
-            cwd: 'apps/admin/app/components',
+            cwd: 'apps/home/admin/app/components',
             src: ['**/*.jsx'],
             dest: 'compiled/admin/components',
             ext: '.js'
@@ -146,7 +148,6 @@ module.exports = (grunt) ->
         theme: "development/docs/blueprint-docs"
         seperator: "\n"
 
-
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-sass"
   grunt.loadNpmTasks "grunt-nodemon"
@@ -161,7 +162,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-rendr-stitch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-aglio');
-
 
   grunt.registerTask "test", (file) ->
     sh = require("execSync")
@@ -193,6 +193,27 @@ module.exports = (grunt) ->
       console.log("\n======= #{method} =======\n")
       _.each routes.sort(), (route)-> console.log(route)
 
-  grunt.registerTask 'productionPostInstall', ->
-    return unless process.env.NODE_ENV == 'production'
-    grunt.task.run('prepareProductionAssets')
+  npmInstallDirectory = (directory, callback)->
+    console.log("running npm install in", directory)
+    cp = exec 'npm install', {cwd: directory}, (err, stdout, stderr)->
+      if err
+        grunt.warn(err)
+        return callback(err) if options.failOnError
+      callback()
+    cp.stdout.pipe(process.stdout)
+    cp.stderr.pipe(process.stderr)
+
+  productionPostInstall = ->
+    switch process.env.RUN_AS
+      when 'hls'
+        return
+      when 'signaling'
+        cb = @async()
+        npmInstallDirectory('apps/signaling', cb)
+      else
+        grunt.task.run('prepareProductionAssets')
+
+  grunt.registerTask 'npmPostInstall', ->
+    return productionPostInstall.call(this) if process.env.NODE_ENV in ['production', 'staging']
+    cb = @async()
+    npmInstallDirectory 'apps/signaling', cb
