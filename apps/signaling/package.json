@@ -1,0 +1,28 @@
+{
+  "author": "BML Ventures Team",
+  "name": "cine.io-signaling",
+  "domains": [
+    "signaling.cine.io"
+  ],
+  "version": "0.0.1",
+  "description": "cine.io signaling server",
+  "scripts": {
+  },
+  "repository": "https://github.com/cine-io/cine",
+  "dependencies": {
+    "metroplex": "0.0.6",
+    "omega-supreme": "0.0.4",
+    "primus": "2.4.5",
+    "primus-cluster": "1.0.1",
+    "primus-emitter": "3.0.3",
+    "primus-rooms": "3.1.0",
+    "sockjs": "0.3.9"
+  },
+  "devDependencies": {
+  },
+  "license": "Copyrighted / All Rights Reserved",
+  "engines": {
+    "node": "0.10.32"
+  },
+  "private": true
+}
