@@ -26,18 +26,15 @@ describe 'socket calls', ->
   after ->
     @child.kill()
 
-  newClient = ->
-    new Socket("http://127.0.0.1:#{@availablePort}/")
+  newClient = (callback)->
+    c = new Socket("http://127.0.0.1:#{@availablePort}/")
+    c.on 'open', callback
 
-  beforeEach ->
-    @client = newClient.call(this)
+  beforeEach (done)->
+    @client = newClient.call(this, done)
 
   afterEach ->
     @client.end()
-
-  it 'connects', (done)->
-    @client.on 'open', ->
-      done()
 
   it 'recieves allservers right away', (done)->
     @client.on 'data', (data)->
@@ -54,8 +51,10 @@ describe 'socket calls', ->
     leaveTestRoom = (client)->
       client.write action: 'leave', room: 'test-room'
 
+    beforeEach (done)->
+      @otherClient = newClient.call(this, done)
+
     beforeEach ->
-      @otherClient = newClient.call(this)
       joinTestRoom @client
 
     afterEach ->
