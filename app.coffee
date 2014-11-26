@@ -1,12 +1,19 @@
 env     = require './config/environment'
-http = require 'http'
 
-if process.env.RUN_AS == 'hls'
-  app = Cine.require('apps/m3u8')
-else
-  app = Cine.require('apps/home')
+switch process.env.RUN_AS
+  when 'hls'
+    app = Cine.require('apps/m3u8')
+  when 'signaling'
+    app = Cine.require('apps/signaling')
+  else
+    app = Cine.require('apps/home')
 
-exports.app = app
-exports.server = http.createServer(app)
+if app
+  app.use Cine.middleware('error_handling')
+  http = require 'http'
+  exports.app = app
+  exports.server = http.createServer(app)
 
-app.use Cine.middleware('error_handling')
+switch process.env.RUN_AS
+  when 'signaling'
+    Cine.require('apps/signaling/start_primus', exports.server)

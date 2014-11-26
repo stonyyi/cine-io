@@ -25,7 +25,7 @@ document = jsdom('<html><head><script></script></head><body></body></html>')
 window = document.parentWindow
 global.jQuery = require("jquery")(window)
 
-App = Cine.require "apps/main/app/app"
+App = Cine.require "apps/home/main/app/app"
 rendrServerOptions = Cine.middleware('rendr_server_options')
 appAttributes = rendrServerOptions.appData(settings: {env: process.env.NODE_ENV})
 

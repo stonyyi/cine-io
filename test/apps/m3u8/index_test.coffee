@@ -10,8 +10,8 @@ describe 'm3u8', ->
   beforeEach (done)->
     client.set redisKeyForM3U8.withAttribute('stream-name'), "my m3u8 file", done
 
-  it 'serves does not handle the root', (done)->
-    @agent.get('/').expect(404).end(done)
+  it 'serves handles the root', (done)->
+    @agent.get('/').expect(200).end(done)
 
   it 'serves 404 for unknown routes', (done)->
     @agent

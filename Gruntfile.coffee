@@ -2,6 +2,7 @@ _ = require('underscore')
 rendrDir = 'node_modules/rendr';
 rendrHandlebarsDir = 'node_modules/rendr-handlebars';
 rendrModulesDir = rendrDir + '/node_modules';
+exec = require('child_process').exec
 
 module.exports = (grunt) ->
   rendrProjects = ['admin', 'main']
@@ -147,7 +148,6 @@ module.exports = (grunt) ->
         theme: "development/docs/blueprint-docs"
         seperator: "\n"
 
-
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-sass"
   grunt.loadNpmTasks "grunt-nodemon"
@@ -162,7 +162,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-rendr-stitch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-aglio');
-
 
   grunt.registerTask "test", (file) ->
     sh = require("execSync")
@@ -194,6 +193,27 @@ module.exports = (grunt) ->
       console.log("\n======= #{method} =======\n")
       _.each routes.sort(), (route)-> console.log(route)
 
-  grunt.registerTask 'productionPostInstall', ->
-    return unless process.env.NODE_ENV == 'production'
-    grunt.task.run('prepareProductionAssets')
+  npmInstallDirectory = (directory, callback)->
+    console.log("running npm install in", directory)
+    cp = exec 'npm install', {cwd: directory}, (err, stdout, stderr)->
+      if err
+        grunt.warn(err)
+        return callback(err) if options.failOnError
+      callback()
+    cp.stdout.pipe(process.stdout)
+    cp.stderr.pipe(process.stderr)
+
+  productionPostInstall = ->
+    switch process.env.RUN_AS
+      when 'hls'
+        return
+      when 'signaling'
+        cb = @async()
+        npmInstallDirectory('apps/signaling', cb)
+      else
+        grunt.task.run('prepareProductionAssets')
+
+  grunt.registerTask 'npmPostInstall', ->
+    return productionPostInstall.call(this) if process.env.NODE_ENV == 'production'
+    cb = @async()
+    npmInstallDirectory 'apps/signaling', cb
