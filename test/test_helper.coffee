@@ -39,7 +39,7 @@ newReq = (currentUser)->
   req
 
 global.newApp = (currentUser=null)->
-  modelUtils = new ModelUtils("#{Cine.root}/apps/shared/")
+  modelUtils = new ModelUtils("#{Cine.root}/apps/home/shared/")
   a = new App(appAttributes, modelUtils: modelUtils, entryPath: "#{Cine.root}/apps/main/", req: newReq(currentUser))
 
 global.testApi = Cine.require('test/helpers/test_api')
