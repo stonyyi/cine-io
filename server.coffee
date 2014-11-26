@@ -18,7 +18,7 @@ startMaster = ->
     # numberToSpawn = require('os').cpus().length
     # I tried 1,2,3,4 and two handled load best.
     # I think it's a combo of memory and cpu bottlenecks
-    numberToSpawn = 2
+    numberToSpawn = 1
     console.log('CPU count', numberToSpawn)
 
   _.times(numberToSpawn, cluster.fork)
