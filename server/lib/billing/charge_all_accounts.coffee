@@ -8,10 +8,15 @@ module.exports = (done)->
   monthToBill = new Date(Date.now())
   return done("Not running on the first of the month") unless monthToBill.getDate() == 1
   monthToBill.setDate(monthToBill.getDate() - 1) # run for the previous month
-
+  errs = []
   billAcount = (account, callback)->
     # console.log("billing account", account)
-    chargeAccountForMonth account, monthToBill, callback
+    chargeAccountForMonth account, monthToBill, (err)->
+      errs.push err if err
+      callback()
 
   scope = Account.where(billingProvider: 'cine.io').exists('deletedAt', false).exists('throttledAt', false)
-  scope.stream().concurrency(20).work billAcount, done
+  scope.stream().concurrency(20).work billAcount, (err)->
+    return done(err) if err
+    return done(errs) if errs.length > 0
+    done()
