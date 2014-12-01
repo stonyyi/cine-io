@@ -133,7 +133,7 @@ describe 'chargeAccountForMonth', ->
       @account.save done
 
     beforeEach ->
-      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 8666)
+      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 8709)
       @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
       @mailerSpy = sinon.spy mailer, 'monthlyBill'
 
@@ -156,7 +156,7 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
         expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 8666.666666666666, prorated: true)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 8709.677419354839, prorated: true)
         expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.8, storage: humanizeBytes.GiB * 0.5)
         done()
 
@@ -170,14 +170,15 @@ describe 'chargeAccountForMonth', ->
     afterEach ->
       @usageStub.restore()
 
-    beforeEach ->
-      @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
-      @mailerSpy = sinon.spy mailer, 'underOneGibBill'
-
-    afterEach ->
-      @mailerSpy.restore()
 
     describe 'with no credit card', ->
+
+      beforeEach ->
+        @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
+        @mailerSpy = sinon.spy mailer, 'underOneGibBill'
+
+      afterEach ->
+        @mailerSpy.restore()
 
       beforeEach (done)->
         chargeAccountForMonth @account, @now, done
@@ -214,8 +215,14 @@ describe 'chargeAccountForMonth', ->
           done()
 
     describe 'with a credit card', ->
+
       beforeEach ->
         @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 60000)
+        @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
+        @mailerSpy = sinon.spy mailer, 'monthlyBill'
+
+      afterEach ->
+        @mailerSpy.restore()
 
       beforeEach (done)->
         @account.stripeCustomer.stripeCustomerId = "cus_2ghmxawfvEwXkw"
@@ -228,6 +235,20 @@ describe 'chargeAccountForMonth', ->
 
       it 'charges stripe', ->
         expect(@chargeSuccess.isDone()).to.be.true
+
+      it 'sends an email', (done)->
+        AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
+          expect(err).to.be.null
+          expect(@templateEmailSuccess.isDone()).to.be.true
+          expect(@mailerSpy.calledOnce).to.be.true
+          args = @mailerSpy.firstCall.args
+          expect(args).to.have.length(5)
+          expect(args[0]._id.toString()).to.equal(@account._id.toString())
+          expect(args[1]._id.toString()).to.equal(abh._id.toString())
+          expect(args[2].toString()).to.equal(abh.history[0]._id.toString())
+          expect(args[3].toString()).to.equal(@now.toString())
+          expect(args[4]).to.be.a('function')
+          done()
 
   describe 'with a declined stripe charge', ->
     beforeEach ->

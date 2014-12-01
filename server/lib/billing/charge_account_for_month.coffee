@@ -84,8 +84,10 @@ chargeAccount = (account, abh, recordId, monthToBill, results, callback)->
   return callback("account has no primary card") unless findPrimaryCard(account)
   chargeStripe account, results, (err, stripeResults)->
     if err
+      console.log("got error charging account", err, stripeResults)
       return saveChargeError account, abh, recordId, monthToBill, err, (err2)->
         return callback(err2)
+    console.log("got stripe results", stripeResults)
     saveNewCharge abh, recordId, monthToBill, stripeResults, (err)->
       return callback(err) if err
 
