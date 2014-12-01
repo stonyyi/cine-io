@@ -118,7 +118,9 @@ module.exports.__work = (account, monthToBill, callback)->
   return callback(null, "free accounts do not recieve non-invoice emails") if calculateAccountBill.accountPlanAmount(account) == 0
   findOrCreateAccountBillingHistory account, (err, abh)->
     return callback(err) if err
-    return callback(null, "already charged account for this month") if abh.hasBilledForMonth(monthToBill)
+    if abh.hasBilledForMonth(monthToBill)
+      console.log("already charged for this month", account._id)
+      return callback(null, "already charged account for this month")
     calculateAccountBill account, monthToBill, (err, results)->
       return callback(err) if err
       # console.log("calculated", err, results)

@@ -128,8 +128,10 @@ describe 'chargeAllAccounts', ->
       it 'aggregates the errors', (done)->
         stubDate.call(this)
         chargeAllAccounts (err)=>
-          expect(err).to.have.length(1)
-          expect(err[0]).to.equal('account not stripe customer')
+          expect(err.err).to.be.null
+          expectedAccountErrs = {}
+          expectedAccountErrs[@cineioAccount._id.toString()] = 'account not stripe customer'
+          expect(err.accountErrs).to.deep.equal(expectedAccountErrs)
           expect(@billingSpy.callCount).to.equal(1)
           account = @billingSpy.firstCall.args[0]
           expect(account._id.toString()).to.equal(@cineioAccount._id.toString())
