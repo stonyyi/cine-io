@@ -18,9 +18,14 @@ describe 'AccountBillingHistory', ->
       @twoMonthsAgo = new Date
       @twoMonthsAgo.setDate(1)
       @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
+
       @threeMonthsAgo = new Date
       @threeMonthsAgo.setDate(1)
       @threeMonthsAgo.setMonth(@threeMonthsAgo.getMonth() - 3)
+
+      @fourMonthsAgo = new Date
+      @fourMonthsAgo.setDate(1)
+      @fourMonthsAgo.setMonth(@fourMonthsAgo.getMonth() - 4)
 
       @abh = new AccountBillingHistory(_account: @account._id)
       @abh.history.push
@@ -34,7 +39,11 @@ describe 'AccountBillingHistory', ->
       @abh.history.push
         billingDate: @threeMonthsAgo
         paid: false
-        stripeChargeId: 'last month charge'
+        stripeChargeId: 'three months ago month charge'
+      @abh.history.push
+        billingDate: @fourMonthsAgo
+        paid: false
+        notCharged: true
       @abh.save done
 
     describe '#hasBilledForMonth', ->
@@ -47,6 +56,9 @@ describe 'AccountBillingHistory', ->
 
       it 'returns false for an abh with a history record for that date but was not paid', ->
         expect(@abh.hasBilledForMonth(@threeMonthsAgo)).to.be.false
+
+      it 'returns true for an abh with a history record for that date but was not paid but was not charged', ->
+        expect(@abh.hasBilledForMonth(@fourMonthsAgo)).to.be.true
 
     describe '#billingRecordForMonth', ->
       it 'returns a record when there is a record for that date', ->
