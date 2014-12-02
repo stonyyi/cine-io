@@ -4,8 +4,21 @@ _ = require('underscore')
 clc = require "cli-color"
 startTime = new Date
 
-prefixes = ["http://", "http://www.", "https://", "https://www."]
-expectedUrl = "https://www.cine.io/health"
+switch process.env.APP
+  when 'hls'
+    functionsToCall = checkUrl("http://hls.cine.io/health")
+    expectedUrl = "http://hls.cine.io/health"
+  when 'signaling'
+    functionsToCall = checkUrl("http://signaling.cine.io/health")
+    expectedUrl = "http://signaling.cine.io/health"
+  else
+    prefixes = ["http://", "http://www.", "https://", "https://www."]
+    functionsToCall = _.map prefixes, (prefix)->
+      url = "#{prefix}cine.io/health"
+      checkUrl(url)
+
+    expectedUrl = "https://www.cine.io/health"
+
 allowedDowntime = 15 # seconds
 acceptableTimeout = 5 # seconds
 
@@ -32,10 +45,6 @@ validateUrlResponse = (url, callback)->
       console.log clc.red(url)
       callback('not ok body')
 
-functionsToCall = _.map prefixes, (prefix)->
-  url = "#{prefix}cine.io/health"
-  checkUrl(url)
-
 checkErr = (success)->
   (err)->
     if err
@@ -46,11 +55,11 @@ checkErr = (success)->
 
 checkUrls = (err)->
   console.log('checking urls')
+
   async.parallel functionsToCall, checkErr(process.exit)
 
 newCodeUp = false
 firstCheck = true
-
 
 console.log('waiting for sha', newSha)
 newCodeDeployed = ->
