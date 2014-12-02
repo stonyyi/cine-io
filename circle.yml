@@ -27,7 +27,6 @@ deployment:
     branch: master
     commands:
       - git push git@github.com:cine-io/cine.git $CIRCLE_SHA1:refs/heads/stable
-deployment:
   production:
     branch: stable
     commands:
