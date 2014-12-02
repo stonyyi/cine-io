@@ -88,6 +88,7 @@ setIdentity = (spark, data, callback)->
       identity.currentConnections.push
         sparkId: spark.id
         client: data.client
+      spark.identity = identityName
       identity.save (err, identity)->
       if err
         console.error("Could not save currentConnection", identity)
@@ -109,6 +110,10 @@ removeCurrentConnectionOnIdentity = (spark)->
         console.log("PeerIdentity still has current connection")
       else
         console.log("removed currentConnection", identity.currentConnections)
+
+invalidPublicKeyOptions = (publicKey)->
+  action: 'error', error: "INVALID_PUBLIC_KEY", message: "invalid publicKey: #{publicKey} provided"
+
 module.exports = (server)->
 
   primus = new Primus(server, primusOptions)
@@ -120,7 +125,7 @@ module.exports = (server)->
     publicKey = data.publicKey
     projectForPublicKey publicKey, (err, project)->
       if err
-        spark.write action: 'error', error: "INVALID_PUBLIC_KEY", message: "invalid publicKey: #{publicKey} provided"
+        spark.write invalidPublicKeyOptions(publicKey)
         return
 
       identityParams =
@@ -197,7 +202,7 @@ module.exports = (server)->
           console.log "i am", spark.id
           setIdentity spark, data, (err, identity)->
             if err == 'project not found'
-              spark.write action: 'error', error: "INVALID_PUBLIC_KEY", message: "invalid publicKey: #{data.publicKey} provided"
+              spark.write invalidPublicKeyOptions(data.publicKey)
             else if err
               spark.write action: 'error', error: "UNKNOWN_ERROR", message: err
             else
@@ -211,6 +216,16 @@ module.exports = (server)->
             askSparkToJoinRoomByIdentity(spark, roomName, data)
             spark.join roomName
             spark.write action: 'ack', source: 'call'
+
+        when "reject"
+          room = data.room
+          publicKey = data.publicKey
+          projectForPublicKey publicKey, (err, project)->
+            if err
+              spark.write invalidPublicKeyOptions(publicKey)
+              return
+            primus.room(room).except(spark.id).write(action: 'reject', room: room, identity: spark.identity)
+            spark.write action: 'ack', source: 'reject'
         # END point-to-point calling
 
         else

@@ -201,3 +201,36 @@ describe 'socket calls', ->
           ensurePeerConnecitonMade 1, (err)=>
             return done(err) if err
             @otherClient.write action: 'call', otheridentity: 'meee', publicKey: 'this-is-a-real-api-key'
+
+      describe 'reject', ->
+        beforeEach (done)->
+          identify @client, 'meee', 'this-is-a-real-api-key'
+          identify @otherClient, 'other', 'this-is-a-real-api-key'
+          setTimeout done, 100
+
+        it 'requires an publicKey', (done)->
+          @client.on 'data', (data)->
+            return unless data.action == 'error'
+            console.log("GOT DATA", data)
+            expect(data.error).to.equal("INVALID_PUBLIC_KEY")
+            expect(data.message).to.equal("invalid publicKey: not-valid-key provided")
+            done()
+
+          @client.write action: 'call', otherIdentity: 'meee', publicKey: 'not-valid-key'
+
+        it 'sends the other client a rejection', (done)->
+          room = null
+          @client.on 'data', (data)=>
+            return unless data.action == 'incomingcall'
+            room = data.room
+            @client.write action: 'reject', room: data.room, identity: "meee", publicKey: "this-is-a-real-api-key"
+
+          @otherClient.on 'data', (data)->
+            return unless data.action == 'reject'
+            expect(data.identity).to.equal('meee')
+            expect(data.room).to.be.ok
+            expect(data.room).to.equal(room)
+            done()
+          ensurePeerConnecitonMade 1, (err)=>
+            return done(err) if err
+            @otherClient.write action: 'call', otheridentity: 'meee', publicKey: 'this-is-a-real-api-key'
