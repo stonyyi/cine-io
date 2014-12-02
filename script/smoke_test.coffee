@@ -4,6 +4,10 @@ _ = require('underscore')
 clc = require "cli-color"
 startTime = new Date
 
+checkUrl = (url)->
+  (callback)->
+    request.get url, timeout: acceptableTimeout*1000, validateUrlResponse(url, callback)
+
 switch process.env.APP
   when 'hls'
     functionsToCall = checkUrl("http://hls.cine.io/health")
@@ -23,10 +27,6 @@ allowedDowntime = 15 # seconds
 acceptableTimeout = 5 # seconds
 
 newSha = process.env.CIRCLE_SHA1.substr(0,7)
-
-checkUrl = (url)->
-  (callback)->
-    request.get url, timeout: acceptableTimeout*1000, validateUrlResponse(url, callback)
 
 validateUrlResponse = (url, callback)->
   (err, res)->
