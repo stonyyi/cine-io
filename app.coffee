@@ -10,9 +10,20 @@ switch process.env.RUN_AS
 
 if app
   app.use Cine.middleware('error_handling')
-  http = require 'http'
   exports.app = app
-  exports.server = http.createServer(app)
+  if process.env.SSL
+    https = require('https')
+    fs = require('fs')
+    options =
+      key: fs.readFileSync(__dirname + '/key.pem')
+      cert: fs.readFileSync(__dirname + '/cert.pem')
+      requestCert: true
+      rejectUnauthorized: false
+      agent: false
+    exports.server = https.createServer(options, app)
+  else
+    http = require('http')
+    exports.server = http.createServer(app)
 
 switch process.env.RUN_AS
   when 'signaling'
