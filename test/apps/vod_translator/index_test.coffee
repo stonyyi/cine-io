@@ -1,5 +1,5 @@
-Base = Cine.run_context('base')
-VodTranslator = Cine.run_context('vod_translator')
+Base = Cine.app('base')
+VodTranslator = Cine.app('vod_translator')
 copyFile = Cine.require('test/helpers/copy_file')
 assertFileDeleted = Cine.require('test/helpers/assert_file_deleted')
 fs = require('fs')

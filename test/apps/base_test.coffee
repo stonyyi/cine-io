@@ -1,4 +1,4 @@
-Base = Cine.run_context('base')
+Base = Cine.app('base')
 os = require("os")
 fs = require("fs")
 
@@ -19,7 +19,7 @@ describe 'Base', ->
 
   describe '.app', ->
     it 'returns an express instance', ->
-      app = Base.app()
+      app = Base.app("app test")
       expect(app.get).to.be.a('function')
       expect(app.post).to.be.a('function')
       expect(app.listen).to.be.a('function')

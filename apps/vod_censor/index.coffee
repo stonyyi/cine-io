@@ -1,4 +1,4 @@
-Base = require('./base')
+Base = require('../base')
 Cine.config('connect_to_mongo')
 fs = require('fs')
 request = require('request')
@@ -8,7 +8,7 @@ streamRecordingNameEnforcer = Cine.server_lib('stream_recordings/stream_recordin
 EdgecastFmsInfo = Cine.config('edgecast_fms_info')
 EdgecastStream = Cine.server_model('edgecast_stream')
 
-app = exports.app = Base.app()
+app = exports.app = Base.app("vod censor")
 
 class RemoveStreamRecording
   constructor: (@fullFileName)->

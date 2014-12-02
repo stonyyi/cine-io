@@ -1,4 +1,17 @@
-exports.newApp = (title)->
+env = require '../config/environment'
+fs = require('fs')
+os = require("os")
+
+noop = ->
+
+jobs = null
+exports._recreateQueue = ->
+  jobs = Cine.server_lib('create_queue')(force: jobs?)
+
+getJobs = ->
+  jobs || exports._recreateQueue()
+
+exports.app = (title)->
   app = require('express')()
 
   # since we're running on heroku which uses nginx
@@ -8,3 +21,39 @@ exports.newApp = (title)->
   app.set 'title', title if title
 
   Cine.middleware 'middleware_base', app
+
+exports.listen = (app, defaultPort)->
+  port = process.env.PORT || defaultPort
+  console.log("listening on", port)
+  app.listen(port)
+
+# scheduleJob("process-video", {file: "some-file"})
+exports.scheduleJob = (queue, details={}, callback=noop)->
+  console.log("scheduling job in", queue, details)
+  job = getJobs().create(queue, details)
+  job.save callback
+
+
+# processJobs "process-video", (job, done)->
+# processJobs "process-video", concurrency: 20, (job, done)->
+processJobs = (queue, options, callback)->
+  if typeof options == 'function'
+    callback = options
+    options = {}
+  console.log("processing jobs for", queue)
+  if options.concurrency
+    getJobs().process(queue, options.concurrency, callback)
+  else
+    getJobs().process(queue, callback)
+
+# eventually we need a per-machine specific name
+exports.getQueueName = (runContext)->
+  "#{os.hostname()}-#{runContext}-incoming"
+
+exports.processJobs = (runContext, callback)->
+  queueName = exports.getQueueName(runContext)
+  processJobs(queueName, callback)
+
+exports.watch = (dir, cb)->
+  console.log("watching directory", dir)
+  fs.watch(dir,cb)

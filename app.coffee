@@ -2,11 +2,11 @@ env     = require './config/environment'
 
 switch process.env.RUN_AS
   when 'hls'
-    app = Cine.require('apps/m3u8')
+    app = Cine.app('m3u8')
   when 'signaling'
-    app = Cine.require('apps/signaling')
+    app = Cine.app('signaling')
   else
-    app = Cine.require('apps/home')
+    app = Cine.app('home')
 
 if app
   app.use Cine.middleware('error_handling')

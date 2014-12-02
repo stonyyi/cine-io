@@ -1,12 +1,12 @@
 _ = require('underscore')
-Base = require('./base')
+Base = require('../base')
 Cine.config('connect_to_mongo')
 runMe = !module.parent
 
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
 
-app = exports.app = Base.app()
+app = exports.app = Base.app("rtmp authenticator")
 
 app.get '/', (req, res)->
   res.send("I am the rtmp_authenticator")

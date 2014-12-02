@@ -1,7 +1,7 @@
 console.log('loaded hls app')
 
 Base = Cine.require('apps/base')
-module.exports = app = Base.newApp('Cine.io hls')
+module.exports = app = Base.app('Cine.io hls')
 
 Cine.middleware('health_check', app)
 Cine.middleware('deploy_info', app)

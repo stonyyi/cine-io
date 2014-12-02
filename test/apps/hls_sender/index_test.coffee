@@ -1,8 +1,8 @@
 async = require('async')
 fs = require('fs')
 shortId = require('shortid')
-Base = Cine.run_context('base')
-HlsSender = Cine.run_context('hls_sender')
+Base = Cine.app('base')
+HlsSender = Cine.app('hls_sender')
 client = Cine.server_lib('redis_client')
 cloudfront = Cine.server_lib("aws/cloudfront")
 

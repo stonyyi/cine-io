@@ -1,6 +1,6 @@
 supertest = require('supertest')
-Base = Cine.run_context('base')
-RtmpAuthenticator = Cine.run_context('rtmp_authenticator').app
+Base = Cine.app('base')
+RtmpAuthenticator = Cine.app('rtmp_authenticator').app
 async = require('async')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')

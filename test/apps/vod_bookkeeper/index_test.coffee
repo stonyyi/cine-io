@@ -1,5 +1,5 @@
-Base = Cine.run_context('base')
-VodBookkeeper = Cine.run_context('vod_bookkeeper')
+Base = Cine.app('base')
+VodBookkeeper = Cine.app('vod_bookkeeper')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
 StreamRecordings = Cine.server_model('stream_recordings')

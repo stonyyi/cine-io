@@ -1,4 +1,4 @@
-Base = require('./base')
+Base = require('../base')
 Cine.config('connect_to_mongo')
 fs = require('fs')
 _ = require('underscore')

@@ -1,6 +1,6 @@
 supertest = require('supertest')
-Base = Cine.run_context('base')
-VodCensor = Cine.run_context('vod_censor').app
+Base = Cine.app('base')
+VodCensor = Cine.app('vod_censor').app
 copyFile = Cine.require('test/helpers/copy_file')
 assertFileDeleted = Cine.require('test/helpers/assert_file_deleted')
 fs = require('fs')

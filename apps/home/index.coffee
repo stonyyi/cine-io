@@ -2,7 +2,7 @@ console.log('loaded home app')
 express = require('express')
 
 Base = Cine.require('apps/base')
-module.exports = app = Base.newApp('Cine.io')
+module.exports = app = Base.app('Cine.io')
 
 Cine.config('connect_to_mongo')
 

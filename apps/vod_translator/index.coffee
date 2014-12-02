@@ -1,4 +1,4 @@
-Base = require('./base')
+Base = require('../base')
 fs = require('fs')
 _ = require('underscore')
 cp = require('child_process')
