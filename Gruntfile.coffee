@@ -164,12 +164,20 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-aglio');
 
   grunt.registerTask "test", (file) ->
+    # if running on circle and we're on the stable branch
+    # we just want to deploy
+    return true if process.env.CIRCLE_BRANCH == 'stable'
+
+    # run a single file
     sh = require("execSync")
-    file = file.substr(1, file.length) if file[0] is "/"
-    sh.run "clear"
-    command = "mocha test/setup_and_teardown.coffee #{file}"
-    console.log command
-    sh.run command
+    if file
+      file = file.substr(1, file.length) if file[0] is "/"
+      sh.run "clear"
+      command = "mocha test/setup_and_teardown.coffee #{file}"
+      console.log command
+      sh.run command
+    else
+      sh.run "mocha"
 
   grunt.registerTask "development:prepare", ->
     done = @async()
