@@ -11,12 +11,20 @@ switch process.env.RUN_AS
 if app
   app.use Cine.middleware('error_handling')
   exports.app = app
-  if process.env.SSL
+  if process.env.SSL_CERTS_PATH
     https = require('https')
     fs = require('fs')
+    sslCertsPath = process.env.SSL_CERTS_PATH
+    sslCertFile = "localhost-cine-io.crt"
+    sslKeyFile = "localhost-cine-io.key"
+    sslIntermediateCertFiles = [ "COMODORSADomainValidationSecureServerCA.crt", "COMODORSAAddTrustCA.crt", "AddTrustExternalCARoot.crt" ]
+    sslKey = fs.readFileSync("#{sslCertsPath}/#{sslKeyFile}")
+    sslCert = fs.readFileSync("#{sslCertsPath}/#{sslCertFile}")
+    sslCA = (fs.readFileSync "#{sslCertsPath}/#{file}" for file in sslIntermediateCertFiles)
     options =
-      key: fs.readFileSync(__dirname + '/key.pem')
-      cert: fs.readFileSync(__dirname + '/cert.pem')
+      ca: sslCA
+      cert: sslCert
+      key: sslKey
       requestCert: true
       rejectUnauthorized: false
       agent: false
