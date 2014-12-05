@@ -65,17 +65,26 @@
         elem.innerText = message;
       };
       var
-      pathName = window.location.pathname,
-      parts = pathName.split('/'),
-      publicKey = parts[2],
-      streamId = parts[3];
+        qs = {},
+        pathName = window.location.pathname,
+        parts = pathName.split('/'),
+        publicKey = parts[2],
+        streamId = parts[3];
+
+
+      if (location.search) {
+        location.search.substr(1).split("&").forEach(function(item) {
+          qs[item.split("=")[0]] = item.split("=")[1];
+        });
+      }
+
       if (publicKey == null){
         return logError("missing publicKey");
       }
       if (streamId == null){
         return logError("missing streamId");
       }
-      CineIO.init(publicKey);
+      CineIO.init(publicKey, {jwPlayerKey: qs.jwPlayerKey});
       CineIO.play(streamId, playerId);
     })();
   </script>
