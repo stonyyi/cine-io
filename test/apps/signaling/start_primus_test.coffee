@@ -45,7 +45,7 @@ describe 'socket calls', ->
 
   describe 'conversations', ->
     beforeEach (done)->
-      @project = new Project(publicKey: 'this-is-a-real-api-key')
+      @project = new Project(publicKey: 'this-is-a-real-api-key', secretKey: 'super-secret-key')
       @project.save done
 
     beforeEach (done)->
@@ -162,8 +162,8 @@ describe 'socket calls', ->
         @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
         @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key'
 
-      identify = (client, name, publicKey)->
-        client.write action: 'identify', client: 'test-client', identity: name, publicKey: publicKey
+      identify = (client, name, timestamp, signature)->
+        client.write action: 'identify', client: 'test-client', identity: name, timestamp: timestamp, signature: signature, publicKey: 'this-is-a-real-api-key'
 
       ensurePeerConnecitonMade = (numberOfIdentities, done)->
         identitySet = false
@@ -182,20 +182,20 @@ describe 'socket calls', ->
           done(err)
 
       describe 'identify', ->
-        it 'requires an project based on an publicKey', (done)->
+        it 'requires a valid signature based on the secret key', (done)->
           @client.on 'data', (data)->
             return unless data.action == 'error'
-            expect(data.error).to.equal('INVALID_PUBLIC_KEY')
-            expect(data.message).to.equal("invalid publicKey: invalid-key-dude provided")
+            expect(data.error).to.equal('INVALID_SIGNATURE')
+            expect(data.message).to.equal("invalid signature: invalid-signature-dude provided")
             done()
-          identify @client, 'meee', 'invalid-key-dude'
+          identify @client, 'meee', '1418075572', 'invalid-signature-dude'
 
         it 'saves the spark id in mongo on identify', (done)->
-          identify @client, 'meee', 'this-is-a-real-api-key'
+          identify @client, 'meee', '1418075572', '41c3c037d56a51cb9dd4389592bd5115f3fa1237'
           ensurePeerConnecitonMade 1, done
 
         it 'removes the current connection on disconnect', (done)->
-          identify @client, 'meee', 'this-is-a-real-api-key'
+          identify @client, 'meee', '1418075572', '41c3c037d56a51cb9dd4389592bd5115f3fa1237'
           ensurePeerConnecitonMade 1, (err)=>
             return done(err) if err
             @client.end()
@@ -203,8 +203,8 @@ describe 'socket calls', ->
 
       describe 'call', ->
         beforeEach (done)->
-          identify @client, 'meee', 'this-is-a-real-api-key'
-          identify @otherClient, 'other', 'this-is-a-real-api-key'
+          identify @client, 'meee', '1418075572', '41c3c037d56a51cb9dd4389592bd5115f3fa1237'
+          identify @otherClient, 'other', '1418075572', '41c3c037d56a51cb9dd4389592bd5115f3fa1237'
           setTimeout done, 100
 
         it 'sends the other client a room', (done)->
@@ -219,8 +219,8 @@ describe 'socket calls', ->
 
       describe 'reject', ->
         beforeEach (done)->
-          identify @client, 'meee', 'this-is-a-real-api-key'
-          identify @otherClient, 'other', 'this-is-a-real-api-key'
+          identify @client, 'meee', '1418075572', '41c3c037d56a51cb9dd4389592bd5115f3fa1237'
+          identify @otherClient, 'other', '1418075572', '41c3c037d56a51cb9dd4389592bd5115f3fa1237'
           setTimeout done, 100
 
         it 'sends the other client a rejection', (done)->

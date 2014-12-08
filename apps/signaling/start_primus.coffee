@@ -11,6 +11,7 @@ Rooms = require('primus-rooms')
 Metroplex = require('metroplex')
 OmegaSupreme = require('omega-supreme')
 PrimusCluster = require('primus-cluster')
+validateSecureIdentity = Cine.server_lib('signaling/validate_secure_identity')
 
 newRedisClient = ->
   client = redis.createClient(redisConfig.port, redisConfig.host)
@@ -59,10 +60,10 @@ projectForPublicKey = (publicKey, callback)->
       return callback("project not found")
     callback(null, project)
 
-findOrCreatePeerIdentity = (project, identityName, callback)->
+findOrCreatePeerIdentity = (projectId, identityName, callback)->
   identityParams =
     identity: identityName
-    _project: project._id
+    _project: projectId
   PeerIdentity.findOne identityParams, (err, identity)->
     return callback(err) if err
     return callback(null, identity) if identity
@@ -78,12 +79,12 @@ sendSparkIceServers = (spark)->
 
 setIdentity = (spark, data, callback)->
   identityName = data.identity
-  publicKey = data.publicKey
-  projectForPublicKey publicKey, (err, project)->
+  ensureProjectId spark, (err)->
     return callback(err) if err
-    findOrCreatePeerIdentity project, identityName, (err, identity)->
+    return callback("invalid signature") unless validateSecureIdentity(identityName, spark.secretKey, data.timestamp, data.signature)
+    findOrCreatePeerIdentity spark.projectId, identityName, (err, identity)->
       if err
-        console.error("Could not get PeerIdentity", project, identityName)
+        console.error("Could not get PeerIdentity", spark.projectId, identityName)
         return callback(err)
       identity.currentConnections.push
         sparkId: spark.id
@@ -119,6 +120,8 @@ ensureProjectId = (spark, callback)->
   spark.projectCallbacks ||= []
   spark.projectCallbacks.push(callback)
 
+callMe = (cb)->
+  cb()
 authenticateSpark = (spark, publicKey)->
   projectForPublicKey publicKey, (err, project)->
     if err || !project
@@ -127,9 +130,10 @@ authenticateSpark = (spark, publicKey)->
           cb("invalid public key")
       return spark.end invalidPublicKeyOptions(publicKey)
     spark.projectId = project._id
+    spark.secretKey = project.secretKey
     spark.write action: 'ack', source: 'auth'
     if spark.projectCallbacks
-      _.each(spark.projectCallbacks, 'invoke')
+      spark.projectCallbacks.forEach callMe
       delete spark.projectCallbacks
 
 module.exports = (server)->
@@ -221,12 +225,16 @@ module.exports = (server)->
           console.log "i am", spark.id
           setIdentity spark, data, (err, identity)->
             if err == 'project not found'
-              spark.write invalidPublicKeyOptions(data.publicKey)
-            else if err
-              spark.write action: 'error', error: "UNKNOWN_ERROR", message: err
-            else
-              spark.identityId = identity._id
-              spark.write action: 'ack', source: 'identify'
+              return spark.write invalidPublicKeyOptions(data.publicKey)
+
+            if err == 'invalid signature'
+              return spark.write action: 'error', error: "INVALID_SIGNATURE", message: "invalid signature: #{data.signature} provided"
+
+            if err
+              return spark.write action: 'error', error: "UNKNOWN_ERROR", message: err
+
+            spark.identityId = identity._id
+            spark.write action: 'ack', source: 'identify'
 
         when "call"
           generateRoomName (err, roomName)->
@@ -238,13 +246,8 @@ module.exports = (server)->
 
         when "call-reject"
           room = data.room
-          publicKey = data.publicKey
-          projectForPublicKey publicKey, (err, project)->
-            if err
-              spark.write invalidPublicKeyOptions(publicKey)
-              return
-            primus.room(room).except(spark.id).write(action: 'call-reject', room: room, identity: spark.identity)
-            spark.write action: 'ack', source: 'call-reject'
+          primus.room(room).except(spark.id).write(action: 'call-reject', room: room, identity: spark.identity)
+          spark.write action: 'ack', source: 'call-reject'
         # END point-to-point calling
 
         else
