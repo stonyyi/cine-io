@@ -45,3 +45,9 @@ describe 'm3u8', ->
       expect(err).to.be.null
       expect(res.text).to.equal('my m3u8 file')
       done()
+
+  it 'should render the crossdomain.xml', (done)->
+    @agent
+    .get('/crossdomain.xml')
+    .expect('Content-Type', /text\/x-cross-domain-policy/)
+    .expect(200, /<cross-domain-policy>/, done)

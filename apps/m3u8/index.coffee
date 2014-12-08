@@ -1,6 +1,7 @@
 console.log('loaded hls app')
-
 Base = Cine.require('apps/base')
+
+fs = require('fs')
 module.exports = app = Base.app('Cine.io hls')
 
 Cine.middleware('health_check', app)
@@ -22,3 +23,9 @@ app.get '/', (req, res)->
 app.get '/:publicKey/:streamName.m3u8', respond
 
 app.get '/:streamName.m3u8', respond
+
+fileName = __dirname + "/crossdomain.xml"
+app.get '/crossdomain.xml', (req, res)->
+  readStream = fs.createReadStream(fileName)
+  res.set('Content-Type', 'text/x-cross-domain-policy')
+  readStream.pipe(res)
