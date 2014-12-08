@@ -36,9 +36,9 @@ describe 'socket calls', ->
   afterEach ->
     @client.end()
 
-  it 'recieves allservers right away', (done)->
+  it 'recieves rtc-servers right away', (done)->
     @client.on 'data', (data)->
-      expect(data.action).to.equal('allservers')
+      expect(data.action).to.equal('rtc-servers')
       expect(data.data).to.have.length(9)
       expect(data.data[0].url.indexOf("stun:")).to.equal(0)
       done()

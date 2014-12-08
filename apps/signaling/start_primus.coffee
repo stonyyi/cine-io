@@ -74,7 +74,7 @@ sendSparkIceServers = (spark)->
   allservers = allservers.concat(iceServers.stunServers)
   allservers = allservers.concat(iceServers.turnServers)
   console.log("sending ice servers", spark.id)
-  spark.write action: "allservers", data: allservers
+  spark.write action: "rtc-servers", data: allservers
 
 setIdentity = (spark, data, callback)->
   identityName = data.identity
