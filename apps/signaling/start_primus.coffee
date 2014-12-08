@@ -114,6 +114,24 @@ removeCurrentConnectionOnIdentity = (spark)->
 invalidPublicKeyOptions = (publicKey)->
   action: 'error', error: "INVALID_PUBLIC_KEY", message: "invalid publicKey: #{publicKey} provided"
 
+ensureProjectId = (spark, callback)->
+  return process.nextTick(callback) if spark.projectId
+  spark.projectCallbacks ||= []
+  spark.projectCallbacks.push(callback)
+
+authenticateSpark = (spark, publicKey)->
+  projectForPublicKey publicKey, (err, project)->
+    if err || !project
+      if spark.projectCallbacks
+        _.each spark.projectCallbacks, (cb)->
+          cb("invalid public key")
+      return spark.end invalidPublicKeyOptions(publicKey)
+    spark.projectId = project._id
+    spark.write action: 'ack', source: 'auth'
+    if spark.projectCallbacks
+      _.each(spark.projectCallbacks, 'invoke')
+      delete spark.projectCallbacks
+
 module.exports = (server)->
 
   primus = new Primus(server, primusOptions)
@@ -123,14 +141,12 @@ module.exports = (server)->
 
   askSparkToJoinRoomByIdentity = (spark, roomName, data)->
     publicKey = data.publicKey
-    projectForPublicKey publicKey, (err, project)->
-      if err
-        spark.write invalidPublicKeyOptions(publicKey)
-        return
+    ensureProjectId spark, (err)->
+      return if err
 
       identityParams =
         identity: data.otheridentity
-        _project: project._id
+        _project: spark.projectId
 
       PeerIdentity.findOne identityParams, (err, identity)->
         if err || !identity
@@ -161,6 +177,9 @@ module.exports = (server)->
       console.log('got spark data', data)
 
       switch data.action
+        when 'auth'
+          authenticateSpark(spark, data.publicKey)
+
         # BEGIN PeerConnection events
         when "ice"
           console.log "i am", spark.id

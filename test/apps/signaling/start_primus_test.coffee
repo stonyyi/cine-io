@@ -43,8 +43,17 @@ describe 'socket calls', ->
       expect(data.data[0].url.indexOf("stun:")).to.equal(0)
       done()
 
-
   describe 'conversations', ->
+    beforeEach (done)->
+      @project = new Project(publicKey: 'this-is-a-real-api-key')
+      @project.save done
+
+    beforeEach (done)->
+      @otherClient = newClient.call(this, done)
+
+    afterEach ->
+      @otherClient.end()
+
     joinTestRoom = (client, callback)->
       client.write action: 'join', room: 'test-room'
       if callback
@@ -55,16 +64,31 @@ describe 'socket calls', ->
     leaveTestRoom = (client)->
       client.write action: 'leave', room: 'test-room'
 
-    beforeEach (done)->
-      @otherClient = newClient.call(this, done)
+    describe 'auth', ->
 
-    beforeEach (done)->
-      joinTestRoom @client, done
+      it 'closes the connection if the publicKey is wrong', (done)->
+        # poor man's ensuring both events fire
+        gotData = false
+        gotEnd = false
+        @client.on 'data', (data)->
+          gotData = true
+          expect(data).to.deep.equal(action: 'error', error: 'INVALID_PUBLIC_KEY', message: 'invalid publicKey: INVALID_PUBLIC_KEY provided')
+          done() if gotEnd
+        @client.on 'end', (data)->
+          gotEnd = true
+          done() if gotData
+        @client.write action: 'auth', publicKey: 'INVALID_PUBLIC_KEY'
 
-    afterEach ->
-      @otherClient.end()
+      it 'keeps the connection open if the publicKey is correct', (done)->
+        @client.on 'data', (data)->
+          expect(data).to.deep.equal(action: 'ack', source: 'auth')
+          done()
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
+
 
     describe 'rooms', ->
+      beforeEach (done)->
+        joinTestRoom @client, done
 
       it 'gets a new member', (done)->
         @client.on 'data', (data)->
@@ -90,6 +114,8 @@ describe 'socket calls', ->
         joinTestRoom @otherClient
 
     describe 'PeerConnection conversation', ->
+      beforeEach (done)->
+        joinTestRoom @client, done
 
       it 'can send ice servers', (done)->
         @client.on 'data', (data)=>
@@ -132,9 +158,9 @@ describe 'socket calls', ->
 
     describe 'point to point calling', ->
 
-      beforeEach (done)->
-        @project = new Project(publicKey: 'this-is-a-real-api-key')
-        @project.save done
+      beforeEach ->
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
+        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key'
 
       identify = (client, name, publicKey)->
         client.write action: 'identify', client: 'test-client', identity: name, publicKey: publicKey
@@ -154,7 +180,6 @@ describe 'socket calls', ->
 
         async.until testFunction, checkFunction, (err)->
           done(err)
-
 
       describe 'identify', ->
         it 'requires an project based on an publicKey', (done)->
@@ -182,16 +207,6 @@ describe 'socket calls', ->
           identify @otherClient, 'other', 'this-is-a-real-api-key'
           setTimeout done, 100
 
-        it 'requires an publicKey', (done)->
-          @client.on 'data', (data)->
-            return unless data.action == 'error'
-            console.log("GOT DATA", data)
-            expect(data.error).to.equal("INVALID_PUBLIC_KEY")
-            expect(data.message).to.equal("invalid publicKey: not-valid-key provided")
-            done()
-
-          @client.write action: 'call', otherIdentity: 'meee', publicKey: 'not-valid-key'
-
         it 'sends the other client a room', (done)->
           @client.on 'data', (data)->
             return unless data.action == 'incomingcall'
@@ -207,16 +222,6 @@ describe 'socket calls', ->
           identify @client, 'meee', 'this-is-a-real-api-key'
           identify @otherClient, 'other', 'this-is-a-real-api-key'
           setTimeout done, 100
-
-        it 'requires an publicKey', (done)->
-          @client.on 'data', (data)->
-            return unless data.action == 'error'
-            console.log("GOT DATA", data)
-            expect(data.error).to.equal("INVALID_PUBLIC_KEY")
-            expect(data.message).to.equal("invalid publicKey: not-valid-key provided")
-            done()
-
-          @client.write action: 'call', otherIdentity: 'meee', publicKey: 'not-valid-key'
 
         it 'sends the other client a rejection', (done)->
           room = null
