@@ -55,14 +55,14 @@ describe 'socket calls', ->
       @otherClient.end()
 
     joinTestRoom = (client, callback)->
-      client.write action: 'join', room: 'test-room'
+      client.write action: 'room-join', room: 'test-room'
       if callback
         client.on 'data', (data)->
-          return unless data.source == 'join'
+          return unless data.source == 'room-join'
           callback()
 
     leaveTestRoom = (client)->
-      client.write action: 'leave', room: 'test-room'
+      client.write action: 'room-leave', room: 'test-room'
 
     describe 'auth', ->
 
@@ -92,7 +92,7 @@ describe 'socket calls', ->
 
       it 'gets a new member', (done)->
         @client.on 'data', (data)->
-          return unless data.action == 'member'
+          return unless data.action == 'room-join'
           expect(data.room).to.equal('test-room')
           expect(data.sparkId).to.have.length(36)
           done()
@@ -103,10 +103,10 @@ describe 'socket calls', ->
         otherClientSparkId = null
         @client.on 'data', (data)=>
           switch data.action
-            when 'member'
+            when 'room-join'
               otherClientSparkId = data.sparkId
               leaveTestRoom @otherClient
-            when 'leave'
+            when 'room-leave'
               expect(data.sparkId).to.equal(otherClientSparkId)
               expect(data.room).to.equal('test-room')
               done()
@@ -119,12 +119,12 @@ describe 'socket calls', ->
 
       it 'can send ice servers', (done)->
         @client.on 'data', (data)=>
-          return unless data.action == 'member'
+          return unless data.action == 'room-join'
           otherClientSparkId = data.sparkId
-          @client.write action: 'ice', source: "test-client", candidate: 'fake candidate', sparkId: otherClientSparkId
+          @client.write action: 'rtc-ice', source: "test-client", candidate: 'fake candidate', sparkId: otherClientSparkId
 
         @otherClient.on 'data', (data)->
-          return unless data.action == 'ice'
+          return unless data.action == 'rtc-ice'
           expect(data.candidate).to.equal('fake candidate')
           done()
 
@@ -132,12 +132,12 @@ describe 'socket calls', ->
 
       it 'can send offers', (done)->
         @client.on 'data', (data)=>
-          return unless data.action == 'member'
+          return unless data.action == 'room-join'
           otherClientSparkId = data.sparkId
-          @client.write action: 'offer', source: "test-client", offer: 'fake offer', sparkId: otherClientSparkId
+          @client.write action: 'rtc-offer', source: "test-client", offer: 'fake offer', sparkId: otherClientSparkId
 
         @otherClient.on 'data', (data)->
-          return unless data.action == 'offer'
+          return unless data.action == 'rtc-offer'
           expect(data.offer).to.equal('fake offer')
           done()
 
@@ -145,12 +145,12 @@ describe 'socket calls', ->
 
       it 'can send answers', (done)->
         @client.on 'data', (data)=>
-          return unless data.action == 'member'
+          return unless data.action == 'room-join'
           otherClientSparkId = data.sparkId
-          @client.write action: 'answer', source: "test-client", answer: 'fake answer', sparkId: otherClientSparkId
+          @client.write action: 'rtc-answer', source: "test-client", answer: 'fake answer', sparkId: otherClientSparkId
 
         @otherClient.on 'data', (data)->
-          return unless data.action == 'answer'
+          return unless data.action == 'rtc-answer'
           expect(data.answer).to.equal('fake answer')
           done()
 
@@ -209,7 +209,7 @@ describe 'socket calls', ->
 
         it 'sends the other client a room', (done)->
           @client.on 'data', (data)->
-            return unless data.action == 'incomingcall'
+            return unless data.action == 'call'
             expect(data.room).to.have.length(64)
             expect(data.sparkId).to.have.length(36)
             done()
@@ -226,12 +226,12 @@ describe 'socket calls', ->
         it 'sends the other client a rejection', (done)->
           room = null
           @client.on 'data', (data)=>
-            return unless data.action == 'incomingcall'
+            return unless data.action == 'call'
             room = data.room
-            @client.write action: 'reject', room: data.room, identity: "meee", publicKey: "this-is-a-real-api-key"
+            @client.write action: 'call-reject', room: data.room, identity: "meee", publicKey: "this-is-a-real-api-key"
 
           @otherClient.on 'data', (data)->
-            return unless data.action == 'reject'
+            return unless data.action == 'call-reject'
             expect(data.identity).to.equal('meee')
             expect(data.room).to.be.ok
             expect(data.room).to.equal(room)

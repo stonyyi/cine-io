@@ -32,12 +32,12 @@ class RoomManager
 
   joinedRoom: (spark, room, callback=noop)=>
     console.log('joined room', room)
-    @primus.room(room).except(spark.id).write(action: 'member', room: room, sparkId: spark.id)
+    @primus.room(room).except(spark.id).write(action: 'room-join', room: room, sparkId: spark.id)
     callback()
 
   leftRoom: (spark, room, callback=noop)=>
     console.log('left room', room)
-    @primus.room(room).except(spark.id).write(action: 'leave', room: room, sparkId: spark.id)
+    @primus.room(room).except(spark.id).write(action: 'room-leave', room: room, sparkId: spark.id)
     callback()
 
   leftRooms: (spark, rooms, callback=noop)=>
@@ -157,7 +157,7 @@ module.exports = (server)->
           return
         _.each identity.currentConnections, (otherSparkId)->
 
-          sendToOtherSpark spark, otherSparkId.sparkId.toString(), action: 'incomingcall', room: roomName
+          sendToOtherSpark spark, otherSparkId.sparkId.toString(), action: 'call', room: roomName
 
   sendToOtherSpark = (senderSpark, receivingSparkId, data)->
     data.sparkId = senderSpark.id
@@ -181,39 +181,39 @@ module.exports = (server)->
           authenticateSpark(spark, data.publicKey)
 
         # BEGIN PeerConnection events
-        when "ice"
+        when "rtc-ice"
           console.log "i am", spark.id
           console.log "sending ice to", data.sparkId, data.candidate
-          sendToOtherSpark spark, data.sparkId, action: "ice", candidate: data.candidate
-          spark.write action: 'ack', source: 'ice'
+          sendToOtherSpark spark, data.sparkId, action: "rtc-ice", candidate: data.candidate
+          spark.write action: 'ack', source: 'rtc-ice'
 
-        when "offer"
+        when "rtc-offer"
           # console.log "new offer", data
           console.log "i am", spark.id
           console.log "sending offer to", data.sparkId, data.offer
-          spark.write action: 'ack', source: 'offer'
-          sendToOtherSpark spark, data.sparkId, action: "offer", offer: data.offer
+          spark.write action: 'ack', source: 'rtc-offer'
+          sendToOtherSpark spark, data.sparkId, action: "rtc-offer", offer: data.offer
 
-        when "answer"
+        when "rtc-answer"
           # console.log "new answer", data
           console.log "i am", spark.id
           console.log "sending answer to", data.sparkId, data.answer
-          spark.write action: 'ack', source: 'answer'
-          sendToOtherSpark spark, data.sparkId, action: "answer", answer: data.answer
+          spark.write action: 'ack', source: 'rtc-answer'
+          sendToOtherSpark spark, data.sparkId, action: "rtc-answer", answer: data.answer
         # END PeerConnection events
 
         # BEGIN room events
-        when "join"
+        when "room-join"
           return if spark.connectedRooms[data.room]
           spark.connectedRooms[data.room] = true
           spark.join data.room
-          spark.write action: 'ack', source: 'join'
+          spark.write action: 'ack', source: 'room-join'
 
-        when "leave"
+        when "room-leave"
           return unless spark.connectedRooms[data.room]
           delete spark.connectedRooms[data.room]
           spark.leave data.room
-          spark.write action: 'ack', source: 'leave'
+          spark.write action: 'ack', source: 'room-leave'
         # END room events
 
         # BEGIN point-to-point calling
@@ -236,15 +236,15 @@ module.exports = (server)->
             spark.join roomName
             spark.write action: 'ack', source: 'call'
 
-        when "reject"
+        when "call-reject"
           room = data.room
           publicKey = data.publicKey
           projectForPublicKey publicKey, (err, project)->
             if err
               spark.write invalidPublicKeyOptions(publicKey)
               return
-            primus.room(room).except(spark.id).write(action: 'reject', room: room, identity: spark.identity)
-            spark.write action: 'ack', source: 'reject'
+            primus.room(room).except(spark.id).write(action: 'call-reject', room: room, identity: spark.identity)
+            spark.write action: 'ack', source: 'call-reject'
         # END point-to-point calling
 
         else
