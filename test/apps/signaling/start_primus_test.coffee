@@ -99,6 +99,20 @@ describe 'socket calls', ->
 
         joinTestRoom @otherClient
 
+      it 'passes along an announce', (done)->
+        @client.on 'data', (data)=>
+          return unless data.action == 'room-join'
+          expect(data.room).to.equal('test-room')
+          expect(data.sparkId).to.have.length(36)
+          @client.write(action: 'room-announce', sparkId: data.sparkId)
+
+        @otherClient.on 'data', (data)->
+          return unless data.action == 'room-announce'
+          expect(data.sparkId).to.have.length(36)
+          done()
+
+        joinTestRoom @otherClient
+
       it 'handles leave', (done)->
         otherClientSparkId = null
         @client.on 'data', (data)=>

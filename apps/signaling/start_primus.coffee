@@ -122,6 +122,7 @@ ensureProjectId = (spark, callback)->
 
 callMe = (cb)->
   cb()
+
 authenticateSpark = (spark, publicKey)->
   projectForPublicKey publicKey, (err, project)->
     if err || !project
@@ -212,6 +213,14 @@ module.exports = (server)->
           spark.connectedRooms[data.room] = true
           spark.join data.room
           spark.write action: 'ack', source: 'room-join'
+
+        # the inverse of room-join
+        # it is the current members of the room telling the spark about themselves
+        when "room-announce"
+          return if spark.connectedRooms[data.room]
+          spark.connectedRooms[data.room] = true
+          sendToOtherSpark spark, data.sparkId, action: "room-announce"
+          spark.write action: 'ack', source: 'room-announce'
 
         when "room-leave"
           return unless spark.connectedRooms[data.room]
