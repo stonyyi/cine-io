@@ -127,6 +127,22 @@ describe 'socket calls', ->
 
         joinTestRoom @otherClient
 
+      it 'passes along a goodbye', (done)->
+        @client.on 'data', (data)=>
+          if data.action == 'room-join'
+            expect(data.room).to.equal('test-room')
+            expect(data.sparkId).to.have.length(36)
+            leaveTestRoom @client
+          if data.action == 'room-goodbye'
+            done()
+
+        @otherClient.on 'data', (data)=>
+          return unless data.action == 'room-leave'
+          expect(data.sparkId).to.have.length(36)
+          @otherClient.write(action: 'room-goodbye', sparkId: data.sparkId)
+
+        joinTestRoom @otherClient
+
     describe 'PeerConnection conversation', ->
       beforeEach (done)->
         joinTestRoom @client, done
