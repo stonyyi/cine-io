@@ -254,12 +254,18 @@ module.exports = (server)->
             spark.write action: 'ack', source: 'identify'
 
         when "call"
-          generateRoomName (err, roomName)->
-            return if spark.connectedRooms[roomName]
-            spark.connectedRooms[roomName] = true
-            askSparkToJoinRoomByIdentity(spark, roomName, data)
-            spark.join roomName
-            spark.write action: 'ack', source: 'call'
+          makeCall = (spark, room, data)->
+            askSparkToJoinRoomByIdentity(spark, room, data)
+            if !spark.connectedRooms[room]
+              spark.connectedRooms[room] = true
+              spark.join room
+            spark.write action: 'ack', source: 'call', room: room
+
+          if data.room?
+            makeCall(spark, data.room, data)
+          else
+            generateRoomName (err, room)->
+              makeCall(spark, room, data)
 
         when "call-reject"
           room = data.room
