@@ -231,8 +231,6 @@ module.exports = (server)->
         # the inverse of room-leave
         # it is the current members of the room telling the spark about themselves
         when "room-goodbye"
-          return if spark.connectedRooms[data.room]
-          spark.connectedRooms[data.room] = true
           sendToOtherSpark spark, data.sparkId, action: "room-goodbye"
           spark.write action: 'ack', source: 'room-goodbye'
         # END room events
