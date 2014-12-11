@@ -36,13 +36,6 @@ describe 'socket calls', ->
   afterEach ->
     @client.end()
 
-  it 'recieves rtc-servers right away', (done)->
-    @client.on 'data', (data)->
-      expect(data.action).to.equal('rtc-servers')
-      expect(data.data).to.have.length(1)
-      expect(data.data[0].url.indexOf("stun:")).to.equal(0)
-      done()
-
   describe 'conversations', ->
     beforeEach (done)->
       @project = new Project(publicKey: 'this-is-a-real-api-key', secretKey: 'super-secret-key')
@@ -81,7 +74,20 @@ describe 'socket calls', ->
 
       it 'keeps the connection open if the publicKey is correct', (done)->
         @client.on 'data', (data)->
+          return if data.action == 'rtc-servers'
           expect(data).to.deep.equal(action: 'ack', source: 'auth')
+          done()
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
+
+      it 'recieves rtc-servers', (done)->
+        @client.on 'data', (data)=>
+          return unless data.action == 'rtc-servers'
+          expect(data.data).to.have.length(2)
+          expect(data.data[0].url.indexOf("stun:")).to.equal(0)
+          expect(data.data[1].url.indexOf("turn:")).to.equal(0)
+          expect(data.data[1].credential).to.be.ok
+          expect(data.data[1].credential).to.equal(@project.turnPassword)
+          expect(data.data[1].username).to.equal('this-is-a-real-api-key')
           done()
         @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
 

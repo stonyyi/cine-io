@@ -72,10 +72,17 @@ findOrCreatePeerIdentity = (projectId, identityName, callback)->
     identity = new PeerIdentity(identityParams)
     callback(null, identity)
 
-sendSparkIceServers = (spark)->
+sendSparkIceServers = (spark, project)->
   allservers = []
   allservers = allservers.concat(iceServers.stunServers)
-  allservers = allservers.concat(iceServers.turnServers)
+  turnWithAuth = _.map iceServers.turnServers, (turnServer)->
+    {
+      url: turnServer.url
+      credential: project.turnPassword
+      username: project.publicKey
+    }
+  console.log("adding turn with auth", turnWithAuth)
+  allservers = allservers.concat turnWithAuth
   console.log("sending ice servers", spark.id)
   spark.write action: "rtc-servers", data: allservers
 
@@ -135,6 +142,8 @@ authenticateSpark = (spark, publicKey)->
     spark.projectId = project._id
     spark.secretKey = project.secretKey
     spark.write action: 'ack', source: 'auth'
+    # tell client about stun and authenticated turn servers
+    sendSparkIceServers(spark, project)
     if spark.projectCallbacks
       spark.projectCallbacks.forEach callMe
       delete spark.projectCallbacks
@@ -291,9 +300,6 @@ module.exports = (server)->
 
         else
           console.log("Unknown action. :(", data)
-
-    # tell client about stun and turn servers and generate nonces
-    sendSparkIceServers(spark)
 
   primus.on 'disconnection', (spark)->
     console.log(spark.id + ' disconnected')
