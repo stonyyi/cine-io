@@ -1,6 +1,6 @@
 environment = require('../config/environment')
 Cine.config('connect_to_mongo')
-Project = Cine.server_model('Project')
+Project = Cine.server_model('project')
 require "mongoose-querystream-worker"
 crypto = require('crypto')
 
