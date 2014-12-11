@@ -11,6 +11,8 @@ ProjectSchema = new mongoose.Schema
   secretKey:
     type: String
     unique: true
+  turnPassword:
+    type: String
   streamsCount:
     type: Number
     default: 0
@@ -33,6 +35,12 @@ ProjectSchema.pre 'save', (next)->
   return next() if @secretKey
   crypto.randomBytes 16, (ex, buf)=>
     @secretKey = buf.toString('hex')
+    next()
+
+ProjectSchema.pre 'save', (next)->
+  return next() if @turnPassword
+  crypto.randomBytes 16, (ex, buf)=>
+    @turnPassword = buf.toString('hex')
     next()
 
 ProjectSchema.statics.increment = (model, field, amount, callback)->

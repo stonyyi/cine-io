@@ -48,6 +48,24 @@ describe 'Project', ->
           expect(project.secretKey).to.equal(secretKey)
           done(err)
 
+  describe 'turnPassword', ->
+    it 'has a unique turnPassword generated on save', (done)->
+      project = new Project(name: 'some name')
+      project.save (err)->
+        expect(err).to.be.null
+        expect(project.turnPassword.length).to.equal(32)
+        done()
+
+    it 'will not override turnPassword on future saves', (done)->
+      project = new Project(name: 'some name')
+      project.save (err)->
+        expect(err).to.be.null
+        turnPassword = project.turnPassword
+        expect(turnPassword.length).to.equal(32)
+        project.save (err)->
+          expect(project.turnPassword).to.equal(turnPassword)
+          done(err)
+
   describe '.increment', ->
 
     it 'increments the specified field and returns the new attributes', (done)->
