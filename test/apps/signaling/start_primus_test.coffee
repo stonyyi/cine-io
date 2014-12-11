@@ -39,7 +39,7 @@ describe 'socket calls', ->
   it 'recieves rtc-servers right away', (done)->
     @client.on 'data', (data)->
       expect(data.action).to.equal('rtc-servers')
-      expect(data.data).to.have.length(9)
+      expect(data.data).to.have.length(1)
       expect(data.data[0].url.indexOf("stun:")).to.equal(0)
       done()
 
