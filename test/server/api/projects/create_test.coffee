@@ -28,7 +28,7 @@ describe 'Projects#Create', ->
       params = name: 'new project'
       Create _.extend(masterKey: 'mk1', params), (err, response, options)->
         expect(err).to.be.null
-        TurnUser.findOne _project: response.id, (err, tu)=>
+        TurnUser.findOne _project: response.id, (err, tu)->
           expect(err).to.be.null
           expect(tu.name).to.equal(response.publicKey)
           expect(tu.realm).to.equal('cine.io')
