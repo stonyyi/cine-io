@@ -85,8 +85,11 @@ describe 'socket calls', ->
           done()
         @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
 
-
     describe 'rooms', ->
+      beforeEach ->
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
+        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key'
+
       beforeEach (done)->
         joinTestRoom @client, done
 
@@ -144,6 +147,11 @@ describe 'socket calls', ->
         joinTestRoom @otherClient
 
     describe 'PeerConnection conversation', ->
+
+      beforeEach ->
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
+        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key'
+
       beforeEach (done)->
         joinTestRoom @client, done
 

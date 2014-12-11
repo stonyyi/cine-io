@@ -33,12 +33,14 @@ class RoomManager
 
   joinedRoom: (spark, room, callback=noop)=>
     console.log('joined room', room)
-    @primus.room(room).except(spark.id).write(action: 'room-join', room: room, sparkId: spark.id)
+    publicRoom = projectRoomNameWithoutProject(spark, room)
+    @primus.room(room).except(spark.id).write(action: 'room-join', room: publicRoom, sparkId: spark.id)
     callback()
 
   leftRoom: (spark, room, callback=noop)=>
     console.log('left room', room)
-    @primus.room(room).except(spark.id).write(action: 'room-leave', room: room, sparkId: spark.id)
+    publicRoom = projectRoomNameWithoutProject(spark, room)
+    @primus.room(room).except(spark.id).write(action: 'room-leave', room: publicRoom, sparkId: spark.id)
     callback()
 
   leftRooms: (spark, rooms, callback=noop)=>
@@ -137,6 +139,13 @@ authenticateSpark = (spark, publicKey)->
       spark.projectCallbacks.forEach callMe
       delete spark.projectCallbacks
 
+projectRoomName = (spark, roomName)->
+  "#{spark.projectId}-#{roomName}"
+
+projectRoomNameWithoutProject = (spark, roomName)->
+  regex = new RegExp("^#{spark.projectId}-")
+  roomName.replace(regex, '')
+
 module.exports = (server)->
 
   primus = new Primus(server, primusOptions)
@@ -209,30 +218,38 @@ module.exports = (server)->
 
         # BEGIN room events
         when "room-join"
-          return if spark.connectedRooms[data.room]
-          spark.connectedRooms[data.room] = true
-          spark.join data.room
-          spark.write action: 'ack', source: 'room-join'
+          ensureProjectId spark, (err)->
+            room = data.room
+            return if spark.connectedRooms[room]
+            spark.connectedRooms[room] = true
+            spark.join projectRoomName(spark, room)
+            spark.write action: 'ack', source: 'room-join'
 
         # the inverse of room-join
         # it is the current members of the room telling the spark about themselves
         when "room-announce"
-          return if spark.connectedRooms[data.room]
-          spark.connectedRooms[data.room] = true
-          sendToOtherSpark spark, data.sparkId, action: "room-announce"
-          spark.write action: 'ack', source: 'room-announce'
+          ensureProjectId spark, (err)->
+            room = data.room
+            return if spark.connectedRooms[room]
+            spark.connectedRooms[room] = true
+            sendToOtherSpark spark, data.sparkId, action: "room-announce", room: room
+            spark.write action: 'ack', source: 'room-announce'
 
         when "room-leave"
-          return unless spark.connectedRooms[data.room]
-          delete spark.connectedRooms[data.room]
-          spark.leave data.room
-          spark.write action: 'ack', source: 'room-leave'
+          ensureProjectId spark, (err)->
+            room = data.room
+            return unless spark.connectedRooms[room]
+            delete spark.connectedRooms[room]
+            spark.leave projectRoomName(spark, room)
+            spark.write action: 'ack', source: 'room-leave'
 
         # the inverse of room-leave
         # it is the current members of the room telling the spark about themselves
         when "room-goodbye"
-          sendToOtherSpark spark, data.sparkId, action: "room-goodbye"
-          spark.write action: 'ack', source: 'room-goodbye'
+          ensureProjectId spark, (err)->
+            room = data.room
+            sendToOtherSpark spark, data.sparkId, action: "room-goodbye", room: room
+            spark.write action: 'ack', source: 'room-goodbye'
         # END room events
 
         # BEGIN point-to-point calling
@@ -256,7 +273,7 @@ module.exports = (server)->
             askSparkToJoinRoomByIdentity(spark, room, data)
             if !spark.connectedRooms[room]
               spark.connectedRooms[room] = true
-              spark.join room
+              spark.join projectRoomName(spark, room)
             spark.write action: 'ack', source: 'call', room: room
 
           if data.room?
@@ -266,9 +283,10 @@ module.exports = (server)->
               makeCall(spark, room, data)
 
         when "call-reject"
-          room = data.room
-          primus.room(room).except(spark.id).write(action: 'call-reject', room: room, identity: spark.identity)
-          spark.write action: 'ack', source: 'call-reject'
+          ensureProjectId spark, (err)->
+            room = data.room
+            primus.room(projectRoomName(spark, room)).except(spark.id).write(action: 'call-reject', room: room, identity: spark.identity)
+            spark.write action: 'ack', source: 'call-reject'
         # END point-to-point calling
 
         else
