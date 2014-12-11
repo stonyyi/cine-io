@@ -6,6 +6,7 @@ _ = require('underscore')
 addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
 createNewAccount = Cine.server_lib('create_new_account')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
+TurnUser = Cine.server_model('turn_user')
 
 describe 'createNewAccount', ->
 
@@ -44,6 +45,14 @@ describe 'createNewAccount', ->
         expect(user.name).to.equal("user name")
         expect(user.email).to.equal("my-email")
         expect(user.appdirectUUID).to.equal("some appdirect uuid")
+        done()
+
+    it 'creates a turn user', (done)->
+      TurnUser.findOne _project: @results.project._id, (err, tu)=>
+        expect(err).to.be.null
+        expect(tu.name).to.equal(@results.project.publicKey)
+        expect(tu.realm).to.equal('cine.io')
+        expect(tu.hmackey).to.be.ok
         done()
 
     it "adds a herokuId to the account", (done)->

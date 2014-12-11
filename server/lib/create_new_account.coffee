@@ -3,6 +3,7 @@ User = Cine.server_model("user")
 Project = Cine.server_model("project")
 _ = require('underscore')
 addNextStreamToProject = Cine.server_lib('add_next_stream_to_project')
+createTurnUserForProject = Cine.server_lib('coturn/create_turn_user_for_project')
 _str = require('underscore.string')
 
 # callback(err, user)
@@ -27,9 +28,10 @@ addProjectToAccount = (account, projectAttributes, streamAttributes, callback)->
   project = new Project name: projectAttributes.name, _account: account._id
   project.save (err, project)->
     return callback(err) if err
-
-    addNextStreamToProject project, name: streamAttributes.name, (err, stream)->
-      callback(err, stream: stream, project: project)
+    createTurnUserForProject project, (err)->
+      return callback(err) if err
+      addNextStreamToProject project, name: streamAttributes.name, (err, stream)->
+        callback(err, stream: stream, project: project)
 
 # callback err, project: project, stream: stream
 addFirstProjectToAccount = (account, projectAttributes, streamAttributes, callback)->

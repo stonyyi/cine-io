@@ -4,6 +4,7 @@ Create = testApi ProjectCreate
 Account = Cine.server_model('account')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 EdgecastStream = Cine.server_model('edgecast_stream')
+TurnUser = Cine.server_model('turn_user')
 _ = require('underscore')
 
 describe 'Projects#Create', ->
@@ -22,6 +23,17 @@ describe 'Projects#Create', ->
         expect(response.name).to.equal('new project')
         expect(response.publicKey).to.have.length(32)
         done()
+
+    it 'creates a turn user', (done)->
+      params = name: 'new project'
+      Create _.extend(masterKey: 'mk1', params), (err, response, options)->
+        expect(err).to.be.null
+        TurnUser.findOne _project: response.id, (err, tu)=>
+          expect(err).to.be.null
+          expect(tu.name).to.equal(response.publicKey)
+          expect(tu.realm).to.equal('cine.io')
+          expect(tu.hmackey).to.be.ok
+          done()
 
     it 'adds the account to the project', (done)->
       params = name: 'new project'
