@@ -152,6 +152,40 @@ describe 'socket calls', ->
 
         joinTestRoom @otherClient
 
+      describe "different projects", ->
+        beforeEach (done)->
+          @project = new Project(publicKey: 'this-is-a-second-key', secretKey: 'super-secret-key-2')
+          @project.save done
+
+        beforeEach (done)->
+          @thirdClient = newClient.call(this, done)
+
+        beforeEach (done)->
+          @fourthClient = newClient.call(this, done)
+
+        afterEach ->
+          @thirdClient.end()
+          @fourthClient.end()
+
+        beforeEach ->
+          @thirdClient.write action: 'auth', publicKey: 'this-is-a-second-key'
+          @fourthClient.write action: 'auth', publicKey: 'this-is-a-second-key'
+
+        it "does not conflict with the other project", (done)->
+          @client.on 'data', (data)->
+            return unless data.action == 'room-join'
+            throw new Error("CLIENT GOT ROOM JOIN")
+            expect(data.room).to.equal('test-room')
+            expect(data.sparkId).to.have.length(36)
+            done()
+          @thirdClient.on 'data', (data)->
+            return unless data.action == 'room-join'
+            expect(data.room).to.equal('test-room')
+            expect(data.sparkId).to.have.length(36)
+            done()
+          joinTestRoom @thirdClient, =>
+            joinTestRoom @fourthClient
+
     describe 'PeerConnection conversation', ->
 
       beforeEach ->
@@ -260,6 +294,47 @@ describe 'socket calls', ->
           ensurePeerConnecitonMade 1, (err)=>
             return done(err) if err
             @otherClient.write action: 'call', otheridentity: 'meee', publicKey: 'this-is-a-real-api-key'
+
+
+        describe "different projects", ->
+          beforeEach (done)->
+            @project = new Project(publicKey: 'this-is-a-second-key', secretKey: 'super-secret-key-2')
+            @project.save done
+
+          beforeEach (done)->
+            @thirdClient = newClient.call(this, done)
+
+          beforeEach (done)->
+            @fourthClient = newClient.call(this, done)
+
+          afterEach ->
+            @thirdClient.end()
+            @fourthClient.end()
+
+          beforeEach ->
+            @thirdClient.write action: 'auth', publicKey: 'this-is-a-second-key'
+            @fourthClient.write action: 'auth', publicKey: 'this-is-a-second-key'
+
+          beforeEach (done)->
+            identify @thirdClient, 'meee', '1418075572', '7e6d5459d538a1d4beeae449ee7aae477b5611ac'
+            identify @fourthClient, 'other', '1418075572', '7e6d5459d538a1d4beeae449ee7aae477b5611ac'
+            setTimeout done, 100
+
+          it "does not conflict with the other project", (done)->
+            @client.on 'data', (data)->
+              return unless data.action == 'call'
+              throw new Error("GOT CALL FROM WRONG PROJECT")
+              expect(data.room).to.have.length(64)
+              expect(data.sparkId).to.have.length(36)
+              done()
+            @thirdClient.on 'data', (data)->
+              return unless data.action == 'call'
+              expect(data.room).to.have.length(64)
+              expect(data.sparkId).to.have.length(36)
+              done()
+            ensurePeerConnecitonMade 1, (err)=>
+              return done(err) if err
+              @fourthClient.write action: 'call', otheridentity: 'meee', publicKey: 'this-is-a-second-key'
 
       describe 'reject', ->
         beforeEach (done)->
