@@ -34,13 +34,13 @@ class RoomManager
   joinedRoom: (spark, room, callback=noop)=>
     console.log('joined room', room)
     publicRoom = projectRoomNameWithoutProject(spark, room)
-    @primus.room(room).except(spark.id).write(action: 'room-join', room: publicRoom, sparkId: spark.id)
+    @primus.room(room).except(spark.id).write(action: 'room-join', room: publicRoom, sparkId: spark.id, sparkUUID: spark.clientUUID)
     callback()
 
   leftRoom: (spark, room, callback=noop)=>
     console.log('left room', room)
     publicRoom = projectRoomNameWithoutProject(spark, room)
-    @primus.room(room).except(spark.id).write(action: 'room-leave', room: publicRoom, sparkId: spark.id)
+    @primus.room(room).except(spark.id).write(action: 'room-leave', room: publicRoom, sparkId: spark.id, sparkUUID: spark.clientUUID)
     callback()
 
   leftRooms: (spark, rooms, callback=noop)=>
@@ -184,6 +184,7 @@ module.exports = (server)->
 
   sendToOtherSpark = (senderSpark, receivingSparkId, data)->
     data.sparkId = senderSpark.id
+    data.sparkUUID = senderSpark.clientUUID
     console.error("sending data to otherSparkId", receivingSparkId, data)
     primus.forward.spark receivingSparkId, data
 
@@ -198,6 +199,8 @@ module.exports = (server)->
       if data instanceof Buffer
         data = JSON.parse(data)
       console.log('got spark data', data)
+
+      spark.clientUUID ||= data.uuid
 
       switch data.action
         when 'auth'
@@ -294,7 +297,7 @@ module.exports = (server)->
         when "call-reject"
           ensureProjectId spark, (err)->
             room = data.room
-            primus.room(projectRoomName(spark, room)).except(spark.id).write(action: 'call-reject', room: room, identity: spark.identity)
+            primus.room(projectRoomName(spark, room)).except(spark.id).write(action: 'call-reject', room: room, identity: spark.identity, sparkUUID: spark.clientUUID)
             spark.write action: 'ack', source: 'call-reject'
         # END point-to-point calling
 

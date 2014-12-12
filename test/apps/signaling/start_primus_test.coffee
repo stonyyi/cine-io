@@ -77,7 +77,7 @@ describe 'socket calls', ->
           return if data.action == 'rtc-servers'
           expect(data).to.deep.equal(action: 'ack', source: 'auth')
           done()
-        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111'
 
       it 'recieves rtc-servers', (done)->
         @client.on 'data', (data)=>
@@ -89,12 +89,12 @@ describe 'socket calls', ->
           expect(data.data[1].credential).to.equal(@project.turnPassword)
           expect(data.data[1].username).to.equal('this-is-a-real-api-key')
           done()
-        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111'
 
     describe 'rooms', ->
       beforeEach ->
-        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
-        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key'
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111'
+        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '222'
 
       beforeEach (done)->
         joinTestRoom @client, done
@@ -113,11 +113,13 @@ describe 'socket calls', ->
           return unless data.action == 'room-join'
           expect(data.room).to.equal('test-room')
           expect(data.sparkId).to.have.length(36)
+          expect(data.sparkUUID).to.equal('222')
           @client.write(action: 'room-announce', sparkId: data.sparkId)
 
         @otherClient.on 'data', (data)->
           return unless data.action == 'room-announce'
           expect(data.sparkId).to.have.length(36)
+          expect(data.sparkUUID).to.equal('111')
           done()
 
         joinTestRoom @otherClient
@@ -132,6 +134,7 @@ describe 'socket calls', ->
             when 'room-leave'
               expect(data.sparkId).to.equal(otherClientSparkId)
               expect(data.room).to.equal('test-room')
+              expect(data.sparkUUID).to.equal('222')
               done()
 
         joinTestRoom @otherClient
@@ -141,13 +144,16 @@ describe 'socket calls', ->
           if data.action == 'room-join'
             expect(data.room).to.equal('test-room')
             expect(data.sparkId).to.have.length(36)
+            expect(data.sparkUUID).to.equal('222')
             leaveTestRoom @client
           if data.action == 'room-goodbye'
+            expect(data.sparkUUID).to.equal('222')
             done()
 
         @otherClient.on 'data', (data)=>
           return unless data.action == 'room-leave'
           expect(data.sparkId).to.have.length(36)
+          expect(data.sparkUUID).to.equal('111')
           @otherClient.write(action: 'room-goodbye', sparkId: data.sparkId)
 
         joinTestRoom @otherClient
@@ -168,20 +174,19 @@ describe 'socket calls', ->
           @fourthClient.end()
 
         beforeEach ->
-          @thirdClient.write action: 'auth', publicKey: 'this-is-a-second-key'
-          @fourthClient.write action: 'auth', publicKey: 'this-is-a-second-key'
+          @thirdClient.write action: 'auth', publicKey: 'this-is-a-second-key', uuid: '333'
+          @fourthClient.write action: 'auth', publicKey: 'this-is-a-second-key', uuid: '444'
 
         it "does not conflict with the other project", (done)->
           @client.on 'data', (data)->
             return unless data.action == 'room-join'
             throw new Error("CLIENT GOT ROOM JOIN")
-            expect(data.room).to.equal('test-room')
-            expect(data.sparkId).to.have.length(36)
             done()
           @thirdClient.on 'data', (data)->
             return unless data.action == 'room-join'
             expect(data.room).to.equal('test-room')
             expect(data.sparkId).to.have.length(36)
+            expect(data.sparkUUID).to.equal('444')
             done()
           joinTestRoom @thirdClient, =>
             joinTestRoom @fourthClient
@@ -189,8 +194,8 @@ describe 'socket calls', ->
     describe 'PeerConnection conversation', ->
 
       beforeEach ->
-        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
-        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key'
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111'
+        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '222'
 
       beforeEach (done)->
         joinTestRoom @client, done
@@ -204,6 +209,7 @@ describe 'socket calls', ->
         @otherClient.on 'data', (data)->
           return unless data.action == 'rtc-ice'
           expect(data.candidate).to.equal('fake candidate')
+          expect(data.sparkUUID).to.equal('111')
           done()
 
         joinTestRoom @otherClient
@@ -217,6 +223,7 @@ describe 'socket calls', ->
         @otherClient.on 'data', (data)->
           return unless data.action == 'rtc-offer'
           expect(data.offer).to.equal('fake offer')
+          expect(data.sparkUUID).to.equal('111')
           done()
 
         joinTestRoom @otherClient
@@ -230,6 +237,7 @@ describe 'socket calls', ->
         @otherClient.on 'data', (data)->
           return unless data.action == 'rtc-answer'
           expect(data.answer).to.equal('fake answer')
+          expect(data.sparkUUID).to.equal('111')
           done()
 
         joinTestRoom @otherClient
@@ -237,8 +245,8 @@ describe 'socket calls', ->
     describe 'point to point calling', ->
 
       beforeEach ->
-        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key'
-        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key'
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111'
+        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '222'
 
       identify = (client, name, timestamp, signature)->
         client.write action: 'identify', client: 'test-client', identity: name, timestamp: timestamp, signature: signature, publicKey: 'this-is-a-real-api-key'
@@ -290,6 +298,7 @@ describe 'socket calls', ->
             return unless data.action == 'call'
             expect(data.room).to.have.length(64)
             expect(data.sparkId).to.have.length(36)
+            expect(data.sparkUUID).to.equal('222')
             done()
           ensurePeerConnecitonMade 1, (err)=>
             return done(err) if err
@@ -312,8 +321,8 @@ describe 'socket calls', ->
             @fourthClient.end()
 
           beforeEach ->
-            @thirdClient.write action: 'auth', publicKey: 'this-is-a-second-key'
-            @fourthClient.write action: 'auth', publicKey: 'this-is-a-second-key'
+            @thirdClient.write action: 'auth', publicKey: 'this-is-a-second-key', uuid: '333'
+            @fourthClient.write action: 'auth', publicKey: 'this-is-a-second-key', uuid: '444'
 
           beforeEach (done)->
             identify @thirdClient, 'meee', '1418075572', '7e6d5459d538a1d4beeae449ee7aae477b5611ac'
@@ -324,13 +333,12 @@ describe 'socket calls', ->
             @client.on 'data', (data)->
               return unless data.action == 'call'
               throw new Error("GOT CALL FROM WRONG PROJECT")
-              expect(data.room).to.have.length(64)
-              expect(data.sparkId).to.have.length(36)
               done()
             @thirdClient.on 'data', (data)->
               return unless data.action == 'call'
               expect(data.room).to.have.length(64)
               expect(data.sparkId).to.have.length(36)
+              expect(data.sparkUUID).to.equal('444')
               done()
             ensurePeerConnecitonMade 1, (err)=>
               return done(err) if err
@@ -347,6 +355,7 @@ describe 'socket calls', ->
           @client.on 'data', (data)=>
             return unless data.action == 'call'
             room = data.room
+            expect(data.sparkUUID).to.equal('222')
             @client.write action: 'call-reject', room: data.room, identity: "meee", publicKey: "this-is-a-real-api-key"
 
           @otherClient.on 'data', (data)->
@@ -354,6 +363,7 @@ describe 'socket calls', ->
             expect(data.identity).to.equal('meee')
             expect(data.room).to.be.ok
             expect(data.room).to.equal(room)
+            expect(data.sparkUUID).to.equal('111')
             done()
           ensurePeerConnecitonMade 1, (err)=>
             return done(err) if err
