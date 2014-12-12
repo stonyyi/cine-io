@@ -1,6 +1,8 @@
 Project = Cine.server_model('project')
+TurnUser = Cine.server_model('turn_user')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Delete = testApi Cine.api('projects/delete')
+createTurnUserForProject = Cine.server_lib('coturn/create_turn_user_for_project')
 
 describe 'Projects#Delete', ->
   testApi.requresApiKey Delete, 'secret'
@@ -21,6 +23,9 @@ describe 'Projects#Delete', ->
     @notProjectStream = new EdgecastStream
     @notProjectStream.save done
 
+  beforeEach (done)->
+    createTurnUserForProject @project, done
+
   it 'adds deletedAt to the project', (done)->
     params = secretKey: @project.secretKey
     Delete params, (err, response, options)=>
@@ -30,6 +35,17 @@ describe 'Projects#Delete', ->
       Project.findById @project._id, (err, project)->
         expect(project.deletedAt).to.be.instanceOf(Date)
         done()
+
+  it 'deletes the turn user', (done)->
+    TurnUser.findOne _project: @project._id, (err, tu)=>
+      expect(err).to.be.null
+      expect(tu).to.be.ok
+      params = secretKey: @project.secretKey
+      Delete params, (err, response, options)=>
+        TurnUser.findOne _project: @project._id, (err, tu)->
+          expect(err).to.be.null
+          expect(tu).to.be.null
+          done()
 
   it 'deletes all the associated streams', (done)->
     params = secretKey: @project.secretKey
