@@ -202,8 +202,9 @@ module.exports = (grunt) ->
       _.each routes.sort(), (route)-> console.log(route)
 
   npmInstallDirectory = (directory, callback)->
-    console.log("running npm install in", directory)
-    cp = exec 'npm install', {cwd: directory}, (err, stdout, stderr)->
+    cmd = 'npm config set ca ""; npm config set registry http://registry.npmjs.org/; npm config set strict-ssl false; npm install'
+    console.log("running", cmd, "in", directory)
+    cp = exec cmd, {cwd: directory}, (err, stdout, stderr)->
       if err
         grunt.warn(err)
         return callback(err) if options.failOnError
