@@ -54,7 +54,8 @@ class RoomManager
     async.each rooms, leftRoom, callback
 
   _logEventInKeen: (spark, room, event)->
-    extraData = {}
+    extraData =
+      signalingClient: spark.signalingClient
     extraData.identity = spark.identity  if spark.identity
     extraData.identityId = spark.identityId if spark.identityId
     logEventInKeen[event](spark.projectId, room, spark.clientUUID, extraData)
@@ -143,7 +144,8 @@ ensureProjectId = (spark, callback)->
 callMe = (cb)->
   cb()
 
-authenticateSpark = (spark, publicKey)->
+authenticateSpark = (spark, data)->
+  publicKey = data.publicKey
   projectForPublicKey publicKey, (err, project)->
     if err || !project
       if spark.projectCallbacks
@@ -152,6 +154,7 @@ authenticateSpark = (spark, publicKey)->
       return spark.end invalidPublicKeyOptions(publicKey)
     spark.projectId = project._id
     spark.secretKey = project.secretKey
+    spark.signalingClient = data.client
     spark.write action: 'ack', source: 'auth'
     # tell client about stun and authenticated turn servers
     sendSparkIceServers(spark, project)
@@ -215,7 +218,7 @@ module.exports = (server)->
 
       switch data.action
         when 'auth'
-          authenticateSpark(spark, data.publicKey)
+          authenticateSpark(spark, data)
 
         # BEGIN PeerConnection events
         when "rtc-ice"
