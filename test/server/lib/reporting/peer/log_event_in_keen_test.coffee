@@ -8,12 +8,25 @@ describe 'logEventInKeen', ->
         room: "the room name"
         sessionUUID: "client session id"
         action: "userJoinedRoom"
+      data2 =
+        projectId: "the proj id"
+        room: "the room name"
+        sessionUUID: "client session id"
+        action: "userJoinedRoom"
+        more: 'data'
       @keenNock = requireFixture('nock/keen/send_event_success')('peer-reporting', data)
+      @keenNock2 = requireFixture('nock/keen/send_event_success')('peer-reporting', data2)
 
     it 'sends an event to keen.io', (done)->
       logEventInKeen.userJoinedRoom "the proj id", 'the room name', 'client session id', (err)=>
         expect(err).to.be.null
         expect(@keenNock.isDone()).to.be.true
+        done()
+
+    it 'sends extra data keen.io', (done)->
+      logEventInKeen.userJoinedRoom "the proj id", 'the room name', 'client session id', more: 'data', (err)=>
+        expect(err).to.be.null
+        expect(@keenNock2.isDone()).to.be.true
         done()
 
   describe 'userLeftRoom', ->
@@ -23,12 +36,25 @@ describe 'logEventInKeen', ->
         room: "the room name"
         sessionUUID: "client session id"
         action: "userLeftRoom"
+      data2 =
+        projectId: "the proj id"
+        room: "the room name"
+        sessionUUID: "client session id"
+        action: "userLeftRoom"
+        more: 'data'
       @keenNock = requireFixture('nock/keen/send_event_success')('peer-reporting', data)
+      @keenNock2 = requireFixture('nock/keen/send_event_success')('peer-reporting', data2)
 
     it 'sends an event to keen.io', (done)->
       logEventInKeen.userLeftRoom "the proj id", 'the room name', 'client session id', (err)=>
         expect(err).to.be.null
         expect(@keenNock.isDone()).to.be.true
+        done()
+
+    it 'sends extra data keen.io', (done)->
+      logEventInKeen.userLeftRoom "the proj id", 'the room name', 'client session id', more: 'data', (err)=>
+        expect(err).to.be.null
+        expect(@keenNock2.isDone()).to.be.true
         done()
 
 # Keen = require('keen.io')

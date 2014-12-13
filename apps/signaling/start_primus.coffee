@@ -54,7 +54,10 @@ class RoomManager
     async.each rooms, leftRoom, callback
 
   _logEventInKeen: (spark, room, event)->
-    logEventInKeen[event](spark.projectId, room, spark.clientUUID)
+    extraData = {}
+    extraData.identity = spark.identity  if spark.identity
+    extraData.identityId = spark.identityId if spark.identityId
+    logEventInKeen[event](spark.projectId, room, spark.clientUUID, extraData)
 
 generateRoomName = (callback)->
   crypto.randomBytes 32, (err, buf)->
