@@ -89,9 +89,9 @@ sendSparkIceServers = (spark, project)->
       credential: project.turnPassword
       username: project.publicKey
     }
-  console.log("adding turn with auth", turnWithAuth)
+  # console.log("adding turn with auth", turnWithAuth)
   allservers = allservers.concat turnWithAuth
-  console.log("sending ice servers", spark.id)
+  # console.log("sending ice servers", spark.id)
   spark.write action: "rtc-servers", data: allservers
 
 setIdentity = (spark, data, callback)->
@@ -193,7 +193,7 @@ module.exports = (server)->
   sendToOtherSpark = (senderSpark, receivingSparkId, data)->
     data.sparkId = senderSpark.id
     data.sparkUUID = senderSpark.clientUUID
-    console.error("sending data to otherSparkId", receivingSparkId, data)
+    # console.log("sending data to otherSparkId", receivingSparkId, data)
     primus.forward.spark receivingSparkId, data
 
   roomManager = new RoomManager(primus)
@@ -206,7 +206,7 @@ module.exports = (server)->
       # iOS sends buffers somehow. Probably double escaped
       if data instanceof Buffer
         data = JSON.parse(data)
-      console.log('got spark data', data)
+      # console.log('got spark data', data)
 
       spark.clientUUID ||= data.uuid
 
