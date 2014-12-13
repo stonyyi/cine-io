@@ -12,6 +12,7 @@ Metroplex = require('metroplex')
 OmegaSupreme = require('omega-supreme')
 PrimusCluster = require('primus-cluster')
 validateSecureIdentity = Cine.server_lib('signaling/validate_secure_identity')
+logEventInKeen = Cine.server_lib('reporting/peer/log_event_in_keen')
 
 newRedisClient = ->
   client = redis.createClient(redisConfig.port, redisConfig.host)
@@ -34,12 +35,14 @@ class RoomManager
   joinedRoom: (spark, room, callback=noop)=>
     console.log('joined room', room)
     publicRoom = projectRoomNameWithoutProject(spark, room)
+    @_logEventInKeen(spark, room, 'userJoinedRoom')
     @primus.room(room).except(spark.id).write(action: 'room-join', room: publicRoom, sparkId: spark.id, sparkUUID: spark.clientUUID)
     callback()
 
   leftRoom: (spark, room, callback=noop)=>
     console.log('left room', room)
     publicRoom = projectRoomNameWithoutProject(spark, room)
+    @_logEventInKeen(spark, room, 'userLeftRoom')
     @primus.room(room).except(spark.id).write(action: 'room-leave', room: publicRoom, sparkId: spark.id, sparkUUID: spark.clientUUID)
     callback()
 
@@ -47,6 +50,9 @@ class RoomManager
     leftRoom = (room, cb)=>
       @leftRoom(spark, room, cb)
     async.each rooms, leftRoom, callback
+
+  _logEventInKeen: (spark, room, event)->
+    logEventInKeen[event](spark.projectId, room, spark.clientUUID)
 
 generateRoomName = (callback)->
   crypto.randomBytes 32, (err, buf)->

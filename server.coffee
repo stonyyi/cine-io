@@ -9,6 +9,16 @@ if process.env.NODE_ENV == "production"
   catch e
     console.log "could not load newrelic"
 
+# I don't have a better way to do this:
+# When I spawn up a server to hit externally,
+# I don't have direct access to the process code,
+# but I want to intercept external http requests.
+# This will at least block all external http requests.
+# Will need a better solution when I'm expecting responses.
+if process.env.NODE_ENV == "test"
+  nock = require('nock')
+  nock.disableNetConnect()
+
 startMaster = ->
   _ = require 'underscore'
 
