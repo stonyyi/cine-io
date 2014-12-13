@@ -25,6 +25,8 @@ primusOptions =
   transformer: 'sockjs'
   namespace: 'metroplex'
   redis: newRedisClient()
+  rooms:
+    wildcard: false #https://github.com/cayasso/primus-rooms#disabling-wildcard
   # cluster:
   #   redis: newRedisClient
 
