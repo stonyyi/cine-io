@@ -170,21 +170,19 @@ module.exports = (grunt) ->
     return true if process.env.CIRCLE_BRANCH == 'stable'
 
     # run a single file
+    done = @async()
+    options =
+      cmd: "mocha"
+      opts:
+        stdio: "inherit"
+
     if file
       sh = require("execSync")
       file = file.substr(1, file.length) if file[0] is "/"
       sh.run "clear"
-      cmd = "mocha test/setup_and_teardown.coffee #{file}"
+      options.args = ["test/setup_and_teardown.coffee", file]
     else
-      cmd = "mocha"
-    console.log cmd
-    callback = @async()
-    cp = spawn(cmd)
-    cp.stdout.pipe(process.stdout)
-    cp.stderr.pipe(process.stderr)
-    cp.on 'close', (code)->
-      return callback(false) if code != 0
-      callback()
+    grunt.util.spawn options, done
 
   grunt.registerTask "development:prepare", ->
     done = @async()
