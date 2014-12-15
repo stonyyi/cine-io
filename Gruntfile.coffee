@@ -184,7 +184,6 @@ module.exports = (grunt) ->
     cp.stdout.pipe(process.stdout)
     cp.stderr.pipe(process.stderr)
 
-
   grunt.registerTask "development:prepare", ->
     done = @async()
     grunt.util.spawn
