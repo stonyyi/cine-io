@@ -1,7 +1,7 @@
 Account = Cine.server_model('account')
 ShowUsageReports = testApi Cine.api('usage_reports/show')
-CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
-CalculateAccountStorage = Cine.server_lib('reporting/calculate_account_storage')
+CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
+CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
 
 describe 'UsageReports#Show', ->
   testApi.requiresMasterKey ShowUsageReports

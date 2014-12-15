@@ -1,5 +1,5 @@
 Project = Cine.server_model('project')
-CalculateProjectBandwidth = Cine.server_lib('reporting/calculate_project_bandwidth')
+CalculateProjectBandwidth = Cine.server_lib('reporting/broadcast/calculate_project_bandwidth')
 async = require('async')
 
 exports.byMonth = (account, month, callback)->

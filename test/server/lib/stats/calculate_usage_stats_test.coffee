@@ -1,7 +1,7 @@
 calculateUsageStats = Cine.server_lib("stats/calculate_usage_stats")
 Account = Cine.server_model('account')
-CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
-CalculateAccountStorage = Cine.server_lib('reporting/calculate_account_storage')
+CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
+CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
 
 describe 'calculateUsageStats', ->
   beforeEach (done)->

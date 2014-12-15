@@ -1,5 +1,5 @@
 Project = Cine.server_model('project')
-CalculateProjectStorage = Cine.server_lib('reporting/calculate_project_storage')
+CalculateProjectStorage = Cine.server_lib('reporting/storage/calculate_project_storage')
 async = require('async')
 
 exports.byMonth = (account, month, callback)->

@@ -1,35 +1,19 @@
-Account = Cine.server_model('account')
 Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')
 StreamUsageReport = Cine.server_model('stream_usage_report')
-CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
+CalculateProjectBandwidth = Cine.server_lib('reporting/broadcast/calculate_project_bandwidth')
 
-describe 'CalculateAccountBandwidth', ->
+describe 'CalculateProjectBandwidth', ->
 
   beforeEach (done)->
-    @account = new Account(billingProvider: 'cine.io', name: 'dat account', plans: ['basic'])
-    @account.save done
+    @project = new Project(name: 'the project')
+    @project.save done
   beforeEach (done)->
-    @project1 = new Project(name: 'project1', _account: @account._id)
-    @project1.save done
-  beforeEach (done)->
-    @project2 = new Project(name: 'project2', _account: @account._id)
-    @project2.save done
-  beforeEach (done)->
-    @notOwnedProject = new Project(name: 'notOwnedProject')
-    @notOwnedProject.save done
-  beforeEach (done)->
-    @stream1 = new EdgecastStream(_project: @project1._id)
+    @stream1 = new EdgecastStream(_project: @project._id)
     @stream1.save done
   beforeEach (done)->
-    @stream2 = new EdgecastStream(_project: @project1._id)
+    @stream2 = new EdgecastStream(_project: @project._id)
     @stream2.save done
-  beforeEach (done)->
-    @stream3 = new EdgecastStream(_project: @project2._id)
-    @stream3.save done
-  beforeEach (done)->
-    @stream4 = new EdgecastStream(_project: @project2._id)
-    @stream4.save done
   beforeEach (done)->
     @notProjectStream = new EdgecastStream()
     @notProjectStream.save done
@@ -72,36 +56,32 @@ describe 'CalculateAccountBandwidth', ->
   beforeEach (done)->
     createReportForStream @stream2, @thisMonth, @lastMonth, done
   beforeEach (done)->
-    createReportForStream @stream3, @thisMonth, @lastMonth, done
-  beforeEach (done)->
-    createReportForStream @stream4, @thisMonth, @lastMonth, done
-  beforeEach (done)->
     createReportForStream @notProjectStream, @thisMonth, @lastMonth, done
 
   describe '#byMonth', ->
 
     it 'can aggrigate for this month', (done)->
-      CalculateAccountBandwidth.byMonth @account, @thisMonth, (err, monthlyBytes)->
-        expect(err).to.be.undefined
-        expect(monthlyBytes).to.equal(31376164)
+      CalculateProjectBandwidth.byMonth @project._id, @thisMonth, (err, monthlyBytes)->
+        expect(err).to.be.null
+        expect(monthlyBytes).to.equal(15688082)
         done()
 
     it 'can aggrigate by last month', (done)->
-      CalculateAccountBandwidth.byMonth @account, @lastMonth, (err, monthlyBytes)->
-        expect(err).to.be.undefined
-        expect(monthlyBytes).to.equal(12172316)
+      CalculateProjectBandwidth.byMonth @project._id, @lastMonth, (err, monthlyBytes)->
+        expect(err).to.be.null
+        expect(monthlyBytes).to.equal(6086158)
         done()
 
     it 'can aggrigate by two months ago', (done)->
-      CalculateAccountBandwidth.byMonth @account, @twoMonthsAgo, (err, monthlyBytes)->
-        expect(err).to.be.undefined
+      CalculateProjectBandwidth.byMonth @project._id, @twoMonthsAgo, (err, monthlyBytes)->
+        expect(err).to.be.null
         expect(monthlyBytes).to.equal(0)
         done()
 
   describe '#total', ->
 
-    it 'can aggrigate all account projects', (done)->
-      CalculateAccountBandwidth.total @account, (err, monthlyBytes)->
-        expect(err).to.be.undefined
-        expect(monthlyBytes).to.equal(43548480)
+    it 'will aggregate all project streams', (done)->
+      CalculateProjectBandwidth.total @project._id, (err, monthlyBytes)->
+        expect(err).to.be.null
+        expect(monthlyBytes).to.equal(21774240)
         done()

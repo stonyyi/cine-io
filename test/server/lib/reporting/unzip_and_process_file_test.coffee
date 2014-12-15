@@ -5,7 +5,7 @@ gzipFile = Cine.require('test/helpers/gzip_file')
 unzipAndProcessFile = Cine.server_lib('reporting/unzip_and_process_file')
 StreamUsageReport = Cine.server_model('stream_usage_report')
 EdgecastStream = Cine.server_model('edgecast_stream')
-parseEdgecastLog = Cine.server_lib('reporting/parse_edgecast_log')
+parseEdgecastLog = Cine.server_lib('reporting/broadcast/parse_edgecast_log')
 
 describe 'unzipAndProcessFile', ->
 

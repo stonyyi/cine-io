@@ -1,6 +1,6 @@
 environment = require('../config/environment')
 Cine.config('connect_to_mongo')
-parseCloudfrontLogs = Cine.server_lib('reporting/download_and_parse_cloudfront_logs')
+parseCloudfrontLogs = Cine.server_lib('reporting/broadcast/download_and_parse_cloudfront_logs')
 
 done = (err)->
   if err

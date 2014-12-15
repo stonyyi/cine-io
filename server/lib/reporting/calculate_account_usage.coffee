@@ -1,6 +1,6 @@
 async = require('async')
-CalculateAccountBandwidth = Cine.server_lib('reporting/calculate_account_bandwidth')
-CalculateAccountStorage = Cine.server_lib('reporting/calculate_account_storage')
+CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
+CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
 
 exports.thisMonth = (account, callback)->
   exports.byMonth account, new Date, callback

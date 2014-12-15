@@ -1,6 +1,6 @@
 Account = Cine.server_model('account')
 Project = Cine.server_model('project')
-CalculateAccountStorage = Cine.server_lib('reporting/calculate_account_storage')
+CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
 EdgecastStream = Cine.server_model('edgecast_stream')
 StreamRecordings = Cine.server_model('stream_recordings')
 

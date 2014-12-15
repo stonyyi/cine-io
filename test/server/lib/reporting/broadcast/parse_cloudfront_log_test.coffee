@@ -1,4 +1,4 @@
-parseCloudfrontLog = Cine.server_lib('reporting/parse_cloudfront_log')
+parseCloudfrontLog = Cine.server_lib('reporting/broadcast/parse_cloudfront_log')
 
 StreamUsageReport = Cine.server_model('stream_usage_report')
 EdgecastStream = Cine.server_model('edgecast_stream')
