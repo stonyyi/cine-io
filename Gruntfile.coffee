@@ -181,6 +181,7 @@ module.exports = (grunt) ->
       file = file.substr(1, file.length) if file[0] is "/"
       sh.run "clear"
       options.args = ["test/setup_and_teardown.coffee", file]
+      console.log("Running", options.cmd, options.args...)
     else
     grunt.util.spawn options, done
 
