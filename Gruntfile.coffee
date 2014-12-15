@@ -3,6 +3,7 @@ rendrDir = 'node_modules/rendr';
 rendrHandlebarsDir = 'node_modules/rendr-handlebars';
 rendrModulesDir = rendrDir + '/node_modules';
 exec = require('child_process').exec
+spawn = require('child_process').spawn
 
 module.exports = (grunt) ->
   rendrProjects = ['admin', 'main']
@@ -178,11 +179,12 @@ module.exports = (grunt) ->
       cmd = "mocha"
     console.log cmd
     callback = @async()
-    cp = exec cmd, (err, stdout, stderr)->
-      return callback(false) if err
-      callback()
+    cp = spawn(cmd)
     cp.stdout.pipe(process.stdout)
     cp.stderr.pipe(process.stderr)
+    cp.on 'close', (code)->
+      return callback(false) if code != 0
+      callback()
 
   grunt.registerTask "development:prepare", ->
     done = @async()
