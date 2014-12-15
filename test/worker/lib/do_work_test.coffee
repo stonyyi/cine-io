@@ -20,8 +20,8 @@ describe 'doWork', ->
         {
           name: 'once_an_hour_worker'
           libs: [
-            'reporting/download_and_parse_edgecast_logs'
-            'reporting/download_and_parse_cloudfront_logs'
+            'reporting/broadcast/download_and_parse_edgecast_logs'
+            'reporting/broadcast/download_and_parse_cloudfront_logs'
             'stats/calculate_and_save_usage_stats'
             'billing/update_or_throttle_accounts_who_cannot_pay_for_overages'
           ]
