@@ -56,6 +56,7 @@ class RoomManager
   _logEventInKeen: (spark, room, event)->
     extraData =
       signalingClient: spark.signalingClient
+      timestamp: new Date
     extraData.identity = spark.identity  if spark.identity
     extraData.identityId = spark.identityId if spark.identityId
     logEventInKeen[event](spark.projectId, room, spark.clientUUID, extraData)
