@@ -1,7 +1,7 @@
 Project = Cine.server_model('project')
-calculateProjectPeerMinutes = Cine.server_lib('reporting/peer/calculate_project_peer_minutes')
+calculateProjectPeerMilliseconds = Cine.server_lib('reporting/peer/calculate_project_peer_milliseconds')
 
-describe 'calculateProjectPeerMinutes', ->
+describe 'calculateProjectPeerMilliseconds', ->
   beforeEach (done)->
     @project = new Project
     @project.save done
@@ -15,7 +15,7 @@ describe 'calculateProjectPeerMinutes', ->
       @nock = requireFixture('nock/keen/results_for_project')(@project._id, @month)
 
     it 'fetches and parses events for this month', (done)->
-      calculateProjectPeerMinutes.thisMonth @project._id, (err, totalTimeInMs)=>
+      calculateProjectPeerMilliseconds.thisMonth @project._id, (err, totalTimeInMs)=>
         expect(err).to.be.null
         expect(totalTimeInMs).to.equal(36545549)
         expect(@nock.isDone()).to.be.true
@@ -29,7 +29,7 @@ describe 'calculateProjectPeerMinutes', ->
       @nock = requireFixture('nock/keen/results_for_project')(@project._id, @month)
 
     it 'fetches and parses events for this month', (done)->
-      calculateProjectPeerMinutes.byMonth @project._id, @month, (err, totalTimeInMs)=>
+      calculateProjectPeerMilliseconds.byMonth @project._id, @month, (err, totalTimeInMs)=>
         expect(err).to.be.null
         expect(totalTimeInMs).to.equal(36545549)
         expect(@nock.isDone()).to.be.true

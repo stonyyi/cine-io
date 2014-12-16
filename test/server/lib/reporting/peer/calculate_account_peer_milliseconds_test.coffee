@@ -1,9 +1,8 @@
 Account = Cine.server_model('account')
 Project = Cine.server_model('project')
-calculateAccountPeerMinutes = Cine.server_lib('reporting/peer/calculate_account_peer_minutes')
-processKeenPeerEventsForProject = Cine.server_lib('reporting/peer/process_keen_peer_events_for_project')
+calculateAccountPeerMlliseconds = Cine.server_lib('reporting/peer/calculate_account_peer_milliseconds')
 
-describe 'calculateAccountPeerMinutes', ->
+describe 'calculateAccountPeerMlliseconds', ->
   beforeEach (done)->
     @account = new Account plans: ['free'], billingProvider: 'cine.io'
     @account.save done
@@ -29,7 +28,7 @@ describe 'calculateAccountPeerMinutes', ->
       @nock3 = requireFixture('nock/keen/results_for_project')(@project3._id, @month)
 
     it 'fetches and parses events for the month for each project', (done)->
-      calculateAccountPeerMinutes.byMonth @account, @month, (err, totalTimeInMs)=>
+      calculateAccountPeerMlliseconds.byMonth @account, @month, (err, totalTimeInMs)=>
         expect(err).to.be.undefined
         expect(totalTimeInMs).to.equal(36545549 * 2)
         expect(@nock1.isDone()).to.be.true
