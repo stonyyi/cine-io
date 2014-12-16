@@ -4,9 +4,8 @@ Account = Cine.server_model('account')
 require "mongoose-querystream-worker"
 
 backfillAccountPlans = (account, callback)->
-  # assume one account/user as that's what we used to support
-  console.log('backfill plan for', account._id)
-  account.plans = [account.tempPlan]
+  console.log('backfill broadcast plans for', account._id)
+  account.productPlans.broadcast = account.plans
   account.save callback
 
 endFunction = (err)->
