@@ -58,7 +58,7 @@ streamLimitForPlan = (planName)->
   switch planName
     when 'free', 'starter', 'sample-addon' then 1
     when 'solo' then 5
-    when 'basic', 'pro', 'test' then Infinity
+    when 'basic', 'premium', 'startup', 'business', 'enterprise', 'pro', 'test' then Infinity
     else throw new Error("Don't know this plan")
 
 aggregatePlanCount = (aggr, planName)->
