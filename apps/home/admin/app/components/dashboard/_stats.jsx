@@ -52,6 +52,7 @@ module.exports = React.createClass({
         <td>{account.firstPlan()}</td>
         <td>{humanizeBytes(usage.bandwidth)}</td>
         <td>{humanizeBytes(usage.storage)}</td>
+        <td>{humanizeTime(usage.peerMilliseconds)}</td>
         </tr>)
     });
     monthSelector = _.map(model.getUsageMonths(), function(month){
@@ -78,6 +79,7 @@ module.exports = React.createClass({
               <th>Plan</th>
               <th>Bandwidth</th>
               <th>Storage</th>
+              <th>Peer Talk Time</th>
             </tr>
           </thead>
           <tbody>
