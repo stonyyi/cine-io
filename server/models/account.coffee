@@ -25,6 +25,11 @@ AccountSchema = new mongoose.Schema
   plans:[
     type: String
   ]
+  productPlans:
+    broadcast:
+      [type: String]
+    peer:
+      [type: String]
   stripeCustomer:
     stripeCustomerId: String
     cards: [StripeCard]
