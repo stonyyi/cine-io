@@ -8,7 +8,7 @@ calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 
 describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
   beforeEach (done)->
-    @account = new Account(billingProvider: 'cine.io', plans: ['solo'])
+    @account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['solo']})
     @account.save done
 
   describe 'cine.io accounts', ->
@@ -77,6 +77,9 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
         afterEach ->
           @usageStub.restore()
 
+        assertEmailSent 'automaticallyUpgradedAccount'
+        assertEmailSent.admin 'automaticallyUpgradedAccount'
+
         it 'does not throttle accounts', (done)->
           updateOrThrottleAccountsWhoCannotPayForOverages (err)=>
             expect(err).to.be.null
@@ -85,16 +88,14 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
               expect(account.throttledAt).to.be.undefined
               done()
 
-        assertEmailSent 'automaticallyUpgradedAccount'
-        assertEmailSent.admin 'automaticallyUpgradedAccount'
-
         it 'updates their plan to the appropriate plan', (done)->
           updateOrThrottleAccountsWhoCannotPayForOverages (err)=>
             expect(err).to.be.null
             Account.findById @account._id, (err, account)->
               expect(err).to.be.null
-              expect(account.plans).to.have.length(1)
-              expect(account.plans[0]).to.equal('enterprise')
+              expect(account.productPlans.peer).to.have.length(0)
+              expect(account.productPlans.broadcast).to.have.length(1)
+              expect(account.productPlans.broadcast[0]).to.equal('enterprise')
               done()
 
     describe 'with low bandwidth', ->

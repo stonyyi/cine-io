@@ -7,7 +7,7 @@ exports.cardAdded = (account, callback=noop)->
   options =
     billingEmail: account.billingEmail
     _id: account._id
-    plans: account.plans
+    productPlans: account.productPlans
   mailOptions =
     subject: '[KPI] Credit Card added'
     content: """
@@ -20,7 +20,7 @@ exports.throttledAccount = (account, callback=noop)->
   options =
     billingEmail: account.billingEmail
     _id: account._id
-    plans: account.plans
+    productPlans: account.productPlans
     billingProvider: account.billingProvider
   mailOptions =
     subject: '[Events] Throttled account'
@@ -34,7 +34,7 @@ exports.automaticallyUpgradedAccount = (account, callback=noop)->
   options =
     billingEmail: account.billingEmail
     _id: account._id
-    plans: account.plans
+    productPlans: account.productPlans
     billingProvider: account.billingProvider
   mailOptions =
     subject: '[Events] Audomatically Upgraded Account'
@@ -48,7 +48,7 @@ exports.willUpgradeAccount = (account, nextPlan, callback=noop)->
   options =
     billingEmail: account.billingEmail
     _id: account._id
-    plans: account.plans
+    productPlans: account.productPlans
     billingProvider: account.billingProvider
   mailOptions =
     subject: '[Events] Notification about upcoming Account Upgrade'
@@ -60,7 +60,7 @@ exports.willUpgradeAccount = (account, nextPlan, callback=noop)->
 
 exports.newUser = (account, user, context, callback=noop)->
   userAttributes = _.pick user, 'name', 'email', 'githubData', 'appdirectData', 'createdAtIP'
-  accountAttributes = _.pick account, 'name', 'billingEmail', 'plans', 'herokuId', 'engineyardId'
+  accountAttributes = _.pick account, 'name', 'billingEmail', 'productPlans', 'herokuId', 'engineyardId'
   mailOptions =
     subject: '[KPI] New User'
     content: """

@@ -10,7 +10,7 @@ describe 'getProject', ->
     @project.save done
 
   beforeEach (done)->
-    @account = new Account(billingProvider: 'cine.io', name: 'my account', plans: ['free'])
+    @account = new Account(billingProvider: 'cine.io', name: 'my account', productPlans: {broadcast: ['free']})
     @account.save done
 
   beforeEach (done)->

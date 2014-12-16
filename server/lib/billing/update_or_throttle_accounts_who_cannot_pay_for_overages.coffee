@@ -17,12 +17,12 @@ hasPrimaryCard = (account)->
   account.stripeCustomer.stripeCustomerId? && _.findWhere(account.stripeCustomer.cards, deletedAt: undefined)?
 
 backboneAccountFromMongooseAccount = (account)->
-  new BackboneAccount(provider: account.billingProvider, plans: account.plans)
+  new BackboneAccount(provider: account.billingProvider, productPlans: account.productPlans)
 calculateAccountLimit = (account, results)->
   ba = backboneAccountFromMongooseAccount(account)
 
-  maxBandwidth = UsageReport.maxUsagePerAccount ba, 'bandwidth'
-  maxStorage = UsageReport.maxUsagePerAccount ba, 'storage'
+  maxBandwidth = UsageReport.maxUsagePerAccount(ba, 'bandwidth', 'broadcast')
+  maxStorage = UsageReport.maxUsagePerAccount(ba, 'storage', 'broadcast')
   response =
     maxBandwidth: maxBandwidth
     maxStorage: maxStorage
@@ -51,7 +51,7 @@ notifyUserTheyWillBeUpgraded = (date, account, results, callback)->
   AccountEmailHistory.findOrCreate _account: account._id, (err, aeh)->
     return callback() if aeh.recordForMonth(date, 'willUpgradeAccount')
     ba = backboneAccountFromMongooseAccount(account)
-    nextPlan = UsageReport.nextPlan(ba)
+    nextPlan = UsageReport.nextPlan(ba, 'broadcast')
     mailer.admin.willUpgradeAccount account, nextPlan
     mailer.willUpgradeAccount account, nextPlan, (err)->
       return callback(err) if err

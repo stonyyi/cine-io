@@ -7,7 +7,7 @@ describe 'AccountBillingHistory', ->
 
   describe '#billingRecordForMonth and #hasBilledForMonth', ->
     beforeEach (done)->
-      @account = new Account(billingProvider: 'cine.io', plans: ['basic', 'pro'])
+      @account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['basic', 'pro']})
       @account.save done
 
     beforeEach (done)->

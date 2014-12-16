@@ -22,7 +22,7 @@ logOutput = (account, response, callback)->
   billing = response.billing
   monthlyBill = billing.plan + billing.bandwidthOverage + billing.storageOverage
   stripeConnected = account.stripeCustomer.cards.length > 0
-  console.log("Total account bill for", account._id, account.billingEmail || account.herokuId, account.billingProvider, account.plans, "$#{monthlyBill / 100} (card: #{stripeConnected})")
+  console.log("Total account bill for", account._id, account.billingEmail || account.herokuId, account.billingProvider, account.productPlans, "$#{monthlyBill / 100} (card: #{stripeConnected})")
   totalAccountsLogged += 1
   totalPotentialIncome += monthlyBill
   billableIncome += monthlyBill if stripeConnected

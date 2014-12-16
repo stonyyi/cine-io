@@ -7,7 +7,7 @@ describe 'Accounts#delete', ->
   testApi.requiresMasterKey DeleteAccount
 
   beforeEach (done)->
-    @account = new Account(billingProvider: 'heroku', plans: ['pro'], billingEmail: 'the email', name: 'Chillin')
+    @account = new Account(billingProvider: 'heroku', productPlans: {broadcast: ['pro']}, billingEmail: 'the email', name: 'Chillin')
     @account.save done
 
   it 'cannot delete non cine.io accounts through the ui, they must be done through the billing provider', (done)->

@@ -13,7 +13,7 @@ describe 'chargeAccountForMonth', ->
   beforeEach (done)->
     twoMonthsAgo = new Date
     twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2)
-    @account = new Account(plans: ['basic', 'pro'], billingProvider: 'cine.io', createdAt: twoMonthsAgo)
+    @account = new Account(productPlans: {broadcast: ['basic', 'pro']}, billingProvider: 'cine.io', createdAt: twoMonthsAgo)
     @account.save done
 
   beforeEach ->
@@ -91,7 +91,8 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.paid).to.be.true
         expect(lastCharge.stripeChargeId).to.equal("ch_102dM82AL5avr9E4B8GOejKB")
         expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
-        expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
+        expect(lastCharge.accountPlans.peer).to.have.length(0)
+        expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic', 'pro'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
         expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
         expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
@@ -125,7 +126,7 @@ describe 'chargeAccountForMonth', ->
       @usageStub.restore()
 
     beforeEach (done)->
-      @account.plans = ['basic']
+      @account.productPlans.broadcast = ['basic']
       @account.createdAt = new Date(@now.toString())
       @account.createdAt.setDate(5)
       @account.stripeCustomer.stripeCustomerId = "cus_2ghmxawfvEwXkw"
@@ -154,7 +155,8 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.paid).to.be.true
         expect(lastCharge.stripeChargeId).to.equal("ch_102dM82AL5avr9E4B8GOejKB")
         expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
-        expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic'])
+        expect(lastCharge.accountPlans.peer).have.length(0)
+        expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
         expect(lastCharge.details.billing).to.deep.equal(plan: 8709.677419354839, prorated: true)
         expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.8, storage: humanizeBytes.GiB * 0.5)
@@ -195,7 +197,8 @@ describe 'chargeAccountForMonth', ->
           expect(lastCharge.notCharged).to.be.true
           expect(lastCharge.stripeChargeId).to.be.undefined
           expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
-          expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
+          expect(lastCharge.accountPlans.peer).to.have.length(0)
+          expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic', 'pro'])
           expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
           expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
           expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.9, storage: humanizeBytes.GiB * 0.9)
@@ -293,7 +296,8 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.stripeChargeId).to.be.undefined
         expect(lastCharge.mandrillEmailId).to.undefined
         expect(lastCharge.chargeError).to.equal('Error: Your card was declined.')
-        expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
+        expect(lastCharge.accountPlans.peer).to.have.length(0)
+        expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic', 'pro'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
         expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
         expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
@@ -367,7 +371,8 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.stripeChargeId).to.be.undefined
         expect(lastCharge.mandrillEmailId).to.undefined
         expect(lastCharge.chargeError).to.equal('Error: Invalid token id: fake_token')
-        expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
+        expect(lastCharge.accountPlans.peer).to.have.length(0)
+        expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic', 'pro'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
         expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
         expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
@@ -452,7 +457,8 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.paid).to.be.true
         expect(lastCharge.stripeChargeId).to.equal("ch_102dM82AL5avr9E4B8GOejKB")
         expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
-        expect(_.invoke(lastCharge.accountPlans, 'toString').sort()).to.deep.equal(['basic', 'pro'])
+        expect(lastCharge.accountPlans.peer).to.have.length(0)
+        expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic', 'pro'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
         expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
         expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
@@ -477,7 +483,7 @@ describe 'chargeAccountForMonth', ->
 
   describe 'on the free plan', ->
     beforeEach (done)->
-      @account.plans = ['free', 'free']
+      @account.productPlans = {broadcast: ['free', 'free']}
       @account.save done
 
     it 'does not send an email to the free plans', (done)->

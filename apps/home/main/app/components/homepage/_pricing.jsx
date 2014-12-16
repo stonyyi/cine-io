@@ -67,7 +67,7 @@ module.exports = React.createClass({
 
   render: function() {
 
-    var cinePlans = UsageReport.sortedCinePlans(),
+    var cinePlans = UsageReport.sortedCinePlans('broadcast'),
       mobilePlanRows = this.getPlanRows(cinePlans, true),
       planRows = this.getPlanRows(cinePlans, false);
 

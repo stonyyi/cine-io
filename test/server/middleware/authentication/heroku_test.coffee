@@ -19,7 +19,7 @@ describe 'heroku authentication', ->
     @agent = supertest.agent(app)
 
   beforeEach (done)->
-    @account = new Account(billingProvider: 'heroku', plans: ['free'], _id: constantAccountId)
+    @account = new Account(billingProvider: 'heroku', productPlans: {broadcast: ['free']}, _id: constantAccountId)
     @account.save done
 
   beforeEach (done)->
@@ -114,8 +114,9 @@ describe 'heroku authentication', ->
           Account.findById @account._id, (err, account)->
             expect(err).to.be.null
             expect(account.deletedAt).to.be.undefined
-            expect(account.plans).to.have.length(1)
-            expect(account.plans[0]).to.equal("pro")
+            expect(account.productPlans.peer).to.have.length(0)
+            expect(account.productPlans.broadcast).to.have.length(1)
+            expect(account.productPlans.broadcast[0]).to.equal("pro")
             done()
 
 

@@ -21,15 +21,15 @@ addPlanToAccount = (accountId, plan, res)->
   getAccount accountId, (err, account)->
     return sendAppdirectResponse(res, 'unknownError') if err
     return sendAppdirectResponse(res, 'accountDoesNotExist', accountId) if !account
-    account.plans.push plan
+    account.productPlans.broadcast.push plan
     AccountThrottler.unthrottle account, (err, account)->
       return sendAppdirectResponse(res, 'unknownError') if err
       sendAppdirectResponse(res, 'addonAdded', account, plan)
 
 removePlanFromPlans = (account, plan)->
   # cannot use _.without because it removes ALL instances of that plan.
-  indexOfPlan = _.indexOf(account.plans, plan)
-  account.plans.splice(indexOfPlan, 1)
+  indexOfPlan = _.indexOf(account.productPlans.broadcast, plan)
+  account.productPlans.broadcast.splice(indexOfPlan, 1)
 
 removePlanFromAccount = (accountId, plan, res)->
   getAccount accountId, (err, account)->

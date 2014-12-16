@@ -116,7 +116,7 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
   describe 'findUser', ->
 
     beforeEach (done)->
-      @account = new Account(billingProvider: 'heroku', plans: ['test'], name: 'the account name')
+      @account = new Account(billingProvider: 'heroku', productPlans: {broadcast: ['test']}, name: 'the account name')
       @account.save done
 
     beforeEach (done)->
@@ -176,19 +176,21 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
   describe 'updatePlan', ->
 
     beforeEach (done)->
-      @account = new Account(billingProvider: 'heroku', plans: ['test'])
+      @account = new Account(billingProvider: 'heroku', productPlans: {broadcast: ['test']})
       @account.save done
 
     it "updates the account's plan", (done)->
       findOrCreateResourcesFromHerokuAndEngineYard.updatePlan @account._id, "basic", (err, account)=>
         expect(err).to.be.null
         expect(account._id.toString()).to.equal(@account._id.toString())
-        expect(account.plans).have.length(1)
-        expect(account.plans[0]).to.equal("basic")
+        expect(account.productPlans.peer).have.length(0)
+        expect(account.productPlans.broadcast).have.length(1)
+        expect(account.productPlans.broadcast[0]).to.equal("basic")
         Account.findById @account._id, (err, accountFromDb)->
           expect(err).to.be.null
-          expect(accountFromDb.plans).have.length(1)
-          expect(accountFromDb.plans[0]).to.equal('basic')
+          expect(accountFromDb.productPlans.peer).have.length(0)
+          expect(accountFromDb.productPlans.broadcast).have.length(1)
+          expect(accountFromDb.productPlans.broadcast[0]).to.equal('basic')
           done()
 
     it "undeletes an account", (done)->
@@ -216,7 +218,7 @@ describe 'findOrCreateResourcesFromHerokuAndEngineYard', ->
   describe 'deleteAccount', ->
 
     beforeEach (done)->
-      @account = new Account(billingProvider: 'heroku', plans: ['test'])
+      @account = new Account(billingProvider: 'heroku', productPlans: {broadcast: ['test']})
       @account.save done
 
     it "adds deletedAt to an account", (done)->

@@ -57,8 +57,9 @@ module.exports = (accountAttributes, userAttributes={}, projectAttributes={}, st
   # trim any whitespace
   userAttributes.email = _str.trim(userAttributes.email)
 
-  accountAttributes.plans = []
-  accountAttributes.plans.push accountAttributes.plan if accountAttributes.plan
+  accountAttributes.productPlans = {broadcast: [], peer: []}
+  # TODO: don't assume broadcast plan
+  accountAttributes.productPlans.broadcast.push accountAttributes.plan if accountAttributes.plan
 
   accountAttributes.name ||= userAttributes.name
   accountAttributes.billingEmail ||= userAttributes.email

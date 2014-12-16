@@ -60,7 +60,7 @@ module.exports = React.createClass({
   loadChart: function(){
     var
       usedStorageInBytes = this.props.model.get('storage');
-      planStorageInBytes = UsageReport.maxUsagePerAccount(this.props.app.currentAccount(), 'storage');
+      planStorageInBytes = UsageReport.maxUsagePerAccount(this.props.app.currentAccount(), 'storage', 'broadcast');
     if (usedStorageInBytes <= planStorageInBytes) {
       this.drawPieChart(usedStorageInBytes, planStorageInBytes);
     }else{

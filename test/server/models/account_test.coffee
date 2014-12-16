@@ -5,7 +5,7 @@ Project = Cine.server_model('project')
 ProvidersAndPlans = Cine.config('providers_and_plans')
 
 describe 'Account', ->
-  modelTimestamps(Account, plans: ['pro'], billingProvider: 'cine.io')
+  modelTimestamps(Account, productPlans: {broadcast: ['pro']}, billingProvider: 'cine.io')
 
   describe 'validations', ->
     describe 'billingProvider', ->
@@ -50,14 +50,14 @@ describe 'Account', ->
 
   describe 'masterKey', ->
     it 'has a unique masterKey generated on save', (done)->
-      account = new Account(billingProvider: 'cine.io', name: 'some name', plans: ['test'])
+      account = new Account(billingProvider: 'cine.io', name: 'some name', productPlans: {broadcast: ['test']})
       account.save (err)->
         expect(err).to.be.null
         expect(account.masterKey.length).to.equal(64)
         done()
 
     it 'will not override the masterKey on future saves', (done)->
-      account = new Account(billingProvider: 'cine.io', name: 'some name', plans: ['test'])
+      account = new Account(billingProvider: 'cine.io', name: 'some name', productPlans: {broadcast: ['test']})
       account.save (err)->
         expect(err).to.be.null
         masterKey = account.masterKey
@@ -69,7 +69,7 @@ describe 'Account', ->
   describe 'streamLimit', ->
     testPlan = (plans..., limit)->
       plans = [plans] unless _.isArray(plans)
-      account = new Account(billingProvider: 'cine.io', plans: plans)
+      account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: plans})
 
       expect(account.streamLimit()).to.equal(limit)
 
@@ -94,7 +94,7 @@ describe 'Account', ->
   describe '#projects', ->
 
     beforeEach (done)->
-      @account = new Account(billingProvider: 'cine.io', plans: ['test'])
+      @account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['test']})
       @account.save done
 
     beforeEach (done)->

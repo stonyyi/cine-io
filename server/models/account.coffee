@@ -65,7 +65,7 @@ aggregatePlanCount = (aggr, planName)->
   aggr + streamLimitForPlan(planName)
 
 AccountSchema.methods.streamLimit = ->
-  _.inject @plans, aggregatePlanCount, 0
+  _.inject @productPlans.broadcast, aggregatePlanCount, 0
 
 allProvidersRegex = new RegExp _.keys(ProvidersAndPlans).join('|')
 

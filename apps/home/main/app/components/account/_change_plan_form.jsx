@@ -36,7 +36,7 @@ module.exports = React.createClass({
       return;
     }
     self.setState({submitting: true});
-    ca.set({plans: [this.state.plan]})
+    ca.set({productPlans: {broadcast: [this.state.plan]}})
     ca.save(null,{
       success: function(model, response, options){
         self.updateSuccess()
@@ -49,7 +49,7 @@ module.exports = React.createClass({
     });
   },
   render: function() {
-    var planOptions = _.map(UsageReport.sortedCinePlans(), function(plan) {
+    var planOptions = _.map(UsageReport.sortedCinePlans('broadcast'), function(plan) {
       return (<option key={plan.name} value={plan.name}>{capitalize(plan.name)}</option>);
     });
 

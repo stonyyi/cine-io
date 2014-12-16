@@ -16,9 +16,10 @@ endFunction = (err, aggregate)->
   process.exit(0)
 
 
+# TODO: Don't know if this works now
 aggregateQuery = [
-  {$unwind: "$plans"},
-  {$group: {_id: "$plans", planCount: {$sum: 1}}}
+  {$unwind: "$productPlans.broadcast"},
+  {$group: {_id: "$productPlans.broadcast", planCount: {$sum: 1}}}
 ]
 
 Account.aggregate(aggregateQuery).exec (err, aggregate)->

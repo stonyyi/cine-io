@@ -6,7 +6,7 @@ describe 'Users#Show', ->
   testApi.requresLoggedIn Show
 
   beforeEach (done)->
-    @account = new Account(billingProvider: 'cine.io', name: 'account name yo', plans: ['free'])
+    @account = new Account(billingProvider: 'cine.io', name: 'account name yo', productPlans: {broadcast: ['free']})
     @account.save done
 
   beforeEach (done)->

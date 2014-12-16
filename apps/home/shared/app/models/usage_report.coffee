@@ -3,12 +3,12 @@ humanizeBytes = Cine.lib('humanize_bytes')
 _ = require('underscore')
 ProvidersAndPlans = Cine.require('config/providers_and_plans')
 
-maxUsagePerPlan = (provider, plan, type)->
-  ProvidersAndPlans[provider].plans[plan][type]
+maxUsagePerPlan = (provider, product, plan, type)->
+  ProvidersAndPlans[provider][product].plans[plan][type]
 
-usagePerPlanAggregator = (provider, type)->
+usagePerPlanAggregator = (provider, product, type)->
   return (accum, plan)->
-    accum + maxUsagePerPlan(provider, plan, type)
+    accum + maxUsagePerPlan(provider, product, plan, type)
 
 module.exports = class UsageReport extends Base
   @id: 'UsageReport'
@@ -16,27 +16,29 @@ module.exports = class UsageReport extends Base
   url: "/usage-report?masterKey=:masterKey"
 
   # type: bandwidth/storage
-  @maxUsagePerAccount: (account, type)->
-    _.inject account.get('plans'), usagePerPlanAggregator(account.get('provider'), type), 0
+  # TODO: currently hardcoded to broadcast plans
+  @maxUsagePerAccount: (account, type, product)->
+    _.inject account.broadcastPlans(), usagePerPlanAggregator(account.get('provider'), product, type), 0
 
-  @sortedCinePlans: ->
-    planOptions = _.chain(ProvidersAndPlans['cine.io'].plans).pairs().filter((planNameDetails)-> planNameDetails[1].order ).value()
+  # product is either broadcast or peer
+  @sortedCinePlans: (product)->
+    planOptions = _.chain(ProvidersAndPlans['cine.io'][product].plans).pairs().filter((planNameDetails)-> planNameDetails[1].order ).value()
     mappedPlans = _.map planOptions, (nameValue)->
       nameValue[1].name = nameValue[0]
       nameValue[1]
     cinePlans = _.sortBy mappedPlans, "order"
 
-  @lowestPlanPerUsage: (bytes, type, includeStarter=false)->
-    cinePlans = @sortedCinePlans()
+  @lowestPlanPerUsage: (bytes, type, product, includeStarter=false)->
+    cinePlans = @sortedCinePlans(product)
     thing = _.find cinePlans, (planDetails)->
       return false if planDetails.price == 0 && !includeStarter
       planDetails[type] >= bytes
     thing ||= _.last(cinePlans)
     return thing.name
 
-  @nextPlan: (account)->
+  @nextPlan: (account, product)->
     foundAccountPlan = false
-    cinePlans = @sortedCinePlans()
+    cinePlans = @sortedCinePlans(product)
     thing = _.find cinePlans, (planDetails)->
       if planDetails.name == account.firstPlan()
         foundAccountPlan = true

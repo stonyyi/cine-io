@@ -43,8 +43,8 @@ exports.forgotPassword = (user, passwordChangeRequest, callback=noop)->
 
 # input: ['basic', 'solo']
 # Basic and Solo
-accountPlans = (plans)->
-  _str.toSentence(_.map(plans, _str.titleize))
+accountPlans = (plans, product)->
+  _str.toSentence(_.map(plans[product], _str.titleize))
 
 displayCurrency = (amountInCents)->
   amountInDollars = amountInCents / 100
@@ -73,11 +73,12 @@ exports.monthlyBill = (account, accountBillingHistory, recordId, billingMonthDat
         header_blurb: 'Thank you for using cine.io.'
         BILLING_MONTH: moment(billingMonthDate).format("MMM YYYY")
         ACCOUNT_NAME: name
-        USAGE_PLAN: accountPlans(record.accountPlans)
+        # TODO: BROADCAST
+        USAGE_PLAN: accountPlans(record.accountPlans, 'broadcast')
         # Plan details
         PLAN_COST: displayCurrency(billing.plan)
-        PLAN_BANDWIDTH: humanizeBytes(UsageReport.maxUsagePerAccount(backboneAccount, 'bandwidth'))
-        PLAN_STORAGE: humanizeBytes(UsageReport.maxUsagePerAccount(backboneAccount, 'storage'))
+        PLAN_BANDWIDTH: humanizeBytes(UsageReport.maxUsagePerAccount(backboneAccount, 'bandwidth', 'broadcast'))
+        PLAN_STORAGE: humanizeBytes(UsageReport.maxUsagePerAccount(backboneAccount, 'storage', 'broadcast'))
         # Monthly Usage
         USAGE_BANDWIDTH: humanizeBytes(usage.bandwidth)
         USAGE_STORAGE: humanizeBytes(usage.storage)
@@ -107,7 +108,7 @@ exports.underOneGibBill = (account, accountBillingHistory, billingMonthDate, cal
 
 exports.automaticallyUpgradedAccount = (account, oldPlans, callback=noop)->
   name = account.name || account.billingEmail
-  newPlan = _.first account.plans
+  newPlan = _.first account.productPlans.broadcast
   mailOptions =
     templateName: 'blank-with-header-and-footer'
     subject: 'Account upgraded your cine.io account plan based on usage.'

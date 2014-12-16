@@ -11,7 +11,7 @@ describe 'Projects#Create', ->
   testApi.requiresMasterKey Create
 
   beforeEach (done)->
-    @account = new Account(billingProvider: 'cine.io', plans: ['free'], masterKey: 'mk1')
+    @account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['free']}, masterKey: 'mk1')
     @account.save done
 
   describe 'success', ->

@@ -10,7 +10,7 @@ login = Cine.require 'test/helpers/login_helper'
 describe 'create stream', ->
 
   beforeEach (done)->
-    @account = new Account(billingProvider: 'cine.io', plans: ['free'])
+    @account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['free']})
     @account.save done
 
   beforeEach (done)->

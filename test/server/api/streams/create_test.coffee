@@ -9,7 +9,7 @@ describe 'Streams#Create', ->
   testApi.requresApiKey Create, 'secret'
 
   beforeEach (done)->
-    @account = new Account billingProvider: 'cine.io', plans: ['free']
+    @account = new Account billingProvider: 'cine.io', productPlans: {broadcast: ['free']}
     @account.save done
 
   beforeEach (done)->

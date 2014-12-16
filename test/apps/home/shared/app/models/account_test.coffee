@@ -24,27 +24,27 @@ describe 'Account', ->
 
   describe 'needsCreditCard', ->
     it 'returns true for an account on a paid plan without a credit card', ->
-      account = new Account(plans: ['pro'], provider: 'cine.io')
+      account = new Account(productPlans: {broadcast: ['pro']}, provider: 'cine.io')
       expect(account.needsCreditCard()).to.be.true
 
     it 'returns true for an account with at least one paid plan without a credit card', ->
-      account = new Account(plans: ['free', 'pro'], provider: 'cine.io')
+      account = new Account(productPlans: {broadcast: ['free', 'pro']}, provider: 'cine.io')
       expect(account.needsCreditCard()).to.be.true
 
     it 'returns false for an account on a free plan without a credit card', ->
-      account = new Account(plans: ['free'], provider: 'cine.io')
+      account = new Account(productPlans: {broadcast: ['free']}, provider: 'cine.io')
       expect(account.needsCreditCard()).to.be.false
 
     it 'returns false for an account on a pro plan which cannot be disabled', ->
-      account = new Account(plans: ['pro'], provider: 'cine.io', cannotBeDisabled: true)
+      account = new Account(productPlans: {broadcast: ['pro']}, provider: 'cine.io', cannotBeDisabled: true)
       expect(account.needsCreditCard()).to.be.false
 
     it 'returns false for an account on a paid plan with a credit card', ->
-      account = new Account(plans: ['pro'], provider: 'cine.io', stripeCard: {last4: '4242'})
+      account = new Account(productPlans: {broadcast: ['pro']}, provider: 'cine.io', stripeCard: {last4: '4242'})
       expect(account.needsCreditCard()).to.be.false
 
     it 'returns false for an account on a paid plan without a credit card on a different provider', ->
-      account = new Account(plans: ['pro'], provider: 'heroku')
+      account = new Account(productPlans: {broadcast: ['pro']}, provider: 'heroku')
       expect(account.needsCreditCard()).to.be.false
 
   describe '#isDisabled', ->
@@ -79,16 +79,16 @@ describe 'Account', ->
 
   describe 'firstPlan', ->
     it 'returns the first plan', ->
-      account = new Account(plans: ['a', 'b', 'c'])
+      account = new Account(productPlans: {broadcast: ['a', 'b', 'c']})
       expect(account.firstPlan()).to.equal('a')
 
   describe 'displayName', ->
     it 'returns the name if available', ->
-      account = new Account(name: 'my name', plans: ['a', 'b', 'c'])
+      account = new Account(name: 'my name', productPlans: {broadcast: ['a', 'b', 'c']})
       expect(account.displayName()).to.equal('my name')
 
     it 'returns a capitalized first plan if name is not available', ->
-      account = new Account(plans: ['the b plan', 'c'])
+      account = new Account(productPlans: {broadcast: ['the b plan', 'c']})
       expect(account.displayName()).to.equal('The b plan')
 
     it 'returns null if name is not available and plans are not available', ->

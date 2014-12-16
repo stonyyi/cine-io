@@ -7,7 +7,7 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 describe 'deleteAccount', ->
 
   beforeEach (done)->
-    @account = new Account(billingProvider: 'cine.io', plans: ['test'])
+    @account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['test']})
     @account.save done
 
   beforeEach (done)->

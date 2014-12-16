@@ -114,7 +114,7 @@ module.exports = React.createClass({
     calc.simultaneousBroadcasts = scaleSimultaneousBroadcasts;
     console.log("Calculator", calc)
     totalBandwidth = calc.calculate();
-    bestPlan = UsageReport.lowestPlanPerUsage(totalBandwidth, 'bandwidth');
+    bestPlan = UsageReport.lowestPlanPerUsage(totalBandwidth, 'bandwidth', 'broadcast');
     cost = ProvidersAndPlans['cine.io'].plans[bestPlan].price;
     humanizedPlan = capitalize(bestPlan);
     humanizedBandwidth = humanizeBytes(totalBandwidth);

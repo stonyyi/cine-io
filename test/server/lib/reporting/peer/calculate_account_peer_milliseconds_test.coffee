@@ -4,7 +4,7 @@ calculateAccountPeerMlliseconds = Cine.server_lib('reporting/peer/calculate_acco
 
 describe 'calculateAccountPeerMlliseconds', ->
   beforeEach (done)->
-    @account = new Account plans: ['free'], billingProvider: 'cine.io'
+    @account = new Account productPlans: {broadcast: ['free']}, billingProvider: 'cine.io'
     @account.save done
 
   beforeEach (done)->

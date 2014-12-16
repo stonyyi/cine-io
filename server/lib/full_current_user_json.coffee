@@ -25,7 +25,7 @@ fullCurrentUserJson.accountJson = (account, callback)->
     name: account.name
     herokuId: account.herokuId
     masterKey: account.masterKey
-    plans: account.plans
+    productPlans: account.productPlans
     provider: account.billingProvider
     email: account.billingEmail
     isDisabled: account.throttledAt?

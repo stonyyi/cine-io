@@ -15,7 +15,7 @@ describe "calculateAccountBill", ->
     @month = new Date
 
   it "returns 0 for no plans", (done)->
-    @account.plans = []
+    @account.productPlans = {broadcast: []}
     calculateAccountBill @account, @month, (err, result)->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
@@ -24,7 +24,7 @@ describe "calculateAccountBill", ->
       done()
 
   it "returns 0 for free plans", (done)->
-    @account.plans = ['free']
+    @account.productPlans = {broadcast: ['free']}
     calculateAccountBill @account, @month, (err, result)->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
@@ -33,7 +33,7 @@ describe "calculateAccountBill", ->
       done()
 
   it "returns 100 for basic plan", (done)->
-    @account.plans = ['basic']
+    @account.productPlans = {broadcast: ['basic']}
     calculateAccountBill @account, @month, (err, result)->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
@@ -42,7 +42,7 @@ describe "calculateAccountBill", ->
       done()
 
   it "returns 600 for basic and pro plan", (done)->
-    @account.plans = ['basic', 'pro']
+    @account.productPlans = {broadcast: ['basic', 'pro']}
     calculateAccountBill @account, @month, (err, result)->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
@@ -66,7 +66,7 @@ describe "calculateAccountBill", ->
 
     describe 'within limits', ->
       it 'returns 100 for basic plans', (done)->
-        @account.plans = ['basic']
+        @account.productPlans = {broadcast: ['basic']}
         usedBandwidth = humanizeBytes.GiB * 150
         usedStorage = humanizeBytes.GiB * 25
         @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
@@ -78,7 +78,7 @@ describe "calculateAccountBill", ->
           done()
 
       it 'returns 600 for basic and pro plans', (done)->
-        @account.plans = ['basic', 'pro']
+        @account.productPlans = {broadcast: ['basic', 'pro']}
         usedBandwidth = humanizeBytes.GiB * 150 + humanizeBytes.TiB
         usedStorage = humanizeBytes.GiB * 25 + humanizeBytes.GiB * 100
         @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
@@ -94,7 +94,7 @@ describe "calculateAccountBill", ->
         @month.setDate(15)
         @month.setMonth(0)
         @account.createdAt = @month
-        @account.plans = ['basic', 'pro']
+        @account.productPlans = {broadcast: ['basic', 'pro']}
         @account.save done
 
       it 'charges them a prorated amount when they are under 1 Gib', (done)->

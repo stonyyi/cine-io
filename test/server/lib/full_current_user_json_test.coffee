@@ -9,19 +9,19 @@ describe 'fullCurrentUserJson', ->
       {stripeCardId: '123', last4: 'the last 4', brand: 'visa', exp_month: '01', exp_year: '2013'},
       {stripeCardId: '456', last4: 'these last 4', brand: 'master', exp_month: '12', exp_year: '2014'}
     ]
-    @account = new Account(name: 'account name', plans: ['solo'], herokuId: 'my heroku id', masterKey: '1mkey', billingProvider: 'heroku', stripeCustomer: {stripeCustomerId: 'cus_2ghmxawfvEwXkw', cards: cards})
+    @account = new Account(name: 'account name', productPlans: {broadcast: ['solo']}, herokuId: 'my heroku id', masterKey: '1mkey', billingProvider: 'heroku', stripeCustomer: {stripeCustomerId: 'cus_2ghmxawfvEwXkw', cards: cards})
     @account.save done
 
   beforeEach (done)->
-    @account2 = new Account(billingEmail: 'with billing email', name: 'second account', plans: ['basic', 'pro'], masterKey: '2mkey', billingProvider: 'cine.io', unthrottleable: true)
+    @account2 = new Account(billingEmail: 'with billing email', name: 'second account', productPlans: {broadcast: ['basic', 'pro']}, masterKey: '2mkey', billingProvider: 'cine.io', unthrottleable: true)
     @account2.save done
 
   beforeEach (done)->
-    @account3 = new Account(name: 'third account', plans: [], masterKey: '4mkey', billingProvider: 'appdirect', appdirectData: {marketplace: {baseUrl: 'the-mplace-base-url'}}, throttledAt: new Date, throttledReason: 'cardDeclined')
+    @account3 = new Account(name: 'third account', productPlans: {broadcast: []}, masterKey: '4mkey', billingProvider: 'appdirect', appdirectData: {marketplace: {baseUrl: 'the-mplace-base-url'}}, throttledAt: new Date, throttledReason: 'cardDeclined')
     @account3.save done
 
   beforeEach (done)->
-    @account4 = new Account(name: 'forth account', plans: [], masterKey: '4mkey', billingProvider: 'cine.io', deletedAt: new Date)
+    @account4 = new Account(name: 'forth account', productPlans: {broadcast: []}, masterKey: '4mkey', billingProvider: 'cine.io', deletedAt: new Date)
     @account4.save done
 
   beforeEach (done)->
@@ -64,8 +64,9 @@ describe 'fullCurrentUserJson', ->
       expect(firstAccount.id.toString()).to.equal(@account._id.toString())
       expect(firstAccount.name).to.equal('account name')
       expect(firstAccount.masterKey).to.equal('1mkey')
-      expect(firstAccount.plans).have.length(1)
-      expect(firstAccount.plans[0]).to.equal('solo')
+      expect(firstAccount.productPlans.peer).have.length(0)
+      expect(firstAccount.productPlans.broadcast).have.length(1)
+      expect(firstAccount.productPlans.broadcast[0]).to.equal('solo')
       expect(firstAccount.herokuId).to.equal('my heroku id')
       expect(firstAccount.cannotBeDisabled).to.be.undefined
       expect(firstAccount.provider).to.equal('heroku')
@@ -75,16 +76,18 @@ describe 'fullCurrentUserJson', ->
       expect(secondAccount.name).to.equal('second account')
       expect(secondAccount.email).to.equal('with billing email')
       expect(secondAccount.masterKey).to.equal('2mkey')
-      expect(secondAccount.plans).have.length(2)
-      expect(secondAccount.plans[0]).to.equal('basic')
-      expect(secondAccount.plans[1]).to.equal('pro')
+      expect(secondAccount.productPlans.peer).have.length(0)
+      expect(secondAccount.productPlans.broadcast).have.length(2)
+      expect(secondAccount.productPlans.broadcast[0]).to.equal('basic')
+      expect(secondAccount.productPlans.broadcast[1]).to.equal('pro')
       expect(secondAccount.provider).to.equal('cine.io')
       expect(secondAccount.cannotBeDisabled).to.be.true
       expect(secondAccount.herokuId).to.be.undefined
 
       thirdAccount = @userJson.accounts[2]
       expect(thirdAccount.id.toString()).to.equal(@account3._id.toString())
-      expect(thirdAccount.plans).have.length(0)
+      expect(thirdAccount.productPlans.peer).have.length(0)
+      expect(thirdAccount.productPlans.broadcast).have.length(0)
       expect(thirdAccount.provider).to.equal('appdirect')
       expect(thirdAccount.appdirect).to.deep.equal(baseUrl: 'the-mplace-base-url')
       expect(thirdAccount.isDisabled).to.be.true

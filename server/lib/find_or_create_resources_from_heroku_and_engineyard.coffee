@@ -73,7 +73,7 @@ exports.findUser = (accountId, userEmail, req, callback)->
 
 setPlanAndEnsureNotDeleted = (account, plan, callback)->
   account.deletedAt = undefined
-  account.plans = [plan]
+  account.productPlans.broadcast = [plan]
   AccountThrottler.unthrottle account, (err, account)->
     return callback(err) if err
     callback(null, account)

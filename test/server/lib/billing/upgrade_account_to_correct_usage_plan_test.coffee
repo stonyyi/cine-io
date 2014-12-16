@@ -5,16 +5,18 @@ assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 
 describe 'upgradeAccountToCorrectUsagePlan', ->
   beforeEach (done)->
-    @account = new Account(billingProvider: 'cine.io', plans: ['basic'])
+    @account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['basic']})
     @account.save done
 
   assertPlanOnAccount = (account, plan, done)->
-    expect(account.plans).to.have.length(1)
-    expect(account.plans[0]).to.equal(plan)
+    expect(account.productPlans.peer).to.have.length(0)
+    expect(account.productPlans.broadcast).to.have.length(1)
+    expect(account.productPlans.broadcast[0]).to.equal(plan)
     Account.findById account._id, (err, accountFromDb)->
       expect(err).to.be.null
-      expect(accountFromDb.plans).to.have.length(1)
-      expect(accountFromDb.plans[0]).to.equal(plan)
+      expect(accountFromDb.productPlans.peer).to.have.length(0)
+      expect(accountFromDb.productPlans.broadcast).to.have.length(1)
+      expect(accountFromDb.productPlans.broadcast[0]).to.equal(plan)
       done()
 
   describe 'with not a cine.io account', ->

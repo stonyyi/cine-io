@@ -84,11 +84,12 @@ describe 'AppDirect/Addons', ->
         expect(@appDirectSuccessResponse.isDone()).to.be.true
 
       it 'adds the addon to the account', (done)->
-        expect(@account.plans).to.have.length(0)
+        expect(@account.productPlans.broadcast).to.have.length(0)
         Account.findById @account._id, (err, account)->
           expect(err).to.be.null
-          expect(account.plans).to.have.length(1)
-          expect(account.plans[0]).to.equal('solo')
+          expect(account.productPlans.peer).to.have.length(0)
+          expect(account.productPlans.broadcast).to.have.length(1)
+          expect(account.productPlans.broadcast[0]).to.equal('solo')
           done()
 
       it 'returns success and the correct identifier', ->
@@ -114,7 +115,7 @@ describe 'AppDirect/Addons', ->
   describe 'cancel', ->
 
     beforeEach (done)->
-      @account.plans = [ 'solo', 'basic', 'solo']
+      @account.productPlans.broadcast = [ 'solo', 'basic', 'solo']
       @account.save done
 
     beforeEach ->
@@ -131,12 +132,13 @@ describe 'AppDirect/Addons', ->
       expect(@appDirectSuccessResponse.isDone()).to.be.true
 
     it 'removes the addon to the account', (done)->
-      expect(@account.plans).to.have.length(3)
+      expect(@account.productPlans.broadcast).to.have.length(3)
       Account.findById @account._id, (err, account)->
         expect(err).to.be.null
-        expect(account.plans).to.have.length(2)
-        expect(account.plans[0]).to.equal('basic')
-        expect(account.plans[1]).to.equal('solo')
+        expect(account.productPlans.peer).to.have.length(0)
+        expect(account.productPlans.broadcast).to.have.length(2)
+        expect(account.productPlans.broadcast[0]).to.equal('basic')
+        expect(account.productPlans.broadcast[1]).to.equal('solo')
         done()
 
     it 'returns success and the correct identifier', ->

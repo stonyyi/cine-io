@@ -16,7 +16,7 @@ describe 'accountMailer', ->
     @user.save done
 
   beforeEach (done)->
-    @account = new Account(name: 'my account name', billingEmail: 'my billing email', plans: ['basic', 'pro'], billingProvider: 'cine.io')
+    @account = new Account(name: 'my account name', billingEmail: 'my billing email', productPlans: {broadcast: ['basic', 'pro']}, billingProvider: 'cine.io')
     @account.save done
 
   beforeEach ->
@@ -178,7 +178,7 @@ describe 'accountMailer', ->
         billingDate: @now
         billedAt: new Date
         details: results
-        accountPlans: @account.plans
+        accountPlans: @account.productPlans
         paid: true
 
       lastMonth = new Date
@@ -233,7 +233,7 @@ describe 'accountMailer', ->
         billingDate: @now
         billedAt: new Date
         details: results
-        accountPlans: @account.plans
+        accountPlans: @account.productPlans
 
       lastMonth = new Date
       lastMonth.setDate(1)

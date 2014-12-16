@@ -6,7 +6,7 @@ describe 'Projects#Index', ->
   testApi.requiresMasterKey Index
 
   beforeEach (done)->
-    @account = new Account(billingProvider: 'cine.io', name: 'an account', plans: ['free'], masterKey: 'the acc master')
+    @account = new Account(billingProvider: 'cine.io', name: 'an account', productPlans: {broadcast: ['free']}, masterKey: 'the acc master')
     @account.save done
 
   beforeEach (done)->

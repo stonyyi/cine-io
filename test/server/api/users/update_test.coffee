@@ -6,7 +6,7 @@ assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 describe 'Users#update', ->
 
   beforeEach (done)->
-    @account = new Account billingProvider: 'cine.io', plans: ['solo']
+    @account = new Account billingProvider: 'cine.io', productPlans: {broadcast: ['solo']}
     @account.save done
 
   beforeEach (done)->

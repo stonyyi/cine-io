@@ -50,7 +50,7 @@ responseXML.accountCreated = (account)->
   responseXML(success: true, accountIdentifier: account._id.toString(), message: "The account for #{account.billingEmail} was created.")
 
 responseXML.planChanged = (account)->
-  responseXML(success: true, accountIdentifier: account._id.toString(), message: "The account for #{account.billingEmail} was changed to #{account.plans[0]}.")
+  responseXML(success: true, accountIdentifier: account._id.toString(), message: "The account for #{account.billingEmail} was changed to #{account.productPlans.broadcast[0]}.")
 
 responseXML.accountCanceled = (account)->
   responseXML(success: true, accountIdentifier: account._id.toString(), message: "The account for #{account.billingEmail} was canceled.")

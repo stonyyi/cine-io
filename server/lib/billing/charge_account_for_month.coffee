@@ -33,7 +33,7 @@ saveResultsToRecord = (abh, account, monthToBill, results, callback)->
     billingDate: monthToBill
     billedAt: new Date
     details: results
-    accountPlans: account.plans
+    accountPlans: account.productPlans
   abh.history.push record
   recordId = _.last(abh.history)._id
   abh.save (err, abh)->

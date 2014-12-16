@@ -22,7 +22,7 @@ module.exports = React.createClass({
     var ltm = UsageReport.lastThreeMonths(),
       model = this.props.model,
       data = [["Month", { role: 'annotation' }, "Usage", "Cap"]],
-      planBandwidthInBytes = UsageReport.maxUsagePerAccount(this.props.app.currentAccount(), 'bandwidth'),
+      planBandwidthInBytes = UsageReport.maxUsagePerAccount(this.props.app.currentAccount(), 'bandwidth', 'broadcast'),
       formatString = humanizeBytes.formatString(planBandwidthInBytes),
       planUsage = planBandwidthInBytes / humanizeBytes[formatString];
 

@@ -35,8 +35,9 @@ describe 'createNewAccount', ->
 
     it 'adds the plan', ->
       # doing a deep equal of a mongo array vs js array doesn't work
-      expect(@results.account.plans).to.have.length(1)
-      expect(@results.account.plans[0]).to.equal('starter')
+      expect(@results.account.productPlans.peer).to.have.length(0)
+      expect(@results.account.productPlans.broadcast).to.have.length(1)
+      expect(@results.account.productPlans.broadcast[0]).to.equal('starter')
 
     it 'creates a user', (done)->
       expect(@results.user.name).to.equal("user name")

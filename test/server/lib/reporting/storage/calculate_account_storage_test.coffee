@@ -7,7 +7,7 @@ StreamRecordings = Cine.server_model('stream_recordings')
 describe 'CalculateAccountStorage', ->
 
   beforeEach (done)->
-    @account = new Account(billingProvider: 'cine.io', name: 'dat account', plans: ['basic'])
+    @account = new Account(billingProvider: 'cine.io', name: 'dat account', productPlans: {broadcast: ['basic']})
     @account.save done
   beforeEach (done)->
     @project1 = new Project(name: 'project1', _account: @account._id)

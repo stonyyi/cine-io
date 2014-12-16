@@ -111,8 +111,9 @@ describe 'local authentication', ->
           expect(user._accounts).to.have.length(1)
           Account.findById user._accounts[0], (err, account)->
             expect(err).to.be.null
-            expect(account.plans).to.have.length(1)
-            expect(account.plans[0]).to.equal('free')
+            expect(account.productPlans.peer).to.have.length(0)
+            expect(account.productPlans.broadcast).to.have.length(1)
+            expect(account.productPlans.broadcast[0]).to.equal('free')
             done()
 
     it 'adds the correct billing provider', (done)->
@@ -141,8 +142,9 @@ describe 'local authentication', ->
           expect(err).to.be.null
           Account.findById user._accounts[0], (err, account)->
             expect(err).to.be.null
-            expect(account.plans).to.have.length(1)
-            expect(account.plans[0]).to.equal('basic')
+            expect(account.productPlans.peer).to.have.length(0)
+            expect(account.productPlans.broadcast).to.have.length(1)
+            expect(account.productPlans.broadcast[0]).to.equal('basic')
             done()
 
     it 'adds a project and a new stream to that user', (done)->

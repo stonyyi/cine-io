@@ -8,7 +8,7 @@ describe 'addStripeCardToAccount', ->
     @createCardNock = requireFixture('nock/stripe_create_card_for_customer_success')()
 
   beforeEach (done)->
-    @account = new Account(billingProvider: 'cine.io', plans: ['pro'], billingEmail: 'the email', name: 'Chillin')
+    @account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['pro']}, billingEmail: 'the email', name: 'Chillin')
     @account.save done
 
   beforeEach (done)->

@@ -17,7 +17,7 @@ BillingHistoryRecord = new mongoose.Schema
   chargeError:
     type: String
   accountPlans:
-    [type: String]
+    mongoose.Schema.Types.Mixed
   details:
     type: mongoose.Schema.Types.Mixed
 

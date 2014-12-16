@@ -5,7 +5,7 @@ _ = require('underscore')
 describe 'getAccount', ->
 
   beforeEach (done)->
-    @account = new Account(billingProvider: 'cine.io', plans: ['solo'])
+    @account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['solo']})
     @account.save done
 
   it 'requires a masterKey', (done)->

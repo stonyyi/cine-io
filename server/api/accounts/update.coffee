@@ -27,7 +27,13 @@ module.exports = (params, callback)->
 
     else
       account.name = params.name unless _str.isBlank(params.name)
-      account.plans = params.plans unless _str.isBlank(params.plans)
+      if params.productPlans
+        broadcastPlans = params.productPlans.broadcast
+        account.productPlans.broadcast = broadcastPlans unless _str.isBlank(broadcastPlans)
+
+        peerPlans = params.productPlans.peer
+        account.productPlans.peer = peerPlans unless _str.isBlank(peerPlans)
+
       account.save (err)->
         return callback(TextMongooseErrorMessage(err), null, status: 400) if err
         fullCurrentUserJson.accountJson(account, callback)

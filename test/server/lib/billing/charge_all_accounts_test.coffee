@@ -24,27 +24,27 @@ describe 'chargeAllAccounts', ->
 
   describe 'success', ->
     beforeEach (done)->
-      @herokuAccount = new Account(billingProvider: 'heroku', plans: ['basic'])
+      @herokuAccount = new Account(billingProvider: 'heroku', productPlans: {broadcast: ['basic']})
       @herokuAccount.save done
     beforeEach (done)->
-      @engineYardAccount = new Account(billingProvider: 'engineyard', plans: ['basic'])
+      @engineYardAccount = new Account(billingProvider: 'engineyard', productPlans: {broadcast: ['basic']})
       @engineYardAccount.save done
     beforeEach (done)->
-      @appdirectAccount = new Account(billingProvider: 'appdirect', plans: ['basic'])
+      @appdirectAccount = new Account(billingProvider: 'appdirect', productPlans: {broadcast: ['basic']})
       @appdirectAccount.save done
 
     beforeEach (done)->
-      @cineioAccount = new Account(billingProvider: 'cine.io', plans: ['basic'])
+      @cineioAccount = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['basic']})
       @cineioAccount.stripeCustomer.stripeCustomerId = "cus_2ghmxawfvEwXkw"
       @cineioAccount.stripeCustomer.cards.push stripeCardId: "card_102gkI2AL5avr9E4geO0PpkC"
       @cineioAccount.save done
 
     beforeEach (done)->
-      @deletedAccount = new Account(billingProvider: 'cine.io', plans: ['basic'], deletedAt: new Date)
+      @deletedAccount = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['basic']}, deletedAt: new Date)
       @deletedAccount.save done
 
     beforeEach (done)->
-      @throttledAccount = new Account(billingProvider: 'cine.io', plans: ['basic'], throttledAt: new Date)
+      @throttledAccount = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['basic']}, throttledAt: new Date)
       @throttledAccount.save done
 
     beforeEach ->

@@ -7,7 +7,7 @@ describe 'UsageReports#Show', ->
   testApi.requiresMasterKey ShowUsageReports
 
   beforeEach (done)->
-    @account = new Account billingProvider: 'cine.io', masterKey: 'dat mk', plans: ['free']
+    @account = new Account billingProvider: 'cine.io', masterKey: 'dat mk', productPlans: {broadcast: ['free']}
     @account.save done
 
   beforeEach ->

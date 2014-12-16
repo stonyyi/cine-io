@@ -8,10 +8,13 @@ getDaysInMonth = Cine.server_lib('get_days_in_month')
 ARITRARY_OVERAGE_COST = 100 #one dollar
 
 accountPlanAmount = (account)->
-  plans = ProvidersAndPlans[account.billingProvider].plans
-  addPlanAmount = (accum, plan)->
-    accum + (plans[plan].price * 100)
-  _.inject account.plans, addPlanAmount, 0
+  addPlanAmount = (product)->
+    plans = ProvidersAndPlans[account.billingProvider][product].plans
+    (accum, plan)->
+      accum + (plans[plan].price * 100)
+  broadcast = _.inject account.productPlans.broadcast, addPlanAmount('broadcast'), 0
+  # peer = _.inject account.productPlans.peer, addPlanAmount('peer'), 0
+  broadcast# + peer
 
 accountIsCreatedInThisMonth = (account, monthToBill)->
   account.createdAt.getYear() == monthToBill.getYear() && account.createdAt.getMonth() == monthToBill.getMonth()
@@ -32,7 +35,7 @@ proratedAccountPlanAmount = (account, accountUsageResult)->
 #  storageOverage: Number in cents
 #  bandwidthOverage: Number in cents
 module.exports = (account, monthToBill, callback)->
-  if account.plans.length == 0
+  if _.all _.values(account.productPlans), _.isEmpty
     return callback null,
       billing:
         plan: 0
