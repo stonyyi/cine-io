@@ -5,7 +5,7 @@ async = require('async')
 exports.byMonth = (account, month, callback)->
 
   calculateProjectUsage = (accum, project, callback)->
-    CalculateProjectPeerMinutes.byMonth project._id, month, (err, projectPeerMilliseconds)->
+    CalculateProjectPeerMilliseconds.byMonth project._id, month, (err, projectPeerMilliseconds)->
       return callback(err) if err
       callback(null, accum + projectPeerMilliseconds)
 
