@@ -1,3 +1,4 @@
+moment = require('moment')
 _ = require('underscore')
 async = require('async')
 
@@ -11,7 +12,7 @@ scheduledTasks =
     ]
 
 runServerLib = (libraryName, payload, callback)->
-  console.log("running #{libraryName} with", payload)
+  console.log("running #{libraryName} with", payload, "at", moment().format('MMMM Do YYYY, h:mm:ss a'))
   library = Cine.server_lib(libraryName)
   switch library.length
     when 1 then library(callback)
