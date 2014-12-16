@@ -11,7 +11,7 @@ exports.byMonth = (month, done)->
   calculateUsageForAccount = (account, callback)->
     calculateAccountUsage.byMonth account, month, (err, result)->
       return callback(err) if err
-      return callback() if result.bandwidth == 0 && result.storage == 0
+      return callback() if result.bandwidth == 0 && result.storage == 0 && result.peerMilliseconds == 0
 
       collectiveStats[account._id.toString()] = result
       callback()
