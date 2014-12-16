@@ -3,7 +3,8 @@ var
   React = require('react'),
   _ = require('underscore'),
   Stats = Cine.model('stats'),
-  humanizeBytes = Cine.lib('humanize_bytes')
+  humanizeBytes = Cine.lib('humanize_bytes'),
+  humanizeTime = Cine.lib('humanize_time')
 ;
 
 module.exports = React.createClass({
