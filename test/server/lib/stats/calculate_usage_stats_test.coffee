@@ -2,6 +2,7 @@ calculateUsageStats = Cine.server_lib("stats/calculate_usage_stats")
 Account = Cine.server_model('account')
 CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
+CalcualteAccountPeerMilliseconds = Cine.server_lib('reporting/peer/calculate_account_peer_milliseconds')
 
 describe 'calculateUsageStats', ->
   beforeEach (done)->
@@ -52,18 +53,39 @@ describe 'calculateUsageStats', ->
   afterEach ->
     @storageStub.restore()
 
+  beforeEach ->
+    @fakePeerMillisecondsThisMonth = {}
+    @fakePeerMillisecondsThisMonth[@account1._id.toString()] = 989898
+    @fakePeerMillisecondsThisMonth[@account2._id.toString()] = 787878
+    @fakePeerMillisecondsThisMonth[@account3._id.toString()] = 676767
+
+    @fakePeerMillisecondsByMonth = {}
+    @fakePeerMillisecondsByMonth[@account1._id.toString()] = 565656
+    @fakePeerMillisecondsByMonth[@account2._id.toString()] = 454545
+    @fakePeerMillisecondsByMonth[@account3._id.toString()] = 343434
+
+    @peerStub = sinon.stub CalcualteAccountPeerMilliseconds, 'byMonth', (account, month, callback)=>
+      resource = if month.getYear() == (new Date).getYear() then @fakePeerMillisecondsThisMonth else @fakePeerMillisecondsByMonth
+      callback(null, resource[account._id.toString()])
+
+  afterEach ->
+    @peerStub.restore()
+
   describe 'thisMonth', ->
     it 'calculates the stats for each account', (done)->
       expected = {}
       expected[@account1._id.toString()] =
         bandwidth: 12345
         storage: 111111
+        peerMilliseconds: 989898
       expected[@account2._id.toString()] =
         bandwidth: 54321
         storage: 666666
+        peerMilliseconds: 787878
       expected[@account3._id.toString()] =
         bandwidth: 12121
         storage: 333333
+        peerMilliseconds: 676767
       calculateUsageStats.thisMonth (err, results)->
         expect(err).to.be.null
         expect(results).to.deep.equal(expected)
@@ -77,12 +99,15 @@ describe 'calculateUsageStats', ->
       expected[@account1._id.toString()] =
         bandwidth: 99999
         storage: 222222
+        peerMilliseconds: 565656
       expected[@account2._id.toString()] =
         bandwidth: 88888
         storage: 444444
+        peerMilliseconds: 454545
       expected[@account3._id.toString()] =
         bandwidth: 77777
         storage: 555555
+        peerMilliseconds: 343434
 
       calculateUsageStats.byMonth d, (err, results)->
         expect(err).to.be.null

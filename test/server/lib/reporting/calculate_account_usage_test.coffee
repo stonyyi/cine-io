@@ -2,6 +2,7 @@ calculateAccountUsage = Cine.server_lib("reporting/calculate_account_usage")
 Account = Cine.server_model('account')
 CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
+CalcualteAccountPeerMilliseconds = Cine.server_lib('reporting/peer/calculate_account_peer_milliseconds')
 
 describe 'calculateAccountUsage', ->
   beforeEach (done)->
@@ -36,11 +37,26 @@ describe 'calculateAccountUsage', ->
   afterEach ->
     @storageStub.restore()
 
+  beforeEach ->
+    @fakePeerMillisecondsThisMonth = {}
+    @fakePeerMillisecondsThisMonth[@account._id.toString()] = 333333
+
+    @fakePeerMillisecondsByMonth = {}
+    @fakePeerMillisecondsByMonth[@account._id.toString()] = 444444
+
+    @peerStub = sinon.stub CalcualteAccountPeerMilliseconds, 'byMonth', (account, month, callback)=>
+      resource = if month.getYear() == (new Date).getYear() then @fakePeerMillisecondsThisMonth else @fakePeerMillisecondsByMonth
+      callback(null, resource[account._id.toString()])
+
+  afterEach ->
+    @peerStub.restore()
+
   describe 'thisMonth', ->
     it 'calculates the stats for each account', (done)->
       expected =
         bandwidth: 12345
         storage: 111111
+        peerMilliseconds: 333333
 
       calculateAccountUsage.thisMonth @account, (err, results)->
         expect(err).to.be.undefined
@@ -54,6 +70,7 @@ describe 'calculateAccountUsage', ->
       expected =
         bandwidth: 99999
         storage: 2222222
+        peerMilliseconds: 444444
 
       calculateAccountUsage.byMonth @account, d, (err, results)->
         expect(err).to.be.undefined

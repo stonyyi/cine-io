@@ -6,7 +6,7 @@ Account = Cine.server_model('account')
 CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
 calculateAndSaveUsageStats = Cine.server_lib("stats/calculate_and_save_usage_stats")
-moment = require('moment')
+CalcualteAccountPeerMilliseconds = Cine.server_lib('reporting/peer/calculate_account_peer_milliseconds')
 
 describe 'Stats#Show', ->
   testApi.requiresSiteAdmin Show
@@ -51,6 +51,18 @@ describe 'Stats#Show', ->
   afterEach ->
     @storageStub.restore()
 
+  beforeEach ->
+    @fakePeerMilliseconds = {}
+    @fakePeerMilliseconds[@account1._id.toString()] = 989898
+    @fakePeerMilliseconds[@account2._id.toString()] = 787878
+    @fakePeerMilliseconds[@account3._id.toString()] = 676767
+
+    @peerStub = sinon.stub CalcualteAccountPeerMilliseconds, 'byMonth', (account, month, callback)=>
+      callback(null, @fakePeerMilliseconds[account._id.toString()])
+
+  afterEach ->
+    @peerStub.restore()
+
   beforeEach (done)->
     @month = new Date
     calculateAndSaveUsageStats.byMonth @month, done
@@ -61,9 +73,9 @@ describe 'Stats#Show', ->
     expect(_.keys(response).sort()).to.deep.equal(['id', 'usage'])
     usageForMonth = response.usage[usageForMonthKey]
     expectedResult = {}
-    expectedResult[@account1._id.toString()] = {name: 'account1 name', usage: {bandwidth: 12345, storage: 111111}}
-    expectedResult[@account2._id.toString()] = {name: 'account2 name', usage: {bandwidth: 54321, storage: 666666}}
-    expectedResult[@account3._id.toString()] = {name: 'account3 name', usage: {bandwidth: 12121, storage: 333333}}
+    expectedResult[@account1._id.toString()] = {name: 'account1 name', usage: {bandwidth: 12345, storage: 111111, peerMilliseconds: 989898}}
+    expectedResult[@account2._id.toString()] = {name: 'account2 name', usage: {bandwidth: 54321, storage: 666666, peerMilliseconds: 787878}}
+    expectedResult[@account3._id.toString()] = {name: 'account3 name', usage: {bandwidth: 12121, storage: 333333, peerMilliseconds: 676767}}
 
     expect(usageForMonth).to.have.length(3)
 
