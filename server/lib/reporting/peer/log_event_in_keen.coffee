@@ -1,13 +1,5 @@
 _ = require('underscore')
-Keen = require('keen.io')
-config = Cine.config('variables/keen')
-
-# Configure instance. Only projectId and writeKey are required to send data.
-client = Keen.configure
-  projectId: config.projectId
-  writeKey: config.writeKey
-  readKey: config.readKey
-  masterKey: config.masterKey
+client = Cine.server_lib('keen_client')
 
 noop = ->
 
