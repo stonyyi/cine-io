@@ -138,7 +138,7 @@ module.exports =
   appdirect:
     # Url likely to change once we're approved
     # I heard something about a dev profile and public profile
-    url: 'https://www.appdirect.com/apps/12055'
+    url: 'https://www.appdirect.com/apps/14079'
     plans:
       'sample-addon':
         price: 0
