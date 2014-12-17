@@ -36,16 +36,23 @@ class RoomManager
 
   joinedRoom: (spark, room, callback=noop)=>
     console.log('joined room', room)
-    publicRoom = projectRoomNameWithoutProject(spark, room)
     @_logEventInKeen(spark, room, 'userJoinedRoom')
-    @primus.room(room).except(spark.id).write(action: 'room-join', room: publicRoom, sparkId: spark.id, sparkUUID: spark.clientUUID)
-    callback()
+    @_sendEvent('room-join', spark, room, callback)
 
   leftRoom: (spark, room, callback=noop)=>
     console.log('left room', room)
-    publicRoom = projectRoomNameWithoutProject(spark, room)
     @_logEventInKeen(spark, room, 'userLeftRoom')
-    @primus.room(room).except(spark.id).write(action: 'room-leave', room: publicRoom, sparkId: spark.id, sparkUUID: spark.clientUUID)
+    @_sendEvent('room-leave', spark, room, callback)
+
+  _sendEvent: (action, spark, room, callback)->
+    publicRoom = projectRoomNameWithoutProject(spark, room)
+    data =
+      action: action
+      room: publicRoom
+      sparkId: spark.id
+      sparkUUID: spark.clientUUID
+    data.identity = spark.identity if spark.identity
+    @primus.room(room).except(spark.id).write(data)
     callback()
 
   leftRooms: (spark, rooms, callback=noop)=>
@@ -177,13 +184,12 @@ module.exports = (server)->
   primus.use('omega-supreme', OmegaSupreme)
   primus.use('metroplex', Metroplex)
 
-  askSparkToJoinRoomByIdentity = (spark, roomName, data)->
-    publicKey = data.publicKey
+  sendToIdentity = (spark, otheridentity, data)->
     ensureProjectId spark, (err)->
       return if err
 
       identityParams =
-        identity: data.otheridentity
+        identity: otheridentity
         _project: spark.projectId
 
       PeerIdentity.findOne identityParams, (err, identity)->
@@ -195,7 +201,14 @@ module.exports = (server)->
           return
         _.each identity.currentConnections, (otherSparkId)->
 
-          sendToOtherSpark spark, otherSparkId.sparkId.toString(), action: 'call', room: roomName
+          sendToOtherSpark spark, otherSparkId.sparkId.toString(), data
+
+  askSparkToJoinRoomByIdentity = (spark, roomName, data)->
+    dataToSend =
+      action: 'call'
+      room: roomName
+      identity: spark.identity
+    sendToIdentity spark, data.otheridentity, dataToSend
 
   sendToOtherSpark = (senderSpark, receivingSparkId, data)->
     data.sparkId = senderSpark.id
@@ -291,7 +304,6 @@ module.exports = (server)->
 
             if err
               return spark.write action: 'error', error: "UNKNOWN_ERROR", message: err
-
             spark.identityId = identity._id
             spark.write action: 'ack', source: 'identify'
 
@@ -301,7 +313,7 @@ module.exports = (server)->
             if !spark.connectedRooms[room]
               spark.connectedRooms[room] = true
               spark.join projectRoomName(spark, room)
-            spark.write action: 'ack', source: 'call', room: room
+            spark.write action: 'ack', source: 'call', room: room, otheridentity: data.otheridentity
 
           if data.room?
             makeCall(spark, data.room, data)
@@ -313,7 +325,16 @@ module.exports = (server)->
           ensureProjectId spark, (err)->
             room = data.room
             primus.room(projectRoomName(spark, room)).except(spark.id).write(action: 'call-reject', room: room, identity: spark.identity, sparkUUID: spark.clientUUID)
-            spark.write action: 'ack', source: 'call-reject'
+            spark.write action: 'ack', source: 'call-reject', room: data.room
+
+        when "call-cancel"
+          ensureProjectId spark, (err)->
+            dataToSend =
+              action: 'call-cancel'
+              room: data.room
+              identity: spark.identity
+            sendToIdentity spark, data.otheridentity, dataToSend
+            spark.write action: 'ack', source: 'call-cancel', room: data.room, otheridentity: data.otheridentity
         # END point-to-point calling
 
         else

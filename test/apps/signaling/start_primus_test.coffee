@@ -290,7 +290,7 @@ describe 'socket calls', ->
       describe 'call', ->
         beforeEach (done)->
           identify @client, 'meee', '1418075572', '41c3c037d56a51cb9dd4389592bd5115f3fa1237'
-          identify @otherClient, 'other', '1418075572', '41c3c037d56a51cb9dd4389592bd5115f3fa1237'
+          identify @otherClient, 'other', '1418075572', '772f96bc81c63ccafd4f10b55434e74ab96f2960'
           setTimeout done, 100
 
         it 'sends the other client a room', (done)->
@@ -303,7 +303,6 @@ describe 'socket calls', ->
           ensurePeerConnecitonMade 1, (err)=>
             return done(err) if err
             @otherClient.write action: 'call', otheridentity: 'meee', publicKey: 'this-is-a-real-api-key'
-
 
         describe "different projects", ->
           beforeEach (done)->
@@ -347,7 +346,7 @@ describe 'socket calls', ->
       describe 'reject', ->
         beforeEach (done)->
           identify @client, 'meee', '1418075572', '41c3c037d56a51cb9dd4389592bd5115f3fa1237'
-          identify @otherClient, 'other', '1418075572', '41c3c037d56a51cb9dd4389592bd5115f3fa1237'
+          identify @otherClient, 'other', '1418075572', '772f96bc81c63ccafd4f10b55434e74ab96f2960'
           setTimeout done, 100
 
         it 'sends the other client a rejection', (done)->
@@ -365,6 +364,36 @@ describe 'socket calls', ->
             expect(data.room).to.equal(room)
             expect(data.sparkUUID).to.equal('111')
             done()
+          ensurePeerConnecitonMade 1, (err)=>
+            return done(err) if err
+            @otherClient.write action: 'call', otheridentity: 'meee', publicKey: 'this-is-a-real-api-key'
+
+      describe 'cancel', ->
+        beforeEach (done)->
+          @client.on 'data', (data)->
+            done() if data.action == 'ack' && data.source == 'identify'
+          identify @client, 'meee', '1418075572', '41c3c037d56a51cb9dd4389592bd5115f3fa1237'
+
+        beforeEach (done)->
+          @otherClient.on 'data', (data)->
+            done() if data.action == 'ack' && data.source == 'identify'
+          identify @otherClient, 'other', '1418075572', '772f96bc81c63ccafd4f10b55434e74ab96f2960'
+
+        it.only 'sends the other client a room', (done)->
+          originalRoom = null
+          @client.on 'data', (data)->
+            if data.action == 'call'
+              originalRoom = data.room
+              expect(data.room).to.have.length(64)
+              expect(data.sparkId).to.have.length(36)
+              expect(data.sparkUUID).to.equal('222')
+            if data.action == 'call-cancel'
+              expect(data.room).to.equal(originalRoom)
+              expect(data.identity).to.equal('other')
+              done()
+          @otherClient.on 'data', (data)=>
+            if data.action == 'ack' and data.source == 'call'
+              @otherClient.write action: 'call-cancel', otheridentity: 'meee', publicKey: 'this-is-a-real-api-key', room: data.room
           ensurePeerConnecitonMade 1, (err)=>
             return done(err) if err
             @otherClient.write action: 'call', otheridentity: 'meee', publicKey: 'this-is-a-real-api-key'
