@@ -379,7 +379,7 @@ describe 'socket calls', ->
             done() if data.action == 'ack' && data.source == 'identify'
           identify @otherClient, 'other', '1418075572', '772f96bc81c63ccafd4f10b55434e74ab96f2960'
 
-        it.only 'sends the other client a room', (done)->
+        it 'sends the other client a room', (done)->
           originalRoom = null
           @client.on 'data', (data)->
             if data.action == 'call'
