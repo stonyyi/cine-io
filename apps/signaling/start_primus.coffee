@@ -35,12 +35,12 @@ class RoomManager
   constructor: (@primus)->
 
   joinedRoom: (spark, room, callback=noop)=>
-    console.log('joined room', room)
+    # console.log('joined room', room)
     @_logEventInKeen(spark, room, 'userJoinedRoom')
     @_sendEvent('room-join', spark, room, callback)
 
   leftRoom: (spark, room, callback=noop)=>
-    console.log('left room', room)
+    # console.log('left room', room)
     @_logEventInKeen(spark, room, 'userLeftRoom')
     @_sendEvent('room-leave', spark, room, callback)
 
@@ -203,12 +203,12 @@ module.exports = (server)->
 
           sendToOtherSpark spark, otherSparkId.sparkId.toString(), data
 
-  askSparkToJoinRoomByIdentity = (spark, roomName, data)->
+  askSparkToJoinRoomByIdentity = (spark, roomName, otheridentity)->
     dataToSend =
       action: 'call'
       room: roomName
       identity: spark.identity
-    sendToIdentity spark, data.otheridentity, dataToSend
+    sendToIdentity spark, otheridentity, dataToSend
 
   sendToOtherSpark = (senderSpark, receivingSparkId, data)->
     data.sparkId = senderSpark.id
@@ -219,7 +219,7 @@ module.exports = (server)->
   roomManager = new RoomManager(primus)
 
   primus.on 'connection', (spark)->
-    console.log("new connection")
+    # console.log("new connection")
     spark.connectedRooms = {}
 
     spark.on 'data', (data)->
@@ -229,29 +229,27 @@ module.exports = (server)->
       # console.log('got spark data', data)
 
       spark.clientUUID ||= data.uuid
-
+      console.log(spark.clientUUID, "sent", data.action)
       switch data.action
         when 'auth'
           authenticateSpark(spark, data)
 
         # BEGIN PeerConnection events
         when "rtc-ice"
-          console.log "i am", spark.id
-          console.log "sending ice to", data.sparkId, data.candidate
+          # console.log "i am", spark.id
+          # console.log "sending ice to", data.sparkId, data.candidate
           sendToOtherSpark spark, data.sparkId, action: "rtc-ice", candidate: data.candidate
           spark.write action: 'ack', source: 'rtc-ice'
 
         when "rtc-offer"
-          # console.log "new offer", data
-          console.log "i am", spark.id
-          console.log "sending offer to", data.sparkId, data.offer
+          # console.log "i am", spark.id
+          # console.log "sending offer to", data.sparkId, data.offer
           spark.write action: 'ack', source: 'rtc-offer'
           sendToOtherSpark spark, data.sparkId, action: "rtc-offer", offer: data.offer
 
         when "rtc-answer"
-          # console.log "new answer", data
-          console.log "i am", spark.id
-          console.log "sending answer to", data.sparkId, data.answer
+          # console.log "i am", spark.id
+          # console.log "sending answer to", data.sparkId, data.answer
           spark.write action: 'ack', source: 'rtc-answer'
           sendToOtherSpark spark, data.sparkId, action: "rtc-answer", answer: data.answer
         # END PeerConnection events
@@ -294,7 +292,7 @@ module.exports = (server)->
 
         # BEGIN point-to-point calling
         when "identify"
-          console.log "i am", spark.id
+          # console.log "i am", spark.id
           setIdentity spark, data, (err, identity)->
             if err == 'project not found'
               return spark.write invalidPublicKeyOptions(data.publicKey)
@@ -309,11 +307,18 @@ module.exports = (server)->
 
         when "call"
           makeCall = (spark, room, data)->
-            askSparkToJoinRoomByIdentity(spark, room, data)
+            otheridentity = data.otheridentity
+            askSparkToJoinRoomByIdentity(spark, room, otheridentity)
             if !spark.connectedRooms[room]
               spark.connectedRooms[room] = true
               spark.join projectRoomName(spark, room)
-            spark.write action: 'ack', source: 'call', room: room, otheridentity: data.otheridentity
+            dataToSend =
+              action: 'ack'
+              source: 'call'
+              room: room
+              otheridentity: otheridentity
+            # console.log("ACKING", dataToSend)
+            spark.write dataToSend
 
           if data.room?
             makeCall(spark, data.room, data)
