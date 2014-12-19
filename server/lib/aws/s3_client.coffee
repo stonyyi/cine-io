@@ -22,7 +22,7 @@ exports.uploadFile = (localFile, bucket, remoteFile, options={}, callback)->
       Key: remoteFile
       ACL: options.ACL
 
-  # console.log("uploading", params)
+  console.log("uploading", params)
 
   uploader = s3Client.uploadFile(params)
 
