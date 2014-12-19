@@ -34,7 +34,7 @@ exports.uploadFile = (localFile, bucket, remoteFile, options={}, callback)->
   #   console.log("progress", uploader.progressMd5Amount, uploader.progressAmount, uploader.progressTotal)
 
   uploader.on 'end', ->
-    # console.log("done uploading")
+    console.log("done uploading", params)
     callback()
 
 exports.downloadFile = (localFile, bucket, remoteFile, callback)->
