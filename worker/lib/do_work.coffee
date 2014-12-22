@@ -10,6 +10,10 @@ scheduledTasks =
       'stats/calculate_and_save_usage_stats'
       'billing/update_or_throttle_accounts_who_cannot_pay_for_overages'
     ]
+  once_every_10_minutes:
+    [
+      'analyze_kue_queue'
+    ]
 
 runServerLib = (libraryName, payload, callback)->
   console.log("running #{libraryName} with", payload, "at", moment().format('MMMM Do YYYY, h:mm:ss a'))

@@ -26,6 +26,12 @@ describe 'doWork', ->
             'billing/update_or_throttle_accounts_who_cannot_pay_for_overages'
           ]
         }
+        {
+          name: 'once_every_10_minutes'
+          libs: [
+            'analyze_kue_queue'
+          ]
+        }
       ]
       _.each schedulableJobs, (schedulableJob)->
 
@@ -37,10 +43,8 @@ describe 'doWork', ->
           jobStub = sinon.stub Cine, 'server_lib', -> justACallback
           jobStub.withArgs(schedulableJob.libs)
           doWork schedulableJob.name, {}, (err, response)->
-            expect(jobStub.firstCall.args).to.deep.equal([schedulableJob.libs[0]])
-            expect(jobStub.secondCall.args).to.deep.equal([schedulableJob.libs[1]])
-            expect(jobStub.thirdCall.args).to.deep.equal([schedulableJob.libs[2]])
-            expect(jobStub.getCall(3).args).to.deep.equal([schedulableJob.libs[3]])
+            for lib, index in schedulableJob.libs
+              expect(jobStub.getCall(index).args).to.deep.equal([lib])
             jobStub.restore()
             expect(err).be.undefined
             expect(response).to.be.undefined
