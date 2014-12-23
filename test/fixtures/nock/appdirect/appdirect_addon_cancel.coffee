@@ -2,13 +2,12 @@ verifyOauthSignature = Cine.server_lib('appdirect/verify_oauth_signature')
 
 createResponse = (accountId)->
   response =
-    type: "ADDON_ORDER"
+    type: "ADDON_CANCEL"
     marketplace:
       partner: "APPDIRECT"
       baseUrl: "https://www.appdirect.com"
 
     applicationUuid: null
-    flag: "DEVELOPMENT"
     creator:
       uuid: "a959d462-a6b0-41e3-b0eb-c73c1d199fd3"
       openId: "https://www.appdirect.com/openid/id/a959d462-a6b0-41e3-b0eb-c73c1d199fd3"
@@ -26,15 +25,11 @@ createResponse = (accountId)->
         accountIdentifier: accountId
         status: "ACTIVE"
 
-      addonInstance: null
-      addonBinding: null
-      order:
-        editionCode: null
-        addonOfferingCode: "solo"
-        pricingDuration: "MONTHLY"
-        items: []
-        maxUsers: null
+      addonInstance:
+        id: "solo"
 
+      addonBinding: null
+      order: null
       notice: null
       configuration: {}
 

@@ -53,7 +53,7 @@ describe 'AppDirect/Subscription/Create', ->
 
       describe 'with an appdirect error', ->
         beforeEach ->
-          @appDirectErrorResponse = requireFixture('nock/appdirect_response_error')()
+          @appDirectErrorResponse = requireFixture('nock/appdirect/appdirect_response_error')()
 
         beforeEach (done)->
           getAppdirectUrl.call(this, done)
@@ -68,7 +68,7 @@ describe 'AppDirect/Subscription/Create', ->
           @user.save done
 
         beforeEach ->
-          @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_create_success')()
+          @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_subscription_create_success')()
 
         assertEmailSent 'welcomeEmail'
         assertEmailSent.admin 'newUser'
@@ -94,9 +94,25 @@ describe 'AppDirect/Subscription/Create', ->
             expect(account.name).to.equal("cine.io")
             done()
 
+    describe 'development', ->
+      beforeEach ->
+        @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_subscription_create_success_development')()
+
+      beforeEach (done)->
+        getAppdirectUrl.call(this, done)
+
+      it 'creates an account and does not send an email', (done)->
+        User.findOne email: 'thomas@cine.io', (err, user)->
+          expect(err).to.be.null
+          Account.findOne user._accounts[0], (err, account)->
+            expect(err).to.be.null
+            expect(account.name).to.equal('cine.io')
+            expect(account.appdirectData.marketplace.partner).to.equal('CLOUDFOUNDRY')
+            done()
+
     describe 'success', ->
       beforeEach ->
-        @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_create_success')()
+        @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_subscription_create_success')()
 
       assertEmailSent 'welcomeEmail'
       assertEmailSent.admin 'newUser'

@@ -32,8 +32,9 @@ createSubscription = (req, res)->
     createNewAccount accountAttributes, userAttributes, (err, result)->
       console.log("DONE", err, result)
       return sendAppdirectResponse(res, 'unknownError') if err
-      mailer.welcomeEmail(result.user)
-      mailer.admin.newUser(result.account, result.user, 'appdirect')
+      if result.account.appdirectData.flag != "DEVELOPMENT"
+        mailer.welcomeEmail(result.user)
+        mailer.admin.newUser(result.account, result.user, 'appdirect')
       sendAppdirectResponse(res, 'accountCreated', result.account)
 
 module.exports = (app)->

@@ -8,7 +8,6 @@ createResponse = (accountId)->
       baseUrl: "https://cloudfoundry.appdirect.com"
 
     applicationUuid: null
-    flag: "DEVELOPMENT"
     creator:
       uuid: "5524eea2-00df-4a81-a4a9-57223a1fc5e6"
       openId: "https://cloudfoundry.appdirect.com/openid/id/5524eea2-00df-4a81-a4a9-57223a1fc5e6"

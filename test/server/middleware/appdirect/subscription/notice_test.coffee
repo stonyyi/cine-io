@@ -51,7 +51,7 @@ describe 'AppDirect/Subscription/Notice', ->
 
       describe 'with an appdirect error', ->
         beforeEach ->
-          @appDirectErrorResponse = requireFixture('nock/appdirect_response_error')()
+          @appDirectErrorResponse = requireFixture('nock/appdirect/appdirect_response_error')()
 
         beforeEach (done)->
           getAppdirectUrl.call(this, done)
@@ -63,7 +63,7 @@ describe 'AppDirect/Subscription/Notice', ->
       describe 'without an account', ->
 
         beforeEach ->
-          @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_notice_deactivate_success')((new Account)._id)
+          @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_subscription_notice_deactivate_success')((new Account)._id)
 
         it 'returns a failed success and the reason', (done)->
           @agent
@@ -85,7 +85,7 @@ describe 'AppDirect/Subscription/Notice', ->
 
       describe 'Deactivate', ->
         beforeEach ->
-          @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_notice_deactivate_success')(@account._id)
+          @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_subscription_notice_deactivate_success')(@account._id)
 
         beforeEach (done)->
           getAppdirectUrl.call(this, done)
@@ -119,7 +119,7 @@ describe 'AppDirect/Subscription/Notice', ->
           @account.save done
 
         beforeEach ->
-          @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_notice_reactivate_success')(@account._id)
+          @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_subscription_notice_reactivate_success')(@account._id)
 
         beforeEach (done)->
           getAppdirectUrl.call(this, done)
@@ -150,7 +150,7 @@ describe 'AppDirect/Subscription/Notice', ->
 
       describe 'Closed', ->
         beforeEach ->
-          @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_notice_closed_success')(@account._id)
+          @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_subscription_notice_closed_success')(@account._id)
 
         beforeEach (done)->
           getAppdirectUrl.call(this, done)
@@ -179,7 +179,7 @@ describe 'AppDirect/Subscription/Notice', ->
 
       describe 'Upcoming Invoice', ->
         beforeEach ->
-          @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_notice_upcoming_invoice_success')(@account._id)
+          @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_subscription_notice_upcoming_invoice_success')(@account._id)
 
         beforeEach (done)->
           getAppdirectUrl.call(this, done)

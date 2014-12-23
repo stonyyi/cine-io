@@ -53,7 +53,7 @@ describe 'AppDirect/Users/Assign', ->
 
       describe 'with an appdirect error', ->
         beforeEach ->
-          @appDirectErrorResponse = requireFixture('nock/appdirect_response_error')()
+          @appDirectErrorResponse = requireFixture('nock/appdirect/appdirect_response_error')()
 
         beforeEach (done)->
           getAppdirectUrl.call(this, done)
@@ -65,7 +65,7 @@ describe 'AppDirect/Users/Assign', ->
     describe 'without an account', ->
 
       beforeEach ->
-        @appDirectSuccessResponse = requireFixture('nock/appdirect_assign_user_success')((new Account)._id)
+        @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_assign_user_success')((new Account)._id)
 
       beforeEach (done)->
         getAppdirectUrl.call(this, done)
@@ -88,7 +88,7 @@ describe 'AppDirect/Users/Assign', ->
         @account.save done
 
       beforeEach ->
-        @appDirectSuccessResponse = requireFixture('nock/appdirect_assign_user_success')(@account._id)
+        @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_assign_user_success')(@account._id)
 
       beforeEach (done)->
         getAppdirectUrl.call(this, done)
@@ -126,7 +126,7 @@ describe 'AppDirect/Users/Assign', ->
         @user.save done
 
       beforeEach ->
-        @appDirectSuccessResponse = requireFixture('nock/appdirect_assign_user_success')(@account._id)
+        @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_assign_user_success')(@account._id)
 
       beforeEach (done)->
         getAppdirectUrl.call(this, done)

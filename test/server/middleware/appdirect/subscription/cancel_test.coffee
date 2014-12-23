@@ -52,7 +52,7 @@ describe 'AppDirect/Subscription/Cancel', ->
 
       describe 'with an appdirect error', ->
         beforeEach ->
-          @appDirectErrorResponse = requireFixture('nock/appdirect_response_error')()
+          @appDirectErrorResponse = requireFixture('nock/appdirect/appdirect_response_error')()
 
         beforeEach (done)->
           getAppdirectUrl.call(this, done)
@@ -64,7 +64,7 @@ describe 'AppDirect/Subscription/Cancel', ->
       describe 'without an account', ->
 
         beforeEach ->
-          @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_cancel_success')((new Account)._id)
+          @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_subscription_cancel_success')((new Account)._id)
 
         it 'returns a failed success and the reason', (done)->
           @agent
@@ -84,7 +84,7 @@ describe 'AppDirect/Subscription/Cancel', ->
         @account.save done
 
       beforeEach ->
-        @appDirectSuccessResponse = requireFixture('nock/appdirect_subscription_cancel_success')(@account._id)
+        @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_subscription_cancel_success')(@account._id)
 
       beforeEach (done)->
         getAppdirectUrl.call(this, done)

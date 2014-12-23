@@ -57,7 +57,7 @@ describe 'AppDirect/Addons', ->
 
   describe 'with an appdirect error', ->
     beforeEach ->
-      @appDirectErrorResponse = requireFixture('nock/appdirect_response_error')()
+      @appDirectErrorResponse = requireFixture('nock/appdirect/appdirect_response_error')()
 
     beforeEach (done)->
       getAppdirectUrl.call(this, done)
@@ -70,7 +70,7 @@ describe 'AppDirect/Addons', ->
   describe 'order', ->
 
     beforeEach ->
-      @appDirectSuccessResponse = requireFixture('nock/appdirect_addon_order')(@account._id)
+      @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_addon_order')(@account._id)
 
     describe 'standard', ->
       beforeEach (done)->
@@ -119,7 +119,7 @@ describe 'AppDirect/Addons', ->
       @account.save done
 
     beforeEach ->
-      @appDirectSuccessResponse = requireFixture('nock/appdirect_addon_cancel')(@account._id)
+      @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_addon_cancel')(@account._id)
 
     beforeEach (done)->
       getAppdirectUrl.call(this, done)
@@ -151,7 +151,7 @@ describe 'AppDirect/Addons', ->
   describe 'bind', ->
 
     beforeEach ->
-      @appDirectSuccessResponse = requireFixture('nock/appdirect_addon_bind')(@account._id)
+      @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_addon_bind')(@account._id)
 
     beforeEach (done)->
       getAppdirectUrl.call(this, done)
@@ -185,7 +185,7 @@ describe 'AppDirect/Addons', ->
 
   describe 'unbind', ->
     beforeEach ->
-      @appDirectSuccessResponse = requireFixture('nock/appdirect_addon_unbind')(@account._id)
+      @appDirectSuccessResponse = requireFixture('nock/appdirect/appdirect_addon_unbind')(@account._id)
 
     beforeEach (done)->
       getAppdirectUrl.call(this, done)
