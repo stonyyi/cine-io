@@ -92,7 +92,7 @@
   },
   "license": "Copyrighted / All Rights Reserved",
   "engines": {
-    "node": "0.10.32"
+    "node": "0.10.34"
   },
   "private": true
 }
