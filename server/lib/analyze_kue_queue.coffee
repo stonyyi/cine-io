@@ -1,6 +1,6 @@
 async = require('async')
 _ = require('underscore')
-queue = Cine.server_lib('create_queue')()
+createQueue = Cine.server_lib('create_queue')
 kue = require('kue')
 
 getQueueResults = (queueName, state, callback)->
@@ -41,6 +41,7 @@ checkQueue = (queueName, callback)->
       callback()
 
 module.exports = (callback)->
+  queue = createQueue()
   queue.inactiveCount (err, inactiveCount)->
     return callback(err) if err
     queue.activeCount (err, activeCount)->

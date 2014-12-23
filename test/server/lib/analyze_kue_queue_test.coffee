@@ -1,7 +1,9 @@
 analyzeKueQueue = Cine.server_lib('analyze_kue_queue')
-jobs = Cine.server_lib('create_queue')()
 
 describe 'analyzeKueQueue', ->
+  beforeEach ->
+    @jobs = Cine.server_lib('create_queue')(force: true)
+
   it 'returns when there are no jobs', (done)->
     analyzeKueQueue (err, result)->
       expect(err).to.be.null
@@ -11,15 +13,15 @@ describe 'analyzeKueQueue', ->
   describe 'with jobs', ->
 
     beforeEach (done)->
-      @job = jobs.create("first-queue", more: 'data')
+      @job = @jobs.create("first-queue", more: 'data')
       @job.save done
 
     beforeEach (done)->
-      @job2 = jobs.create("second-queue", some: 'data')
+      @job2 = @jobs.create("second-queue", some: 'data')
       @job2.save done
 
     beforeEach (done)->
-      @job3 = jobs.create("second-queue", again: 'data')
+      @job3 = @jobs.create("second-queue", again: 'data')
       @job3.save done
 
     beforeEach (done)->
