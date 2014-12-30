@@ -107,8 +107,13 @@ exports.underOneGibBill = (account, accountBillingHistory, billingMonthDate, cal
   sendMail mailOptions, callback
 
 exports.automaticallyUpgradedAccount = (account, oldPlans, callback=noop)->
+  oldBroadcastPlan = oldPlans.broadcast
+  oldPeerPlan = oldPlans.peer
   name = account.name || account.billingEmail
-  newPlan = _.first account.productPlans.broadcast
+  if oldPeerPlan
+    newPlan = _.first account.productPlans.peer
+  else
+    newPlan = _.first account.productPlans.broadcast
   mailOptions =
     templateName: 'blank-with-header-and-footer'
     subject: 'Account upgraded your cine.io account plan based on usage.'

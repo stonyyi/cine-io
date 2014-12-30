@@ -16,7 +16,7 @@ describe 'accountMailer', ->
     @user.save done
 
   beforeEach (done)->
-    @account = new Account(name: 'my account name', billingEmail: 'my billing email', productPlans: {broadcast: ['basic', 'pro']}, billingProvider: 'cine.io')
+    @account = new Account(name: 'my account name', billingEmail: 'my billing email', productPlans: {broadcast: ['basic', 'pro'], peer: ['business']}, billingProvider: 'cine.io')
     @account.save done
 
   beforeEach ->
@@ -120,23 +120,31 @@ describe 'accountMailer', ->
         assertMailSent.call(this, err, response, done)
 
   describe 'automaticallyUpgradedAccount', ->
-    assertCorrectMergeVars = (mergeVars)->
+    assertCorrectMergeVars = (newPlan, mergeVars)->
       expectedMergeVars =
-        header_blurb: "Account upgraded to basic."
+        header_blurb: "Account upgraded to #{newPlan}."
         name: "my account name"
-      expect(mergeVars.templateVars.content).to.include('We have upgraded your account to basic.')
+      expect(mergeVars.templateVars.content).to.include("We have upgraded your account to #{newPlan}.")
       expect(mergeVars.templateVars.content).to.include("If you have any questions")
       # content is huge, don't want to include it here
       expectedMergeVars.content = mergeVars.templateVars.content
       expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
       assertMergeVarsInVars(mergeVars, expectedMergeVars)
 
-    it 'sends the email', (done)->
-      accountMailer.automaticallyUpgradedAccount @account, "some-old-plan", (err, response)=>
+    it 'sends the email for broadcast', (done)->
+      accountMailer.automaticallyUpgradedAccount @account, broadcast: "some-old-plan", (err, response)=>
         options = getMailOptions.call(this)
         expect(options.subject).to.equal("Account upgraded your cine.io account plan based on usage.")
         assertToAccount(options, @account)
-        assertCorrectMergeVars accountMergeVars(options, @account)
+        assertCorrectMergeVars "basic", accountMergeVars(options, @account)
+        assertMailSent.call(this, err, response, done)
+
+    it 'sends the email for peer', (done)->
+      accountMailer.automaticallyUpgradedAccount @account, peer: "some-old-plan", (err, response)=>
+        options = getMailOptions.call(this)
+        expect(options.subject).to.equal("Account upgraded your cine.io account plan based on usage.")
+        assertToAccount(options, @account)
+        assertCorrectMergeVars "business", accountMergeVars(options, @account)
         assertMailSent.call(this, err, response, done)
 
   describe 'willUpgradeAccount', ->
