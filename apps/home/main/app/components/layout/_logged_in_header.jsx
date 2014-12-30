@@ -5,6 +5,9 @@ var React = require('react'),
   _ = require('underscore');
 module.exports = React.createClass({
   mixins: [Cine.lib('requires_app')],
+  propTypes: {
+    selected: React.PropTypes.string
+  },
   getInitialState: function(){
     return {linksMoved: false, accountMoved: false};
   },
@@ -88,10 +91,16 @@ module.exports = React.createClass({
         <li><a href={userUrl} target="_blank">User Management</a></li>
       )];
     }
-    var linksClass = cx({'has-dropdown': true, 'not-click': true, moved: this.state.linksMoved});
+    var
+      linksClass = cx({'has-dropdown': true, 'not-click': true, moved: this.state.linksMoved}),
+      pricingClass = cx({active: this.props.selected === "pricing"}),
+      docsClass = cx({active: this.props.selected === "docs"});
+
     return (
       <section className="top-bar-section">
         <ul className="right account-drop-down">
+          <li className={pricingClass}><a href="/pricing">Pricing</a></li>
+          <li className={docsClass}><a href='/docs'>Docs</a></li>
           {accountDropDown}
           <li ref="links" className={linksClass}>
             <a href="" onClick={this.toggleLinksMoved}>{name}</a>
