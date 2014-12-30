@@ -23,12 +23,20 @@ describe 'Account', ->
       expect(account.isAppdirect()).to.be.false
 
   describe 'needsCreditCard', ->
-    it 'returns true for an account on a paid plan without a credit card', ->
+    it 'returns true for an account on a paid broadcast plan without a credit card', ->
       account = new Account(productPlans: {broadcast: ['pro']}, provider: 'cine.io')
       expect(account.needsCreditCard()).to.be.true
 
-    it 'returns true for an account with at least one paid plan without a credit card', ->
+    it 'returns true for an account on a paid peer plan without a credit card', ->
+      account = new Account(productPlans: {peer: ['pro']}, provider: 'cine.io')
+      expect(account.needsCreditCard()).to.be.true
+
+    it 'returns true for an account with at least one paid plan out of multiple plans without a credit card', ->
       account = new Account(productPlans: {broadcast: ['free', 'pro']}, provider: 'cine.io')
+      expect(account.needsCreditCard()).to.be.true
+
+    it 'returns true for an account with at least one paid plan without a credit card', ->
+      account = new Account(productPlans: {broadcast: ['free'], peer: ['business']}, provider: 'cine.io')
       expect(account.needsCreditCard()).to.be.true
 
     it 'returns false for an account on a free plan without a credit card', ->
@@ -71,11 +79,20 @@ describe 'Account', ->
       account = new Account(provider: 'appdirect', appdirect: {baseUrl: 'the appdirect url'})
       expect(account.updateAccountUrl()).to.equal('the appdirect url')
 
-
   describe 'createdAt', ->
     it 'returns a date', ->
       account = new Account(createdAt: (new Date).toISOString())
       expect(account.createdAt()).to.be.instanceOf(Date)
+
+  describe 'broadcastPlans', ->
+    it 'returns the broadcastPlans', ->
+      account = new Account(productPlans: {broadcast: ['a', 'b', 'c'], peer: ['d', 'e']})
+      expect(account.broadcastPlans()).to.deep.equal(['a', 'b', 'c'])
+
+  describe 'peerPlans', ->
+    it 'returns the peerPlans', ->
+      account = new Account(productPlans: {broadcast: ['a', 'b', 'c'], peer: ['d', 'e']})
+      expect(account.peerPlans()).to.deep.equal(['d', 'e'])
 
   describe 'firstPlan', ->
     it 'returns the first plan', ->

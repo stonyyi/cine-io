@@ -26,7 +26,7 @@ module.exports = class Account extends Base
   needsCreditCard: ->
     return false unless @get('provider') == 'cine.io'
     return false if @get('cannotBeDisabled')
-    return false if _.all @broadcastPlans(), planIsFree('broadcast')
+    return false if _.all(@broadcastPlans(), planIsFree('broadcast')) && _.all(@peerPlans(), planIsFree('peer'))
     !@get('stripeCard')?
 
   updateAccountUrl: ->
@@ -44,6 +44,11 @@ module.exports = class Account extends Base
     plans = @get('productPlans')
     return [] unless plans
     plans.broadcast || []
+
+  peerPlans: ->
+    plans = @get('productPlans')
+    return [] unless plans
+    plans.peer || []
 
   firstPlan: ->
     _.first(@broadcastPlans())

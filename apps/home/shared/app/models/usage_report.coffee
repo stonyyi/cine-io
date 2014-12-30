@@ -16,9 +16,15 @@ module.exports = class UsageReport extends Base
   url: "/usage-report?masterKey=:masterKey"
 
   # type: bandwidth/storage
-  # TODO: currently hardcoded to broadcast plans
   @maxUsagePerAccount: (account, type, product)->
-    _.inject account.broadcastPlans(), usagePerPlanAggregator(account.get('provider'), product, type), 0
+    plans = switch product
+      when 'broadcast'
+        account.broadcastPlans()
+      when 'peer'
+        account.peerPlans()
+      else
+        throw new Error("unknown plans")
+    _.inject plans, usagePerPlanAggregator(account.get('provider'), product, type), 0
 
   # product is either broadcast or peer
   @sortedCinePlans: (product)->

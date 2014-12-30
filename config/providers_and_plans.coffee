@@ -1,7 +1,8 @@
 humanizeBytes = Cine.lib('humanize_bytes')
 THOUSAND = 1000
 MILLION = THOUSAND * THOUSAND
-MINUTES = 60
+
+MINUTES = 60 * THOUSAND # in milliseconds
 
 module.exports =
   'cine.io':
