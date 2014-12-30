@@ -82,9 +82,9 @@ describe 'github auth', ->
               expect(account.billingProvider).to.equal('cine.io')
               done()
 
-        it 'redirects to the homepage', ->
-          expect(@res.headers.location).to.equal("/")
-          expect(@res.text).to.equal("Moved Temporarily. Redirecting to /")
+        it 'redirects to the dashboard', ->
+          expect(@res.headers.location).to.equal("/dashboard")
+          expect(@res.text).to.equal("Moved Temporarily. Redirecting to /dashboard")
 
         it 'creates a new user', (done)->
           User.findOne githubId: 135461, (err, user)->
@@ -206,9 +206,9 @@ describe 'github auth', ->
             process.nextTick ->
               done(err)
 
-      it 'redirects to the homepage', ->
-        expect(@res.headers.location).to.equal("/")
-        expect(@res.text).to.equal("Moved Temporarily. Redirecting to /")
+      it 'redirects to the dashboard', ->
+        expect(@res.headers.location).to.equal("/dashboard")
+        expect(@res.text).to.equal("Moved Temporarily. Redirecting to /dashboard")
 
       it 'only changes the githubData and githubAccessToken', (done)->
         User.findOne githubId: 135461, (err, user)->

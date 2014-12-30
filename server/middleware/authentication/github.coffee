@@ -90,7 +90,7 @@ issueRememberMeToken = (req, res, next)->
 success = (req, res)->
   state = JSON.parse(req.query.state)
   redirectUrl = switch state.client
-    when 'web' then '/'
+    when 'web' then '/dashboard'
     when 'iOS' then "cineioconsole://login?userToken=#{req.user.masterKey}"
   res.redirect(redirectUrl)
 
