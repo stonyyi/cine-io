@@ -13,27 +13,35 @@ accountPlanAmount = (account)->
     (accum, plan)->
       accum + (plans[plan].price * 100)
   broadcast = _.inject account.productPlans.broadcast, addPlanAmount('broadcast'), 0
-  # peer = _.inject account.productPlans.peer, addPlanAmount('peer'), 0
-  broadcast# + peer
+  peer = _.inject account.productPlans.peer, addPlanAmount('peer'), 0
+  # console.log("Adding", broadcast, peer)
+  broadcast + peer
 
 accountIsCreatedInThisMonth = (account, monthToBill)->
   account.createdAt.getYear() == monthToBill.getYear() && account.createdAt.getMonth() == monthToBill.getMonth()
 
 shouldProrateNewAccounts = (account, monthToBill, accountUsageResult)->
-  accountIsCreatedInThisMonth(account, monthToBill) && accountLessThan1GibUsage(accountUsageResult)
+  accountIsCreatedInThisMonth(account, monthToBill) && accountLessThan1GibUsage(accountUsageResult) && accountLessThan60MinutesUsage(accountUsageResult)
 
 accountLessThan1GibUsage = (accountUsageResult)->
   accountUsageResult.bandwidth < humanizeBytes.GiB && accountUsageResult.storage < humanizeBytes.GiB
+
+accountLessThan60MinutesUsage = (accountUsageResult)->
+  oneHour = 60 * 60 * 1000
+  accountUsageResult.peerMilliseconds < oneHour
 
 proratedAccountPlanAmount = (account, accountUsageResult)->
   daysInMonth = getDaysInMonth(account.createdAt)
   percentOfMonthAccountWasActive = (daysInMonth - (account.createdAt.getDate() - 1)) / daysInMonth
   accountPlanAmount(account) * percentOfMonthAccountWasActive
 
+ensureZeros = (accountUsageResult)->
+  accountUsageResult.bandwidth ||= 0
+  accountUsageResult.storage ||= 0
+  accountUsageResult.peerMilliseconds ||= 0
+
 # returns
 #  plan: Number in cents
-#  storageOverage: Number in cents
-#  bandwidthOverage: Number in cents
 module.exports = (account, monthToBill, callback)->
   if _.all _.values(account.productPlans), _.isEmpty
     return callback null,
@@ -43,8 +51,11 @@ module.exports = (account, monthToBill, callback)->
       usage:
         bandwidth: 0
         storage: 0
+        peerMilliseconds: 0
   calculateAccountUsage.byMonth account, monthToBill, (err, accountUsageResult)->
     return callback(err) if err
+    ensureZeros(accountUsageResult)
+    # console.log("Calculated", accountUsageResult)
     prorate = shouldProrateNewAccounts(account, monthToBill, accountUsageResult)
     planBill = if prorate then proratedAccountPlanAmount(account, accountUsageResult) else accountPlanAmount(account)
     result =
@@ -52,8 +63,9 @@ module.exports = (account, monthToBill, callback)->
         plan: planBill
         prorated: prorate
       usage:
-        bandwidth: accountUsageResult['bandwidth']
-        storage: accountUsageResult['storage']
+        bandwidth: accountUsageResult.bandwidth
+        storage: accountUsageResult.storage
+        peerMilliseconds: accountUsageResult.peerMilliseconds
     callback(null, result)
 
 module.exports.accountPlanAmount = accountPlanAmount

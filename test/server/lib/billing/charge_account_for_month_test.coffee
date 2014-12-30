@@ -9,11 +9,13 @@ mailer = Cine.server_lib("mailer")
 assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 AccountThrottler = Cine.server_lib('account_throttler')
 
+MINUTES = 60 * 1000
+
 describe 'chargeAccountForMonth', ->
   beforeEach (done)->
     twoMonthsAgo = new Date
     twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2)
-    @account = new Account(productPlans: {broadcast: ['basic', 'pro']}, billingProvider: 'cine.io', createdAt: twoMonthsAgo)
+    @account = new Account(productPlans: {broadcast: ['basic', 'pro'], peer: ['startup']}, billingProvider: 'cine.io', createdAt: twoMonthsAgo)
     @account.save done
 
   beforeEach ->
@@ -30,7 +32,8 @@ describe 'chargeAccountForMonth', ->
       @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
       usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
-      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+      usedPeerMilliseconds = 200 * MINUTES
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
 
     afterEach ->
       @usageStub.restore()
@@ -59,7 +62,8 @@ describe 'chargeAccountForMonth', ->
       @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
       usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
-      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+      usedPeerMilliseconds = 200 * MINUTES
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
 
     afterEach ->
       @usageStub.restore()
@@ -70,7 +74,7 @@ describe 'chargeAccountForMonth', ->
       @account.save done
 
     beforeEach ->
-      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 60000)
+      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 160000)
       @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
       @mailerSpy = sinon.spy mailer, 'monthlyBill'
 
@@ -91,11 +95,11 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.paid).to.be.true
         expect(lastCharge.stripeChargeId).to.equal("ch_102dM82AL5avr9E4B8GOejKB")
         expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
-        expect(lastCharge.accountPlans.peer).to.have.length(0)
         expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic', 'pro'])
+        expect(_.invoke(lastCharge.accountPlans.peer, 'toString').sort()).to.deep.equal(['startup'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
-        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 160000, prorated: false)
+        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, peerMilliseconds: 200 * MINUTES)
         done()
 
     it 'charges stripe', ->
@@ -120,7 +124,8 @@ describe 'chargeAccountForMonth', ->
       @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 0.8
       usedStorage = humanizeBytes.GiB * 0.5
-      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+      usedPeerMilliseconds = 10 * MINUTES
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
 
     afterEach ->
       @usageStub.restore()
@@ -134,7 +139,7 @@ describe 'chargeAccountForMonth', ->
       @account.save done
 
     beforeEach ->
-      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 8709)
+      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 95806)
       @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
       @mailerSpy = sinon.spy mailer, 'monthlyBill'
 
@@ -155,23 +160,23 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.paid).to.be.true
         expect(lastCharge.stripeChargeId).to.equal("ch_102dM82AL5avr9E4B8GOejKB")
         expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
-        expect(lastCharge.accountPlans.peer).have.length(0)
         expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic'])
+        expect(_.invoke(lastCharge.accountPlans.peer, 'toString').sort()).to.deep.equal(['startup'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 8709.677419354839, prorated: true)
-        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.8, storage: humanizeBytes.GiB * 0.5)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 95806.45161290323, prorated: true)
+        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.8, storage: humanizeBytes.GiB * 0.5, peerMilliseconds: 10 * MINUTES)
         done()
 
-  describe 'with < 1 GiB of usage', ->
+  describe 'with < free usage amounts (1 GiB and 60 minutes)', ->
     beforeEach ->
       @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 0.9
       usedStorage = humanizeBytes.GiB * 0.9
-      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+      usedPeerMilliseconds = 50 * MINUTES
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
 
     afterEach ->
       @usageStub.restore()
-
 
     describe 'with no credit card', ->
 
@@ -197,11 +202,11 @@ describe 'chargeAccountForMonth', ->
           expect(lastCharge.notCharged).to.be.true
           expect(lastCharge.stripeChargeId).to.be.undefined
           expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
-          expect(lastCharge.accountPlans.peer).to.have.length(0)
           expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic', 'pro'])
+          expect(_.invoke(lastCharge.accountPlans.peer, 'toString').sort()).to.deep.equal(['startup'])
           expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-          expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
-          expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.9, storage: humanizeBytes.GiB * 0.9)
+          expect(lastCharge.details.billing).to.deep.equal(plan: 160000, prorated: false)
+          expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.9, storage: humanizeBytes.GiB * 0.9, peerMilliseconds: 50 * MINUTES)
           done()
 
       it 'sends an email that they were not charged', (done)->
@@ -220,7 +225,7 @@ describe 'chargeAccountForMonth', ->
     describe 'with a credit card', ->
 
       beforeEach ->
-        @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 60000)
+        @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 160000)
         @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
         @mailerSpy = sinon.spy mailer, 'monthlyBill'
 
@@ -258,7 +263,8 @@ describe 'chargeAccountForMonth', ->
       @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
       usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
-      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+      usedPeerMilliseconds = 200 * MINUTES
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
 
     afterEach ->
       @usageStub.restore()
@@ -269,7 +275,7 @@ describe 'chargeAccountForMonth', ->
       @account.save done
 
     beforeEach ->
-      @chargeDeclined = requireFixture('nock/stripe_charge_card_declined')(amount: 60000)
+      @chargeDeclined = requireFixture('nock/stripe_charge_card_declined')(amount: 160000)
 
     assertEmailSent 'throttledAccount'
     assertEmailSent.admin 'cardDeclined'
@@ -296,11 +302,11 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.stripeChargeId).to.be.undefined
         expect(lastCharge.mandrillEmailId).to.undefined
         expect(lastCharge.chargeError).to.equal('Error: Your card was declined.')
-        expect(lastCharge.accountPlans.peer).to.have.length(0)
         expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic', 'pro'])
+        expect(_.invoke(lastCharge.accountPlans.peer, 'toString').sort()).to.deep.equal(['startup'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
-        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 160000, prorated: false)
+        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, peerMilliseconds: 200 * MINUTES)
         done()
 
     it 'throttles the account in four days', (done)->
@@ -341,7 +347,8 @@ describe 'chargeAccountForMonth', ->
       @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
       usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
-      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+      usedPeerMilliseconds = 200 * MINUTES
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
 
     afterEach ->
       @usageStub.restore()
@@ -352,7 +359,7 @@ describe 'chargeAccountForMonth', ->
       @account.save done
 
     beforeEach ->
-      @chargeDeclined = requireFixture('nock/stripe_charge_card_failed')(amount: 60000)
+      @chargeDeclined = requireFixture('nock/stripe_charge_card_failed')(amount: 160000)
 
     assertEmailSent.admin 'unknownChargeError'
 
@@ -371,11 +378,11 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.stripeChargeId).to.be.undefined
         expect(lastCharge.mandrillEmailId).to.undefined
         expect(lastCharge.chargeError).to.equal('Error: Invalid token id: fake_token')
-        expect(lastCharge.accountPlans.peer).to.have.length(0)
         expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic', 'pro'])
+        expect(_.invoke(lastCharge.accountPlans.peer, 'toString').sort()).to.deep.equal(['startup'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
-        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 160000, prorated: false)
+        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, peerMilliseconds: 200 * MINUTES)
         done()
 
     it 'sends an email to the admins', (done)->
@@ -425,13 +432,14 @@ describe 'chargeAccountForMonth', ->
       @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
       usedBandwidth = humanizeBytes.GiB * 155 + humanizeBytes.TiB
       usedStorage = humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100
-      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage)
+      usedPeerMilliseconds = 200 * MINUTES
+      @usageStub.callsArgWith(2, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
 
     afterEach ->
       @usageStub.restore()
 
     beforeEach ->
-      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 60000)
+      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 160000)
       @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
       @mailerSpy = sinon.spy mailer, 'monthlyBill'
 
@@ -457,11 +465,11 @@ describe 'chargeAccountForMonth', ->
         expect(lastCharge.paid).to.be.true
         expect(lastCharge.stripeChargeId).to.equal("ch_102dM82AL5avr9E4B8GOejKB")
         expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
-        expect(lastCharge.accountPlans.peer).to.have.length(0)
         expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic', 'pro'])
+        expect(_.invoke(lastCharge.accountPlans.peer, 'toString').sort()).to.deep.equal(['startup'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 60000, prorated: false)
-        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100)
+        expect(lastCharge.details.billing).to.deep.equal(plan: 160000, prorated: false)
+        expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 155 + humanizeBytes.TiB, storage: humanizeBytes.GiB * 29 + humanizeBytes.GiB * 100, peerMilliseconds: 200 * MINUTES)
         done()
 
     it 'charges stripe', ->
@@ -483,7 +491,7 @@ describe 'chargeAccountForMonth', ->
 
   describe 'on the free plan', ->
     beforeEach (done)->
-      @account.productPlans = {broadcast: ['free', 'free']}
+      @account.productPlans = {broadcast: ['free', 'free'], peer: ['free']}
       @account.save done
 
     it 'does not send an email to the free plans', (done)->

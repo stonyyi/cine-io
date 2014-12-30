@@ -3,6 +3,7 @@ calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 calculateAccountBill = Cine.server_lib("billing/calculate_account_bill.coffee")
 Account = Cine.server_model("account")
 humanizeBytes = Cine.lib('humanize_bytes')
+MINUTES = 1000 * 60
 
 describe "calculateAccountBill", ->
   beforeEach (done)->
@@ -20,7 +21,7 @@ describe "calculateAccountBill", ->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
       expect(result.billing).to.deep.equal(plan: 0, prorated: false)
-      expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0)
+      expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, peerMilliseconds: 0)
       done()
 
   it "returns 0 for free plans", (done)->
@@ -29,7 +30,7 @@ describe "calculateAccountBill", ->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
       expect(result.billing).to.deep.equal(plan: 0, prorated: false)
-      expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0)
+      expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, peerMilliseconds: 0)
       done()
 
   it "returns 100 for basic plan", (done)->
@@ -38,7 +39,7 @@ describe "calculateAccountBill", ->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
       expect(result.billing).to.deep.equal(plan: 10000, prorated: false)
-      expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0)
+      expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, peerMilliseconds: 0)
       done()
 
   it "returns 600 for basic and pro plan", (done)->
@@ -47,7 +48,7 @@ describe "calculateAccountBill", ->
       expect(err).to.be.null
       expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
       expect(result.billing).to.deep.equal(plan: 60000, prorated: false)
-      expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0)
+      expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, peerMilliseconds: 0)
       done()
 
   describe 'with bandwidth and storage', ->
@@ -74,7 +75,7 @@ describe "calculateAccountBill", ->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
           expect(result.billing).to.deep.equal(plan: 10000, prorated: false)
-          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage)
+          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: 0)
           done()
 
       it 'returns 600 for basic and pro plans', (done)->
@@ -86,7 +87,7 @@ describe "calculateAccountBill", ->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
           expect(result.billing).to.deep.equal(plan: 60000, prorated: false)
-          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage)
+          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: 0)
           done()
 
     describe 'signed up within the month', ->
@@ -107,7 +108,7 @@ describe "calculateAccountBill", ->
           daysActiveInMonth = 17
           percentageOfMonthWereThrough = daysActiveInMonth / 31
           expect(result.billing).to.deep.equal(plan: 60000 * (percentageOfMonthWereThrough), prorated: true)
-          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage)
+          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: 0)
           done()
 
       it 'charges them a full amount when they are at usage', (done)->
@@ -118,5 +119,112 @@ describe "calculateAccountBill", ->
           expect(err).to.be.null
           expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
           expect(result.billing).to.deep.equal(plan: 60000, prorated: false)
-          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage)
+          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: 0)
+          done()
+
+  describe 'with peerMilliseconds', ->
+    beforeEach ->
+      @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
+
+    afterEach ->
+      expect(@usageStub.calledOnce).to.be.true
+      args = @usageStub.firstCall.args
+      expect(args).to.have.length(3)
+      expect(args[0]._id.toString()).to.equal(@account._id.toString())
+      expect(args[1].toString()).to.equal(@month.toString())
+      expect(args[2]).to.be.an.instanceOf(Function)
+      @usageStub.restore()
+
+    describe 'within limits', ->
+      it 'returns 100 for basic plans', (done)->
+        @account.productPlans = {peer: ['basic']}
+        usedMilliseconds = 1 * MINUTES
+        @usageStub.callsArgWith(2, null, peerMilliseconds: usedMilliseconds)
+        calculateAccountBill @account, @month, (err, result)->
+          expect(err).to.be.null
+          expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+          expect(result.billing).to.deep.equal(plan: 10000, prorated: false)
+          expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, peerMilliseconds: usedMilliseconds)
+          done()
+
+      it 'returns 600 for basic and pro plans', (done)->
+        @account.productPlans = {peer: ['basic', 'pro']}
+        usedMilliseconds = 500 * MINUTES
+        @usageStub.callsArgWith(2, null, peerMilliseconds: usedMilliseconds)
+        calculateAccountBill @account, @month, (err, result)->
+          expect(err).to.be.null
+          expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+          expect(result.billing).to.deep.equal(plan: 60000, prorated: false)
+          expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, peerMilliseconds: usedMilliseconds)
+          done()
+
+    describe 'signed up within the month', ->
+      beforeEach (done)->
+        @month.setDate(15)
+        @month.setMonth(0)
+        @account.createdAt = @month
+        @account.productPlans = {peer: ['basic', 'pro']}
+        @account.save done
+
+      it 'charges them a prorated amount when they are under 60 minutes', (done)->
+        usedMilliseconds = 50 * MINUTES
+        @usageStub.callsArgWith(2, null, peerMilliseconds: usedMilliseconds)
+        calculateAccountBill @account, @month, (err, result)->
+          expect(err).to.be.null
+          expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+          daysActiveInMonth = 17
+          percentageOfMonthWereThrough = daysActiveInMonth / 31
+          expect(result.billing).to.deep.equal(plan: 60000 * (percentageOfMonthWereThrough), prorated: true)
+          expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, peerMilliseconds: usedMilliseconds)
+          done()
+
+      it 'charges them a full amount when they are at usage', (done)->
+        usedMilliseconds = 61 * MINUTES
+        @usageStub.callsArgWith(2, null, peerMilliseconds: usedMilliseconds)
+        calculateAccountBill @account, @month, (err, result)->
+          expect(err).to.be.null
+          expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+          expect(result.billing).to.deep.equal(plan: 60000, prorated: false)
+          expect(result.usage).to.deep.equal(bandwidth: 0, storage: 0, peerMilliseconds: usedMilliseconds)
+          done()
+
+  describe 'with storage, bandwidth, and peerMilliseconds', ->
+    beforeEach ->
+      @usageStub = sinon.stub(calculateAccountUsage, 'byMonth')
+
+    afterEach ->
+      expect(@usageStub.calledOnce).to.be.true
+      args = @usageStub.firstCall.args
+      expect(args).to.have.length(3)
+      expect(args[0]._id.toString()).to.equal(@account._id.toString())
+      expect(args[1].toString()).to.equal(@month.toString())
+      expect(args[2]).to.be.an.instanceOf(Function)
+      @usageStub.restore()
+
+    describe 'within limits', ->
+      it 'returns 600 for basic and pro plans', (done)->
+        @account.productPlans = {peer: ['basic'], broadcast: ['pro']}
+        usedMilliseconds = 1 * MINUTES
+        usedBandwidth = humanizeBytes.GiB * 150
+        usedStorage = humanizeBytes.GiB * 25
+
+        @usageStub.callsArgWith(2, null, peerMilliseconds: usedMilliseconds, bandwidth: usedBandwidth, storage: usedStorage)
+        calculateAccountBill @account, @month, (err, result)->
+          expect(err).to.be.null
+          expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+          expect(result.billing).to.deep.equal(plan: 60000, prorated: false)
+          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedMilliseconds)
+          done()
+
+      it 'returns 3600 for basic and pro plans', (done)->
+        @account.productPlans = {peer: ['startup', 'pro'], broadcast: ['basic', 'business']}
+        usedBandwidth = humanizeBytes.GiB * 150 + humanizeBytes.TiB
+        usedStorage = humanizeBytes.GiB * 25 + humanizeBytes.GiB * 100
+        usedMilliseconds = 500 * MINUTES
+        @usageStub.callsArgWith(2, null, peerMilliseconds: usedMilliseconds, bandwidth: usedBandwidth, storage: usedStorage)
+        calculateAccountBill @account, @month, (err, result)->
+          expect(err).to.be.null
+          expect(_.keys(result).sort()).to.deep.equal(['billing', 'usage'])
+          expect(result.billing).to.deep.equal(plan: 360000, prorated: false)
+          expect(result.usage).to.deep.equal(bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedMilliseconds)
           done()

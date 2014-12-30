@@ -1,4 +1,7 @@
 humanizeBytes = Cine.lib('humanize_bytes')
+THOUSAND = 1000
+MILLION = THOUSAND * THOUSAND
+MINUTES = 60
 
 module.exports =
   'cine.io':
@@ -69,6 +72,41 @@ module.exports =
           storage: humanizeBytes.GiB * 500
           bandwidthOverage: 0
           storageOverage: 0
+    peer:
+      url: 'https://www.cine.io'
+      plans:
+        free:
+          order: 10
+          minutes: 60 * MINUTES
+          price: 0
+        solo:
+          order: 20
+          minutes: 2 * THOUSAND * MINUTES
+          price: 20
+        basic:
+          order: 30
+          minutes: 12.5 * THOUSAND * MINUTES
+          price: 100
+        premium:
+          order: 40
+          minutes: 35 * THOUSAND * MINUTES
+          price: 300
+        pro:
+          order: 50
+          minutes: 70 * THOUSAND * MINUTES
+          price: 500
+        startup:
+          order: 60
+          minutes: 165 * THOUSAND * MINUTES
+          price: 1000
+        business:
+          order: 70
+          minutes: 400 * THOUSAND * MINUTES
+          price: 2000
+        enterprise:
+          order: 80
+          minutes: 1.25 * MILLION * MINUTES
+          price: 5000
   heroku:
     broadcast:
       url: 'https://addons.heroku.com/cine'
