@@ -24,6 +24,13 @@ describe 'UsageReport', ->
         account.attributes.productPlans = {broadcast: ['pro']}
         expect(UsageReport.maxUsagePerAccount(account, 'bandwidth', 'broadcast')).to.equal(1099511627776)
 
+      it 'works with empty', ->
+        account = new Account(provider: 'cine.io')
+        account.attributes.productPlans = {}
+        expect(UsageReport.maxUsagePerAccount(account, 'bandwidth', 'broadcast')).to.equal(0)
+        account.attributes.productPlans = {broadcast: []}
+        expect(UsageReport.maxUsagePerAccount(account, 'bandwidth', 'broadcast')).to.equal(0)
+
       it 'works with combos', ->
         account = new Account(provider: 'cine.io')
         account.attributes.productPlans = {broadcast: ['free', 'pro']}
@@ -42,6 +49,13 @@ describe 'UsageReport', ->
         expect(UsageReport.maxUsagePerAccount(account, 'storage', 'broadcast')).to.equal(26843545600)
         account.attributes.productPlans = {broadcast: ['pro']}
         expect(UsageReport.maxUsagePerAccount(account, 'storage', 'broadcast')).to.equal(107374182400)
+
+      it 'works with empty', ->
+        account = new Account(provider: 'cine.io')
+        account.attributes.productPlans = {}
+        expect(UsageReport.maxUsagePerAccount(account, 'storage', 'broadcast')).to.equal(0)
+        account.attributes.productPlans = {broadcast: []}
+        expect(UsageReport.maxUsagePerAccount(account, 'storage', 'broadcast')).to.equal(0)
 
       it 'works with combos', ->
         account = new Account(provider: 'cine.io')
@@ -62,12 +76,26 @@ describe 'UsageReport', ->
         account.attributes.productPlans = {peer: ['pro']}
         expect(UsageReport.maxUsagePerAccount(account, 'minutes', 'peer')).to.equal(70 * THOUSAND * MINUTES)
 
+      it 'works with empty', ->
+        account = new Account(provider: 'cine.io')
+        account.attributes.productPlans = {}
+        expect(UsageReport.maxUsagePerAccount(account, 'minutes', 'peer')).to.equal(0)
+        account.attributes.productPlans = {peer: []}
+        expect(UsageReport.maxUsagePerAccount(account, 'minutes', 'peer')).to.equal(0)
+
       it 'works with combos', ->
         account = new Account(provider: 'cine.io')
         account.attributes.productPlans = {peer: ['free', 'pro']}
         expect(UsageReport.maxUsagePerAccount(account, 'minutes', 'peer')).to.equal(60 * MINUTES + 70 * THOUSAND * MINUTES)
         account.attributes.productPlans = {peer: ['free', 'solo', 'basic']}
         expect(UsageReport.maxUsagePerAccount(account, 'minutes', 'peer')).to.equal(60 * MINUTES + 2 * THOUSAND * MINUTES + 12.5 * THOUSAND * MINUTES)
+
+      it 'works with other accounts', ->
+        account = new Account(provider: 'heroku')
+        account.attributes.productPlans = {}
+        expect(UsageReport.maxUsagePerAccount(account, 'minutes', 'peer')).to.equal(0)
+        account.attributes.productPlans = {peer: []}
+        expect(UsageReport.maxUsagePerAccount(account, 'minutes', 'peer')).to.equal(0)
 
   describe '.lowestPlanPerUsage', ->
     it 'returns the lowest plan', ->
