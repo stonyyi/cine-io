@@ -74,7 +74,7 @@ module.exports = React.createClass({
     e.preventDefault();
     this.props.app.trigger('hide-modal');
     this.props.app.tracker.getApiKey({value: value});
-    this.props.app.trigger('set-signup-plan', plan);
+    this.props.app.trigger('set-signup-plan', {broadcast: plan});
     this.props.app.trigger('show-login');
   },
   componentDidMount: function(){

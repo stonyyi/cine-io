@@ -32,13 +32,13 @@ findBestGithubEmail = (githubEmails)->
   return firstEmail.email if firstEmail
   null
 
-createNewUser = (profile, plan, accessToken, req, callback)->
+createNewUser = (profile, productPlans, accessToken, req, callback)->
   console.log('got github profile', profile)
   email = profile.emails[0] && profile.emails[0].value
   console.log(profile)
   saveUser = ->
     accountAttributes =
-      plan: plan
+      productPlans: productPlans
       billingProvider: 'cine.io'
     userAttributes =
       githubId: profile.id
@@ -77,7 +77,7 @@ findGithubUser = (req, accessToken, refreshToken, profile, callback)->
     return callback(err) if err
     return updateUserData(user, profile, accessToken, req, callback) if user
     state = if req.query.state then JSON.parse(req.query.state) else {}
-    createNewUser(profile, state.plan, accessToken, req, callback)
+    createNewUser(profile, {peer: state.peerPlan, broadcast: state.broadcastPlan || state.plan}, accessToken, req, callback)
 
 githubStrategy = new GitHubStrategy strategyOptions, findGithubUser
 
@@ -99,7 +99,8 @@ module.exports = (app)->
 
   app.get '/auth/github', (req, res)->
     state =
-      plan: req.query.plan
+      broadcastPlan: req.query['broadcast-plan'] || req.query['plan']
+      peerPlan: req.query['peer-plan']
       client: req.query.client
     passport.authenticate('github', scope: "user:email", state: JSON.stringify(state))(req, res)
 

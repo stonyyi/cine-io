@@ -5,7 +5,6 @@ Project = Cine.server_model('project')
 EdgecastStream = Cine.server_model('edgecast_stream')
 stubEdgecast = Cine.require 'test/helpers/stub_edgecast'
 _ = require('underscore')
-login = Cine.require 'test/helpers/login_helper'
 
 describe 'create stream', ->
 

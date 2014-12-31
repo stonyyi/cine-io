@@ -7,7 +7,7 @@ var GithubLogin = React.createClass({
   displayName: 'GithubLogin',
   mixins: [Cine.lib('requires_app')],
   getInitialState: function() {
-    return {plan: 'free'};
+    return {broadcastPlan: 'free', peerPlan: 'free'};
   },
   componentDidMount: function(){
     this.props.app.on('set-signup-plan', this.setPlan, this);
@@ -16,10 +16,10 @@ var GithubLogin = React.createClass({
     this.props.app.off('set-signup-plan', this.setPlan);
   },
   setPlan: function(plan){
-    this.setState({plan: plan});
+    this.setState({broadcastPlan: plan.broadcast, peerPlan: plan.peer});
   },
   render: function() {
-    var url = "/auth/github?client=web&plan="+this.state.plan;
+    var url = "/auth/github?client=web&broadcast-plan="+this.state.broadcastPlan+"&peer-plan="+this.state.peerPlan;
     return (
       <a className='button expand radius button-social button-github github-login' href={url}>
         <i className="fa fa-github"></i>
@@ -36,7 +36,7 @@ var EmailLogin = React.createClass({
     showing: React.PropTypes.bool.isRequired
   },
   getInitialState: function() {
-    return {allowFocusHijack: true, completeSignup: false, myName: '', myPassword: '', myEmail: '', plan: 'free', submitting: false};
+    return {allowFocusHijack: true, completeSignup: false, myName: '', myPassword: '', myEmail: '', broadcastPlan: 'free', peerPlan: 'free', submitting: false};
   },
   componentDidMount: function(){
     this.props.app.on('set-signup-plan', this.setPlan, this);
@@ -45,7 +45,7 @@ var EmailLogin = React.createClass({
     this.props.app.off('set-signup-plan', this.setPlan);
   },
   setPlan: function(plan){
-    this.setState({plan: plan});
+    this.setState({broadcastPlan: plan.broadcast, peerPlan: plan.peer});
   },
   submitName: function (e){
     e.preventDefault();
@@ -171,7 +171,8 @@ var EmailLogin = React.createClass({
         <form onSubmit={this.emailLogin}>
           <input name='username' type="email" required placeholder='Your email' ref='emailField' value={this.state.myEmail} onChange={this.changeMyEmail}/>
           <input name='password' type="password" required placeholder='Your password' value={this.state.myPassword} onChange={this.changeMyPassword}/>
-          <input name='plan' type="hidden" required value={this.state.plan}/>
+          <input name='broadcast-plan' type="hidden" required value={this.state.broadcastPlan}/>
+          <input name='peer-plan' type="hidden" required value={this.state.peerPlan}/>
           <SubmitButton className="button radius expand bottom-margin-0" text="Sign up or sign in" submittingText="Submitting" submitting={this.state.submitting}/>
           <div className='text-center top-margin-half'>
             <a href='' onClick={this.showForgotPassword}>Forgot password?</a>

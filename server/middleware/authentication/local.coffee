@@ -9,7 +9,9 @@ mailer = Cine.server_lib('mailer')
 
 createNewUser = (email, cleartextPassword, req, callback)->
   accountAttributes =
-    plan: req.body.plan
+    productPlans:
+      peer: req.body['peer-plan']
+      broadcast: req.body['broadcast-plan'] || req.body.plan
     billingProvider: 'cine.io'
   userAttributes =
     email: email

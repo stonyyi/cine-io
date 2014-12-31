@@ -22,7 +22,8 @@ exports.newHerokuAccount = (herokuId, plan, callback)->
   accountAttributes =
     herokuId: herokuId
     name: nameFromHerokuId(herokuId)
-    plan: plan
+    productPlans:
+      broadcast: plan
     billingProvider: 'heroku'
   projectAttributes =
     name: nameFromHerokuId(herokuId)
@@ -36,7 +37,8 @@ exports.newEngineYardAccount = (engineyardId, plan, callback)->
   accountAttributes =
     engineyardId: engineyardId
     name: nameFromEngineYardId(engineyardId)
-    plan: plan
+    productPlans:
+      broadcast: plan
     billingProvider: 'engineyard'
   projectAttributes =
     name: nameFromEngineYardId(engineyardId)
