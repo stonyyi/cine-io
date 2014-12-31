@@ -112,6 +112,19 @@ button, .button {
   // border: 2px solid $primary-color;
 }
 
+// fix Foundation's confusing tabs
+.tab-title {
+  border-top: 1px transparent;
+  border-left: 1px transparent;
+  border-right: 1px transparent;
+}
+.tab-title.active {
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  font-weight: bold;
+}
+
 .account-drop-down{
   position: relative;
   z-index: $flash-holder-z-index+1;

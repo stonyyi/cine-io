@@ -29,10 +29,10 @@ module.exports = React.createClass({
             <div className="tabs-wrapper">
               <ul className="tabs" data-tab role="tablist">
                 <li className={cx({'tab-title': true, active: this.state.showing === 'broadcast'})} role="presentational" >
-                  <a onClick={this.selectTab.bind(this, 'broadcast')} href="" role="tab" tabIndex="0" aria-selected={this.state.showing === 'broadcast'}>Broadcast</a>
+                  <a onClick={this.selectTab.bind(this, 'broadcast')} href="" role="tab" tabIndex="0" aria-selected={this.state.showing === 'broadcast'}><i className="cine-broadcast"></i>&nbsp;Broadcast</a>
                 </li>
                 <li className={cx({'tab-title': true, active: this.state.showing === 'peer'})} role="presentational" >
-                  <a onClick={this.selectTab.bind(this, 'peer')} href="" role="tab" tabIndex="1"aria-selected={this.state.showing === 'peer'}>Peer</a>
+                  <a onClick={this.selectTab.bind(this, 'peer')} href="" role="tab" tabIndex="1"aria-selected={this.state.showing === 'peer'}><i className="cine-conference"></i>&nbsp;Peer</a>
                 </li>
               </ul>
             </div>
