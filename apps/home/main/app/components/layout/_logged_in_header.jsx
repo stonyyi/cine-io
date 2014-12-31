@@ -100,7 +100,7 @@ module.exports = React.createClass({
       <section className="top-bar-section">
         <ul className="right account-drop-down">
           <li className={pricingClass}><a href="/pricing">Pricing</a></li>
-          <li className={docsClass}><a href='/docs'>Docs</a></li>
+          <li className={docsClass}><a target="_blank" href='http://developer.cine.io'>Docs</a></li>
           {accountDropDown}
           <li ref="links" className={linksClass}>
             <a href="" onClick={this.toggleLinksMoved}>{name}</a>

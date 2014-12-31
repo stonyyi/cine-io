@@ -130,7 +130,7 @@ module.exports = React.createClass({
           </div>
           <div className='medium-4 columns'>
             <h4 className='top-margin-1'>
-             <a href='/docs'>Full documentation</a>
+             <a target="_blank" href='http://developer.cine.io'>Full documentation</a>
             </h4>
             <h4 className='top-margin-1'>Client libraries</h4>
             <ul className="inline-list">

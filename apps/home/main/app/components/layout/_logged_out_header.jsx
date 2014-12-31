@@ -49,7 +49,7 @@ module.exports = React.createClass({
         <ul className="right top-links">
           {solutionsDropDown}
           <li className={pricingClass}><a href="/pricing">Pricing</a></li>
-          <li className={docsClass}><a href='/docs'>Docs</a></li>
+          <li className={docsClass}><a target="_blank" href='http://developer.cine.io'>Docs</a></li>
         </ul>
       </section>
     );
