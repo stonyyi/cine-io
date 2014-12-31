@@ -1,6 +1,15 @@
 .top-bar-section .has-dropdown.moved>.dropdown{
   position: static !important;
 }
+pre {
+  line-height: 1;
+}
+pre code{
+  padding: 0;
+  line-height: 1;
+  background-color: transparent;
+  border: none;
+}
 
 @media #{$medium-up} {
   .top-bar-section .has-dropdown.moved>.dropdown{
