@@ -15,7 +15,7 @@ module.exports = React.createClass({
             </h2>
             <p>
               Leave the CDN and cross-platform viewing experience to us.
-              Launch your live- streaming and video-conferencing apps in a
+              Launch your live-streaming apps in a
               matter of minutes using our APIs and SDKs for iOS, Android, and
               the web. We handle all of your RTMP and HLS needs.
             </p>
