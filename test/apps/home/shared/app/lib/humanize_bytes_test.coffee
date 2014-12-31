@@ -3,6 +3,8 @@ humanizeBytes = Cine.lib('humanize_bytes')
 describe 'humanizeBytes', ->
 
   it 'humanizes bytes', ->
+    expect(humanizeBytes(1)).to.equal("1 byte")
+    expect(humanizeBytes(155)).to.equal("155 bytes")
     expect(humanizeBytes(12355)).to.equal("12 KiB")
     expect(humanizeBytes(12353735)).to.equal("11.78 MiB")
     expect(humanizeBytes(1238888855)).to.equal("1.15 GiB")
