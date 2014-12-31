@@ -195,7 +195,7 @@ var BroadcastPricing = React.createClass({
 
   showCalculatorModal: function(e) {
     e.preventDefault();
-    this.props.app.trigger('show-modal', 'homepage/_bandwidth_calculator');
+    this.props.app.trigger('show-modal', 'products/broadcast/_bandwidth_calculator');
   },
 
   render: function(){

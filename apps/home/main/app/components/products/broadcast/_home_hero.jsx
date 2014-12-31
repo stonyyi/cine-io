@@ -1,11 +1,11 @@
 /** @jsx React.DOM */
 var
-  React = require('react'),
-  cx = Cine.lib('cx');
+  React = require('react');
 
 module.exports = React.createClass({
   displayName: 'HomeHero',
-  mixins: [],
+  mixins: [Cine.lib('requires_app')],
+
   getApiKey: function(e){
     e.preventDefault();
 

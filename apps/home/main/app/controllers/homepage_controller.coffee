@@ -4,10 +4,6 @@ exports.show = (params, callback)->
   setTitleAndDescription @app
   callback()
 
-exports.products = (params, callback)->
-  setTitleAndDescription @app
-  callback()
-
 exports.pricing = (params, callback)->
   setTitleAndDescription @app
   callback()

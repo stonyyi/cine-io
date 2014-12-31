@@ -1,0 +1,6 @@
+#consulting {
+  padding-top: 1.5em;
+  .info {
+    @include grid-column(12);
+  }
+}

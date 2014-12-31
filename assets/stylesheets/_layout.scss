@@ -280,6 +280,7 @@ header {
       margin: 5px;
       border: 1px solid white;
       border-radius: 3px;
+      overflow: hidden;
       a:not(.button), a:not(.button):hover {
         background: transparent;
         display: inline-block;

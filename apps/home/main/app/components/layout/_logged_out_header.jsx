@@ -8,7 +8,7 @@ module.exports = React.createClass({
     selected: React.PropTypes.string
   },
   getInitialState: function(){
-    return {solutionsMoved: false};
+    return {solutionsMoved: false, productsMoved: false};
   },
   login: function() {
     this.props.app.trigger('show-login');
@@ -17,9 +17,12 @@ module.exports = React.createClass({
     e.preventDefault();
     this.setState({solutionsMoved: !this.state.solutionsMoved});
   },
+  toggleProductsMoved: function(e){
+    e.preventDefault();
+    this.setState({productsMoved: !this.state.productsMoved});
+  },
   render: function() {
     var
-      productsClass = cx({active: this.props.selected === "products"}),
       pricingClass = cx({active: this.props.selected === "pricing"}),
       docsClass = cx({active: this.props.selected === "docs"}),
       solutionsClasses = cx({
@@ -28,6 +31,21 @@ module.exports = React.createClass({
         'has-dropdown': true,
         'not-click': true
       }),
+      productsClasses = cx({
+        active: this.props.selected === "products",
+        moved: this.state.productsMoved,
+        'has-dropdown': true,
+        'not-click': true
+      }),
+      productsDropDown = (
+        <li className={productsClasses}>
+          <a href="" onClick={this.toggleProductsMoved}>Products</a>
+          <ul className="dropdown">
+            <li><a href="/products/broadcast">Broadcast</a></li>
+            <li><a href="/products/peer">Peer</a></li>
+          </ul>
+        </li>
+      )
       solutionsDropDown = (
         <li className={solutionsClasses}>
           <a href="" onClick={this.toggleSolutionsMoved}>Solutions</a>
@@ -47,6 +65,7 @@ module.exports = React.createClass({
           </li>
         </ul>
         <ul className="right top-links">
+          {productsDropDown}
           {solutionsDropDown}
           <li className={pricingClass}><a href="/pricing">Pricing</a></li>
           <li className={docsClass}><a target="_blank" href='http://developer.cine.io'>Docs</a></li>

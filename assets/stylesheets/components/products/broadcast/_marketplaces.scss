@@ -1,0 +1,24 @@
+#marketplaces {
+  padding-top: 1.5em;
+  background: $scheme-color-north;
+  color: $light-green-color;
+  h2 {
+    color: white;
+  }
+  .icon-list {
+    @include block-grid(5);
+  }
+}
+
+@media #{$medium-up} {
+  #marketplaces{
+    ul {
+      li {
+        img {
+          width: 96px;
+          height: 96px;
+        }
+      }
+    }
+  }
+}
