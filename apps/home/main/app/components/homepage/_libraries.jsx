@@ -59,7 +59,7 @@ module.exports = React.createClass({
                 <a target="_blank" href='http://developer.cine.io' className="button radius">View Docs</a>
               </div>
               <div>
-                <a href="https://www.hipchat.com/gZCLRQ9Ih" className="button radius">Developer chat</a>
+                <a target="_blank" href="http://devchat.cine.io" className="button radius">Developer chat</a>
               </div>
             </div>
           </div>

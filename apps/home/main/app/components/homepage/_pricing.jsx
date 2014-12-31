@@ -81,7 +81,7 @@ var PeerPricing = React.createClass({
   render: function(){
     var planRows = this.generatePlanRows(UsageReport.sortedCinePlans('peer'));
     return (
-      <div className="broadcast-pricing">
+      <div className="peer-pricing">
         <div className="prices">
           <table>
             <thead>
@@ -103,6 +103,36 @@ var PeerPricing = React.createClass({
             </tbody>
           </table>
         </div>
+
+        <div className="postscript">
+          <div className="limits">
+            <h4>What if I exceed my usage limits?</h4>
+            <p>
+              As long as you&apos;re on one of our paid plans, if you
+              exceed your usage limits, we&apos;ll automatically upgrade
+              you to the next plan and notify you. However, if you exceed
+              the limits while of our free&nbsp;
+              <strong>Developer</strong> plan, you won&apos;t be able to
+              continue to use your account until you enter a credit card.
+            </p>
+          </div>
+
+          <div className="included">
+            <h4>All plans include:</h4>
+            <ul className="features">
+              <li>full real time video and audio communication</li>
+              <li>native mobile support (iOS and Android)</li>
+              <li>unlimited <strong>simultaneous calls</strong></li>
+              <li><strong>no ads</strong> of any kind</li>
+              <li><a href="http://cineio.uservoice.com">email</a> {" + "}
+              <strong><a target="_blank" href="http://devchat.cine.io">live chat support</a></strong>
+              &nbsp;from our developers</li>
+              <li>Discounts for inbound links to cine.io.</li>
+            </ul>
+          </div>
+
+        </div>
+
       </div>
     );
   }
@@ -249,7 +279,7 @@ var BroadcastPricing = React.createClass({
               <li>distribution via our <strong>global CDN</strong></li>
               <li><strong>no ads</strong> of any kind</li>
               <li><a href="http://cineio.uservoice.com">email</a> {" + "}
-              <strong><a href="https://www.hipchat.com/gZCLRQ9Ih">live chat support</a></strong>
+              <strong><a target="_blank" href="http://devchat.cine.io">live chat support</a></strong>
               &nbsp;from our developers</li>
               <li>Discounts for inbound links to cine.io.</li>
             </ul>
