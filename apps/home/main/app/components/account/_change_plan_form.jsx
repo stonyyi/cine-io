@@ -75,17 +75,15 @@ module.exports = React.createClass({
     return (
       <form onSubmit={this.updateAccount}>
         <div className="row">
-          <div className="large-12 columns">
-            <label>Broadcast Plan
+          <div className="large-6 columns">
+            <label><i className="cine-broadcast"></i>&nbsp;Broadcast Plan
               <select value={this.state.broadcastPlan} onChange={this.changeBroadcastPlan} name='broadcast'>
                 {broadcastPlanOptions}
               </select>
             </label>
           </div>
-        </div>
-        <div className="row">
-          <div className="large-12 columns">
-            <label>Peer Plan
+          <div className="large-6 columns">
+            <label><i className="cine-conference"></i>&nbsp;Peer Plan
               <select value={this.state.peerPlan} onChange={this.changePeerPlan} name='peer'>
                 {peerPlanOptions}
               </select>
