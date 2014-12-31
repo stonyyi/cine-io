@@ -19,8 +19,6 @@ module.exports = (match) ->
   match '/legal', 'legal#show'
   match '/legal/:id', 'legal#show'
 
-  match '/docs', 'docs#show'
-
   match '/recover-password/:identifier', 'password_change_requests#show'
 
   match '/component', 'components#show'
