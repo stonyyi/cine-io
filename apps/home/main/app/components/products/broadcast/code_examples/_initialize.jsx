@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 var
   React = require('react');
-  CodeHighlighter = Cine.component('homepage/code_examples/_code_highlighter');
+  CodeHighlighter = Cine.component('shared/code_examples/_code_highlighter');
 
 module.exports = React.createClass({
   displayName: 'InitializeCodeBlock',

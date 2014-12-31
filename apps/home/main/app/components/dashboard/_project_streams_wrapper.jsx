@@ -5,9 +5,9 @@ var
   NewStreamButton = Cine.component('dashboard/_new_stream_button'),
   Streams = Cine.collection('streams'),
   Project = Cine.model('project'),
-  InitializeCodeExample = Cine.component('homepage/code_examples/_initialize'),
-  PlayCodeExample = Cine.component('homepage/code_examples/_play'),
-  PublishCodeExample = Cine.component('homepage/code_examples/_publish');
+  InitializeCodeExample = Cine.component('products/broadcast/code_examples/_initialize'),
+  PlayCodeExample = Cine.component('products/broadcast/code_examples/_play'),
+  PublishCodeExample = Cine.component('products/broadcast/code_examples/_publish');
 
 module.exports = React.createClass({
   displayName: 'ProjectStreamsWrapper',

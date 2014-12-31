@@ -2,9 +2,9 @@
 var React = require('react'),
   flashDetect = Cine.lib('flash_detect'),
   cx = Cine.lib('cx'),
-  InitializeCodeExample = Cine.component('homepage/code_examples/_initialize'),
-  PlayCodeExample = Cine.component('homepage/code_examples/_play'),
-  PublishCodeExample = Cine.component('homepage/code_examples/_publish');
+  InitializeCodeExample = Cine.component('products/broadcast/code_examples/_initialize'),
+  PlayCodeExample = Cine.component('products/broadcast/code_examples/_play'),
+  PublishCodeExample = Cine.component('products/broadcast/code_examples/_publish');
 
 
 module.exports = React.createClass({
