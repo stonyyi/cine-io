@@ -1,6 +1,9 @@
 /** @jsx React.DOM */
 var React = require('react'),
-  PageWrapper = Cine.component('layout/_page_wrapper');
+  PageWrapper = Cine.component('layout/_page_wrapper'),
+  About = Cine.component('products/peer/_about'),
+  Consulting = Cine.component('shared/_consulting');
+
 
 
 module.exports = React.createClass({
@@ -13,7 +16,8 @@ module.exports = React.createClass({
   render: function() {
     return (
       <PageWrapper app={this.props.app} wide={true}>
-        The peer product.
+        <About />
+        <Consulting />
       </PageWrapper>
     );
   }
