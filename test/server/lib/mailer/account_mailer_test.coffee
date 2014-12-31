@@ -9,6 +9,9 @@ PasswordChangeRequest = Cine.server_model('password_change_request')
 humanizeBytes = Cine.lib('humanize_bytes')
 moment = require('moment')
 
+THOUSAND = 1000
+MINUTES = 60 * THOUSAND # in milliseconds
+
 describe 'accountMailer', ->
 
   beforeEach (done)->
@@ -177,6 +180,7 @@ describe 'accountMailer', ->
         usage:
           bandwidth: humanizeBytes.TiB
           storage: humanizeBytes.GiB * 2
+          peerMilliseconds: 123 * THOUSAND * MINUTES
           bandwidthOverage: humanizeBytes.Gib * 5
           storageOverage: humanizeBytes.Gib * 2
       @now = new Date
@@ -206,10 +210,12 @@ describe 'accountMailer', ->
         BILLING_MONTH: month
         BILL_TOTAL: "$5.00"
         PLAN_BANDWIDTH: "1.15 TiB"
-        PLAN_COST: "$5.00"
+        PLAN_MINUTES: "400.0k"
         PLAN_STORAGE: "125.00 GiB"
         USAGE_BANDWIDTH: "1.00 TiB"
-        USAGE_PLAN: "Basic and Pro"
+        USAGE_MINUTES: "123.0k"
+        BROADCAST_PLAN: "Basic ($100 / month) and Pro ($500 / month)"
+        PEER_PLAN: "Business ($2,000 / month)"
         USAGE_STORAGE: "2.00 GiB"
       expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
       assertMergeVarsInVars(mergeVars, expectedMergeVars)

@@ -405,16 +405,28 @@
                                                     <tr>
                                                         <td valign="top">
                                                             <div mc:edit="std_content00">
-                                                                <strong>Plan:</strong> *|USAGE_PLAN|*
-                                                                <ul>
-                                                                  <li>Base cost: *|PLAN_COST|* / month</li>
-                                                                  <li>Included bandwidth: *|PLAN_BANDWIDTH|*</li>
-                                                                  <li>Included storage: *|PLAN_STORAGE|*</li>
-                                                                </ul>
+                                                                *|IF:BROADCAST_PLAN|*
+                                                                  <strong>Broadcast Plan:</strong> *|BROADCAST_PLAN|*
+                                                                  <ul>
+                                                                    <li>Included bandwidth: *|PLAN_BANDWIDTH|*</li>
+                                                                    <li>Included storage: *|PLAN_STORAGE|*</li>
+                                                                  </ul>
+                                                                *|END:IF|*
+                                                                *|IF:PEER_PLAN|*
+                                                                  <strong>Peer Plan:</strong> *|PEER_PLAN|*
+                                                                  <ul>
+                                                                    <li>Included minutes: *|PLAN_MINUTES|*</li>
+                                                                  </ul>
+                                                                *|END:IF|*
                                                                 <strong>Usage during *|BILLING_MONTH|*:</strong>
                                                                 <ul>
-                                                                <li>Bandwidth: *|USAGE_BANDWIDTH|*</li>
-                                                                <li>Storage: *|USAGE_STORAGE|*</li>
+                                                                  *|IF:BROADCAST_PLAN|*
+                                                                    <li>Bandwidth: *|USAGE_BANDWIDTH|*</li>
+                                                                    <li>Storage: *|USAGE_STORAGE|*</li>
+                                                                  *|END:IF|*
+                                                                  *|IF:PEER_PLAN|*
+                                                                    <li>Minutes: *|USAGE_MINUTES|*</li>
+                                                                  *|END:IF|*
                                                                 </ul>
                                                                 <strong>Charged to your card:</strong> *|BILL_TOTAL|*
                                                                 <br/>

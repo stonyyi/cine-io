@@ -4,6 +4,7 @@ sendTemplateEmail = Cine.server_lib('mailer/send_template_email')
 _ = require('underscore')
 _str = require('underscore.string')
 humanizeBytes = Cine.lib('humanize_bytes')
+humanizeNumber = Cine.lib('humanize_number')
 moment = require('moment')
 BackboneAccount = Cine.model('account')
 UsageReport = Cine.model('usage_report')
@@ -44,7 +45,13 @@ exports.forgotPassword = (user, passwordChangeRequest, callback=noop)->
 # input: ['basic', 'solo']
 # Basic and Solo
 accountPlans = (plans, product)->
-  _str.toSentence(_.map(plans[product], _str.titleize))
+  plans = plans[product]
+  return undefined unless plans.length # don't want to return empty string
+  planStrings = _.map plans, (plan)->
+    planName = _str.titleize(plan)
+    planCost = ProvidersAndPlans['cine.io'][product].plans[plan].price
+    "#{planName} ($#{humanizeNumber(planCost)} / month)"
+  _str.toSentence(planStrings)
 
 displayCurrency = (amountInCents)->
   amountInDollars = amountInCents / 100
@@ -54,6 +61,16 @@ displayCurrency = (amountInCents)->
   else
     withDecimals
   "$#{value}"
+
+THOUSAND = 1000
+MINUTES = 60 * THOUSAND # milliseconds
+humanizeMinutes = (milliseconds)->
+  return "" unless milliseconds
+  if milliseconds > (1 * THOUSAND * MINUTES)
+    number = humanizeNumber(milliseconds / (1 * THOUSAND * MINUTES), 1)
+    "#{number}k"
+  else
+    "#{humanizeNumber(milliseconds / MINUTES, 2)}"
 
 exports.monthlyBill = (account, accountBillingHistory, recordId, billingMonthDate, callback=noop)->
   record = accountBillingHistory.history.id(recordId)
@@ -73,17 +90,19 @@ exports.monthlyBill = (account, accountBillingHistory, recordId, billingMonthDat
         header_blurb: 'Thank you for using cine.io.'
         BILLING_MONTH: moment(billingMonthDate).format("MMM YYYY")
         ACCOUNT_NAME: name
-        # TODO: BROADCAST
-        USAGE_PLAN: accountPlans(record.accountPlans, 'broadcast')
+        BROADCAST_PLAN: accountPlans(record.accountPlans, 'broadcast')
+        PEER_PLAN: accountPlans(record.accountPlans, 'peer')
         # Plan details
-        PLAN_COST: displayCurrency(billing.plan)
         PLAN_BANDWIDTH: humanizeBytes(UsageReport.maxUsagePerAccount(backboneAccount, 'bandwidth', 'broadcast'))
         PLAN_STORAGE: humanizeBytes(UsageReport.maxUsagePerAccount(backboneAccount, 'storage', 'broadcast'))
+        PLAN_MINUTES: humanizeMinutes(UsageReport.maxUsagePerAccount(backboneAccount, 'minutes', 'peer'))
         # Monthly Usage
         USAGE_BANDWIDTH: humanizeBytes(usage.bandwidth)
         USAGE_STORAGE: humanizeBytes(usage.storage)
+        USAGE_MINUTES: humanizeMinutes(usage.peerMilliseconds)
         # TOTAL
         BILL_TOTAL: displayCurrency(billing.plan)
+
     sendMail mailOptions, callback
 
 exports.underOneGibBill = (account, accountBillingHistory, billingMonthDate, callback=noop)->
