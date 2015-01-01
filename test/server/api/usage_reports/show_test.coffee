@@ -19,15 +19,25 @@ describe 'UsageReports#Show', ->
     @twoMonthsAgo.setDate(1)
     @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
 
+
+  monthIsLastMonth = (monthNumber, nowMonthNumber)->
+    (monthNumber == nowMonthNumber - 1) || checkForYearRollover(monthNumber, nowMonthNumber, 11)
+
+  monthIsTwoMonthsAgo = (monthNumber, nowMonthNumber)->
+    (monthNumber == nowMonthNumber - 2) || checkForYearRollover(monthNumber, nowMonthNumber, 10)
+
+  checkForYearRollover = (monthNumber, nowMonthNumber, monthToCheck)->
+    monthNumber == monthToCheck && nowMonthNumber == 0
+
   beforeEach ->
     today = new Date
     today.setDate(1)
     @bandwidthStub = sinon.stub CalculateAccountBandwidth, 'byMonth', (account, date, callback)->
       if date.getMonth() == today.getMonth()
         callback(null, 123)
-      else if date.getMonth() == today.getMonth() - 1
+      else if monthIsLastMonth(date.getMonth(), today.getMonth())
         callback(null, 456)
-      else if date.getMonth() == today.getMonth() - 2
+      else if monthIsTwoMonthsAgo(date.getMonth(), today.getMonth())
         callback(null, 789)
       else
         throw new Error("requesting longer date")
