@@ -30,15 +30,18 @@ module.exports = React.createClass({
             <div className="hero-row hero-flow">
 
               <div className="hero-item chat">
-                <div className="players">
-                  <div className="hero-image phone-video">
-                    <img src="/images/peer-hero/phone.png" />
+                <div className="players left">
+                  <div className="hero-image phone">
+                    <img className="device" src="/images/peer-hero/phone.png" />
+                    <img className="avatar" src="/images/peer-hero/user-female.png" />
                   </div>
-                  <div className="hero-image tablet-video">
-                    <img src="/images/peer-hero/tablet.png" />
+                  <div className="hero-image tablet">
+                    <img className="device" src="/images/peer-hero/tablet.png" />
+                    <img className="avatar" src="/images/peer-hero/user-male.png" />
                   </div>
-                  <div className="hero-image laptop-video">
-                    <img src="/images/peer-hero/laptop.png" />
+                  <div className="hero-image laptop">
+                    <img className="device" src="/images/peer-hero/laptop.png" />
+                    <img className="avatar" src="/images/peer-hero/user-male.png" />
                   </div>
                 </div>
               </div>
@@ -49,6 +52,25 @@ module.exports = React.createClass({
                   <img src="/images/cine-cloud.png" />
                 </div>
               </div>
+
+
+              <div className="hero-item chat">
+                <div className="players right">
+                  <div className="hero-image laptop">
+                    <img className="device" src="/images/peer-hero/laptop.png" />
+                    <img className="avatar" src="/images/peer-hero/user-female.png" />
+                  </div>
+                  <div className="hero-image tablet">
+                    <img className="device" src="/images/peer-hero/tablet.png" />
+                    <img className="avatar" src="/images/peer-hero/user-female.png" />
+                  </div>
+                  <div className="hero-image phone">
+                    <img className="device" src="/images/peer-hero/phone.png" />
+                    <img className="avatar" src="/images/peer-hero/user-male.png" />
+                  </div>
+                </div>
+              </div>
+
 
             </div>
           </div>

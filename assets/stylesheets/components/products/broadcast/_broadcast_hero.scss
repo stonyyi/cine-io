@@ -34,7 +34,6 @@
     .hero-item{
       display: table-cell;
       vertical-align: middle;
-
     }
 
   }
@@ -47,31 +46,9 @@
       }
     }
   }
-  .call-to-action {
-    margin-top: -42px;
-    text-align: center;
-
-    .api-key-button {
-      display: inline-block;
-      padding: 6px;
-      background: white;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 4px;
-      position: relative;
-      bottom: -42px;
-      margin-bottom: -42px;
-      .button {
-        background: $scheme-color-south-bright;
-        color: white;
-        margin-bottom: 0;
-      }
-      .button:hover {
-        background: $scheme-color-south;
-      }
-    }
-  }
 }
 @media #{$medium-up} {
+  $grid-item-width: 146px;
   .broadcast-hero{
     .brand-wrapper{
       text-align: left;
@@ -79,35 +56,7 @@
         background-position: left center;
       }
     }
-  }
-}
-@media #{$medium-up} {
-  .hero-row{
-    display: table-row;
-
-
-    .hero-content{
-      padding-top: 50px;
-    }
-    .table-row{
-      display: table-row;
-      width: auto;
-    }
-    .hero-item{
-      display: table-cell;
-    }
-    &.hero-flow{
-      .hero-item{
-        vertical-align: middle;
-      }
-      $grid-item-width: 146px;
-      .broadcaster-wrapper{
-        width: 370px;
-        text-align: center;
-        div {
-          display: inline-block;
-        }
-      }
+    .hero-flow{
       .arrows {
         width: $grid-item-width + 30px;
         padding: 0px 18px;
@@ -115,8 +64,16 @@
       .cloud{
         width: 280px;
       }
+      .broadcaster-wrapper{
+        width: 370px;
+        text-align: center;
+        div {
+          display: inline-block;
+        }
+      }
+
     }
-    &.hero-text{
+    .hero-text{
       $grid-item-width: 146px;
       color: $light-green-color;
       text-align: center;

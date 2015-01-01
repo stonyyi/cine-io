@@ -1,5 +1,89 @@
 .peer-hero{
   .players{
+    .hero-image{
+      position: relative;
+      img{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+      .device{
+        z-index: 2;
+      }
+      .avatar{
+        z-index: 1;
+      }
+    }
+    .phone {
+      width: 70px;
+      height: 130px;
+      .device{
+        width: 70px;
+      }
+      .avatar{
+        width: 70px;
+        top: inherit;
+        bottom: 16px;
+      }
+    }
+    .tablet {
+      width: 100px;
+      height: 168px;
+      .device{
+        width: 100px;
+      }
+      .avatar{
+        width: 100px;
+        top: inherit;
+        bottom: 11px;
+      }
+
+    }
+
+    .laptop {
+      width: 250px;
+      height: 163px;
+      .device{
+        width: 250px;
+      }
+      .avatar{
+        width: 125px;
+        top: inherit;
+        bottom: 22px;
+        left: 60px;
+      }
+
+    }
+
+    &.left{
+      .phone, .tablet{
+        margin-bottom: 15px;
+      }
+      .phone > img{
+        left: 90px;
+      }
+      .phone, .laptop {
+        margin-left: 15px
+      }
+    }
+
+    &.right{
+      .laptop, .tablet{
+        margin-bottom: 15px;
+      }
+      .tablet > img{
+        left: 165px;
+      }
+      .phone > img{
+        left: 90px;
+      }
+      .phone, .laptop {
+        margin-right: 15px
+      }
+
+    }
 
   }
 }
