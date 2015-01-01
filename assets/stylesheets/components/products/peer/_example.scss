@@ -1,4 +1,4 @@
-#broadcast-example {
+#peer-example {
   padding-top: 1.5em;
 
   background: #ccc;
@@ -12,22 +12,18 @@
     @include grid-column(12);
   }
 
-  .publish-script {
+  .events-script {
     @include grid-column(12);
   }
 
-  .play-script {
+  .join-script {
     @include grid-column(12);
   }
   .aspect-wrapper{
     display: inline-block;
     position: relative;
     width: 100%;
-    &:after {
-      padding-top: 56.25%; // 16:9 ratio
-      display: block;
-      content: '';
-    }
+    height: 300px;
     .main {
       position: absolute;
       top: 0; bottom: 0; right: 0; left: 0; // fill parent
@@ -50,17 +46,21 @@
 }
 
 @media #{$medium-up} {
-  #broadcast-example {
+  #peer-example {
     .head-script {
       @include grid-column(12);
     }
 
-    .publish-script {
+    .events-script {
       @include grid-column(6);
     }
 
-    .play-script {
+    .join-script {
       @include grid-column(6);
     }
+    .peers, video{
+      height: 300px;
+    }
+
   }
 }

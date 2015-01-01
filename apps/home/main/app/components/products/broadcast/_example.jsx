@@ -8,7 +8,7 @@ var React = require('react'),
 
 
 module.exports = React.createClass({
-  displayName: 'Example',
+  displayName: 'PeerExample',
   mixins: [Cine.lib('requires_app')],
   getInitialState: function() {
     return {
@@ -45,7 +45,6 @@ module.exports = React.createClass({
   },
   render: function() {
     var publishTry = this.state.publishing ? 'Stop publisher' : (this.state.hasPublished ? 'Start publisher' : 'Watch demo')
-      , topGist = ''
       , publishClasses = cx({
           'hide': !flashDetect(),
           'row': true,
@@ -53,7 +52,7 @@ module.exports = React.createClass({
         })
 
     return (
-      <section id="example">
+      <section id="broadcast-example">
         <div className="row">
           <div className="head-script">
             <InitializeCodeExample publicKey={this.state.examplePublicKey} />
