@@ -1,4 +1,4 @@
-.home-hero{
+.broadcast-hero{
   position: relative;
   color: white;
   background: #128c87;
@@ -48,7 +48,7 @@
   }
 }
 @media #{$medium-up} {
-  .home-hero{
+  .broadcast-hero{
     .brand-wrapper{
       text-align: left;
       .brand{

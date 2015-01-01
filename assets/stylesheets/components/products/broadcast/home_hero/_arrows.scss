@@ -1,7 +1,7 @@
 $arrow-border-visible: 18px solid;
 $arrow-border-transparent: $arrow-border-visible transparent;
 
-.home-hero{
+.broadcast-hero{
   .arrow.extra-arrow{
     display: none;
   }
@@ -41,7 +41,7 @@ $arrow-border-transparent: $arrow-border-visible transparent;
 }
 
 @media #{$medium-up} {
-  .home-hero{
+  .broadcast-hero{
     .arrow.extra-arrow{
       display: inline-block;
     }

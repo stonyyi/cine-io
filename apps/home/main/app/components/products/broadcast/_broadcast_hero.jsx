@@ -47,7 +47,7 @@ module.exports = React.createClass({
       </video>
     );
     return (
-      <div className='home-hero'>
+      <div className='broadcast-hero'>
 
         <div className="row brand-wrapper">
           <a href="/" title="cine.io">
@@ -71,7 +71,7 @@ module.exports = React.createClass({
                 <div className='table-row'>
                   <div className="hero-item broadcaster">
                     <div className="hero-image broadcast">
-                      <img src="/images/home-hero/cine-broadcast.png" />
+                      <img src="/images/broadcast-hero/cine-broadcast.png" />
                     </div>
                   </div>
                   <div className="hero-item stage">
@@ -84,7 +84,7 @@ module.exports = React.createClass({
 
               <div className="hero-item cloud">
                 <div className="hero-image">
-                  <img src="/images/home-hero/cine-cloud.png" />
+                  <img src="/images/broadcast-hero/cine-cloud.png" />
                 </div>
               </div>
 
@@ -94,15 +94,15 @@ module.exports = React.createClass({
                 <div className="players">
                   <div className="hero-image laptop-video">
                     {video}
-                    <img src="/images/home-hero/laptop.png" />
+                    <img src="/images/broadcast-hero/laptop.png" />
                   </div>
                   <div className="hero-image tablet-video">
                     {video}
-                    <img src="/images/home-hero/tablet.png" />
+                    <img src="/images/broadcast-hero/tablet.png" />
                   </div>
                   <div className="hero-image phone-video">
                     {video}
-                    <img src="/images/home-hero/phone.png" />
+                    <img src="/images/broadcast-hero/phone.png" />
                   </div>
                 </div>
               </div>

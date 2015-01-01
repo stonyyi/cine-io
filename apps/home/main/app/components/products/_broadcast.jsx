@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react'),
   PageWrapper = Cine.component('layout/_page_wrapper'),
-  HomeHero = Cine.component('products/broadcast/_home_hero'),
+  BroadcastHero = Cine.component('products/broadcast/_broadcast_hero'),
   About = Cine.component('products/broadcast/_about'),
   Example = Cine.component('products/broadcast/_example'),
   Libraries = Cine.component('products/broadcast/_libraries'),
@@ -19,7 +19,7 @@ module.exports = React.createClass({
     return (
       <PageWrapper app={this.props.app} wide={true}>
 
-        <HomeHero app={this.props.app} />
+        <BroadcastHero app={this.props.app} />
         <About />
         <Libraries />
         <Example app={this.props.app}/>
