@@ -84,7 +84,7 @@ module.exports = React.createClass({
 
               <div className="hero-item cloud">
                 <div className="hero-image">
-                  <img src="/images/broadcast-hero/cine-cloud.png" />
+                  <img src="/images/cine-cloud.png" />
                 </div>
               </div>
 
@@ -121,8 +121,8 @@ module.exports = React.createClass({
                 {watchText}
               </div>
             </div>
-
           </div>
+
           <div className="call-to-action">
             <span className="api-key-button">
               <a className="button radius secondary" href="" onClick={this.getApiKey}>
