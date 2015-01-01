@@ -1,3 +1,9 @@
+@mixin rotate($degrees) {
+  -ms-transform: rotate($degrees); /* IE 9 */
+  -webkit-transform: rotate($degrees); /* Chrome, Safari, Opera */
+  transform: rotate($degrees);
+}
+
 .peer-hero{
   .players{
     .hero-image{
@@ -8,6 +14,9 @@
         bottom: 0;
         left: 0;
         right: 0;
+      }
+      .double-arrow{
+        position: absolute;
       }
       .device{
         z-index: 2;
@@ -67,6 +76,21 @@
       .phone, .laptop {
         margin-left: 15px
       }
+      // arrows
+      .phone .double-arrow{
+        left: 213px;
+        top: 77px;
+        @include rotate(23deg);
+      }
+      .tablet .double-arrow{
+        left: 159px;
+        top: 78px;
+      }
+      .laptop .double-arrow{
+        left: 239px;
+        top: 28px;
+        @include rotate(-23deg);
+      }
     }
 
     &.right{
@@ -81,6 +105,22 @@
       }
       .phone, .laptop {
         margin-right: 15px
+      }
+
+      // arrows
+      .laptop .double-arrow{
+        left: -100px;
+        top: 108px;
+        @include rotate(-23deg);
+      }
+      .tablet .double-arrow{
+        left: 0px;
+        top: 78px;
+      }
+      .phone .double-arrow{
+        left: -47px;
+        top: -13px;
+        @include rotate(23deg);
       }
 
     }

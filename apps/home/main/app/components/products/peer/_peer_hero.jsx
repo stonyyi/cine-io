@@ -16,6 +16,15 @@ module.exports = React.createClass({
     return {};
   },
   render: function() {
+    var doubleArrow = (
+      <div className="double-arrow">
+        <div className="arrow-right" />
+        <div className="arrow-body">
+          <div className="arrow-inner-body" />
+        </div>
+        <div className="arrow-left" />
+      </div>
+      )
     return (
       <div className='peer-hero'>
 
@@ -34,14 +43,17 @@ module.exports = React.createClass({
                   <div className="hero-image phone">
                     <img className="device" src="/images/peer-hero/phone.png" />
                     <img className="avatar" src="/images/peer-hero/user-female.png" />
+                    {doubleArrow}
                   </div>
                   <div className="hero-image tablet">
                     <img className="device" src="/images/peer-hero/tablet.png" />
                     <img className="avatar" src="/images/peer-hero/user-male.png" />
+                    {doubleArrow}
                   </div>
                   <div className="hero-image laptop">
                     <img className="device" src="/images/peer-hero/laptop.png" />
                     <img className="avatar" src="/images/peer-hero/user-male.png" />
+                    {doubleArrow}
                   </div>
                 </div>
               </div>
@@ -57,14 +69,17 @@ module.exports = React.createClass({
               <div className="hero-item chat">
                 <div className="players right">
                   <div className="hero-image laptop">
+                    {doubleArrow}
                     <img className="device" src="/images/peer-hero/laptop.png" />
                     <img className="avatar" src="/images/peer-hero/user-female.png" />
                   </div>
                   <div className="hero-image tablet">
+                    {doubleArrow}
                     <img className="device" src="/images/peer-hero/tablet.png" />
                     <img className="avatar" src="/images/peer-hero/user-female.png" />
                   </div>
                   <div className="hero-image phone">
+                    {doubleArrow}
                     <img className="device" src="/images/peer-hero/phone.png" />
                     <img className="avatar" src="/images/peer-hero/user-male.png" />
                   </div>

@@ -1,0 +1,37 @@
+.peer-hero{
+  $arrow-height: 15px;
+  $arrow-length: 30px;
+  $arrow-body-width: 50px;
+  $arrow-color: $light-green-color;
+  .double-arrow{
+    font-size: 0;
+    display: table-row;
+  }
+  .double-arrow > div{
+    width: 0;
+    height: 0;
+    display: inline-block;
+    border-style: solid;
+    padding: 0;
+    margin: 0;
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .double-arrow .arrow-body{
+    border: none;
+  }
+  .double-arrow .arrow-inner-body {
+    height: $arrow-height;
+    width: $arrow-body-width;
+    background-color: $arrow-color;
+    border: none;
+  }
+  .arrow-left{
+    border-width: $arrow-height 0 $arrow-height $arrow-length;
+    border-color: transparent transparent transparent $arrow-color;
+  }
+  .arrow-right{
+    border-width: $arrow-height $arrow-length $arrow-height 0;
+    border-color: transparent $arrow-color transparent transparent;
+  }
+}
