@@ -3,13 +3,22 @@ calculateUsageStats = Cine.server_lib("stats/calculate_usage_stats")
 Stats = Cine.server_lib("stats")
 
 describe 'calculateAndSaveUsageStats', ->
+
+  monthIsLastMonth = (monthNumber, nowMonthNumber)->
+    (monthNumber == nowMonthNumber - 1) || checkForYearRollover(monthNumber, nowMonthNumber)
+
+  checkForYearRollover = (monthNumber, nowMonthNumber)->
+    monthNumber == 11 && nowMonthNumber == 0
+
   beforeEach ->
     now = new Date
     now.setDate(1)
     @calculateStub = sinon.stub calculateUsageStats, 'byMonth', (month, callback)->
-      if month.getMonth() == now.getMonth()
+      monthNumber = month.getMonth()
+      nowMonthNumber = now.getMonth()
+      if monthNumber == nowMonthNumber
         callback(null, the: "this month usage stats")
-      else if month.getMonth() == now.getMonth() - 1
+      else if monthIsLastMonth(monthNumber, nowMonthNumber)
         callback(null, the: "last month usage stats")
       else
         throw new Error("unknown month")
