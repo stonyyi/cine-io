@@ -3,7 +3,7 @@ var
   React = require('react');
 
 module.exports = React.createClass({
-  displayName: 'HomeHero',
+  displayName: 'BroadcastHero',
   mixins: [Cine.lib('requires_app')],
 
   getApiKey: function(e){
@@ -53,7 +53,7 @@ module.exports = React.createClass({
           <a href="/" title="cine.io">
             <h1 className="brand">cine.io</h1>
           </a>
-          <h3>Build powerful video apps.</h3>
+          <h3>Build powerful video broadcast apps.</h3>
         </div>
         <div className="show-for-small-only">
           <div className='text-center'>
