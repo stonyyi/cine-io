@@ -16,3 +16,16 @@ pre code{
     position: absolute !important;
   }
 }
+
+// fix Foundation's confusing tabs
+.tab-title {
+  border-top: 1px transparent;
+  border-left: 1px transparent;
+  border-right: 1px transparent;
+}
+.tab-title.active {
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  font-weight: bold;
+}
