@@ -10,7 +10,7 @@ var
   PublishCodeExample = Cine.component('products/broadcast/code_examples/_publish');
 
 module.exports = React.createClass({
-  displayName: 'ProjectStreamsWrapper',
+  displayName: 'BroadcastDashboardContent',
   mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
   propTypes: {
     model: React.PropTypes.instanceOf(Project).isRequired,

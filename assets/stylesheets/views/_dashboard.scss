@@ -7,6 +7,11 @@
   .panels-wrapper{
     overflow-y: scroll;
   }
+
+  .tabs dd>a, .tabs .tab-title>a{
+    padding: 1rem 1rem;
+  }
+
   table.clickable-row{
     width: 100%;
     tbody{

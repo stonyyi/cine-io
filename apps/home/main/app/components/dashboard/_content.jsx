@@ -4,7 +4,10 @@ var
   NewProject = Cine.component('dashboard/_new_project'),
   ListItem = Cine.component('dashboard/_project_list_item'),
   Projects = Cine.collection('projects'),
-  ProjectStreamsWrapper = Cine.component('dashboard/_project_streams_wrapper'),
+  BroadcastDashboardContent = Cine.component('dashboard/_broadcast_dashboard_content'),
+  PeerDashboardContent = Cine.component('dashboard/_peer_dashboard_content'),
+  BroadcastDocumentation = Cine.component('dashboard/_broadcast_documentation'),
+  PeerDocumentation = Cine.component('dashboard/_peer_documentation'),
   FlashMessage = Cine.component('layout/_flash_message'),
   cx = Cine.lib('cx');
 
@@ -18,7 +21,11 @@ module.exports = React.createClass({
     var projects = {}
     projects[this.props.masterKey] = this._createNewProject(this.props.masterKey);
     return {
-      selectedProjectId: null, showingNewProject: false, projects: projects};
+      selectedProjectId: null,
+      showingNewProject: false,
+      projects: projects,
+      showing: 'broadcast'
+    };
   },
   componentWillReceiveProps: function(nextProps){
     // allow the focus to be hijacked when not showing
@@ -51,11 +58,16 @@ module.exports = React.createClass({
     this.getCurrentCollection().add(project);
     this.selectProject(project);
   },
+  selectTab: function(tab, event){
+    event.preventDefault();
+    this.setState({showing: tab});
+  },
+
   render: function() {
     var
       selectedProjectId = this.state.selectedProjectId,
       currentAccount = this.props.app.currentAccount(),
-      planNeedsCreditCard;
+      planNeedsCreditCard, Documentation;
     // if something is selected and but it doesn't exist in the collection, remove it.
     if (selectedProjectId && !this.getCurrentCollection().get(selectedProjectId)){
       selectedProjectId = null;
@@ -65,7 +77,7 @@ module.exports = React.createClass({
       selectedProjectId = this.getCurrentCollection().models[0].id;
     }
     var
-      streamsPanel = '',
+      bottomContent = '',
       newProject = '',
       listItems = this.getCurrentCollection().map(function(model) {
         var selected = model.id === selectedProjectId;
@@ -97,7 +109,15 @@ module.exports = React.createClass({
     }
     if (selectedProjectId){
       var selectedProject = this.getCurrentCollection().get(selectedProjectId);
-      streamsPanel = (<ProjectStreamsWrapper app={this.props.app} model={selectedProject} />);
+      if (this.state.showing === 'broadcast')
+        bottomContent = (<BroadcastDashboardContent app={this.props.app} model={selectedProject} />);
+      else
+        bottomContent = (<PeerDashboardContent app={this.props.app} model={selectedProject} />);
+    }
+    if (this.state.showing === 'broadcast'){
+      Documentation = BroadcastDocumentation;
+    } else {
+      Documentation = PeerDocumentation;
     }
     return (
       <div id="homepage-logged-in">
@@ -129,54 +149,21 @@ module.exports = React.createClass({
             </div>
           </div>
           <div className='medium-4 columns'>
-            <h4 className='top-margin-1'>
-             <a target="_blank" href='http://developer.cine.io'>Full documentation</a>
-            </h4>
-            <h4 className='top-margin-1'>Client libraries</h4>
-            <ul className="inline-list">
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/js-sdk'>
-                  <img width='36' height='36' src="/images/code-logos/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-ios'>
-                  <img width='36' height='36' src="/images/code-logos/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-android'>
-                  <img width='36' height='36' src="/images/code-logos/android-logo.png" alt="Android logo" title="The Android SDK" />
-                </a>
-              </li>
-            </ul>
+            <div className="tabs-wrapper">
+              <ul className="tabs" data-tab role="tablist">
+                <li className={cx({'tab-title': true, active: this.state.showing === 'broadcast'})} role="presentational" >
+                  <a onClick={this.selectTab.bind(this, 'broadcast')} href="" role="tab" tabIndex="0" aria-selected={this.state.showing === 'broadcast'}><i className="cine-broadcast"></i>&nbsp;Broadcast</a>
+                </li>
+                <li className={cx({'tab-title': true, active: this.state.showing === 'peer'})} role="presentational" >
+                  <a onClick={this.selectTab.bind(this, 'peer')} href="" role="tab" tabIndex="1"aria-selected={this.state.showing === 'peer'}><i className="cine-conference"></i>&nbsp;Peer</a>
+                </li>
+              </ul>
+            </div>
 
-            <h4 className='top-margin-1'>Server side libraries</h4>
-            <ul className="inline-list">
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-ruby'>
-                  <img width='36' height='36' src="/images/code-logos/ruby-logo.png" alt="Ruby logo" title="The Ruby Gem" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-python'>
-                  <img width='36' height='36' src="/images/code-logos/python-logo.png" alt="Python logo" title="The Python Egg" />
-                </a>
-              </li>
-              <li>
-                <a target="_blank" href='https://github.com/cine-io/cineio-node'>
-                  <img width='36' height='36' src="/images/code-logos/nodejs-logo.png" alt="Node.js logo" title="The Node.js Package" />
-                </a>
-              </li>
-            </ul>
-
-            <h4 className='top-margin-1'>Mobile apps</h4>
-            <a target="_blank" href='https://itunes.apple.com/us/app/cine.io-console/id900579145'>
-              <img className='bottom-margin-1' width='135' height='40' src="/images/app-store-badge-135x40.svg" alt="App Store Badge" title="cine.io Console app" />
-            </a>
+            <Documentation />
           </div>
         </div>
-        {streamsPanel}
+        {bottomContent}
       </div>
     );
   }
