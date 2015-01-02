@@ -33,8 +33,7 @@ endpoint.</p>
 <p>Look at the API docs for <a href="#stream-stream-post">POST /stream</a> to learn how to
 create a stream.</p>
 <h3 id="publish-a-live-stream">Publish a live stream</h3>
-<p>Now you’ve saved your stream <code>id</code> and stream <code>password</code>. Using the <a href="https://github.com/cine-io/js-sdk">JS
-SDK</a>, you’ll need to pass you project’s
+<p>Now you’ve saved your stream <code>id</code> and stream <code>password</code>. Using the <a href="https://github.com/cine-io/broadcast-js-sdk">Broadcast JS SDK</a>, you’ll need to pass you project’s
 <code>publicKey</code> to the client. If your specific user has permission in your
 application to publish to this stream, then you’ll need to send along the
 stream <code>id</code> and stream <code>password</code> to your web client. For example, this
@@ -55,7 +54,7 @@ called on the publisher.</p>
 publisher.start();
 </code></pre>
 <h3 id="play-a-live-stream">Play a live stream</h3>
-<p>Using the <a href="https://github.com/cine-io/js-sdk">JS SDK</a>, you’ll need to pass you
+<p>Using the <a href="https://github.com/cine-io/broadcast-js-sdk">Broadcast JS SDK</a>, you’ll need to pass you
 project’s <em>public key</em> to the client. To play a stream using the JS SDK, you
 only need to send out the stream <code>id</code>. Only serve the stream <code>id</code> to users who
 have permission to view a stream. For example, in our aforementioned “virtual

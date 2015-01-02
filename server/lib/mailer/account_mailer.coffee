@@ -230,7 +230,7 @@ exports.welcomeEmail = (user, callback=noop)->
       content: """
       <p>Welcome to <a href='https://www.cine.io'>cine.io</a>!</p>
       <p>All of our APIs and common workflows are documented on our <a href='https://www.cine.io/docs'>documentation page</a>.</p>
-      <p>We have a <a href="https://github.com/cine-io/js-sdk">JavaScript SDK</a> for easy playing and publishing live streams.</p>
+      <p>We have a <a href="https://github.com/cine-io/broadcast-js-sdk">Broadcast JavaScript SDK</a> for easy playing and publishing live streams.</p>
       <p>We have server side packages for <a href="https://github.com/cine-io/cineio-ruby">ruby</a>, <a href="https://github.com/cine-io/cineio-node">node</a>, and <a href="https://github.com/cine-io/cineio-python">python</a>.</p>
       <p>We also have an <a href="https://github.com/cine-io/cineio-ios">iOS pod</a>, with Android coming soon.</p>
       <p>All of our repositories and some sample apps can be found on our  <a href="http://git.cine.io">Github page</a>.</p>

@@ -36,7 +36,7 @@
             Our SDK integrates directly into your Android Studio project using
             <a target="_blank" href="http://maven.apache.org/">Apache
             Maven.</a> Just install <a target="_blank"
-            href="https://github.com/cine-io /cineio-android">our library</a>
+            href="https://github.com/cine-io/cineio-broadcast-android">our library</a>
             and you're up and running.
           </p>
         </div>
