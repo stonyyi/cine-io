@@ -8,6 +8,7 @@ adminMaker = (name, callback)->
     productPlans:
       broadcast: 'pro'
     billingProvider: 'cine.io'
+    unthrottleable: true
   userAttributes =
     email: "#{name}@cine.io"
     name: name
