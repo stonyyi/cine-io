@@ -41,8 +41,8 @@ module.exports = React.createClass({
         <li className={productsClasses}>
           <a href="" onClick={this.toggleProductsMoved}>Products</a>
           <ul className="dropdown">
-            <li><a href="/products/broadcast">Broadcast</a></li>
-            <li><a href="/products/peer">Peer</a></li>
+            <li><a href="/products/broadcast"><i className="cine-broadcast"></i>&nbsp;Broadcast</a></li>
+            <li><a href="/products/peer"><i className="cine-conference"></i>&nbsp;Peer</a></li>
           </ul>
         </li>
       )
