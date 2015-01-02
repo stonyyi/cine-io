@@ -27,14 +27,33 @@
     margin: 0;
     font-size: 2.75rem;
   }
+  .hero-text{
+    color: $light-green-color;
+    text-align: center;
+    margin: 20px auto;
+    padding: 0 20px;
+    small{
+      display: block;
+      margin-top: 8px;
+    }
+  }
+
 }
 @media #{$medium-up} {
   .peer-hero{
+    .hero-content-inner{
+      width: 850px;
+      margin: auto;
+    }
     .brand-wrapper{
       text-align: left;
       .brand{
         background-position: left center;
       }
+    }
+    .hero-text{
+      width: 450px;
+      padding: 0;
     }
   }
 }

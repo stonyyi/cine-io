@@ -35,7 +35,7 @@ module.exports = React.createClass({
           <h3>Build powerful realtime video apps.</h3>
         </div>
         <div className="hero-content row">
-          <div className="show-for-medium-up">
+          <div className="hero-content-inner show-for-medium-up">
             <div className="hero-row hero-flow">
 
               <div className="hero-item chat">
@@ -88,6 +88,14 @@ module.exports = React.createClass({
 
 
             </div>
+          </div>
+          <div className="hero-text">
+            <h4>Device agnostic video chat</h4>
+            <p>
+              Make and receive calls from iOS*, Android*, or compatable
+              web-browsers with minimal effort and very little code.
+              <small>(*native mobile support coming soon)</small>
+            </p>
           </div>
           <div className="call-to-action">
             <span className="api-key-button">
