@@ -20,7 +20,6 @@ describe 'UsageReports#Show', ->
     @twoMonthsAgo.setDate(1)
     @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
 
-
   monthIsLastMonth = (monthNumber, nowMonthNumber)->
     (monthNumber == nowMonthNumber - 1) || checkForYearRollover(monthNumber, nowMonthNumber, 11)
 
@@ -52,9 +51,9 @@ describe 'UsageReports#Show', ->
     @peerStub = sinon.stub CalcualteAccountPeerMilliseconds, 'byMonth', (account, date, callback)->
       if date.getMonth() == today.getMonth()
         callback(null, 111)
-      else if date.getMonth() == today.getMonth() - 1
+      else if monthIsLastMonth(date.getMonth(), today.getMonth())
         callback(null, 222)
-      else if date.getMonth() == today.getMonth() - 2
+      else if monthIsTwoMonthsAgo(date.getMonth(), today.getMonth())
         callback(null, 333)
       else
         throw new Error("requesting longer date")
