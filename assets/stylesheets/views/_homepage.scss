@@ -1,8 +1,9 @@
 .homepage-logged-out {
-  .wide-container{
+  .wide-container {
     padding: 0 !important;
   }
-  &.hide-logo{
+
+  &.hide-logo {
     header{
       z-index: 5;
       background-color: $scheme-color-north;
@@ -16,14 +17,38 @@
       transition: none;
     }
   }
-  &.show-logo{
+
+  &.show-logo {
     .top-bar, .top-bar.expanded .title-area, .top-bar-section ul, .top-links li a, .top-bar-section li:not(.outlined) a{
       transition: background-color 500ms ease;
     }
   }
-  .peer-hero, .broadcast-hero{
-    margin-bottom: 50px;
+
+
+  .hero-content {
+    @include grid-column(12);
+    background-color: $scheme-color-north;
+    color: white;
+
+    .brand-wrapper {
+      @include grid-row();
+      .brand {
+        margin: 0;
+        font-size: 2.75rem;
+      }
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      color: white;
+    }
+  }
+
+  .product-list {
+    @include grid-column(12);
+
+    .product-panel {
+      @include grid-column(6, false, false, 0, 0, 0, false);
+      text-align: center;
+    }
   }
 }
-
-
