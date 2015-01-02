@@ -7,6 +7,7 @@ adminMaker = (name, callback)->
   accountAttributes =
     productPlans:
       broadcast: 'pro'
+      peer: 'premium'
     billingProvider: 'cine.io'
     unthrottleable: true
   userAttributes =
