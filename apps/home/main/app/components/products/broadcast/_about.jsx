@@ -14,10 +14,12 @@ module.exports = React.createClass({
               <em> for </em> developers.
             </h2>
             <p>
-              Leave the CDN and cross-platform viewing experience to us.
-              Launch your live-streaming apps in a
-              matter of minutes using our APIs and SDKs for iOS, Android, and
-              the web. We handle all of your RTMP and HLS needs.
+
+              Launch your live-streaming apps in a matter of minutes using our
+              APIs and SDKs for iOS, Android, and the web. Just focus on
+              coding your app &mdash; we&apos;ll handle the infrastructure,
+              CDN, and cross-platform viewing experience for both RTMP and HLS.
+
             </p>
           </div>
         </div>
