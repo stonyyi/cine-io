@@ -1,6 +1,9 @@
 .hero-content{
+  $half-section-button-fudge: -42px;
+  padding-bottom: 28px;
+
   .call-to-action {
-    margin-top: -42px;
+    margin-top: $half-section-button-fudge;
     text-align: center;
 
     .api-key-button {
@@ -10,8 +13,8 @@
       background: rgba(255, 255, 255, 0.5);
       border-radius: 4px;
       position: relative;
-      bottom: -42px;
-      margin-bottom: -42px;
+      bottom: $half-section-button-fudge;
+      margin-bottom: $half-section-button-fudge;
       .button {
         background: $scheme-color-south-bright;
         color: white;
@@ -27,7 +30,6 @@
 @media #{$medium-up} {
   .hero-row{
     display: table-row;
-
 
     .hero-content{
       padding-top: 50px;

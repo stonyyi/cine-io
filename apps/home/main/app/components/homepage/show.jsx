@@ -23,7 +23,8 @@ module.exports = React.createClass({
   render: function() {
       return (
         <PageWrapper app={this.props.app} wide={true} fixedNav={true} fadeLogo={true} className="homepage-logged-out">
-          <div className="hero-content">
+          <div className="home-hero">
+
             <div className="brand-wrapper">
               <a href="/" title="cine.io">
                 <h1 className="brand">cine.io</h1>
@@ -31,16 +32,18 @@ module.exports = React.createClass({
               <h3>Build powerful video apps.</h3>
             </div>
 
-            <div className="row text-center top-margin-2">
-              Put some marketing text here and figure out why button is not right.
-            </div>
+            <div className="hero-content row">
+              <div className="text-center">
+                Put some marketing text here and figure out why button is not right.
+              </div>
 
-            <div className="call-to-action">
-              <span className="api-key-button">
-                <a className="button radius secondary" href="" onClick={this.getApiKey}>
-                  Get Free API Key
-                </a>
-              </span>
+              <div className="call-to-action">
+                <span className="api-key-button">
+                  <a className="button radius secondary" href="" onClick={this.getApiKey}>
+                    Get Free API Key
+                  </a>
+                </span>
+              </div>
             </div>
           </div>
 
