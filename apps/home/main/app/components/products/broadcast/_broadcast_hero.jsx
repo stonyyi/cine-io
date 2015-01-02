@@ -49,10 +49,8 @@ module.exports = React.createClass({
     return (
       <div className='broadcast-hero'>
 
-        <div className="row brand-wrapper">
-          <a href="/" title="cine.io">
-            <h1 className="brand">cine.io</h1>
-          </a>
+        <div className="row">
+          <h1><i className="cine-broadcast"></i>&nbsp;Broadcast</h1>
           <h3>Build powerful video broadcast apps.</h3>
         </div>
         <div className="show-for-small-only">

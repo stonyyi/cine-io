@@ -28,11 +28,9 @@ module.exports = React.createClass({
     return (
       <div className='peer-hero'>
 
-        <div className="row brand-wrapper">
-          <a href="/" title="cine.io">
-            <h1 className="brand">cine.io</h1>
-          </a>
-          <h3>Build powerful realtime video apps.</h3>
+        <div className="row">
+          <h1><i className="cine-conference"></i>&nbsp;Peer</h1>
+          <h3>Build powerful real-time video apps.</h3>
         </div>
         <div className="hero-content row">
           <div className="hero-content-inner show-for-medium-up">
