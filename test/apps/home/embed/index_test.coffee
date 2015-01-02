@@ -8,7 +8,7 @@ describe 'embed', ->
   expectSuccess = (done)->
     return (err, res)->
       expect(res.text).to.include("<title>cine.io player embed</title>")
-      expect(res.text).to.include('<script type="text/javascript" src="//cdn.cine.io/cineio.js"></script>')
+      expect(res.text).to.include('<script type="text/javascript" src="//cdn.cine.io/cineio-broadcast.js"></script>')
       done(err)
 
   it 'serves does not handle the root', (done)->
