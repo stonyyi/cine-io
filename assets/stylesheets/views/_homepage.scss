@@ -43,7 +43,7 @@
     }
   }
 
-  .product-list {
+  #product-list {
     @include grid-column(12);
 
     .product-panel {
