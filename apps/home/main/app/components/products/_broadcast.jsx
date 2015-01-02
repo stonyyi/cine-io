@@ -18,7 +18,6 @@ module.exports = React.createClass({
   render: function() {
     return (
       <PageWrapper app={this.props.app} wide={true}>
-
         <BroadcastHero app={this.props.app} />
         <About />
         <Libraries />
