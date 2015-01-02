@@ -1,6 +1,8 @@
 /** @jsx React.DOM */
 var React = require('react'),
-PageWrapper = Cine.component('layout/_page_wrapper');
+  PageWrapper = Cine.component('layout/_page_wrapper'),
+  PeerHero = Cine.component('products/peer/_peer_hero'),
+  BroadcastHero = Cine.component('products/broadcast/_broadcast_hero');
 
 module.exports = React.createClass({
   displayName: 'HomepageShow',
@@ -21,7 +23,8 @@ module.exports = React.createClass({
   render: function() {
       return (
         <PageWrapper app={this.props.app} wide={true} fixedNav={true} fadeLogo={true} className="homepage-logged-out">
-        The homepage
+        <PeerHero app={this.props.app}/>
+        <BroadcastHero app={this.props.app}/>
         </PageWrapper>
       );
   }
