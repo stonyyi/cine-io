@@ -5,16 +5,7 @@ PageWrapper = Cine.component('layout/_page_wrapper');
 
 module.exports = React.createClass({
   displayName: 'HomepagePricing',
-  mixins: [Cine.lib('requires_app')],
-  componentDidMount: function() {
-    this.props.app.currentUser.on('login', this.redirectToDashboard);
-  },
-  componentWillUnmount: function() {
-    this.props.app.currentUser.off('login', this.redirectToDashboard);
-  },
-  redirectToDashboard: function(){
-    this.props.app.router.redirectTo('/dashboard');
-  },
+  mixins: [Cine.lib('requires_app'), Cine.lib('redirect_to_dashboard_on_login')],
   render: function() {
 
     return (

@@ -5,11 +5,7 @@ PeerProduct = Cine.component('products/_peer');
 
 module.exports = React.createClass({
   displayName: 'ProductsShow',
-  mixins: [Cine.lib('requires_app')],
-
-  getInitialState: function(){
-    return {};
-  },
+  mixins: [Cine.lib('requires_app'), Cine.lib('redirect_to_dashboard_on_login')],
   render: function() {
     var Product;
     if (this.props.options.product === 'broadcast')
