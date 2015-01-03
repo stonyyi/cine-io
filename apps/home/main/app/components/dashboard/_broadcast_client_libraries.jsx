@@ -15,12 +15,12 @@ module.exports = React.createClass({
             </a>
           </li>
           <li>
-            <a target="_blank" href='https://github.com/cine-io/cineio-ios'>
+            <a target="_blank" href='https://github.com/cine-io/cineio-broadcast-ios'>
               <img width='36' height='36' src="/images/code-logos/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
             </a>
           </li>
           <li>
-            <a target="_blank" href='https://github.com/cine-io/cineio-android'>
+            <a target="_blank" href='https://github.com/cine-io/cineio-broadcast-android'>
               <img width='36' height='36' src="/images/code-logos/android-logo.png" alt="Android logo" title="The Android SDK" />
             </a>
           </li>
