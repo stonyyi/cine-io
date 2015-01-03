@@ -5,8 +5,7 @@ Static = Cine.component('shared/_static');
 
 module.exports = React.createClass({
   displayName: 'SolutionsShow',
-  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin')],
-
+  mixins: [Cine.lib('requires_app'), Cine.lib('backbone_mixin'), Cine.lib('redirect_to_dashboard_on_login')],
   getInitialState: function(){
     return{};
   },
