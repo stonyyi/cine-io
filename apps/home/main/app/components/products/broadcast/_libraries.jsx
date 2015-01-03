@@ -16,7 +16,7 @@ module.exports = React.createClass({
             </h2>
             <ul className="icon-list">
               <li>
-                <a target="_blank" href='https://github.com/cine-io/js-sdk'>
+                <a target="_blank" href='https://github.com/cine-io/broadcast-js-sdk'>
                   <img src="/images/code-logos/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
                 </a>
               </li>
