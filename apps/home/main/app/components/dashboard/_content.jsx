@@ -4,10 +4,16 @@ var
   NewProject = Cine.component('dashboard/_new_project'),
   ListItem = Cine.component('dashboard/_project_list_item'),
   Projects = Cine.collection('projects'),
+
   BroadcastDashboardContent = Cine.component('dashboard/_broadcast_dashboard_content'),
   PeerDashboardContent = Cine.component('dashboard/_peer_dashboard_content'),
-  BroadcastDocumentation = Cine.component('dashboard/_broadcast_documentation'),
-  PeerDocumentation = Cine.component('dashboard/_peer_documentation'),
+
+  BroadcastClientLibraries = Cine.component('dashboard/_broadcast_client_libraries'),
+  PeerClientLibraries = Cine.component('dashboard/_peer_client_libraries'),
+  ServerLibraries = Cine.component('dashboard/_server_libraries'),
+  BroadcastMobileApps = Cine.component('dashboard/_broadcast_mobile_apps'),
+  PeerMobileApps = Cine.component('dashboard/_peer_mobile_apps'),
+
   FlashMessage = Cine.component('layout/_flash_message'),
   cx = Cine.lib('cx');
 
@@ -115,15 +121,20 @@ module.exports = React.createClass({
         bottomContent = (<PeerDashboardContent app={this.props.app} model={selectedProject} />);
     }
     if (this.state.showing === 'broadcast'){
-      Documentation = BroadcastDocumentation;
+      ClientLibraries = BroadcastClientLibraries;
     } else {
-      Documentation = PeerDocumentation;
+      ClientLibraries = PeerClientLibraries;
+    }
+    if (this.state.showing === 'broadcast'){
+      MobileApps = BroadcastMobileApps;
+    } else {
+      MobileApps = PeerMobileApps;
     }
     return (
       <div id="homepage-logged-in">
         <div className='row'>
           {planNeedsCreditCard}
-          <div className='medium-8 columns'>
+          <div className='medium-12 columns'>
             <div className="panels-wrapper panel">
               <div className='panel-heading clearfix'>
                 <h3> Projects </h3>
@@ -148,7 +159,10 @@ module.exports = React.createClass({
               </table>
             </div>
           </div>
-          <div className='medium-4 columns'>
+        </div>
+        <div className='row'>
+          <div className='medium-12 columns'>
+
             <div className="tabs-wrapper">
               <ul className="tabs" data-tab role="tablist">
                 <li className={cx({'tab-title': true, active: this.state.showing === 'broadcast'})} role="presentational" >
@@ -159,8 +173,24 @@ module.exports = React.createClass({
                 </li>
               </ul>
             </div>
+          </div>
+        </div>
+        <div className='row'>
 
-            <Documentation />
+          <div className='medium-3 columns'>
+            <h4 className='top-margin-1'>
+              <a target="_blank" href='http://developer.cine.io'>Full documentation</a>
+            </h4>
+
+          </div>
+          <div className='medium-3 columns'>
+            <ClientLibraries />
+          </div>
+          <div className='medium-3 columns'>
+            <ServerLibraries />
+          </div>
+          <div className='medium-3 columns'>
+            <MobileApps />
           </div>
         </div>
         {bottomContent}

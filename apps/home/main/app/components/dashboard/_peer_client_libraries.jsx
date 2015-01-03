@@ -3,13 +3,10 @@ var
   React = require('react');
 
 module.exports = React.createClass({
-  displayName: 'BroadcastDocumentation',
+  displayName: 'PeerClientLIbraries',
   render: function() {
     return (
       <div>
-        <h4 className='top-margin-1'>
-          <a target="_blank" href='http://developer.cine.io'>Full documentation</a>
-        </h4>
         <h4 className='top-margin-1'>Client libraries</h4>
         <ul className="inline-list">
           <li>
