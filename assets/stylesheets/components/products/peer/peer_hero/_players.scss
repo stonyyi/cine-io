@@ -47,14 +47,14 @@
     }
     .tablet {
       width: 100px;
-      height: 168px;
+      height: 163px;
       .device{
         width: 100px;
       }
       .avatar{
         width: 100px;
         top: inherit;
-        bottom: 11px;
+        bottom: 6px;
       }
       .avatar-background{
         width: 100px;
@@ -85,60 +85,67 @@
 
     }
 
+    .desktop {
+      width: 250px;
+      height: 203px;
+      .device{
+        width: 250px;
+      }
+      .avatar{
+        width: 125px;
+        top: inherit;
+        bottom: 38px;
+        left: 60px;
+      }
+      .avatar-background{
+        width: 231px;
+        height: 160px;
+        top: 7px;
+        left: 10px;
+      }
+
+    }
+
     &.left{
+      margin-right: 66px;
       .phone, .tablet{
         margin-bottom: 15px;
       }
-      .phone > *{
-        left: 90px;
-      }
-      .phone, .laptop {
-        margin-left: 15px
+      .tablet > *{
+        left: 76px;
       }
       // arrows
-      .phone .double-arrow{
-        left: 213px;
-        top: 77px;
+      .tablet .double-arrow{
+        left: 228px;
+        top: 83px;
         @include rotate(23deg);
       }
-      .tablet .double-arrow{
-        left: 159px;
-        top: 78px;
-      }
       .laptop .double-arrow{
-        left: 239px;
-        top: 28px;
+        left: 231px;
+        top: 55px;
         @include rotate(-23deg);
       }
     }
 
     &.right{
-      .laptop, .tablet{
+      margin-left: 66px;
+      .desktop{
         margin-bottom: 15px;
-      }
-      .tablet > *{
-        left: 165px;
       }
       .phone > *{
         left: 90px;
       }
-      .phone, .laptop {
-        margin-right: 15px
+      // arrows
+
+      .desktop .double-arrow{
+        left: -118px;
+        top: 99px;
+        @include rotate(-30deg);
       }
 
-      // arrows
-      .laptop .double-arrow{
-        left: -100px;
-        top: 108px;
-        @include rotate(-23deg);
-      }
-      .tablet .double-arrow{
-        left: 0px;
-        top: 78px;
-      }
       .phone .double-arrow{
-        left: -47px;
-        top: -13px;
+        left: -60px;
+        top: 31px;
         @include rotate(23deg);
       }
 
