@@ -8,7 +8,7 @@
   .players{
     .hero-image{
       position: relative;
-      img{
+      > img, .avatar-background {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -24,6 +24,9 @@
       .avatar{
         z-index: 1;
       }
+      .avatar-background{
+        background-color: white;
+      }
     }
     .phone {
       width: 70px;
@@ -36,6 +39,11 @@
         top: inherit;
         bottom: 16px;
       }
+      .avatar-background{
+        width: 70px;
+        height: 100px;
+        top: 10px;
+      }
     }
     .tablet {
       width: 100px;
@@ -47,6 +55,11 @@
         width: 100px;
         top: inherit;
         bottom: 11px;
+      }
+      .avatar-background{
+        width: 100px;
+        height: 144px;
+        top: 10px;
       }
 
     }
@@ -63,6 +76,12 @@
         bottom: 22px;
         left: 60px;
       }
+      .avatar-background{
+        width: 192px;
+        height: 134px;
+        top: 7px;
+        left: 30px;
+      }
 
     }
 
@@ -70,7 +89,7 @@
       .phone, .tablet{
         margin-bottom: 15px;
       }
-      .phone > img{
+      .phone > *{
         left: 90px;
       }
       .phone, .laptop {
@@ -97,10 +116,10 @@
       .laptop, .tablet{
         margin-bottom: 15px;
       }
-      .tablet > img{
+      .tablet > *{
         left: 165px;
       }
-      .phone > img{
+      .phone > *{
         left: 90px;
       }
       .phone, .laptop {
