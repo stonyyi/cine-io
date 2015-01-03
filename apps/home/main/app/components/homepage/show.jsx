@@ -1,8 +1,9 @@
 /** @jsx React.DOM */
 var React = require('react'),
   PageWrapper = Cine.component('layout/_page_wrapper'),
-  HomeHero = Cine.component('homepage/_home_hero');
-  Products = Cine.component('homepage/_products');
+  HomeHero = Cine.component('homepage/_home_hero'),
+  Products = Cine.component('homepage/_products'),
+  Consulting = Cine.component('shared/_consulting');
 
 module.exports = React.createClass({
   displayName: 'HomepageShow',
@@ -25,6 +26,7 @@ module.exports = React.createClass({
         <PageWrapper app={this.props.app} wide={true} fixedNav={true} fadeLogo={true} className="homepage-logged-out">
           <HomeHero />
           <Products />
+          <Consulting />
         </PageWrapper>
       );
   }

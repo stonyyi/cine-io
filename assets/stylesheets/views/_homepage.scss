@@ -45,6 +45,7 @@
 
   #product-list {
     @include grid-column(12);
+    margin-top: 3em;
 
     .product-panel {
       text-align: center;
