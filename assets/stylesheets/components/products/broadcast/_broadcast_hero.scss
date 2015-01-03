@@ -1,0 +1,104 @@
+.broadcast-hero{
+  position: relative;
+  color: white;
+  background: #128c87;
+  padding-top: 1em;
+
+  .brand-wrapper{
+    text-align: center;
+    .brand{
+      background-position: center center;
+    }
+  }
+
+  p {
+    line-height: 1.2;
+  }
+  h1 {
+    font-size: 2em;
+    color: white;
+  }
+  h3, h4 {
+    font-family: $distinct-font-family;
+    color: white;
+  }
+  h4 {
+    text-transform: uppercase;
+  }
+  .hero-text-wrapper{
+    margin-top: 20px;
+  }
+  .brand{
+    margin: 0;
+    font-size: 2.75rem;
+  }
+  .table-row{
+    .hero-item{
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+  }
+
+  .hero-row{
+    .broadcaster-wrapper{
+      .table-row{
+        margin: auto;
+        width: 208px;
+      }
+    }
+  }
+}
+@media #{$medium-up} {
+  $grid-item-width: 146px;
+  .broadcast-hero{
+    .brand-wrapper{
+      text-align: left;
+      .brand{
+        background-position: left center;
+      }
+    }
+    .hero-flow{
+      .arrows {
+        width: $grid-item-width + 30px;
+        padding: 0px 18px;
+      }
+      .cloud{
+        width: 280px;
+      }
+      .broadcaster-wrapper{
+        width: 370px;
+        text-align: center;
+        div {
+          display: inline-block;
+        }
+      }
+
+    }
+    .hero-text{
+      $grid-item-width: 146px;
+      color: $light-green-color;
+      text-align: center;
+      padding-top: 20px;
+      .broadcaster-wrapper{
+        width: $grid-item-width * 3;
+        padding-right: 20px;
+      }
+      .cloud {
+        width: $grid-item-width * 4;
+        padding-left: 60px;
+        padding-right: 60px;
+      }
+      .players{
+        width: $grid-item-width * 3;
+        padding-left: 76px;
+      }
+    }
+  }
+}
+
+@import "broadcast_hero/background";
+@import "broadcast_hero/broadcaster";
+@import "broadcast_hero/arrows";
+@import "broadcast_hero/cloud";
+@import "broadcast_hero/players";

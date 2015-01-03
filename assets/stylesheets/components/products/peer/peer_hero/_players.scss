@@ -1,0 +1,155 @@
+@mixin rotate($degrees) {
+  -ms-transform: rotate($degrees); /* IE 9 */
+  -webkit-transform: rotate($degrees); /* Chrome, Safari, Opera */
+  transform: rotate($degrees);
+}
+
+.peer-hero{
+  .players{
+    .hero-image{
+      position: relative;
+      > img, .avatar-background {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+      .double-arrow{
+        position: absolute;
+      }
+      .device{
+        z-index: 2;
+      }
+      .avatar{
+        z-index: 1;
+      }
+      .avatar-background{
+        background-color: #ccc;
+      }
+    }
+    .phone {
+      width: 70px;
+      height: 130px;
+      .device{
+        width: 70px;
+      }
+      .avatar{
+        width: 70px;
+        top: inherit;
+        bottom: 16px;
+      }
+      .avatar-background{
+        width: 70px;
+        height: 100px;
+        top: 10px;
+      }
+    }
+    .tablet {
+      width: 100px;
+      height: 163px;
+      .device{
+        width: 100px;
+      }
+      .avatar{
+        width: 100px;
+        top: inherit;
+        bottom: 6px;
+      }
+      .avatar-background{
+        width: 100px;
+        height: 144px;
+        top: 10px;
+      }
+
+    }
+
+    .laptop {
+      width: 250px;
+      height: 163px;
+      .device{
+        width: 250px;
+      }
+      .avatar{
+        width: 125px;
+        top: inherit;
+        bottom: 22px;
+        left: 60px;
+      }
+      .avatar-background{
+        width: 192px;
+        height: 134px;
+        top: 7px;
+        left: 30px;
+      }
+
+    }
+
+    .desktop {
+      width: 250px;
+      height: 203px;
+      .device{
+        width: 250px;
+      }
+      .avatar{
+        width: 125px;
+        top: inherit;
+        bottom: 38px;
+        left: 60px;
+      }
+      .avatar-background{
+        width: 231px;
+        height: 160px;
+        top: 7px;
+        left: 10px;
+      }
+
+    }
+
+    &.left{
+      margin-right: 66px;
+      .phone, .tablet{
+        margin-bottom: 15px;
+      }
+      .tablet > *{
+        left: 76px;
+      }
+      // arrows
+      .tablet .double-arrow{
+        left: 228px;
+        top: 83px;
+        @include rotate(23deg);
+      }
+      .laptop .double-arrow{
+        left: 231px;
+        top: 55px;
+        @include rotate(-23deg);
+      }
+    }
+
+    &.right{
+      margin-left: 66px;
+      .desktop{
+        margin-bottom: 15px;
+      }
+      .phone > *{
+        left: 90px;
+      }
+      // arrows
+
+      .desktop .double-arrow{
+        left: -118px;
+        top: 99px;
+        @include rotate(-30deg);
+      }
+
+      .phone .double-arrow{
+        left: -60px;
+        top: 31px;
+        @include rotate(23deg);
+      }
+
+    }
+
+  }
+}

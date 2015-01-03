@@ -103,10 +103,6 @@ module.exports = (grunt) ->
         files: ["apps/home/main/app/**/*.coffee", "apps/home/admin/app/**/*.coffee"]
         tasks: ["rendr_stitch"]
 
-      aglio:
-        files: ["development/docs/**/*.jade", "development/docs/**/*.md"]
-        tasks: ["aglio"]
-
     react:
       dynamic_mappings:
         files: [
@@ -142,13 +138,6 @@ module.exports = (grunt) ->
           "public/compiled/main/mergedAssets.js": ["public/compiled/main/mergedAssets.js"]
           "public/compiled/admin/mergedAssets.js": ["public/compiled/admin/mergedAssets.js"]
 
-    aglio:
-      docs:
-        files:
-          "server/static_documents/docs/main": ["development/docs/main.md"]
-        theme: "development/docs/blueprint-docs"
-        seperator: "\n"
-
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-sass"
   grunt.loadNpmTasks "grunt-nodemon"
@@ -162,7 +151,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-react'
   grunt.loadNpmTasks('grunt-rendr-stitch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-aglio');
 
   grunt.registerTask "test", (file) ->
     # if running on circle and we're on the stable branch

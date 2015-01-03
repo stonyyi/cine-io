@@ -80,23 +80,24 @@ describe 'local authentication', ->
       @stream.save done
 
     stubEdgecast()
+
     assertEmailSent.admin 'newUser'
 
     it 'returns the user', (done)->
-      login @agent, 'new email', 'new pass', 'solo', (err, res)->
+      login @agent, 'new email', 'new pass', 'broadcast-plan': 'solo', (err, res)->
         response = JSON.parse(res.text)
         expect(response.email).to.equal('new email')
         done(err)
 
     it 'creates a new user', (done)->
-      login @agent, 'new email', 'new pass', 'free', (err, res)->
+      login @agent, 'new email', 'new pass', 'broadcast-plan': 'free', (err, res)->
         response = JSON.parse(res.text)
         User.findById response.id, (err, user)->
           expect(user.email).to.equal('new email')
           done(err)
 
     it 'sets createdAtIP and lastLoginIP', (done)->
-      login @agent, 'new email', 'new pass', 'free', (err, res)->
+      login @agent, 'new email', 'new pass', 'broadcast-plan': 'free', (err, res)->
         response = JSON.parse(res.text)
         User.findById response.id, (err, user)->
           expect(user.lastLoginIP).to.equal('127.0.0.1')
@@ -104,20 +105,18 @@ describe 'local authentication', ->
           done(err)
 
     it 'creates an account', (done)->
-      login @agent, 'new email', 'new pass', 'free', (err, res)->
+      login @agent, 'new email', 'new pass', 'broadcast-plan': 'free', (err, res)->
         response = JSON.parse(res.text)
         User.findById response.id, (err, user)->
           expect(err).to.be.null
           expect(user._accounts).to.have.length(1)
           Account.findById user._accounts[0], (err, account)->
             expect(err).to.be.null
-            expect(account.productPlans.peer).to.have.length(0)
-            expect(account.productPlans.broadcast).to.have.length(1)
-            expect(account.productPlans.broadcast[0]).to.equal('free')
+            expect(account).to.be.ok
             done()
 
     it 'adds the correct billing provider', (done)->
-      login @agent, 'new email', 'new pass', 'free', (err, res)->
+      login @agent, 'new email', 'new pass', 'broadcast-plan': 'free', (err, res)->
         response = JSON.parse(res.text)
         User.findById response.id, (err, user)->
           expect(err).to.be.null
@@ -128,15 +127,15 @@ describe 'local authentication', ->
             done()
 
     it 'gives that user a hashed_password and salt', (done)->
-      login @agent, 'new email', 'new pass', 'free', (err, res)->
+      login @agent, 'new email', 'new pass', 'broadcast-plan': 'free', (err, res)->
         response = JSON.parse(res.text)
         User.findById response.id, (err, user)->
           expect(user.hashed_password).to.be.ok
           expect(user.password_salt).to.be.ok
           done(err)
 
-    it 'gives that account a plan', (done)->
-      login @agent, 'new email', 'new pass', 'basic', (err, res)->
+    it 'gives that account a broadcast plan', (done)->
+      login @agent, 'new email', 'new pass', 'broadcast-plan': 'basic', (err, res)->
         response = JSON.parse(res.text)
         User.findById response.id, (err, user)->
           expect(err).to.be.null
@@ -148,7 +147,7 @@ describe 'local authentication', ->
             done()
 
     it 'adds a project and a new stream to that user', (done)->
-      login @agent, 'new email', 'new pass', 'free', (err, res)=>
+      login @agent, 'new email', 'new pass', 'broadcast-plan': 'free', (err, res)=>
         response = JSON.parse(res.text)
         User.findById response.id, (err, user)=>
           expect(err).to.be.null
@@ -166,7 +165,7 @@ describe 'local authentication', ->
                 done()
 
     it 'issues a remember me token', (done)->
-      login @agent, 'new email', 'new pass', 'free', (err, res)->
+      login @agent, 'new email', 'new pass', 'broadcast-plan': 'free', (err, res)->
         response = JSON.parse(res.text)
         remember_me = res.headers['set-cookie'][0]
         token = remember_me.match(/remember_me=([^;]+)/)[1]
@@ -174,3 +173,19 @@ describe 'local authentication', ->
         RememberMeToken.findOne token: token, (err, rmt)->
           expect(rmt._user.toString()).to.equal(response.id.toString())
           done(err)
+
+  describe 'new user with peer', ->
+
+    assertEmailSent.admin 'newUser'
+
+    it 'gives that account a peer plan', (done)->
+      login @agent, 'new email', 'new pass', 'peer-plan': 'solo', (err, res)->
+        response = JSON.parse(res.text)
+        User.findById response.id, (err, user)->
+          expect(err).to.be.null
+          Account.findById user._accounts[0], (err, account)->
+            expect(err).to.be.null
+            expect(account.productPlans.broadcast).to.have.length(0)
+            expect(account.productPlans.peer).to.have.length(1)
+            expect(account.productPlans.peer[0]).to.equal('solo')
+            done()

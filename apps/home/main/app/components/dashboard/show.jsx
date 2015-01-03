@@ -1,7 +1,7 @@
 /** @jsx React.DOM */
 var React = require('react'),
 PageWrapper = Cine.component('layout/_page_wrapper'),
-LoggedIn = Cine.component('dashboard/_content'),
+DashboardContent = Cine.component('dashboard/_content'),
 NoAccount = Cine.component('shared/_no_account');
 
 module.exports = React.createClass({
@@ -19,7 +19,7 @@ module.exports = React.createClass({
     }
     return (
       <PageWrapper app={this.props.app}>
-        <LoggedIn app={this.props.app} masterKey={currentAccount.get('masterKey')}/>
+        <DashboardContent app={this.props.app} masterKey={currentAccount.get('masterKey')}/>
       </PageWrapper>
     );
   }

@@ -10,7 +10,11 @@
       text-align: center;
     }
 
-    .prices {
+    .tabs-wrapper{
+      @include grid-row();
+    }
+
+    .tabs-content {
       @include grid-row();
       margin-top: 1.5em;
 
@@ -25,12 +29,13 @@
           }
         }
       }
-      table.hide-for-medium-up {
+      .hide-for-medium-up table {
         /* this is an ugly hack */
+        width: 100%;
         td:first-child { width: 25%; }
         td:last-child { width: 60%; }
       }
-      table.show-for-medium-up {
+      .show-for-medium-up table, .peer-pricing{
         th {
           text-align: center;
         }
@@ -72,6 +77,10 @@
 
 @media #{$large-up} {
   #pricing {
+    .tabs-wrapper .tabs{
+      @include grid-column(8, false, false, 2);
+      padding-left: 0;
+    }
     .prices {
       table {
         @include grid-column(8, false, false, 2);

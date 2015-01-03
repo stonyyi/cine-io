@@ -3,12 +3,5 @@
 @import "utility";
 @import "layout";
 @import "foundation_fixes";
-@import "components/homepage/home_hero";
-@import "components/shared/static";
-@import "views/header";
-@import "views/homepage";
-@import "views/dashboard";
-@import "views/pricing";
-@import "views/billing";
-@import "views/bandwidth_calculator";
-@import "views/solutions";
+@import "components";
+@import "views";

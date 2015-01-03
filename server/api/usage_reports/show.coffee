@@ -1,5 +1,7 @@
 CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
+CalcualteAccountPeerMilliseconds = Cine.server_lib('reporting/peer/calculate_account_peer_milliseconds')
+
 getAccount = Cine.server_lib('get_account')
 async = require('async')
 _ = require('underscore')
@@ -15,6 +17,15 @@ createAsyncCallsForLastThreeMonthsOfBandwidth = (account)->
 
   _.inject lastThreeMonths, createAysncCaller, {}
 
+createAsyncCallsForLastThreeMonthsOfPeer = (account)->
+  lastThreeMonths = UsageReport.lastThreeMonths()
+  createAysncCaller = (accum, date)->
+    accum[date.format] = (cb)->
+      CalcualteAccountPeerMilliseconds.byMonth account, date.date, cb
+    return accum
+
+  _.inject lastThreeMonths, createAysncCaller, {}
+
 module.exports = (params, callback)->
   getAccount params, (err, account, options)->
     return callback(err, account, options) if err
@@ -22,6 +33,8 @@ module.exports = (params, callback)->
     asyncCalls =
       bandwidth: (cb)->
         async.parallel createAsyncCallsForLastThreeMonthsOfBandwidth(account), cb
+      peerMilliseconds: (cb)->
+        async.parallel createAsyncCallsForLastThreeMonthsOfPeer(account), cb
       storage: (cb)->
         CalculateAccountStorage.total account, cb
 
@@ -31,4 +44,5 @@ module.exports = (params, callback)->
         masterKey: account.masterKey
         bandwidth: result.bandwidth
         storage: result.storage
+        peerMilliseconds: result.peerMilliseconds
       callback(null, response)

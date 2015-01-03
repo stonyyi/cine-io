@@ -11,10 +11,24 @@ TurnUser = Cine.server_model('turn_user')
 describe 'createNewAccount', ->
 
   beforeEach ->
-    @accountAttributes = name: "the new account name", herokuId: 'heroku-id-yo', billingProvider: 'heroku', plan: 'starter'
+    @accountAttributes = name: "the new account name", herokuId: 'heroku-id-yo', billingProvider: 'heroku', productPlans: {broadcast: 'starter'}
     @userAttributes = email: "my-email", name: 'user name', appdirectUUID: 'some appdirect uuid'
     @projectAttributes = name: 'this project'
     @streamAttributes = name: 'this stream'
+
+  describe 'with peer', ->
+
+    beforeEach (done)->
+      @accountAttributes.productPlans = {peer: 'solo'}
+      createNewAccount @accountAttributes, @userAttributes, @projectAttributes, @streamAttributes, (err, results)=>
+        @results = results
+        done(err)
+
+    it 'adds the plan', ->
+      # doing a deep equal of a mongo array vs js array doesn't work
+      expect(@results.account.productPlans.broadcast).to.have.length(0)
+      expect(@results.account.productPlans.peer).to.have.length(1)
+      expect(@results.account.productPlans.peer[0]).to.equal('solo')
 
   describe 'without a stream', ->
     beforeEach (done)->

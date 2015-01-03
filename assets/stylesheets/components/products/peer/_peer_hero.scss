@@ -1,0 +1,69 @@
+$hero-width: 952px;
+.peer-hero{
+  position: relative;
+  color: white;
+  background: #128c87;
+  padding-top: 1em;
+
+  .brand-wrapper{
+    text-align: center;
+    .brand{
+      background-position: center center;
+    }
+  }
+
+  p {
+    line-height: 1.2;
+  }
+  h1 {
+    font-size: 2em;
+    color: white;
+  }
+  h3, h4 {
+    font-family: $distinct-font-family;
+    color: white;
+  }
+  h4 {
+    text-transform: uppercase;
+  }
+  .brand{
+    margin: 0;
+    font-size: 2.75rem;
+  }
+  .chat{
+    width: 250px;
+  }
+  .hero-text{
+    color: $light-green-color;
+    text-align: center;
+    margin: 20px auto;
+    padding: 0 20px;
+    small{
+      display: block;
+      margin-top: 8px;
+    }
+  }
+
+}
+@media #{$medium-up} {
+  .peer-hero{
+    .hero-content-inner{
+      width: $hero-width;
+      margin: auto;
+    }
+    .brand-wrapper{
+      text-align: left;
+      .brand{
+        background-position: left center;
+      }
+    }
+    .hero-text{
+      width: 450px;
+      padding: 0;
+    }
+  }
+}
+
+@import "peer_hero/cloud";
+@import "peer_hero/double_arrow";
+@import "peer_hero/players";

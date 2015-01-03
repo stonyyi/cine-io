@@ -1,0 +1,14 @@
+.peer-hero{
+  $cloud-width: 280px;
+  .cloud{
+    .hero-image{
+      text-align: center;
+      // width: $cloud-width;
+      margin: 0 20px;
+
+    }
+    img{
+      width: $cloud-width;
+    }
+  }
+}

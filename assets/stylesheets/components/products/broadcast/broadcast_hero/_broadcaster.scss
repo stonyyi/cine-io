@@ -1,0 +1,17 @@
+.broadcast-hero{
+  .broadcast{
+    img{
+      width: 90px;
+      z-index: 1;
+      position: relative;
+    }
+  }
+  .stage{
+    video{
+      width: 93px;
+      height: 49px;
+      transform: perspective(6px) rotateY(-3deg);
+    }
+  }
+
+}

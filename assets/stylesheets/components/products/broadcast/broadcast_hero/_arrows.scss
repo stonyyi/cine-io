@@ -1,0 +1,86 @@
+$arrow-border-visible: 18px solid;
+$arrow-border-transparent: $arrow-border-visible transparent;
+
+.broadcast-hero{
+  .arrow.extra-arrow{
+    display: none;
+  }
+  .arrow {
+    width: 0;
+    height: 0;
+    opacity: 0.0;
+    margin: auto;
+    -webkit-animation: pulsate-down 2s ease-out;
+    -webkit-animation-iteration-count: infinite;
+
+    animation: pulsate-down 2s ease-out;
+    animation-iteration-count: infinite;
+    border-left: $arrow-border-transparent;
+    border-right: $arrow-border-transparent;
+    border-top: $arrow-border-visible;
+  }
+
+  .arrow:nth-child(3n+1) {
+    -webkit-animation-delay: 0s;
+    -moz-animation-delay: 0s;
+  }
+  .arrow:nth-child(3n+2) {
+    -webkit-animation-delay: 0.5s;
+    -moz-animation-delay: 0.5s;
+  }
+  .arrow:nth-child(3n+3) {
+    -webkit-animation-delay: 1s;
+    -moz-animation-delay: 1s;
+  }
+
+  .arrow:nth-child(3n+4) {
+    -webkit-animation-delay: 1.5s;
+    -moz-animation-delay: 1.5s;
+  }
+
+}
+
+@media #{$medium-up} {
+  .broadcast-hero{
+    .arrow.extra-arrow{
+      display: inline-block;
+    }
+    .arrow {
+      display: inline-block;
+      border-top: $arrow-border-transparent;
+      border-bottom: $arrow-border-transparent;
+      border-right: none;
+
+      -webkit-animation: pulsate-right 2s ease-out;
+      -webkit-animation-iteration-count: infinite;
+
+      animation: pulsate-right 2s ease-out;
+      animation-iteration-count: infinite;
+      border-left: $arrow-border-visible;
+    }
+  }
+}
+
+@-webkit-keyframes pulsate-down {
+  0% {-webkit-transform: scale(0.1, 0.1); opacity: 1.0; border-top-color: $scheme-color-north;}
+  /*50% {opacity: 1.0; border-color: red;}*/
+  100% {-webkit-transform: scale(1.2, 1.2); opacity: 0.0; border-top-color: white;}
+}
+
+@-webkit-keyframes pulsate-right {
+  0% {-webkit-transform: scale(0.1, 0.1); opacity: 1.0; border-left-color: $scheme-color-north;}
+  /*50% {opacity: 1.0; border-color: red;}*/
+  100% {-webkit-transform: scale(1.2, 1.2); opacity: 0.0; border-left-color: white;}
+}
+
+@keyframes pulsate-down {
+  0% {transform: scale(0.1, 0.1); opacity: 1.0; border-top-color: $scheme-color-north;}
+  /*50% {opacity: 1.0; border-color: red;}*/
+  100% {transform: scale(1.2, 1.2); opacity: 0.0; border-top-color: white;}
+}
+
+@keyframes pulsate-right {
+  0% {transform: scale(0.1, 0.1); opacity: 1.0; border-left-color: $scheme-color-north;}
+  /*50% {opacity: 1.0; border-color: red;}*/
+  100% {transform: scale(1.2, 1.2); opacity: 0.0; border-left-color: white;}
+}

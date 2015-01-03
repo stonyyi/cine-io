@@ -20,14 +20,6 @@ describe 'HomepageController', ->
         done()
       test('show', params, callback)
 
-  describe '#products', ->
-    it "calls back", (done)->
-      params = {}
-      callback = (err, viewOptions)->
-        expect(err).to.equal(undefined)
-        done()
-      test('products', params, callback)
-
   describe '#pricing', ->
     it "calls back", (done)->
       params = {}

@@ -1,0 +1,50 @@
+.hero-content{
+  $half-section-button-fudge: -42px;
+  padding-bottom: 28px;
+
+  .call-to-action {
+    margin-top: $half-section-button-fudge;
+    text-align: center;
+
+    .api-key-button {
+      display: inline-block;
+      padding: 6px;
+      background: white;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 4px;
+      position: relative;
+      bottom: $half-section-button-fudge;
+      margin-bottom: $half-section-button-fudge;
+      .button {
+        background: $scheme-color-south-bright;
+        color: white;
+        margin-bottom: 0;
+      }
+      .button:hover {
+        background: $scheme-color-south;
+      }
+    }
+  }
+}
+
+@media #{$medium-up} {
+  .hero-row{
+    display: table-row;
+
+    .hero-content{
+      padding-top: 50px;
+    }
+    .table-row{
+      display: table-row;
+      width: auto;
+    }
+    .hero-item{
+      display: table-cell;
+    }
+    &.hero-flow{
+      .hero-item{
+        vertical-align: middle;
+      }
+    }
+  }
+}

@@ -1,9 +1,31 @@
 .top-bar-section .has-dropdown.moved>.dropdown{
   position: static !important;
 }
+pre {
+  line-height: 1;
+}
+pre code{
+  padding: 0;
+  line-height: 1;
+  background-color: transparent;
+  border: none;
+}
 
 @media #{$medium-up} {
   .top-bar-section .has-dropdown.moved>.dropdown{
     position: absolute !important;
   }
+}
+
+// fix Foundation's confusing tabs
+.tab-title {
+  border-top: 1px transparent;
+  border-left: 1px transparent;
+  border-right: 1px transparent;
+}
+.tab-title.active {
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  font-weight: bold;
 }

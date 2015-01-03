@@ -2,12 +2,13 @@ Account = Cine.server_model('account')
 ShowUsageReports = testApi Cine.api('usage_reports/show')
 CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
+CalcualteAccountPeerMilliseconds = Cine.server_lib('reporting/peer/calculate_account_peer_milliseconds')
 
 describe 'UsageReports#Show', ->
   testApi.requiresMasterKey ShowUsageReports
 
   beforeEach (done)->
-    @account = new Account billingProvider: 'cine.io', masterKey: 'dat mk', productPlans: {broadcast: ['free']}
+    @account = new Account billingProvider: 'cine.io', masterKey: 'dat mk', productPlans: {broadcast: ['free'], peer: ['free']}
     @account.save done
 
   beforeEach ->
@@ -18,7 +19,6 @@ describe 'UsageReports#Show', ->
     @twoMonthsAgo = new Date
     @twoMonthsAgo.setDate(1)
     @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
-
 
   monthIsLastMonth = (monthNumber, nowMonthNumber)->
     (monthNumber == nowMonthNumber - 1) || checkForYearRollover(monthNumber, nowMonthNumber, 11)
@@ -46,6 +46,22 @@ describe 'UsageReports#Show', ->
     @bandwidthStub.restore()
 
   beforeEach ->
+    today = new Date
+    today.setDate(1)
+    @peerStub = sinon.stub CalcualteAccountPeerMilliseconds, 'byMonth', (account, date, callback)->
+      if date.getMonth() == today.getMonth()
+        callback(null, 111)
+      else if monthIsLastMonth(date.getMonth(), today.getMonth())
+        callback(null, 222)
+      else if monthIsTwoMonthsAgo(date.getMonth(), today.getMonth())
+        callback(null, 333)
+      else
+        throw new Error("requesting longer date")
+
+  afterEach ->
+    @peerStub.restore()
+
+  beforeEach ->
     @storageStub = sinon.stub CalculateAccountStorage, 'total', (account, callback)->
       callback(null, 9937)
 
@@ -57,11 +73,16 @@ describe 'UsageReports#Show', ->
     callback = (err, response)=>
       expect(err).to.be.null
       bandwidth = {}
+      peerMilliseconds = {}
       bandwidth["#{@twoMonthsAgo.getFullYear()}-#{@twoMonthsAgo.getMonth()}"] = 789
       bandwidth["#{@lastMonth.getFullYear()}-#{@lastMonth.getMonth()}"] = 456
       bandwidth["#{@thisMonth.getFullYear()}-#{@thisMonth.getMonth()}"] = 123
+      peerMilliseconds["#{@twoMonthsAgo.getFullYear()}-#{@twoMonthsAgo.getMonth()}"] = 333
+      peerMilliseconds["#{@lastMonth.getFullYear()}-#{@lastMonth.getMonth()}"] = 222
+      peerMilliseconds["#{@thisMonth.getFullYear()}-#{@thisMonth.getMonth()}"] = 111
       expectedResponse =
         bandwidth: bandwidth
+        peerMilliseconds: peerMilliseconds
         storage: 9937
         masterKey: 'dat mk'
       expect(response).to.deep.equal(expectedResponse)
