@@ -42,7 +42,7 @@ describe 'UsageReport', ->
       it 'returns the max amount', ->
         account = new Account(provider: 'cine.io')
         account.attributes.productPlans = {broadcast: ['free']}
-        expect(UsageReport.maxUsagePerAccount(account, 'storage', 'broadcast')).to.equal(0)
+        expect(UsageReport.maxUsagePerAccount(account, 'storage', 'broadcast')).to.equal(1073741824)
         account.attributes.productPlans = {broadcast: ['solo']}
         expect(UsageReport.maxUsagePerAccount(account, 'storage', 'broadcast')).to.equal(5368709120)
         account.attributes.productPlans = {broadcast: ['basic']}
@@ -60,9 +60,9 @@ describe 'UsageReport', ->
       it 'works with combos', ->
         account = new Account(provider: 'cine.io')
         account.attributes.productPlans = {broadcast: ['free', 'pro']}
-        expect(UsageReport.maxUsagePerAccount(account, 'storage', 'broadcast')).to.equal(0 + 107374182400)
+        expect(UsageReport.maxUsagePerAccount(account, 'storage', 'broadcast')).to.equal(1073741824 + 107374182400)
         account.attributes.productPlans = {broadcast: ['free', 'solo', 'basic']}
-        expect(UsageReport.maxUsagePerAccount(account, 'storage', 'broadcast')).to.equal(0 + 5368709120 + 26843545600)
+        expect(UsageReport.maxUsagePerAccount(account, 'storage', 'broadcast')).to.equal(1073741824 + 5368709120 + 26843545600)
 
     describe 'peer', ->
       it 'returns the max amount', ->

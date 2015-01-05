@@ -14,7 +14,7 @@ module.exports =
           streams: 1
           price: 0
           bandwidth: humanizeBytes.GiB
-          storage: 0
+          storage: humanizeBytes.GiB
           bandwidthOverage: 0
           storageOverage: 0
         solo:
