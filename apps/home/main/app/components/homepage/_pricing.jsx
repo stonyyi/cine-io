@@ -82,7 +82,7 @@ var PeerPricing = React.createClass({
     var planRows = this.generatePlanRows(UsageReport.sortedCinePlans('peer'));
     return (
       <div className="peer-pricing">
-        <div className="prices">
+        <div className="prices row">
           <table>
             <thead>
               <tr>
@@ -130,9 +130,7 @@ var PeerPricing = React.createClass({
               <li>Discounts for inbound links to cine.io.</li>
             </ul>
           </div>
-
         </div>
-
       </div>
     );
   }
@@ -205,50 +203,47 @@ var BroadcastPricing = React.createClass({
 
     return (
       <div className="broadcast-pricing">
-        <div className="prices">
-          <div className="hide-for-medium-up">
-            <table>
-              <tbody>
-                {mobilePlanRows}
-                <tr>
-                  <td className="plan-name">Custom</td>
-                  <td>
-                    <strong>Streams:</strong> Unlimited<br/>
-                    <strong>Xfer:</strong> &gt;15 TiB<br/>
-                    <strong>Storage:</strong> &gt;=1 TiB<br/>
-                    <strong>Cost:</strong> Negotiable<br/><br/>
-                    <a className="button tiny radius" target="_blank" href="mailto:support@cine.io?subject=Business+Inquiry">Talk to Us</a><br/>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="show-for-medium-up">
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Included Streams</th>
-                  <th>Included Bandwidth</th>
-                  <th>Included Storage</th>
-                  <th>Cost / Month</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {planRows}
-                <tr>
-                  <td className="plan-name">Custom</td>
-                  <td>Unlimited</td>
-                  <td>&gt; 15 TiB</td>
-                  <td>&gt;= 1 TiB</td>
-                  <td className="cost">Negotiable</td>
-                  <td><a className="button tiny radius" target="_blank" href="mailto:support@cine.io?subject=Business+Inquiry">Talk to Us</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
+        <div className="row prices hide-for-medium-up">
+          <table>
+            <tbody>
+              {mobilePlanRows}
+              <tr>
+                <td className="plan-name">Custom</td>
+                <td>
+                  <strong>Streams:</strong> Unlimited<br/>
+                  <strong>Xfer:</strong> &gt;15 TiB<br/>
+                  <strong>Storage:</strong> &gt;=1 TiB<br/>
+                  <strong>Cost:</strong> Negotiable<br/><br/>
+                  <a className="button tiny radius" target="_blank" href="mailto:support@cine.io?subject=Business+Inquiry">Talk to Us</a><br/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="row prices show-for-medium-up">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Included Streams</th>
+                <th>Included Bandwidth</th>
+                <th>Included Storage</th>
+                <th>Cost / Month</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {planRows}
+              <tr>
+                <td className="plan-name">Custom</td>
+                <td>Unlimited</td>
+                <td>&gt; 15 TiB</td>
+                <td>&gt;= 1 TiB</td>
+                <td className="cost">Negotiable</td>
+                <td><a className="button tiny radius" target="_blank" href="mailto:support@cine.io?subject=Business+Inquiry">Talk to Us</a></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <div className="row show-for-medium-up">

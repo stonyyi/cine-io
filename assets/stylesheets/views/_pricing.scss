@@ -29,13 +29,13 @@
           }
         }
       }
-      .hide-for-medium-up table {
+      table.hide-for-medium-up {
         /* this is an ugly hack */
         width: 100%;
         td:first-child { width: 25%; }
         td:last-child { width: 60%; }
       }
-      .show-for-medium-up table, .peer-pricing{
+      table.show-for-medium-up, .peer-pricing{
         th {
           text-align: center;
         }

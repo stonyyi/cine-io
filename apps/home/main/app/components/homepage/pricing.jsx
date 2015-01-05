@@ -10,7 +10,11 @@ module.exports = React.createClass({
 
     return (
       <PageWrapper selected='pricing' fixedNav={true} app={this.props.app} wide={true}>
-        <Pricing app={this.props.app} />
+        <div className='row'>
+          <div className='medium-12 columns'>
+            <Pricing app={this.props.app} />
+          </div>
+        </div>
       </PageWrapper>
     );
   }

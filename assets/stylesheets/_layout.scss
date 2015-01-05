@@ -198,6 +198,8 @@ ul.dropdown li a.current{
 
   .wide-container {
     @include grid-column(12);
+    padding: 0 !important;
+    float: none;
   }
 
   header{
@@ -239,6 +241,9 @@ ul.dropdown li a.current{
 
     .wide-container {
       @include grid-column(12);
+      padding: 0 !important;
+      float: none;
+
     }
 
     &.fixed-nav {
