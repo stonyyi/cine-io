@@ -73,6 +73,7 @@ module.exports = React.createClass({
     var
       selectedProjectId = this.state.selectedProjectId,
       currentAccount = this.props.app.currentAccount(),
+      documentationLink,
       planNeedsCreditCard, Documentation;
     // if something is selected and but it doesn't exist in the collection, remove it.
     if (selectedProjectId && !this.getCurrentCollection().get(selectedProjectId)){
@@ -122,13 +123,12 @@ module.exports = React.createClass({
     }
     if (this.state.showing === 'broadcast'){
       ClientLibraries = BroadcastClientLibraries;
+      MobileApps = BroadcastMobileApps;
+      documentationLink = "http://developer.cine.io/broadcast"
     } else {
       ClientLibraries = PeerClientLibraries;
-    }
-    if (this.state.showing === 'broadcast'){
-      MobileApps = BroadcastMobileApps;
-    } else {
       MobileApps = PeerMobileApps;
+      documentationLink = "http://developer.cine.io/peer"
     }
     return (
       <div id="homepage-logged-in">
@@ -179,7 +179,7 @@ module.exports = React.createClass({
 
           <div className='medium-3 columns'>
             <h4 className='top-margin-1'>
-              <a target="_blank" href='http://developer.cine.io'>Full documentation</a>
+              <a target="_blank" href={documentationLink}>Full documentation</a>
             </h4>
           </div>
           <div className='medium-3 columns'>
