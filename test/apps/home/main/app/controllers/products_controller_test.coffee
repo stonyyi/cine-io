@@ -7,20 +7,23 @@ describe 'ProductsController', ->
   beforeEach ->
     ProductsController.app = mainApp
 
-  AssertTitleAndDescription ProductsController, ProductsController.titlesAndDescriptions.broadcast
 
   afterEach ->
     delete ProductsController.app
 
   describe '#show', ->
+    it 'returns a 404 for an invalid product', (done)->
+      params = {id: 'NOT_A_PRODUCT'}
+      callback = (err, result)->
+        expect(err).to.deep.equal(status: 404)
+        expect(result).to.be.undefined
+        done()
+      test('show', params, callback)
+
     describe 'main usage', ->
-      beforeEach ->
-        ProductsController.app = mainApp
+      AssertTitleAndDescription ProductsController, ProductsController.titlesAndDescriptions.broadcast
 
-      afterEach ->
-        delete ProductsController.app
-
-      it 'returns a document', (done)->
+      it 'returns a product', (done)->
         params = {id: 'broadcast'}
         callback = (err, result)->
           expect(err).to.equal(null)

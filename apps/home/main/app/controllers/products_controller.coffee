@@ -1,3 +1,4 @@
+_ = require('underscore')
 setTitleAndDescription = Cine.lib('set_title_and_description')
 
 exports.titlesAndDescriptions =
@@ -10,4 +11,5 @@ exports.titlesAndDescriptions =
 
 exports.show = (params, callback)->
   setTitleAndDescription @app, exports.titlesAndDescriptions[params.id]
+  return callback(status: 404) unless _.chain(exports.titlesAndDescriptions).keys().include(params.id).value()
   callback(null, product: params.id)
