@@ -50,6 +50,7 @@ describe 'api routes', ->
 
   testRoute api: 'usage/accounts/show', method: 'get', url: '/api/1/-/usage/account'
   testRoute api: 'usage/projects/show', method: 'get', url: '/api/1/-/usage/project'
+  testRoute api: 'usage/streams/show', method: 'get', url: '/api/1/-/usage/stream'
 
   testRoute api: 'users/show', method: 'get' , url: '/api/1/-/user'
   testRoute api: 'users/update_account', method: 'post', url: '/api/1/-/update-account'

@@ -47,6 +47,7 @@ get 'static_documents#show', url: 'static-document'
 
 get 'usage/accounts#show', url: 'usage/account'
 get 'usage/projects#show', url: 'usage/project'
+get 'usage/streams#show', url: 'usage/stream'
 
 get  'users#show', url: 'user'
 post 'users#update_account', url: 'update-account'
