@@ -7,7 +7,13 @@ describe 'UsageReportsController', ->
   beforeEach ->
     UsageReportsController.app = mainApp
     @fetchStub = sinon.stub mainApp, "fetch", (spec, callback)->
-      expect(spec).to.deep.equal(model: {model: 'UsageReport', params: {masterKey: 'the master key', scope: 'account'}})
+      expect(spec).to.deep.equal
+        model:
+          model: 'UsageReport',
+          params:
+            masterKey: 'the master key'
+            scope: 'account'
+            report: ['peerMilliseconds', 'bandwidth', 'storage']
       callback(null, 'the usage report')
 
   AssertTitleAndDescription UsageReportsController

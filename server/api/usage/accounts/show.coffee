@@ -29,20 +29,25 @@ createAsyncCallsForLastThreeMonthsOfPeer = (account)->
 module.exports = (params, callback)->
   getAccount params, (err, account, options)->
     return callback(err, account, options) if err
-
-    asyncCalls =
-      bandwidth: (cb)->
+    asyncCalls = {}
+    report = params.report || []
+    if _.contains(params.report, 'bandwidth')
+      asyncCalls.bandwidth = (cb)->
         async.parallel createAsyncCallsForLastThreeMonthsOfBandwidth(account), cb
-      peerMilliseconds: (cb)->
+    if _.contains(params.report, 'peerMilliseconds')
+      asyncCalls.peerMilliseconds = (cb)->
         async.parallel createAsyncCallsForLastThreeMonthsOfPeer(account), cb
-      storage: (cb)->
+    if _.contains(params.report, 'storage')
+      asyncCalls.storage = (cb)->
         CalculateAccountStorage.total account, cb
 
     async.parallel asyncCalls, (err, result)->
       return callback(err, null, status: 400) if err
       response =
         masterKey: account.masterKey
-        bandwidth: result.bandwidth
-        storage: result.storage
-        peerMilliseconds: result.peerMilliseconds
+
+      response.bandwidth = result.bandwidth if result.bandwidth
+      response.storage = result.storage if result.storage
+      response.peerMilliseconds = result.peerMilliseconds if result.peerMilliseconds
+
       callback(null, response)

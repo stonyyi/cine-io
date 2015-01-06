@@ -123,7 +123,7 @@ describe 'UsageReports/Streams#Show', ->
 
 
   it 'requires a stream owned by that project month', (done)->
-    params = {secretKey: 'dat secret key', id: @stream3._id, month: @lastMonth.toISOString()}
+    params = {secretKey: 'dat secret key', id: @stream3._id, month: @lastMonth.toISOString(), report: ['bandwidth', 'storage']}
     callback = (err, response, options)->
       expect(err).to.contain('stream not found')
       expect(response).to.be.null
@@ -132,8 +132,21 @@ describe 'UsageReports/Streams#Show', ->
 
     ShowUsageReportsStream params, callback
 
+  it 'returns no values if there are no reports requested', (done)->
+    params = {secretKey: 'dat secret key', id: @stream1._id, month: @lastMonth.toISOString(), report: []}
+    callback = (err, response)=>
+      expect(err).to.be.null
+      expectedResponse =
+        secretKey: 'dat secret key'
+        month: @lastMonth.toISOString()
+        id: @stream1._id.toString()
+      expect(response).to.deep.equal(expectedResponse)
+      done()
+
+    ShowUsageReportsStream params, callback
+
   it 'calculates a usage report for a passed in month', (done)->
-    params = {secretKey: 'dat secret key', id: @stream1._id, month: @lastMonth.toISOString()}
+    params = {secretKey: 'dat secret key', id: @stream1._id, month: @lastMonth.toISOString(), report: ['bandwidth', 'storage']}
     callback = (err, response)=>
       expect(err).to.be.null
       expectedResponse =

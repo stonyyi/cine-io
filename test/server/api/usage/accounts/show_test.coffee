@@ -68,8 +68,19 @@ describe 'UsageReports/Accounts#Show', ->
   afterEach ->
     @storageStub.restore()
 
+  it 'returns empty when not asked for any report', (done)->
+    params = {masterKey: 'dat mk', report: []}
+    callback = (err, response)->
+      expect(err).to.be.null
+      expectedResponse =
+        masterKey: 'dat mk'
+      expect(response).to.deep.equal(expectedResponse)
+      done()
+
+    ShowUsageReportsAccount params, callback
+
   it 'calculates a usage report', (done)->
-    params = {masterKey: 'dat mk'}
+    params = {masterKey: 'dat mk', report: ['bandwidth', 'storage', 'peerMilliseconds']}
     callback = (err, response)=>
       expect(err).to.be.null
       bandwidth = {}

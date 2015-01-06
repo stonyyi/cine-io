@@ -1,9 +1,11 @@
+_ = require('underscore')
+async = require('async')
+
 EdgecastStream = Cine.server_model('edgecast_stream')
 StreamUsageReport = Cine.server_model('stream_usage_report')
 StreamRecordings = Cine.server_model('stream_recordings')
 
 getProject = Cine.server_lib('get_project')
-async = require('async')
 
 module.exports = (params, callback)->
   getProject params, requires: 'secret', userOverride: true, (err, project, status)->
@@ -18,17 +20,19 @@ module.exports = (params, callback)->
     query =
       _id: params.id
       _project: project._id
-    console.log("Finding stream", query)
+    # console.log("Finding stream", query)
     EdgecastStream.findOne query, (err, stream)->
       return callback(err, null, status) if err
       return callback("stream not found", null, status: 404) unless stream
 
-      asyncCalls =
-        bandwidth: (cb)->
+      asyncCalls = {}
+      if _.contains(params.report, 'bandwidth')
+        asyncCalls.bandwidth = (cb)->
           StreamUsageReport.findOne _edgecastStream: params.id, (err, streamUsageReport)->
             return cb(err) if err
             cb null, streamUsageReport.bytesForMonth(month)
-        storage: (cb)->
+      if _.contains(params.report, 'storage')
+        asyncCalls.storage = (cb)->
           StreamRecordings.findOne _edgecastStream: params.id, (err, streamRecordings)->
             return cb(err) if err
             cb null, streamRecordings.bytesForMonth(month)
@@ -38,7 +42,7 @@ module.exports = (params, callback)->
         response =
           secretKey: project.secretKey
           id: stream._id.toString()
-          bandwidth: result.bandwidth
-          storage: result.storage
           month: month.toISOString()
+        response.bandwidth = result.bandwidth if result.bandwidth
+        response.storage = result.storage if result.storage
         callback(null, response)

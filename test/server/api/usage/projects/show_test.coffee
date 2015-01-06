@@ -80,8 +80,20 @@ describe 'UsageReports/Projects#Show', ->
 
     ShowUsageReportsProject params, callback
 
-  it 'calculates a usage report for a passed in month', (done)->
+  it 'returns no values if there are no reports requested', (done)->
     params = {secretKey: 'dat secret key', month: @twoMonthsAgo.toISOString()}
+    callback = (err, response)=>
+      expect(err).to.be.null
+      expectedResponse =
+        secretKey: 'dat secret key'
+        month: @twoMonthsAgo.toISOString()
+      expect(response).to.deep.equal(expectedResponse)
+      done()
+
+    ShowUsageReportsProject params, callback
+
+  it 'calculates a usage report for a passed in month', (done)->
+    params = {secretKey: 'dat secret key', month: @twoMonthsAgo.toISOString(), report: ['bandwidth', 'storage']}
     callback = (err, response)=>
       expect(err).to.be.null
       expectedResponse =
