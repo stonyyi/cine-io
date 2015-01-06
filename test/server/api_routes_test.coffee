@@ -48,7 +48,8 @@ describe 'api routes', ->
 
   testRoute api: 'static_documents/show', method: 'get', url: '/api/1/-/static-document'
 
-  testRoute api: 'usage/account/show', method: 'get', url: '/api/1/-/usage/account'
+  testRoute api: 'usage/accounts/show', method: 'get', url: '/api/1/-/usage/account'
+  testRoute api: 'usage/projects/show', method: 'get', url: '/api/1/-/usage/project'
 
   testRoute api: 'users/show', method: 'get' , url: '/api/1/-/user'
   testRoute api: 'users/update_account', method: 'post', url: '/api/1/-/update-account'

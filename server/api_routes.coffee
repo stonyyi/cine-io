@@ -45,7 +45,8 @@ destroy 'stream_recordings#delete', url: 'stream/recording'
 
 get 'static_documents#show', url: 'static-document'
 
-get 'usage/account#show', url: 'usage/account'
+get 'usage/accounts#show', url: 'usage/account'
+get 'usage/projects#show', url: 'usage/project'
 
 get  'users#show', url: 'user'
 post 'users#update_account', url: 'update-account'
