@@ -5,7 +5,9 @@ Account = Cine.model('account')
 humanizeBytes = Cine.lib('humanize_bytes')
 ProvidersAndPlans = Cine.config('providers_and_plans')
 
-basicModel('usage_report', urlAttributes: ['masterKey'], id: 'masterKey')
+basicModel('usage_report', urlAttributes: ['masterKey'], attributes: {scope: 'account'}, id: 'masterKey', url: 'usage/account')
+basicModel('usage_report', urlAttributes: ['secretKey'], attributes: {scope: 'project'}, id: 'masterKey', url: 'usage/project')
+basicModel('usage_report', urlAttributes: ['id', 'secretKey'], attributes: {scope: 'stream'}, id: 'masterKey', url: 'usage/stream')
 
 THOUSAND = 1000
 MINUTES = 60 * 1000

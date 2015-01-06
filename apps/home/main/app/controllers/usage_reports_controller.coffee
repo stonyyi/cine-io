@@ -10,7 +10,7 @@ exports.show = (params, callback)->
   return callback(status: 404) unless currentAccount
 
   spec =
-    model: { model: 'UsageReport', params: { masterKey: currentAccount.get('masterKey') } }
+    model: { model: 'UsageReport', params: { masterKey: currentAccount.get('masterKey'), scope: 'account' } }
 
   @app.fetch spec, (err, result)->
     callback(err, result)

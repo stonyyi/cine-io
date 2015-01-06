@@ -1,11 +1,11 @@
 Account = Cine.server_model('account')
-ShowUsageReports = testApi Cine.api('usage_reports/show')
+ShowUsageReportsAccount = testApi Cine.api('usage_reports/account/show')
 CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
 CalcualteAccountPeerMilliseconds = Cine.server_lib('reporting/peer/calculate_account_peer_milliseconds')
 
 describe 'UsageReports#Show', ->
-  testApi.requiresMasterKey ShowUsageReports
+  testApi.requiresMasterKey ShowUsageReportsAccount
 
   beforeEach (done)->
     @account = new Account billingProvider: 'cine.io', masterKey: 'dat mk', productPlans: {broadcast: ['free'], peer: ['free']}
@@ -88,4 +88,4 @@ describe 'UsageReports#Show', ->
       expect(response).to.deep.equal(expectedResponse)
       done()
 
-    ShowUsageReports params, callback
+    ShowUsageReportsAccount params, callback

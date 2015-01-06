@@ -13,7 +13,16 @@ usagePerPlanAggregator = (provider, product, type)->
 module.exports = class UsageReport extends Base
   @id: 'UsageReport'
   idAttribute: 'masterKey'
-  url: "/usage-report?masterKey=:masterKey"
+  url: ->
+    switch @get('scope')
+      when 'account'
+        "/usage/account?masterKey=:masterKey"
+      when 'project'
+        "/usage/project?secretKey=:secretKey"
+      when 'stream'
+        "/usage/stream?id=:id&secretKey=:secretKey"
+      else
+        throw new Error("Unknown scope")
 
   # type: bandwidth/storage
   @maxUsagePerAccount: (account, type, product)->
