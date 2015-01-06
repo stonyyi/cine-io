@@ -43,6 +43,6 @@ module.exports = (params, callback)->
           secretKey: project.secretKey
           id: stream._id.toString()
           month: month.toISOString()
-        response.bandwidth = result.bandwidth if result.bandwidth
-        response.storage = result.storage if result.storage
+        response.bandwidth = result.bandwidth if _.contains(params.report, 'bandwidth')
+        response.storage = result.storage if _.contains(params.report, 'storage')
         callback(null, response)

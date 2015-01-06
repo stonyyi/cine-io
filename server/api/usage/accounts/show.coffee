@@ -46,8 +46,8 @@ module.exports = (params, callback)->
       response =
         masterKey: account.masterKey
 
-      response.bandwidth = result.bandwidth if result.bandwidth
-      response.storage = result.storage if result.storage
-      response.peerMilliseconds = result.peerMilliseconds if result.peerMilliseconds
+      response.bandwidth = result.bandwidth if _.contains(params.report, 'bandwidth')
+      response.storage = result.storage if _.contains(params.report, 'storage')
+      response.peerMilliseconds = result.peerMilliseconds if _.contains(params.report, 'peerMilliseconds')
 
       callback(null, response)
