@@ -1,10 +1,10 @@
 Account = Cine.server_model('account')
-ShowUsageReportsAccount = testApi Cine.api('usage_reports/account/show')
+ShowUsageReportsAccount = testApi Cine.api('usage/account/show')
 CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
 CalcualteAccountPeerMilliseconds = Cine.server_lib('reporting/peer/calculate_account_peer_milliseconds')
 
-describe 'UsageReports#Show', ->
+describe 'UsageReports/Account#Show', ->
   testApi.requiresMasterKey ShowUsageReportsAccount
 
   beforeEach (done)->
