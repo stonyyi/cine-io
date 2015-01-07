@@ -34,13 +34,13 @@ module.exports = React.createClass({
                 <li><a href="/docs">Docs</a></li>
                 <li><a href="/docs#getting-started">Getting Started</a></li>
                 <li><a href="/#libraries">SDKs</a></li>
-                <li><a target="_blank" href="https://git.cine.io">Open Source</a></li>
+                <li><a target="_blank" href="http://git.cine.io">Open Source</a></li>
               </ul>
             </div>
             <div className="social">
               <h4>Connect With Us</h4>
               <ul>
-                <li><a target="_blank" href="https://git.cine.io"><i className="fa fa-github"></i> GitHub</a></li>
+                <li><a target="_blank" href="http://git.cine.io"><i className="fa fa-github"></i> GitHub</a></li>
                 <li><a target="_blank" href="https://twitter.com/cine_io"><i className="fa fa-twitter"></i> Twitter</a></li>
                 <li><a target="_blank" href="https://www.facebook.com/cinedotio"><i className="fa fa-facebook"></i> Facebook</a></li>
                 <li><a target="_blank" href="https://angel.co/cine-io"><i className="fa fa-angellist"></i> AngelList</a></li>
