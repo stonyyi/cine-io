@@ -22,7 +22,6 @@ module.exports = React.createClass({
             <div className="feedback">
               <h4>Feedback and Support</h4>
               <ul>
-                <li><a target="_blank" href="http://devchat.cine.io/">Developer Chat</a></li>
                 <li><a target="_blank" href="https://cineio.uservoice.com/">Get Support</a></li>
                 <li><a target="_blank" href="https://cineio.uservoice.com/">Give us Feedback</a></li>
                 <li><a href="http://status.cine.io/1228453">API Status</a></li>

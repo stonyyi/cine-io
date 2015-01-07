@@ -124,9 +124,10 @@ var PeerPricing = React.createClass({
               <li>native mobile support (iOS and Android)</li>
               <li>unlimited <strong>simultaneous calls</strong></li>
               <li><strong>no ads</strong> of any kind</li>
-              <li><a href="http://cineio.uservoice.com">email</a> {" + "}
-              <strong><a target="_blank" href="http://devchat.cine.io">live chat support</a></strong>
-              &nbsp;from our developers</li>
+              <li>
+                <strong><a href="http://cineio.uservoice.com">email support</a></strong>
+                from our developers
+              </li>
               <li>Discounts for inbound links to cine.io.</li>
             </ul>
           </div>
@@ -273,9 +274,10 @@ var BroadcastPricing = React.createClass({
               <li>archiving / recording of streams</li>
               <li>distribution via our <strong>global CDN</strong></li>
               <li><strong>no ads</strong> of any kind</li>
-              <li><a href="http://cineio.uservoice.com">email</a> {" + "}
-              <strong><a target="_blank" href="http://devchat.cine.io">live chat support</a></strong>
-              &nbsp;from our developers</li>
+              <li>
+                <strong><a href="http://cineio.uservoice.com">email support</a></strong>
+                from our developers
+              </li>
               <li>Discounts for inbound links to cine.io.</li>
             </ul>
           </div>

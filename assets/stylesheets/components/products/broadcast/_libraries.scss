@@ -6,15 +6,6 @@
   .icon-list {
     @include block-grid(6);
   }
-  .developer-actions {
-    @include grid-row();
-    div {
-      @include grid-column(12);
-      a.button {
-        width: 100%;
-      }
-    }
-  }
 }
 
 
@@ -22,18 +13,6 @@
 @media #{$medium-up} {
 
   #libraries {
-    .developer-actions {
-      div {
-        @include grid-column(4, false, false, 2);
-        a.button {
-          width: 100%;
-        }
-      }
-      div:last-child {
-        @include grid-column(4, true, false, 0);
-      }
-    }
-
     ul {
       li {
         img {

@@ -52,15 +52,7 @@ module.exports = React.createClass({
               </li>
             </ul>
             <div>
-              <p>Working in another framework / language? Don&apos;t sweat it. Our <a target="_blank" href='http://developer.cine.io'>REST API</a> has you covered.</p>
-            </div>
-            <div className="developer-actions">
-              <div>
-                <a target="_blank" href='http://developer.cine.io' className="button radius">View Docs</a>
-              </div>
-              <div>
-                <a target="_blank" href="http://devchat.cine.io" className="button radius">Developer chat</a>
-              </div>
+              <p>Working in another framework / language? Don&apos;t sweat it. Our <a target="_blank" href='http://developer.cine.io/broadcast'>REST API</a> has you covered.</p>
             </div>
           </div>
         </div>
