@@ -69,7 +69,7 @@ module.exports = React.createClass({
                 <div className='table-row'>
                   <div className="hero-item broadcaster">
                     <div className="hero-image broadcast">
-                      <img src="/images/broadcast-hero/cine-broadcast.png" />
+                      <img src="//cdn.cine.io/images/broadcast-hero/cine-broadcast.png" />
                     </div>
                   </div>
                   <div className="hero-item stage">
@@ -82,7 +82,7 @@ module.exports = React.createClass({
 
               <div className="hero-item cloud">
                 <div className="hero-image">
-                  <img src="/images/cine-cloud.png" />
+                  <img src="//cdn.cine.io/images/cine-cloud.png" />
                 </div>
               </div>
 
@@ -92,15 +92,15 @@ module.exports = React.createClass({
                 <div className="players">
                   <div className="hero-image laptop-video">
                     {video}
-                    <img src="/images/broadcast-hero/laptop.png" />
+                    <img src="//cdn.cine.io/images/broadcast-hero/laptop.png" />
                   </div>
                   <div className="hero-image tablet-video">
                     {video}
-                    <img src="/images/broadcast-hero/tablet.png" />
+                    <img src="//cdn.cine.io/images/broadcast-hero/tablet.png" />
                   </div>
                   <div className="hero-image phone-video">
                     {video}
-                    <img src="/images/broadcast-hero/phone.png" />
+                    <img src="//cdn.cine.io/images/broadcast-hero/phone.png" />
                   </div>
                 </div>
               </div>

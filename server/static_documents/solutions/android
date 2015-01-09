@@ -27,11 +27,11 @@
 
         </div>
         <div class="hero">
-          <img src="/images/solutions/android-hero.jpg"/>
+          <img src="//cdn.cine.io/images/solutions/android-hero.jpg"/>
           <div>
             <div class="logo-img android">&nbsp;</div>
-            <div class="logo-img android"><img src="/images/code-logos/android-logo.png"/></div>
-            <div class="logo-img android"><img src="/images/code-logos/java-logo.png"/></div>
+            <div class="logo-img android"><img src="//cdn.cine.io/images/code-logos/android-logo.png"/></div>
+            <div class="logo-img android"><img src="//cdn.cine.io/images/code-logos/java-logo.png"/></div>
             <div class="logo-img android">&nbsp;</div>
           </div>
         </div>

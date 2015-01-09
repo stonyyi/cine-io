@@ -24,11 +24,11 @@
           </p>
         </div>
         <div class="hero">
-          <img src="/images/solutions/ios-hero.jpg"/>
+          <img src="//cdn.cine.io/images/solutions/ios-hero.jpg"/>
           <div>
-            <div class="logo-img ios"><img src="/images/code-logos/ios-logo.png"/></div>
-            <div class="logo-img ios"><img src="/images/code-logos/swift-logo.png"/></div>
-            <div class="logo-img ios"><img src="/images/code-logos/xcode-logo.png"/></div>
+            <div class="logo-img ios"><img src="//cdn.cine.io/images/code-logos/ios-logo.png"/></div>
+            <div class="logo-img ios"><img src="//cdn.cine.io/images/code-logos/swift-logo.png"/></div>
+            <div class="logo-img ios"><img src="//cdn.cine.io/images/code-logos/xcode-logo.png"/></div>
           </div>
         </div>
       </div>

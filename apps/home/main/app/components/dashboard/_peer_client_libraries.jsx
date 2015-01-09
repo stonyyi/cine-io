@@ -11,7 +11,7 @@ module.exports = React.createClass({
         <ul className="inline-list">
           <li>
             <a target="_blank" href='https://github.com/cine-io/peer-js-sdk'>
-              <img width='36' height='36' src="/images/code-logos/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
+              <img width='36' height='36' src="//cdn.cine.io/images/code-logos/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
             </a>
           </li>
         </ul>

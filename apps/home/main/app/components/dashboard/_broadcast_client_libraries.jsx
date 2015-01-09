@@ -11,17 +11,17 @@ module.exports = React.createClass({
         <ul className="inline-list">
           <li>
             <a target="_blank" href='https://github.com/cine-io/broadcast-js-sdk'>
-              <img width='36' height='36' src="/images/code-logos/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
+              <img width='36' height='36' src="//cdn.cine.io/images/code-logos/javascript-logo.png" alt="JavaScript logo" title="The JavaScript SDK" />
             </a>
           </li>
           <li>
             <a target="_blank" href='https://github.com/cine-io/cineio-broadcast-ios'>
-              <img width='36' height='36' src="/images/code-logos/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
+              <img width='36' height='36' src="//cdn.cine.io/images/code-logos/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
             </a>
           </li>
           <li>
             <a target="_blank" href='https://github.com/cine-io/cineio-broadcast-android'>
-              <img width='36' height='36' src="/images/code-logos/android-logo.png" alt="Android logo" title="The Android SDK" />
+              <img width='36' height='36' src="//cdn.cine.io/images/code-logos/android-logo.png" alt="Android logo" title="The Android SDK" />
             </a>
           </li>
         </ul>
