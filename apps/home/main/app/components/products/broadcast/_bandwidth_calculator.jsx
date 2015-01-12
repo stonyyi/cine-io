@@ -115,7 +115,7 @@ module.exports = React.createClass({
     console.log("Calculator", calc)
     totalBandwidth = calc.calculate();
     bestPlan = UsageReport.lowestPlanPerUsage(totalBandwidth, 'bandwidth', 'broadcast');
-    cost = ProvidersAndPlans['cine.io'].plans[bestPlan].price;
+    cost = ProvidersAndPlans['cine.io'].broadcast.plans[bestPlan].price;
     humanizedPlan = capitalize(bestPlan);
     humanizedBandwidth = humanizeBytes(totalBandwidth);
     return (
