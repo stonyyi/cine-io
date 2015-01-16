@@ -307,18 +307,19 @@ module.exports = (server)->
 
         when "call"
           makeCall = (spark, room, data)->
-            otheridentity = data.otheridentity
-            askSparkToJoinRoomByIdentity(spark, room, otheridentity)
-            if !spark.connectedRooms[room]
-              spark.connectedRooms[room] = true
-              spark.join projectRoomName(spark, room)
-            dataToSend =
-              action: 'ack'
-              source: 'call'
-              room: room
-              otheridentity: otheridentity
-            # console.log("ACKING", dataToSend)
-            spark.write dataToSend
+            ensureProjectId spark, ->
+              otheridentity = data.otheridentity
+              askSparkToJoinRoomByIdentity(spark, room, otheridentity)
+              if !spark.connectedRooms[room]
+                spark.connectedRooms[room] = true
+                spark.join projectRoomName(spark, room)
+              dataToSend =
+                action: 'ack'
+                source: 'call'
+                room: room
+                otheridentity: otheridentity
+              # console.log("ACKING", dataToSend)
+              spark.write dataToSend
 
           if data.room?
             makeCall(spark, data.room, data)
