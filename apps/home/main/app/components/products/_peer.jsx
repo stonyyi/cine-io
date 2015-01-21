@@ -4,6 +4,7 @@ var React = require('react'),
   PeerHero = Cine.component('products/peer/_peer_hero'),
   About = Cine.component('products/peer/_about'),
   Example = Cine.component('products/peer/_example'),
+  Libraries = Cine.component('products/peer/_libraries'),
   Consulting = Cine.component('shared/_consulting');
 
 module.exports = React.createClass({
@@ -18,6 +19,7 @@ module.exports = React.createClass({
       <PageWrapper app={this.props.app} wide={true}>
         <PeerHero app={this.props.app} />
         <About />
+        <Libraries />
         <Example app={this.props.app}/>
         <Consulting />
       </PageWrapper>
