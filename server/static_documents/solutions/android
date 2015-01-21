@@ -18,7 +18,7 @@
 
           <h2>Video-Conferencing in Android</h2>
           <p>
-            With the <a target="_blank" href="#">cine.io Peer Android SDK</a>,
+            With the <a target="_blank" href="https://github.com/cine-io/cineio-peer-android">cine.io Peer Android SDK</a>,
             you can make and receive calls or join group conferences using
             WebRTC from your Android-powered phone or tablet. We handle all of
             the signaling and identification in a secure and seamless way.
