@@ -88,7 +88,7 @@ module.exports = React.createClass({
           <div className="hero-text">
             <h4>Device agnostic video chat</h4>
             <p>
-              Make and receive calls from iOS*, Android*, or compatable
+              Make and receive calls from iOS*, Android, or compatable
               web-browsers with minimal effort and very little code.
               <small>(*native mobile support coming soon)</small>
             </p>
