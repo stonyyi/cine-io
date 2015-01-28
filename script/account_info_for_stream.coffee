@@ -1,4 +1,4 @@
-# heroku run --app=cine-io coffee script/account_usage_report.coffee STREAM_NAME
+# heroku run --app=cine-io coffee script/account_info_for_stream.coffee STREAM_NAME
 environment = require('../config/environment')
 Cine.config('connect_to_mongo')
 EdgecastStream = Cine.server_model('edgecast_stream')
