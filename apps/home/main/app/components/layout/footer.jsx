@@ -30,8 +30,7 @@ module.exports = React.createClass({
             <div className="developers">
               <h4>Developers</h4>
               <ul>
-                <li><a href="/docs">Docs</a></li>
-                <li><a href="/docs#getting-started">Getting Started</a></li>
+                <li><a target="_blank" href="http://developer.cine.io/">Docs</a></li>
                 <li><a href="/#libraries">SDKs</a></li>
                 <li><a target="_blank" href="http://git.cine.io">Open Source</a></li>
               </ul>
