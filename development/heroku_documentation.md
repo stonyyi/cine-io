@@ -63,7 +63,7 @@ You'll need these fields to play and publish your live stream. You can always
 fetch the other fields again by issuing a get request to the `stream/show`
 endpoint.
 
-Look at the API docs for [POST /stream](https://www.cine.io/docs#stream-stream-post) to learn how to
+Look at the API docs for [POST /stream](http://developer.cine.io/broadcast#stream-stream-post) to learn how to
 create a stream.
 
 ### Publish a live stream
@@ -117,7 +117,7 @@ CineIO.play(streamId, domId);
 
 ## Additional API endpoints
 
-Additional API endpoints may be found at: [cine.io/docs](cine.io/docs).
+Additional API endpoints may be found at: [http://developer.cine.io](http://developer.cine.io).
 
 ## Using with Rails
 
@@ -194,7 +194,7 @@ Additional examples can be found at the [repository's homepage](https://github.c
 ## Dashboard
 
 > callout
-> For more information on the features available within the cine.io dashboard please see the docs at [cine.io/docs](cine.io/docs).
+> For more information on the features available within the cine.io dashboard please see the docs at [http://developer.cine.io](http://developer.cine.io).
 
 The cine.io dashboard allows you to manage all your projects, create live streams, monitor bandwidth, and see example code.
 
