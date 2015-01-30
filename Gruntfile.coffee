@@ -213,6 +213,9 @@ module.exports = (grunt) ->
       when 'signaling'
         cb = @async()
         npmInstallDirectory('apps/signaling', cb)
+      when 'rtc_transmuxer'
+        cb = @async()
+        npmInstallDirectory('apps/rtc_transmuxer', cb)
       else
         grunt.task.run('prepareProductionAssets')
 
