@@ -26,9 +26,6 @@ tailingStream = require('tailing-stream')
 
 ffmpeg = "ffmpeg"
 
-process.env.RTMP_REPLICATOR_HOST="192.168.59.103"
-process.env.KURENTO_MEDIA_SERVER_HOST="192.168.59.103"
-
 RTMP_REPLICATOR_HOST = process.env.RTMP_REPLICATOR_HOST || 'rtmp-replicator'
 RTMP_AUTHENTICATOR_HOST = process.env.RTMP_AUTHENTICATOR_HOST || 'rtmp-authenticator'
 KURENTO_MEDIA_SERVER_HOST = process.env.KURENTO_MEDIA_SERVER_HOST || "kurento-media-server"

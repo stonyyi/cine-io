@@ -1,4 +1,5 @@
 *.DS_Store
+.env
 
 heroku-addon-manifest.json
 engineyard-addon-manifest.json
