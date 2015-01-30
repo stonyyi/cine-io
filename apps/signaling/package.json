@@ -14,7 +14,6 @@
     "omega-supreme": "0.0.4",
     "primus": "2.4.5",
     "primus-cluster": "1.0.1",
-    "primus-emitter": "3.0.3",
     "primus-rooms": "3.1.0",
     "sockjs": "0.3.9"
   },
