@@ -143,7 +143,7 @@ class RecorderPipeline
             return cb(err) if err
             cb(null, webRtcEndpoint)
 
-      async.parallel asynCalls, (err, result)=>
+      async.parallel asynCalls, (err, result)->
         return callback(err) if err
 
         webRtcEndpoint = result.webRtcEndpoint
