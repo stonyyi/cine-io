@@ -22,10 +22,10 @@ exports.app = (title)->
 
   Cine.middleware 'middleware_base', app
 
-exports.listen = (app, defaultPort)->
+exports.listen = (appOrHTTPServer, defaultPort)->
   port = process.env.PORT || defaultPort
   console.log("listening on", port)
-  app.listen(port)
+  appOrHTTPServer.listen(port)
 
 # scheduleJob("process-video", {file: "some-file"})
 exports.scheduleJob = (queue, details={}, callback=noop)->
