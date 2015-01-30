@@ -31,7 +31,7 @@ RTMP_AUTHENTICATOR_HOST = process.env.RTMP_AUTHENTICATOR_HOST || 'rtmp-authentic
 KURENTO_MEDIA_SERVER_HOST = process.env.KURENTO_MEDIA_SERVER_HOST || "kurento-media-server"
 KURENTO_PORT = process.env.KURENTO_MEDIA_SERVER_CONNECTION_PORT || 8888
 DOCKER_PATH = "/var/rtc-recordings"
-TEMP_HOST_PATH = "/Users/thomas/work/tmp"
+HOST_FILE_SYSTEM_PATH = DOCKER_PATH # override if running locally
 ws_uri = "ws://#{KURENTO_MEDIA_SERVER_HOST}:#{KURENTO_PORT}/kurento"
 
 class TailingFFMpegStreamer
@@ -152,7 +152,7 @@ class RecorderPipeline
     file = "#{date}.mp4"
 
     @dockerFile = "#{DOCKER_PATH}/#{file}"
-    @fileSystemFile = "#{TEMP_HOST_PATH}/#{file}"
+    @fileSystemFile = "#{HOST_FILE_SYSTEM_PATH}/#{file}"
 
   processOffer: (offer, callback)=>
     @webRtcEndpoint.processOffer offer, (error, sdpAnswer) ->
