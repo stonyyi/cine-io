@@ -16,7 +16,7 @@
     "primus-cluster": "1.0.1",
     "primus-rooms": "3.1.0",
     "sockjs": "0.3.9",
-    "tailing-stream": "0.1.0"
+    "tailing-stream": "0.1.1"
   },
   "devDependencies": {},
   "license": "Copyrighted / All Rights Reserved",
