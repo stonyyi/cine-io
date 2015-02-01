@@ -40,13 +40,13 @@ describe 'chargeAccountForMonth', ->
 
     it 'requires the account be a stripe customer', (done)->
       chargeAccountForMonth @account, @now, (err)->
-        expect(err).to.equal('account not stripe customer')
+        expect(err).to.equal('no credit card for account')
         done()
 
     it 'requires the account have a stripe card', (done)->
       @account.stripeCustomer.stripeCustomerId = "the customer id"
       chargeAccountForMonth @account, @now, (err)->
-        expect(err).to.equal('account has no primary card')
+        expect(err).to.equal('no credit card for account')
         done()
 
     it 'requires the account have a non deleted stripe card', (done)->
@@ -54,7 +54,7 @@ describe 'chargeAccountForMonth', ->
       @account.stripeCustomer.cards.push stripeCardId: 'some card id', deletedAt: new Date
 
       chargeAccountForMonth @account, @now, (err)->
-        expect(err).to.equal('account has no primary card')
+        expect(err).to.equal('no credit card for account')
         done()
 
   describe 'success', ->
@@ -134,12 +134,14 @@ describe 'chargeAccountForMonth', ->
       @account.productPlans.broadcast = ['basic']
       @account.createdAt = new Date(@now.toString())
       @account.createdAt.setDate(5)
+      @chargeAmount = 94285
+      @fullAmount = 94285.71428571428
       @account.stripeCustomer.stripeCustomerId = "cus_2ghmxawfvEwXkw"
       @account.stripeCustomer.cards.push stripeCardId: "card_102gkI2AL5avr9E4geO0PpkC"
       @account.save done
 
     beforeEach ->
-      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 95806)
+      @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: @chargeAmount)
       @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
       @mailerSpy = sinon.spy mailer, 'monthlyBill'
 
@@ -163,7 +165,7 @@ describe 'chargeAccountForMonth', ->
         expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic'])
         expect(_.invoke(lastCharge.accountPlans.peer, 'toString').sort()).to.deep.equal(['startup'])
         expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
-        expect(lastCharge.details.billing).to.deep.equal(plan: 95806.45161290323, prorated: true)
+        expect(lastCharge.details.billing).to.deep.equal(plan: @fullAmount, prorated: true)
         expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.8, storage: humanizeBytes.GiB * 0.5, peerMilliseconds: 10 * MINUTES)
         done()
 
@@ -180,15 +182,9 @@ describe 'chargeAccountForMonth', ->
 
     describe 'with no credit card', ->
 
-      beforeEach ->
-        @templateEmailSuccess = requireFixture('nock/send_template_email_success')()
-        @mailerSpy = sinon.spy mailer, 'underOneGibBill'
-
-      afterEach ->
-        @mailerSpy.restore()
-
       beforeEach (done)->
-        chargeAccountForMonth @account, @now, done
+        chargeAccountForMonth @account, @now, (@err)=>
+          done()
 
       it 'creates a record in AccountBillingHistory', (done)->
         AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
@@ -201,7 +197,7 @@ describe 'chargeAccountForMonth', ->
           expect(lastCharge.paid).to.be.undefined
           expect(lastCharge.notCharged).to.be.true
           expect(lastCharge.stripeChargeId).to.be.undefined
-          expect(lastCharge.mandrillEmailId).to.equal("7af3c15b69ab46cb8fa8ded3370418fa")
+          expect(lastCharge.mandrillEmailId).to.be.undefined
           expect(_.invoke(lastCharge.accountPlans.broadcast, 'toString').sort()).to.deep.equal(['basic', 'pro'])
           expect(_.invoke(lastCharge.accountPlans.peer, 'toString').sort()).to.deep.equal(['startup'])
           expect(_.keys(lastCharge.details).sort()).to.deep.equal(['billing', 'usage'])
@@ -209,18 +205,8 @@ describe 'chargeAccountForMonth', ->
           expect(lastCharge.details.usage).to.deep.equal(bandwidth: humanizeBytes.GiB * 0.9, storage: humanizeBytes.GiB * 0.9, peerMilliseconds: 50 * MINUTES)
           done()
 
-      it 'sends an email that they were not charged', (done)->
-        AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
-          expect(err).to.be.null
-          expect(@templateEmailSuccess.isDone()).to.be.true
-          expect(@mailerSpy.calledOnce).to.be.true
-          args = @mailerSpy.firstCall.args
-          expect(args).to.have.length(4)
-          expect(args[0]._id.toString()).to.equal(@account._id.toString())
-          expect(args[1]._id.toString()).to.equal(abh._id.toString())
-          expect(args[2].toString()).to.equal(@now.toString())
-          expect(args[3]).to.be.a('function')
-          done()
+      it 'sends an email that they were not charged', ->
+        expect(@err).to.equal("no credit card for account")
 
     describe 'with a credit card', ->
 
@@ -410,7 +396,7 @@ describe 'chargeAccountForMonth', ->
     it 'does not update the account billing history', (done)->
       chargeAccountForMonth @account, @now, (err, result)=>
         expect(err).be.null
-        expect(result).to.equal("already charged account for this month")
+        expect(result).to.deep.equal(message: "already charged account for this month")
         AccountBillingHistory.findOne _account: @account._id, (err, abh)->
           expect(err).to.be.null
           expect(abh.history).to.have.length(1)
@@ -497,5 +483,5 @@ describe 'chargeAccountForMonth', ->
     it 'does not send an email to the free plans', (done)->
       chargeAccountForMonth @account, @now, (err, response)->
         expect(err).to.be.null
-        expect(response).to.equal('free accounts do not recieve non-invoice emails')
+        expect(response).to.deep.equal({message: 'free accounts do not recieve non-invoice emails'})
         done()

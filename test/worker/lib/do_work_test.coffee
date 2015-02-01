@@ -32,6 +32,12 @@ describe 'doWork', ->
             'analyze_kue_queue'
           ]
         }
+        {
+          name: 'bill_customers_once_a_month'
+          libs: [
+            'billing/charge_all_accounts'
+          ]
+        }
       ]
       _.each schedulableJobs, (schedulableJob)->
 

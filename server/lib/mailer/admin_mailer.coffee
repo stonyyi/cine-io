@@ -30,6 +30,20 @@ exports.throttledAccount = (account, callback=noop)->
     """
   sendAdminEmail mailOptions, callback
 
+exports.chargedAllAccounts = (data, callback=noop)->
+  options =
+    date: new Date
+    errs: data.errs
+    accountErrs: data.accountErrs
+    billed: data.billed
+  mailOptions =
+    subject: '[Events] Charged all accounts'
+    content: """
+    <p>Just ran the script to charge all accounts. Here are the results:</p>
+    <p><pre>#{util.inspect(options)}</pre></p>
+    """
+  sendAdminEmail mailOptions, callback
+
 exports.automaticallyUpgradedAccount = (account, callback=noop)->
   options =
     billingEmail: account.billingEmail

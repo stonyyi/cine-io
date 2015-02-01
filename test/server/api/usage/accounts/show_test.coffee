@@ -21,13 +21,17 @@ describe 'UsageReports/Accounts#Show', ->
     @twoMonthsAgo.setMonth(@twoMonthsAgo.getMonth() - 2)
 
   monthIsLastMonth = (monthNumber, nowMonthNumber)->
-    (monthNumber == nowMonthNumber - 1) || checkForYearRollover(monthNumber, nowMonthNumber, 11)
+    (monthNumber == nowMonthNumber - 1) || checkLastMonthYearRollover(monthNumber, nowMonthNumber)
 
   monthIsTwoMonthsAgo = (monthNumber, nowMonthNumber)->
-    (monthNumber == nowMonthNumber - 2) || checkForYearRollover(monthNumber, nowMonthNumber, 10)
+    (monthNumber == nowMonthNumber - 2) || checkForYearRollover(monthNumber, nowMonthNumber)
 
-  checkForYearRollover = (monthNumber, nowMonthNumber, monthToCheck)->
-    monthNumber == monthToCheck && nowMonthNumber == 0
+  checkLastMonthYearRollover = (monthNumber, nowMonthNumber)->
+    monthNumber == 11 && nowMonthNumber == 0
+
+  checkForYearRollover = (monthNumber, nowMonthNumber)->
+    (monthNumber == 10 && nowMonthNumber == 0) ||
+    (monthNumber == 11 && nowMonthNumber == 1)
 
   beforeEach ->
     today = new Date
@@ -40,6 +44,7 @@ describe 'UsageReports/Accounts#Show', ->
       else if monthIsTwoMonthsAgo(date.getMonth(), today.getMonth())
         callback(null, 789)
       else
+        console.log(date, today)
         throw new Error("requesting longer date")
 
   afterEach ->

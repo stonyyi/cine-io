@@ -3,6 +3,8 @@ _ = require('underscore')
 async = require('async')
 
 scheduledTasks =
+  bill_customers_once_a_month:
+    ['billing/charge_all_accounts']
   once_an_hour_worker:
     [
       'reporting/broadcast/download_and_parse_edgecast_logs'

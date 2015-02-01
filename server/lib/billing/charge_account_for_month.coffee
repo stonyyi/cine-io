@@ -93,19 +93,13 @@ chargeAccount = (account, abh, recordId, monthToBill, results, callback)->
 
       sendEmailReceipt account, abh, recordId, monthToBill, callback
 
-sendNotBilledEmail = (account, abh, recordId, monthToBill, callback)->
+couldNotBill = (account, abh, recordId, monthToBill, callback)->
   record = abh.history.id(recordId)
   record.notCharged = true
-  abh.save (err)->
-    return callback(err) if err
-    mailer.underOneGibBill account, abh, monthToBill, (err, emailResult)->
-      record = abh.billingRecordForMonth(monthToBill)
-      record.mandrillEmailId = emailResult[0]._id
-      abh.save callback
+  abh.save callback
 
-shouldBill = (account, results)->
-  return true if account.stripeCustomer.stripeCustomerId && findPrimaryCard(account)
-  results.usage.bandwidth > humanizeBytes.GiB && results.usage.storage > humanizeBytes.GiB
+canBill = (account, results)->
+  account.stripeCustomer.stripeCustomerId && findPrimaryCard(account)
 
 # provides a nice api
 module.exports = (account, monthToBill, callback)->
@@ -115,12 +109,12 @@ module.exports = (account, monthToBill, callback)->
 module.exports.__work = (account, monthToBill, callback)->
   return callback("can only charge cine.io accounts") if account.billingProvider != 'cine.io'
   # console.log("charging account", account)
-  return callback(null, "free accounts do not recieve non-invoice emails") if calculateAccountBill.accountPlanAmount(account) == 0
+  return callback(null, message: "free accounts do not recieve non-invoice emails") if calculateAccountBill.accountPlanAmount(account) == 0
   findOrCreateAccountBillingHistory account, (err, abh)->
     return callback(err) if err
     if abh.hasBilledForMonth(monthToBill)
       console.log("already charged for this month", account._id)
-      return callback(null, "already charged account for this month")
+      return callback(null, message: "already charged account for this month")
     calculateAccountBill account, monthToBill, (err, results)->
       return callback(err) if err
       # console.log("calculated", err, results)
@@ -128,9 +122,11 @@ module.exports.__work = (account, monthToBill, callback)->
         # console.log("saved results to record", err)
         return callback(err) if err
 
-        if shouldBill(account, results)
+        if canBill(account, results)
           console.log("will bill account", account._id, account.billingEmail)
-          chargeAccount(account, abh, recordId, monthToBill, results, callback)
+          chargeAccount account, abh, recordId, monthToBill, results, (err)->
+            callback(err, results: results)
         else
           console.log("will not bill account", account._id, account.billingEmail)
-          sendNotBilledEmail(account, abh, recordId, monthToBill, callback)
+          couldNotBill account, abh, recordId, monthToBill, (err)->
+            callback(err || "no credit card for account")

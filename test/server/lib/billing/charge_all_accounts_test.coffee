@@ -75,6 +75,7 @@ describe 'chargeAllAccounts', ->
         @chargeSuccess = requireFixture('nock/stripe_charge_card_success')(amount: 10000)
 
       assertEmailSent 'monthlyBill'
+      assertEmailSent.admin 'chargedAllAccounts'
 
       it 'does not try to charge heroku, engineyard, or appdirect accounts', (done)->
         stubDate()
@@ -125,12 +126,14 @@ describe 'chargeAllAccounts', ->
         @cineioAccount.stripeCustomer.stripeCustomerId = undefined
         @cineioAccount.save done
 
+      assertEmailSent.admin 'chargedAllAccounts'
+
       it 'aggregates the errors', (done)->
         stubDate.call(this)
         chargeAllAccounts (err)=>
           expect(err.err).to.be.null
           expectedAccountErrs = {}
-          expectedAccountErrs[@cineioAccount._id.toString()] = 'account not stripe customer'
+          expectedAccountErrs[@cineioAccount._id.toString()] = 'no credit card for account'
           expect(err.accountErrs).to.deep.equal(expectedAccountErrs)
           expect(@billingSpy.callCount).to.equal(1)
           account = @billingSpy.firstCall.args[0]
