@@ -12,7 +12,7 @@ Metroplex = require('metroplex')
 OmegaSupreme = require('omega-supreme')
 PrimusCluster = require('primus-cluster')
 validateSecureIdentity = Cine.server_lib('signaling/validate_secure_identity')
-logEventInKeen = Cine.server_lib('reporting/peer/log_event_in_keen')
+RoomManager = Cine.server_lib('signaling/room_manager')
 
 newRedisClient = ->
   client = redis.createClient(redisConfig.port, redisConfig.host)
@@ -31,42 +31,6 @@ primusOptions =
   #   redis: newRedisClient
 
 noop = ->
-class RoomManager
-  constructor: (@primus)->
-
-  joinedRoom: (spark, room, callback=noop)=>
-    # console.log('joined room', room)
-    @_logEventInKeen(spark, room, 'userJoinedRoom')
-    @_sendEvent('room-join', spark, room, callback)
-
-  leftRoom: (spark, room, callback=noop)=>
-    # console.log('left room', room)
-    @_logEventInKeen(spark, room, 'userLeftRoom')
-    @_sendEvent('room-leave', spark, room, callback)
-
-  _sendEvent: (action, spark, room, callback)->
-    publicRoom = projectRoomNameWithoutProject(spark, room)
-    data =
-      action: action
-      room: publicRoom
-      sparkId: spark.id
-      sparkUUID: spark.clientUUID
-    data.identity = spark.identity if spark.identity
-    @primus.room(room).except(spark.id).write(data)
-    callback()
-
-  leftRooms: (spark, rooms, callback=noop)=>
-    leftRoom = (room, cb)=>
-      @leftRoom(spark, room, cb)
-    async.each rooms, leftRoom, callback
-
-  _logEventInKeen: (spark, room, event)->
-    extraData =
-      signalingClient: spark.signalingClient
-      timestamp: new Date
-    extraData.identity = spark.identity  if spark.identity
-    extraData.identityId = spark.identityId if spark.identityId
-    logEventInKeen[event](spark.projectId, room, spark.clientUUID, extraData)
 
 generateRoomName = (callback)->
   crypto.randomBytes 32, (err, buf)->
@@ -170,12 +134,6 @@ authenticateSpark = (spark, data)->
       spark.projectCallbacks.forEach callMe
       delete spark.projectCallbacks
 
-projectRoomName = (spark, roomName)->
-  "#{spark.projectId}-#{roomName}"
-
-projectRoomNameWithoutProject = (spark, roomName)->
-  regex = new RegExp("^#{spark.projectId}-")
-  roomName.replace(regex, '')
 
 module.exports = (server)->
 
@@ -260,7 +218,7 @@ module.exports = (server)->
             room = data.room
             return if spark.connectedRooms[room]
             spark.connectedRooms[room] = true
-            spark.join projectRoomName(spark, room)
+            spark.join RoomManager.projectRoomName(spark, room)
             spark.write action: 'ack', source: 'room-join'
 
         # the inverse of room-join
@@ -278,7 +236,7 @@ module.exports = (server)->
             room = data.room
             return unless spark.connectedRooms[room]
             delete spark.connectedRooms[room]
-            spark.leave projectRoomName(spark, room)
+            spark.leave RoomManager.projectRoomName(spark, room)
             spark.write action: 'ack', source: 'room-leave'
 
         # the inverse of room-leave
@@ -312,7 +270,7 @@ module.exports = (server)->
               askSparkToJoinRoomByIdentity(spark, room, otheridentity)
               if !spark.connectedRooms[room]
                 spark.connectedRooms[room] = true
-                spark.join projectRoomName(spark, room)
+                spark.join RoomManager.projectRoomName(spark, room)
               dataToSend =
                 action: 'ack'
                 source: 'call'
@@ -330,7 +288,7 @@ module.exports = (server)->
         when "call-reject"
           ensureProjectId spark, (err)->
             room = data.room
-            primus.room(projectRoomName(spark, room)).except(spark.id).write(action: 'call-reject', room: room, identity: spark.identity, sparkUUID: spark.clientUUID)
+            primus.room(RoomManager.projectRoomName(spark, room)).except(spark.id).write(action: 'call-reject', room: room, identity: spark.identity, sparkUUID: spark.clientUUID)
             spark.write action: 'ack', source: 'call-reject', room: data.room
 
         when "call-cancel"

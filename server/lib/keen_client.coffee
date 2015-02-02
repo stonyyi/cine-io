@@ -1,8 +1,8 @@
-Keen = require('keen.io')
+Keen = require('keen-js')
 config = Cine.config('variables/keen')
 
 newKeenClient = ->
-  Keen.configure
+  new Keen
     projectId: config.projectId
     writeKey: config.writeKey
     readKey: config.readKey

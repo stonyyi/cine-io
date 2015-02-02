@@ -2,10 +2,10 @@ client = Cine.server_lib('keen_client')
 
 describe 'client', ->
   expectKeen = (keenClient)->
-    expect(keenClient.projectId).to.equal("548b844ac2266c05648b501e")
+    expect(keenClient.config.projectId).to.equal("548b844ac2266c05648b501e")
     expect(keenClient.run).to.be.a('function')
     expect(keenClient.addEvent).to.be.a('function')
-    expect(keenClient.baseUrl).to.equal('https://api.keen.io/')
+    expect(keenClient.config.host).to.equal('api.keen.io/3.0')
 
   it 'is a keen client', ->
     expectKeen(client)

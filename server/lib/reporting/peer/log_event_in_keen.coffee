@@ -4,9 +4,10 @@ client = Cine.server_lib('keen_client')
 noop = ->
 
 sendToKeen = (collection, data, callback)->
+  # console.log("sending to keen", collection, data)
   client.addEvent collection, data, callback
 
-exports.userJoinedRoom = (projectId, room, sessionUUID, extraData={}, callback=noop)->
+exports.userTalkedInRoom = (projectId, room, sessionUUID, extraData={}, callback=noop)->
   if typeof extraData == 'function'
     callback = extraData
     extraData = {}
@@ -14,18 +15,6 @@ exports.userJoinedRoom = (projectId, room, sessionUUID, extraData={}, callback=n
     projectId: projectId
     room: room
     sessionUUID: sessionUUID
-    action: 'userJoinedRoom'
+    action: 'userTalkedInRoom'
   _.extend(data, extraData)
-  sendToKeen 'peer-reporting', data, callback
-
-exports.userLeftRoom = (projectId, room, sessionUUID, extraData={}, callback=noop)->
-  if typeof extraData == 'function'
-    callback = extraData
-    extraData = {}
-  data =
-    projectId: projectId
-    room: room
-    sessionUUID: sessionUUID
-    action: 'userLeftRoom'
-  _.extend(data, extraData)
-  sendToKeen 'peer-reporting', data, callback
+  sendToKeen 'peer-minutes', data, callback

@@ -17,7 +17,7 @@ describe 'calculateProjectPeerMilliseconds', ->
     it 'fetches and parses events for this month', (done)->
       calculateProjectPeerMilliseconds.thisMonth @project._id, (err, totalTimeInMs)=>
         expect(err).to.be.null
-        expect(totalTimeInMs).to.equal(36545549)
+        expect(totalTimeInMs).to.equal(94061)
         expect(@nock.isDone()).to.be.true
         done()
 
@@ -31,6 +31,6 @@ describe 'calculateProjectPeerMilliseconds', ->
     it 'fetches and parses events for this month', (done)->
       calculateProjectPeerMilliseconds.byMonth @project._id, @month, (err, totalTimeInMs)=>
         expect(err).to.be.null
-        expect(totalTimeInMs).to.equal(36545549)
+        expect(totalTimeInMs).to.equal(94061)
         expect(@nock.isDone()).to.be.true
         done()

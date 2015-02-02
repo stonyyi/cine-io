@@ -30,7 +30,7 @@ describe 'calculateAccountPeerMlliseconds', ->
     it 'fetches and parses events for the month for each project', (done)->
       calculateAccountPeerMlliseconds.byMonth @account, @month, (err, totalTimeInMs)=>
         expect(err).to.be.undefined
-        expect(totalTimeInMs).to.equal(36545549 * 2)
+        expect(totalTimeInMs).to.equal(94061 * 2)
         expect(@nock1.isDone()).to.be.true
         expect(@nock2.isDone()).to.be.true
         expect(@nock3.isDone()).to.be.false

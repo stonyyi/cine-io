@@ -1,6 +1,5 @@
-Keen = require('keen.io')
+Keen = require('keen-js')
 client = Cine.server_lib('keen_client')
-processKeenPeerEventsForProject = Cine.server_lib('reporting/peer/process_keen_peer_events_for_project')
 
 exports.thisMonth = (projectId, callback)->
   now = new Date()
@@ -12,7 +11,7 @@ exports.byMonth = (projectId, month, callback)->
   lastSecondInMonth.setSeconds(-1)
 
   queryOptions =
-    event_collection: "peer-reporting"
+    eventCollection: "peer-minutes"
     filters:
       [
         {
@@ -20,17 +19,24 @@ exports.byMonth = (projectId, month, callback)->
           operator: 'eq'
           property_value: projectId
         }
+        {
+          property_name: 'action'
+          operator: 'eq'
+          property_value: "userTalkedInRoom"
+        }
       ]
+    targetProperty: "talkTimeInMilliseconds"
     timeframe:
       start: firstSecondInMonth.toISOString()
       end: lastSecondInMonth.toISOString()
 
   # console.log("running keen query", queryOptions)
 
-  query = new Keen.Query("extraction", queryOptions)
+  query = new Keen.Query("sum", queryOptions)
 
   client.run query, (err, response)->
     if err
-      console.log("GOT ERR", err)
+      console.dir(err)
       return callback(err)
-    processKeenPeerEventsForProject(projectId, response.result, callback)
+    return callback("no result") unless response?.result
+    callback(null, response.result)
