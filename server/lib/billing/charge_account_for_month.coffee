@@ -125,6 +125,10 @@ module.exports.__work = (account, monthToBill, callback)->
         if canBill(account, results)
           console.log("will bill account", account._id, account.billingEmail)
           chargeAccount account, abh, recordId, monthToBill, results, (err)->
+            record = abh.history.id(recordId)
+            results =
+              paid: record.paid
+              amount: Math.floor(results.billing.plan)
             callback(err, results: results)
         else
           console.log("will not bill account", account._id, account.billingEmail)
