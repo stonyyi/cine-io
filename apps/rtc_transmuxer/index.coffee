@@ -33,7 +33,8 @@ KURENTO_PORT = process.env.KURENTO_MEDIA_SERVER_CONNECTION_PORT || 8888
 DOCKER_PATH = "/var/rtc-recordings"
 HOST_FILE_SYSTEM_PATH = process.env.HOST_FILE_SYSTEM_PATH || DOCKER_PATH # override if running locally
 ws_uri = "ws://#{KURENTO_MEDIA_SERVER_HOST}:#{KURENTO_PORT}/kurento"
-MAX_FFMPEG_RETRIES = 2
+MAX_FFMPEG_RETRIES = 1
+
 class TailingFFMpegStreamer
   constructor: (@input, @output)->
   start: ->
