@@ -31,21 +31,29 @@ RTMP_AUTHENTICATOR_HOST = process.env.RTMP_AUTHENTICATOR_HOST || 'rtmp-authentic
 KURENTO_MEDIA_SERVER_HOST = process.env.KURENTO_MEDIA_SERVER_HOST || "kurento-media-server"
 KURENTO_PORT = process.env.KURENTO_MEDIA_SERVER_CONNECTION_PORT || 8888
 DOCKER_PATH = "/var/rtc-recordings"
-HOST_FILE_SYSTEM_PATH = DOCKER_PATH # override if running locally
+HOST_FILE_SYSTEM_PATH = process.env.HOST_FILE_SYSTEM_PATH || DOCKER_PATH # override if running locally
 ws_uri = "ws://#{KURENTO_MEDIA_SERVER_HOST}:#{KURENTO_PORT}/kurento"
-
+MAX_FFMPEG_RETRIES = 2
 class TailingFFMpegStreamer
   constructor: (@input, @output)->
   start: ->
+    @retries = 0
+    @startTime = new Date
+    @_startFlow()
+
+  _startFlow: ->
     @_startReadStream()
     @_startFfmpeg()
     @_sendDataToFfmpeg()
 
   _startReadStream: ->
     debug("tailing", @input)
+    @readStream.destroy() if @readStream
     @readStream = tailingStream.createReadStream(@input)
 
   _startFfmpeg: ->
+    delete @startTime
+
     ffmpegOptions = [
       '-re', # read in "real time", don't read too quickly
       '-i', 'pipe:0', # take stdin as the input
@@ -62,25 +70,40 @@ class TailingFFMpegStreamer
       '-f', 'flv',
       @output
     ]
-
     debug('running ffmpeg', ffmpegOptions)
     @ffmpegSpawn = cp.spawn(ffmpeg, ffmpegOptions)
 
     @ffmpegSpawn.stderr.setEncoding('utf8')
-    @ffmpegSpawn.stderr.on 'data', (data)->
+    @ffmpegSpawn.stderr.on 'data', (data)=>
+      @startTime ||= new Date
       if (/^execvp\(\)/.test(data))
         debug('Failed to start child process.')
       debug("ffmpeg stderr", data)
 
-    @ffmpegSpawn.on 'close', (code)->
+    @ffmpegSpawn.on 'close', (code)=>
       if code != 0
-        debug('ffmpeg process exited with code ' + code)
+        debug('ffmpeg process exited with code ', code)
+        # 6 seconds from starting ffmpeg to seeing if it dies
+        # kinda arbitrary
+        sixSecondsAgo = new Date
+        sixSecondsAgo.setSeconds(sixSecondsAgo.getSeconds() - 6)
+        # sometimes there's bad input
+        debug(code, code == 1, @startTime, sixSecondsAgo)
+        badExit = code == 1
+        lessThanSixSecondsAgo = @startTime >= sixSecondsAgo
+        retryable = @retries < MAX_FFMPEG_RETRIES
+        if !@stopped && badExit && lessThanSixSecondsAgo && retryable
+          @retries += 1
+          debug("RESTARTING FFMPEG RETRY:", @retries)
+          @_startFlow()
+
       debug("ffmpeg done")
 
   _sendDataToFfmpeg: ->
     @readStream.pipe(@ffmpegSpawn.stdin)
 
   stop: ->
+    @stopped = true
     @readStream.destroy() if @readStream
     @ffmpegSpawn.kill('SIGHUP') if @ffmpegSpawn
 
