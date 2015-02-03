@@ -38,5 +38,5 @@ exports.byMonth = (projectId, month, callback)->
     if err
       console.dir(err)
       return callback(err)
-    return callback("no result") unless response?.result
+    return callback(null, 0) unless response?.result
     callback(null, response.result)
