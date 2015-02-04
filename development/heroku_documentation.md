@@ -122,9 +122,9 @@ Additional API endpoints may be found at: [http://developer.cine.io](http://deve
 ## Using with Rails
 
 >callout
->We’ve built a small Ruby Sinatra example.
-> [Source code](https://github.com/cine-io/cineio-sinatra-example-app) or
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/cine-io/cineio-sinatra-example-app)
+>We’ve built a small Ruby Sinatra broadcast example.
+> [Source code](https://github.com/cine-io/cineio-sinatra-broadcast-example-app) or
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/cine-io/cineio-sinatra-broadcast-example-app)
 
 
 ### Integrate with your Ruby app
@@ -153,9 +153,9 @@ Additional examples can be found at the [repository's homepage](https://github.c
 ## Using with Node.js
 
 >callout
->We’ve built a small Node.js Express example.
-> [Source code](https://github.com/cine-io/cineio-node-example-app) or
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/cine-io/cineio-node-example-app)
+>We’ve built a small Node.js Express broadcast example.
+> [Source code](https://github.com/cine-io/cineio-node-broadcast-example-app) or
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/cine-io/cineio-node-broadcast-example-app)
 
 ### Integrate with your Node app
 
