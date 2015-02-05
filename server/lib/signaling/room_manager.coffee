@@ -31,9 +31,9 @@ logJoinInRedis = (spark, room, callback)->
     debug("total members in room", membersKey, totalMembersInRoom, totalNumberOfMembersBeforeAdd)
     return callback() if totalMembersInRoom <= 2 #if there are two people in the room, do not send info to keen
     debug("total time", newTime, lastUpdatedTime)
-    totalTalkTimeBeforeNewClient = (newTime - lastUpdatedTime) * totalNumberOfMembersBeforeAdd
+    totalTalkTimeBeforeNewClient = newTime - lastUpdatedTime
 
-    sendTalkTimeToKeen(totalTalkTimeBeforeNewClient, spark.projectId, room, callback)
+    sendTalkTimeToKeen(totalTalkTimeBeforeNewClient, totalNumberOfMembersBeforeAdd, spark.projectId, room, callback)
 
 logLeaveInRedis = (spark, room, callback)->
   newTime = Date.now()
@@ -57,14 +57,15 @@ logLeaveInRedis = (spark, room, callback)->
     return redisClient.del(updatedKey, membersKey, callback) if  totalMembersInRoom == 0
     return callback() if  totalMembersInRoom == 1 && !didRemoveOldMember
     debug("total time", newTime, lastUpdatedTime)
-    totalTalkTimeBeforeNewClient = (newTime - lastUpdatedTime) * totalNumberOfMembersBeforeRemove
+    totalTalkTimeBeforeNewClient = newTime - lastUpdatedTime
 
-    sendTalkTimeToKeen(totalTalkTimeBeforeNewClient, spark.projectId, room, callback)
+    sendTalkTimeToKeen(totalTalkTimeBeforeNewClient, totalNumberOfMembersBeforeRemove, spark.projectId, room, callback)
 
 
-sendTalkTimeToKeen = (talkTimeInMilliseconds, projectId, room, callback)->
+sendTalkTimeToKeen = (talkTimeInMilliseconds, numberOfMembers, projectId, room, callback)->
   data =
-    talkTimeInMilliseconds: talkTimeInMilliseconds
+    talkTimeInMilliseconds: talkTimeInMilliseconds * numberOfMembers
+    userCount: numberOfMembers
   # console.log("SENDING EVENT", extraData)
   logEventInKeen.userTalkedInRoom projectId, room, data, callback
 

@@ -134,6 +134,7 @@ describe 'RoomManager', ->
           room: 'fun-room'
           action: 'userTalkedInRoom'
           talkTimeInMilliseconds: 2000
+          userCount: 2
         @keenNock = requireFixture('nock/keen/send_event_success')('peer-minutes', data)
 
       it 'updates the time the second person entered the room', (done)->
@@ -216,6 +217,7 @@ describe 'RoomManager', ->
           room: 'fun-room'
           action: 'userTalkedInRoom'
           talkTimeInMilliseconds: 2000
+          userCount: 2
         @keenNockForLeave = requireFixture('nock/keen/send_event_success')('peer-minutes', data)
 
       it 'updates redis updated key', (done)->
@@ -254,6 +256,7 @@ describe 'RoomManager', ->
           room: 'fun-room'
           action: 'userTalkedInRoom'
           talkTimeInMilliseconds: 2000
+          userCount: 2
         @keenNockForJoin = requireFixture('nock/keen/send_event_success')('peer-minutes', data)
 
       beforeEach ->
@@ -262,6 +265,7 @@ describe 'RoomManager', ->
           room: 'fun-room'
           action: 'userTalkedInRoom'
           talkTimeInMilliseconds: 6000
+          userCount: 3
         @keenNockForLeave = requireFixture('nock/keen/send_event_success')('peer-minutes', data)
 
       it 'updates redis updated key', (done)->
