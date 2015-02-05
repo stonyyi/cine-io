@@ -71,7 +71,7 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
           it 'does not send an email to the account', (done)->
             updateOrThrottleAccountsWhoCannotPayForOverages done
 
-      describe '80% of account limit for peer', ->
+      xdescribe '80% of account limit for peer', ->
         beforeEach ->
           @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
           usedBandwidth = humanizeBytes.GiB
@@ -199,11 +199,11 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
           expect(args[1]).to.be.a('function')
           done()
 
-    describe 'over account limit for peer', ->
+    xdescribe 'over account limit for peer', ->
       beforeEach ->
         @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
-        usedBandwidth = humanizeBytes.GiB
-        usedStorage = humanizeBytes.GiB
+        usedBandwidth = humanizeBytes.GiB - 10
+        usedStorage = humanizeBytes.GiB - 10
         usedPeerMilliseconds = 13 * THOUSAND * MINUTES
         @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
 
