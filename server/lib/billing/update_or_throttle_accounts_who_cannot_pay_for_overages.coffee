@@ -15,8 +15,7 @@ MINUTES = 60 * 1000
 underFreePlanStorageAndBandwidthAndPeer = (results)->
   underFreeBandwidth = if results.bandwidth then results.bandwidth <= humanizeBytes.GiB else true
   underFreeStorage = if results.storage then results.storage <= humanizeBytes.GiB else true
-  # underFreePeer = if results.peerMilliseconds then results.peerMilliseconds <= (60 * MINUTES) else true
-  underFreePeer = true
+  underFreePeer = if results.peerMilliseconds then results.peerMilliseconds <= (60 * MINUTES) else true
 
   underFreeBandwidth && underFreeStorage && underFreePeer
 
@@ -50,14 +49,14 @@ throttleAccount = (account, callback)->
 
 overAccountLimit = (accountLimitResults)->
   accountLimitResults.bandwidthPercent > 1 ||
-  accountLimitResults.storagePercent > 1 #||
-  # accountLimitResults.peerMillisecondsPercent > 1
+  accountLimitResults.storagePercent > 1 ||
+  accountLimitResults.peerMillisecondsPercent > 1
 
 at90PercentOfAccountLimit = (accountLimitResults)->
   # console.log("accountLimitResults", accountLimitResults)
   accountLimitResults.bandwidthPercent > 0.9        ||
-  accountLimitResults.storagePercent > 0.9         # ||
-  # accountLimitResults.peerMillisecondsPercent > 0.9
+  accountLimitResults.storagePercent > 0.9          ||
+  accountLimitResults.peerMillisecondsPercent > 0.9
 
 isCineAccount = (account)->
   account.billingProvider == 'cine.io'
@@ -85,7 +84,7 @@ checkAccount = (account, callback)->
     return callback() if underFreePlanStorageAndBandwidthAndPeer(results)
 
     accountLimit = calculateAccountLimit(account, results)
-    console.log("calculated account limit", accountLimit)
+    # console.log("calculated account limit", accountLimit)
     if isCineAccount(account)
       # they have no credit card, throttle them
       unless hasPrimaryCard(account)
