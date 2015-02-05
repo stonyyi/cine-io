@@ -265,10 +265,12 @@ primus.on 'connection', (spark)->
         createBroadcaster webRTCBroadcastSessions[spark.id], data.offer, data.streamId, data.streamKey, (err, sdpAnswer) ->
           if err
             response =
+              streamType: data.streamType
               action: "error"
               data: err
           else
             response =
+              streamType: data.streamType
               action: "rtc-answer"
               answer: {type: 'answer', sdp: sdpAnswer}
           debug("RESPONDING", response)
