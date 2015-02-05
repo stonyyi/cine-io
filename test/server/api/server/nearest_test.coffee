@@ -7,7 +7,7 @@ describe 'Server#Nearest', ->
     params = {}
     Nearest params, (err, response, options)->
       expect(err).to.equal("ipAddress not available")
-      expect(response).to.deep.equal(server: null, transcode: null, host: null, app: null, rtmpCDNHost: null, rtmpCDNApp: null)
+      expect(response).to.deep.equal(server: null, transcode: null, host: null, app: null, rtmpCDNHost: null, rtmpCDNApp: null, rtcPublish: null)
       expect(options).to.deep.equal(status: 400)
       done()
 
@@ -22,6 +22,7 @@ describe 'Server#Nearest', ->
         app: '20C45E/cines'
         rtmpCDNApp: '20C45E/cines'
         transcode: "rtmp://publish-sfo1.cine.io:1936/live"
+        rtcPublish: "https://rtc-publish-sfo1.cine.io:8081/"
       expect(options).to.be.undefined
       done()
 
@@ -29,7 +30,7 @@ describe 'Server#Nearest', ->
     params = remoteIpAddress: "127.0.0.1"
     Nearest params, (err, response, options)->
       expect(err).to.be.null
-      expect(response).to.deep.equal(server: null, transcode: null, host: null, app: null, rtmpCDNHost: null, rtmpCDNApp: null)
+      expect(response).to.deep.equal(server: null, transcode: null, host: null, app: null, rtmpCDNHost: null, rtmpCDNApp: null, rtcPublish: null)
       done()
 
   it 'will return a default when unknown but with default true', (done)->
@@ -43,6 +44,7 @@ describe 'Server#Nearest', ->
         app: '20C45E/cines'
         rtmpCDNApp: '20C45E/cines'
         transcode: "rtmp://publish-sfo1.cine.io:1936/live"
+        rtcPublish: "https://rtc-publish-sfo1.cine.io:8081/"
       expect(options).to.be.undefined
       done()
 
@@ -58,6 +60,7 @@ describe 'Server#Nearest', ->
         app: '20C45E/cines'
         rtmpCDNApp: '20C45E/cines'
         transcode: "rtmp://publish-ams1.cine.io:1936/live"
+        rtcPublish: "https://rtc-publish-sfo1.cine.io:8081/"
       done()
 
   it 'will return a localized publish value for parameter ipAddress', (done)->
@@ -72,6 +75,7 @@ describe 'Server#Nearest', ->
         app: '20C45E/cines'
         rtmpCDNApp: '20C45E/cines'
         transcode: "rtmp://publish-ams1.cine.io:1936/live"
+        rtcPublish: "https://rtc-publish-sfo1.cine.io:8081/"
       done()
 
   it 'will return a localized publish value for lax', (done)->
@@ -86,4 +90,5 @@ describe 'Server#Nearest', ->
         app: '20C45E/cines'
         rtmpCDNApp: '20C45E/cines'
         transcode: "rtmp://publish-sfo1.cine.io:1936/live"
+        rtcPublish: "https://rtc-publish-sfo1.cine.io:8081/"
       done()

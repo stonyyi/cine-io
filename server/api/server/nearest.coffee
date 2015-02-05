@@ -1,9 +1,13 @@
 _ = require('underscore')
 convertIpAddressToEdgecastServer = Cine.server_lib('convert_ip_address_to_edgecast_server')
 
+RTMP_TRANSMUCODE_PORT = 1936
+RTC_TRANSMUX_PORT = 8081
+
 nullCase =
   server: null
   transcode: null
+  rtcPublish: null
   app: null
   host: null
   rtmpCDNHost: null
@@ -19,10 +23,12 @@ convert = (params)->
   rtmpCDNHost = "stream.#{geo.rtmpCDNCode}.cine.io"
   app = module.exports.default.app
   cineIOEndpoint = "rtmp://publish-#{geo.cineioEndpointCode}.cine.io/live"
-  cineIOTranscodeEndpoint = "rtmp://publish-#{geo.cineioEndpointCode}.cine.io:1936/live"
+  cineIOTranscodeEndpoint = "rtmp://publish-#{geo.cineioEndpointCode}.cine.io:#{RTMP_TRANSMUCODE_PORT}/live"
+  cineIORTCTranscodeEndpoint = "https://rtc-publish-#{geo.cineioRtcEndpointCode}.cine.io:#{RTC_TRANSMUX_PORT}/"
   response =
     server: cineIOEndpoint
     transcode: cineIOTranscodeEndpoint
+    rtcPublish: cineIORTCTranscodeEndpoint
     host: rtmpCDNHost
     app: app
     rtmpCDNApp: app
@@ -47,7 +53,7 @@ module.exports.default =
   host: "stream.lax.cine.io"
   app: "20C45E/cines"
   rtmpCDNApp: "20C45E/cines"
-  transcode: "rtmp://publish-sfo1.cine.io:1936/live"
+  transcode: "rtmp://publish-sfo1.cine.io:#{RTMP_TRANSMUCODE_PORT}/live"
   rtmpCDNHost: "stream.lax.cine.io"
-
+  rtcPublish: "https://rtc-publish-sfo1.cine.io:#{RTC_TRANSMUX_PORT}/"
 module.exports.default.server = "rtmp://publish-sfo1.cine.io/live"

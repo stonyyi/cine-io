@@ -5,6 +5,7 @@ module.exports = [
   #   name: "North America - Ashburn"
   #   rtmpCDNCode: "dca"
   #   cineioEndpointCode: 'sfo1'
+  #   cineioRtcEndpointCode: 'sfo1'
   #   lat: 39.043427
   #   lng: -77.487938
   # }
@@ -13,6 +14,7 @@ module.exports = [
     name: "North America - Los Angeles"
     rtmpCDNCode: "lax"
     cineioEndpointCode: 'sfo1'
+    cineioRtcEndpointCode: 'sfo1'
     lat: 34.051226
     lng: -118.241444
   }
@@ -21,6 +23,7 @@ module.exports = [
     name: "Europe - Amsterdam"
     rtmpCDNCode: "ams"
     cineioEndpointCode: 'ams1'
+    cineioRtcEndpointCode: 'sfo1'
     lat: 52.370524
     lng: 4.894497
   }
@@ -29,6 +32,7 @@ module.exports = [
     name: "Europe - Frankfurt"
     rtmpCDNCode: "fra"
     cineioEndpointCode: 'ams1'
+    cineioRtcEndpointCode: 'sfo1'
     lat: 50.112846
     lng: 8.683942
   }
@@ -37,6 +41,7 @@ module.exports = [
     name: "Europe - Stockholm"
     rtmpCDNCode: "arn"
     cineioEndpointCode: 'ams1'
+    cineioRtcEndpointCode: 'sfo1'
     lat: 59.328944
     lng: 18.069256
   }
@@ -45,6 +50,7 @@ module.exports = [
     name: "Asia - Hong Kong"
     rtmpCDNCode: "hhp"
     cineioEndpointCode: 'ams1'
+    cineioRtcEndpointCode: 'sfo1'
     lat: 22.289391
     lng: 114.163894
   }
@@ -53,6 +59,7 @@ module.exports = [
     name: "Australia - Sydney"
     rtmpCDNCode: "syd"
     cineioEndpointCode: 'sfo1'
+    cineioRtcEndpointCode: 'sfo1'
     lat: -33.868790
     lng: 151.213570
   }
