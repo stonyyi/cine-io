@@ -16,6 +16,9 @@ nock.disableNetConnect()
 nock.enableNetConnect('127.0.0.1')
 # nock.recorder.rec()
 
+Debug = require('debug')
+Debug.enable("*")
+
 if process.env.CI
   sh = require 'execSync'
   sh.run 'grunt prepareProductionAssets'
