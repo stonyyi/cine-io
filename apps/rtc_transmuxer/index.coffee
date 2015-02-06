@@ -1,130 +1,29 @@
-_ = require('underscore')
 Base = require('../base')
 Cine.config('connect_to_mongo')
 runMe = !module.parent
-EdgecastStream = Cine.server_model('edgecast_stream')
-request = require('request')
-Primus = require('primus')
-http = require('http')
-app = exports.app = Base.app("rtc transmuxer")
 
-fs = require('fs')
-kurento = require("kurento-client")
-path = require("path")
+http = require('http')
 async = require('async')
 Debug = require('debug')
+Primus = require('primus')
+kurento = require("kurento-client")
+EdgecastStream = Cine.server_model('edgecast_stream')
+
+KURENTO_MEDIA_SERVER_HOST = process.env.KURENTO_MEDIA_SERVER_HOST || "kurento-media-server"
+KURENTO_PORT = process.env.KURENTO_MEDIA_SERVER_CONNECTION_PORT || 8888
+ws_uri = "ws://#{KURENTO_MEDIA_SERVER_HOST}:#{KURENTO_PORT}/kurento"
+
 Debug.enable('rtc_transmuxer:*')
 debug = Debug("rtc_transmuxer:index")
-cp = require('child_process')
-tailingStream = require('tailing-stream')
 
-
+app = exports.app = Base.app("rtc transmuxer")
 server = http.createServer(app)
 
 app.get '/', (req, res)->
   res.send("I am the rtc_transmuxer")
 
-app.put '/send/:streamName', (req, res)->
-  debug("HERE I AMMMM")
-  res.send("I am the rtc_transmuxer")
 
-ffmpeg = "ffmpeg"
-
-RTMP_REPLICATOR_HOST = process.env.RTMP_REPLICATOR_HOST || 'rtmp-replicator'
-RTMP_AUTHENTICATOR_HOST = process.env.RTMP_AUTHENTICATOR_HOST || 'rtmp-authenticator'
-KURENTO_MEDIA_SERVER_HOST = process.env.KURENTO_MEDIA_SERVER_HOST || "kurento-media-server"
-KURENTO_PORT = process.env.KURENTO_MEDIA_SERVER_CONNECTION_PORT || 8888
-DOCKER_PATH = "/var/rtc-recordings"
-HOST_FILE_SYSTEM_PATH = process.env.HOST_FILE_SYSTEM_PATH || DOCKER_PATH # override if running locally
-ws_uri = "ws://#{KURENTO_MEDIA_SERVER_HOST}:#{KURENTO_PORT}/kurento"
-MAX_FFMPEG_RETRIES = 1
-
-class TailingFFMpegStreamer
-  constructor: (@input, @output)->
-  start: ->
-    @retries = 0
-    @startTime = new Date
-    @_startFlow()
-
-  _startFlow: ->
-    @_startReadStream()
-    @_startFfmpeg()
-    @_sendDataToFfmpeg()
-
-  _startReadStream: ->
-    debug("tailing", @input)
-    @readStream.destroy() if @readStream
-    @readStream = tailingStream.createReadStream(@input)
-
-  _startFfmpeg: ->
-    delete @startTime
-
-    ffmpegOptions = [
-      '-re', # read in "real time", don't read too quickly
-      '-i', 'pipe:0', # take stdin as the input
-      '-c:v', 'copy', # h.264
-
-      #for audio, it outputs in mp3, we can either:
-      # change it to aac:
-      '-c:a', 'libfdk_aac',
-      # or downsample to 44100:
-      # '-ar', '44100',
-      # end audio
-      '-c:d', 'copy', # don't think this does anything
-      '-map', '0',
-      '-f', 'flv',
-      @output
-    ]
-    debug('running ffmpeg', ffmpegOptions)
-    @ffmpegSpawn = cp.spawn(ffmpeg, ffmpegOptions)
-
-    @ffmpegSpawn.stderr.setEncoding('utf8')
-    @ffmpegSpawn.stderr.on 'data', (data)=>
-      @startTime ||= new Date
-      if (/^execvp\(\)/.test(data))
-        debug('Failed to start child process.')
-      debug("ffmpeg stderr", data)
-
-    @ffmpegSpawn.on 'close', (code)=>
-      if code != 0
-        debug('ffmpeg process exited with code ', code)
-        # 6 seconds from starting ffmpeg to seeing if it dies
-        # kinda arbitrary
-        sixSecondsAgo = new Date
-        sixSecondsAgo.setSeconds(sixSecondsAgo.getSeconds() - 6)
-        # sometimes there's bad input
-        debug(code, code == 1, @startTime, sixSecondsAgo)
-        badExit = code == 1
-        lessThanSixSecondsAgo = @startTime >= sixSecondsAgo
-        retryable = @retries < MAX_FFMPEG_RETRIES
-        if !@stopped && badExit && lessThanSixSecondsAgo && retryable
-          @retries += 1
-          debug("RESTARTING FFMPEG RETRY:", @retries)
-          @_startFlow()
-
-      debug("ffmpeg done")
-
-  _sendDataToFfmpeg: ->
-    @readStream.pipe(@ffmpegSpawn.stdin)
-
-  stop: ->
-    @stopped = true
-    @readStream.destroy() if @readStream
-    @ffmpegSpawn.kill('SIGHUP') if @ffmpegSpawn
-
-runFfmpeg = (input, output)->
-  streamer = new TailingFFMpegStreamer(input, output)
-  streamer.start()
-  return streamer
-
-idCounter = 0
 kurentoClient = null
-
-nextUniqueId = ->
-  idCounter++
-  idCounter.toString()
-
-
 # Recover kurentoClient for the first time.
 getKurentoClient = (callback) ->
   return callback(null, kurentoClient) if kurentoClient isnt null
@@ -140,7 +39,6 @@ class RecorderPipeline
   constructor: (@kurentoClient, @streamName, @streamKey)->
   create: (callback)=>
     debug("createing pipeline")
-    @_createUniqueFile()
 
     @_createWebRtcEndpoint (err, @webRtcEndpoint)=>
       callback(err)
@@ -150,8 +48,8 @@ class RecorderPipeline
     recorderParams =
       stopOnEndOfStream: true
       mediaProfile: 'MP4'
-      # uri: "file://#{@dockerFile}"
-      uri: "http://192.168.1.139:8881/send/#{@streamName}/#{@streamKey}"
+      uri: "http://192.168.1.139:8881/#{@streamName}/#{@streamKey}"
+
     debug("creating reporder pipeline", recorderParams)
     @kurentoClient.create "MediaPipeline", (err, pipeline)=>
       return callback(err) if err
@@ -176,31 +74,14 @@ class RecorderPipeline
         webRtcEndpoint.connect result.recorder, (err)->
           callback(err, webRtcEndpoint)
 
-  _createUniqueFile: =>
-    date = (new Date).toISOString().replace(/[-:.]/g, '')
-    file = "#{date}.mp4"
-
-    @dockerFile = "#{DOCKER_PATH}/#{file}"
-    @fileSystemFile = "#{HOST_FILE_SYSTEM_PATH}/#{file}"
-
   processOffer: (offer, callback)=>
     @webRtcEndpoint.processOffer offer, (error, sdpAnswer) ->
       return callback(error) if error
 
       callback null, sdpAnswer
 
-  broadcast: (stream, streamKey)=>
-
-    # output = "rtmp://stream.lax.cine.io/20C45E/cines/#{stream.streamName}?#{streamKey}"
-
-    output = "rtmp://#{RTMP_REPLICATOR_HOST}:1935/live/#{stream.streamName}?#{streamKey}"
-    debug("streaming to", output)
-
-    #@streamer = runFfmpeg(@fileSystemFile, output)
-
   stop: ->
     @pipeline.release() if @pipeline
-    @streamer.stop() if @streamer
 
 getStream = (streamId, streamKey, callback)->
   EdgecastStream.findById streamId, (err, stream)->
@@ -230,8 +111,6 @@ createBroadcaster = (webRTCBroadcastSession, sdp, streamId, streamKey, callback)
         pipeline.processOffer sdp.sdp, (err, sdpAnswer)->
           callback(err, sdpAnswer)
 
-          pipeline.broadcast(stream, streamKey)
-
 webRTCBroadcastSessions = {}
 
 class WebRTCBroadcastSession
@@ -239,7 +118,6 @@ class WebRTCBroadcastSession
   setRecorderPipeline: (@recorderPipeline)->
   stop: ->
     @recorderPipeline.stop() if @recorderPipeline
-
 
 primusOptions =
   transformer: 'sockjs'

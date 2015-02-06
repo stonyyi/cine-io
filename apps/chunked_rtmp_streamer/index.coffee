@@ -1,19 +1,18 @@
 _ = require('underscore')
 Base = require('../base')
 runMe = !module.parent
-http = require('http')
+
 cp = require('child_process')
 Debug = require('debug')
-Debug.enable('chunked_rtmp_streamer:*')
-debug = Debug("chunked_rtmp_streamer:index")
-
-app = exports.app = Base.app("chunked rtmp streamer")
-
-server = http.createServer(app)
 
 RTMP_REPLICATOR_HOST = process.env.RTMP_REPLICATOR_HOST || 'rtmp-replicator'
 ffmpeg = "ffmpeg"
 MAX_FFMPEG_RETRIES = 1
+
+Debug.enable('chunked_rtmp_streamer:*')
+debug = Debug("chunked_rtmp_streamer:index")
+
+app = exports.app = Base.app("chunked rtmp streamer")
 
 class FfmpegStreamer
   constructor: (@output)->
@@ -103,14 +102,15 @@ class FfmpegStreamers
     new FfmpegStreamer(output)
 
 streamers = new FfmpegStreamers
+
 app.get '/', (req, res)->
   res.send("I am the chunked_rtmp_streamer")
 
-app.put '/send/:streamName/:streamKey', (req, res)->
+app.put '/:streamName/:streamKey', (req, res)->
   streamName = req.param('streamName')
   streamKey = req.param('streamKey')
-  debug("HERE I AMMMM", streamName, streamKey)
+  debug("got data", streamName, streamKey)
   streamers.getStreamer(streamName, streamKey).reversePipe(req)
-  res.send('OK')
+  res.sendStatus(200)
 
-Base.listen server, 8185 if runMe
+Base.listen app, 8185 if runMe
