@@ -9,6 +9,7 @@ Primus = require('primus')
 kurento = require("kurento-client")
 EdgecastStream = Cine.server_model('edgecast_stream')
 
+CHUNKED_RTMP_STREMER_HOST = process.env.CHUNKED_RTMP_STREMER_HOST || 'chunked-rtmp-streamer'
 KURENTO_MEDIA_SERVER_HOST = process.env.KURENTO_MEDIA_SERVER_HOST || "kurento-media-server"
 KURENTO_PORT = process.env.KURENTO_MEDIA_SERVER_CONNECTION_PORT || 8888
 ws_uri = "ws://#{KURENTO_MEDIA_SERVER_HOST}:#{KURENTO_PORT}/kurento"
@@ -48,7 +49,7 @@ class RecorderPipeline
     recorderParams =
       stopOnEndOfStream: true
       mediaProfile: 'MP4'
-      uri: "http://192.168.1.139/#{@streamName}/#{@streamKey}"
+      uri: "http://#{CHUNKED_RTMP_STREMER_HOST}/#{@streamName}/#{@streamKey}"
 
     debug("creating reporder pipeline", recorderParams)
     @kurentoClient.create "MediaPipeline", (err, pipeline)=>
