@@ -48,7 +48,7 @@ class RecorderPipeline
     recorderParams =
       stopOnEndOfStream: true
       mediaProfile: 'MP4'
-      uri: "http://192.168.1.139:8881/#{@streamName}/#{@streamKey}"
+      uri: "http://192.168.1.139/#{@streamName}/#{@streamKey}"
 
     debug("creating reporder pipeline", recorderParams)
     @kurentoClient.create "MediaPipeline", (err, pipeline)=>
