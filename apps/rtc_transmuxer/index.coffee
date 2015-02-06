@@ -9,6 +9,7 @@ Primus = require('primus')
 kurento = require("kurento-client")
 EdgecastStream = Cine.server_model('edgecast_stream')
 
+RTMP_AUTHENTICATOR_HOST = process.env.RTMP_AUTHENTICATOR_HOST || 'rtmp-authenticator'
 CHUNKED_RTMP_STREMER_HOST = process.env.CHUNKED_RTMP_STREMER_HOST || 'chunked-rtmp-streamer'
 KURENTO_MEDIA_SERVER_HOST = process.env.KURENTO_MEDIA_SERVER_HOST || "kurento-media-server"
 KURENTO_PORT = process.env.KURENTO_MEDIA_SERVER_CONNECTION_PORT || 8888
