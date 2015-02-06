@@ -6,13 +6,7 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 request = require('request')
 Primus = require('primus')
 http = require('http')
-
 app = exports.app = Base.app("rtc transmuxer")
-
-server = http.createServer(app)
-
-app.get '/', (req, res)->
-  res.send("I am the rtc_transmuxer")
 
 fs = require('fs')
 kurento = require("kurento-client")
@@ -23,6 +17,16 @@ Debug.enable('rtc_transmuxer:*')
 debug = Debug("rtc_transmuxer:index")
 cp = require('child_process')
 tailingStream = require('tailing-stream')
+
+
+server = http.createServer(app)
+
+app.get '/', (req, res)->
+  res.send("I am the rtc_transmuxer")
+
+app.put '/send/:streamName', (req, res)->
+  debug("HERE I AMMMM")
+  res.send("I am the rtc_transmuxer")
 
 ffmpeg = "ffmpeg"
 
@@ -133,7 +137,7 @@ getKurentoClient = (callback) ->
 
 
 class RecorderPipeline
-  constructor: (@kurentoClient)->
+  constructor: (@kurentoClient, @streamName, @streamKey)->
   create: (callback)=>
     debug("createing pipeline")
     @_createUniqueFile()
@@ -146,8 +150,9 @@ class RecorderPipeline
     recorderParams =
       stopOnEndOfStream: true
       mediaProfile: 'MP4'
-      uri: "file://#{@dockerFile}"
-
+      # uri: "file://#{@dockerFile}"
+      uri: "http://192.168.1.139:8881/send/#{@streamName}/#{@streamKey}"
+    debug("creating reporder pipeline", recorderParams)
     @kurentoClient.create "MediaPipeline", (err, pipeline)=>
       return callback(err) if err
       @pipeline = pipeline
@@ -191,7 +196,7 @@ class RecorderPipeline
     output = "rtmp://#{RTMP_REPLICATOR_HOST}:1935/live/#{stream.streamName}?#{streamKey}"
     debug("streaming to", output)
 
-    @streamer = runFfmpeg(@fileSystemFile, output)
+    #@streamer = runFfmpeg(@fileSystemFile, output)
 
   stop: ->
     @pipeline.release() if @pipeline
@@ -216,8 +221,8 @@ createBroadcaster = (webRTCBroadcastSession, sdp, streamId, streamKey, callback)
     getKurentoClient (err, kurentoClient) ->
       return callback(err) if err
       debug("got kurentoClient")
-      pipeline = new RecorderPipeline(kurentoClient)
-      webRTCBroadcastSession.setRecorderPipeline(pipeline)
+      pipeline = new RecorderPipeline(kurentoClient, stream.streamName, streamKey)
+      webRTCBroadcastSession.setRecorderPipeline(pipeline, stream.streamName, streamKey)
       pipeline.create (err)->
         return callback(err) if err
         debug("created pipeline")
