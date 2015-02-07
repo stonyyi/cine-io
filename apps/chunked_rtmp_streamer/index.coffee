@@ -1,10 +1,6 @@
 _ = require('underscore')
 Base = require('../base')
 runMe = !module.parent
-fs = require('fs')
-
-fileName = "/Users/thomas/work/cine-io/cine/apps/chunked_rtmp_streamer/wtf.webm"
-# writer = fs.createWriteStream(fileName)
 
 cp = require('child_process')
 Debug = require('debug')
@@ -19,7 +15,7 @@ debug = Debug("chunked_rtmp_streamer:index")
 app = exports.app = Base.app("chunked rtmp streamer", log: false)
 
 class FfmpegStreamer
-  constructor: (@output)->
+  constructor: (@input, @output, @endCallback)->
     debug("creating ffmpeg streamer")
     @start()
 
@@ -36,9 +32,9 @@ class FfmpegStreamer
 
     ffmpegOptions = [
       '-re', # read in "real time", don't read too quickly
-      #'-nostats', # do not constantly output frame number/time
-      '-i', 'pipe:0', # take stdin as the input
-      '-loglevel', 'debug' #log level
+      '-nostats', # do not constantly output frame number/time
+      '-i', @input, # take kurento HttpEndpoint as the input
+      #'-loglevel', 'debug' #log level
       # '-c:v', 'copy', # h.264
       # begin same as rtmp-stylist
       '-c:v', 'libx264',
@@ -48,13 +44,7 @@ class FfmpegStreamer
       #'-x264opts', 'keyint=30',
       # end same as rtmp-stylist
 
-      #for audio, it outputs in mp3, we can either:
-      # change it to aac:
       '-c:a', 'libfdk_aac',
-      # '-bsf:a', 'aac_adtstoasc', #this didn't help
-      # or downsample to 44100:
-      # '-ar', '44100',
-      # end audio
       '-c:d', 'copy', # don't think this does anything
       '-map', '0',
       '-f', 'flv',
@@ -93,60 +83,50 @@ class FfmpegStreamer
           debug("RESTARTING FFMPEG RETRY:", @retries)
           @_startFlow()
       debug("ffmpeg done")
-      @endFFmpegCallback() if typeof @endFFmpegCallback == 'function'
+      @endCallback()
 
-  reversePipe: (contentStream)->
-    contentStream.on 'data', (data)=>
-      return debug("not writing body") if @stopped
-      # debug("Writing body yo")
-      @ffmpegSpawn.stdin.write(data)
-      # writer.write(data)
-
-    contentStream.on 'end', =>
-      # ABSORB END
-      #debug("end of body yo, but I ain't tellin ffmpeg")
-
-  stop: (@endFFmpegCallback)=>
+  stop: ->
     debug("INDICATING STOP")
     @stopped = true
     @_stopFFmpeg()
 
   _stopFFmpeg: ->
-    # FFMPEG didn't like killing the child process
-    # when ending stdin, ffmpeg will close itself.
-    # V8 will gc this child process because we delete all references to it*
-    # *I think
-    @ffmpegSpawn.stdin.end()
-    # writer.end()
+    @ffmpegSpawn.kill("SIGTERM")
 
 class FfmpegStreamers
   constructor: ->
     @streamers = {}
 
-  getStreamer: (streamName, streamKey)->
-    @streamers[streamName] ||= @_createNewStreamer(streamName, streamKey)
+  startStreamer: (streamName, streamKey, input)->
+    @streamers[streamName] ||= @_createNewStreamer(streamName, streamKey, input)
 
-  _createNewStreamer: (streamName, streamKey)->
+  _createNewStreamer: (streamName, streamKey, input)->
     output = "rtmp://#{RTMP_REPLICATOR_HOST}:1935/live/#{streamName}?#{streamKey}"
-    new FfmpegStreamer(output)
+
+    endFunction = =>
+      delete @streamers[streamName]
+
+    new FfmpegStreamer(input, output, endFunction)
 
   stopStreamer: (streamName)->
     streamer = @streamers[streamName]
     return unless streamer
     debug("stopping streamer")
-    streamer.stop =>
-      delete @streamers[streamName]
+    streamer.stop()
 
 streamers = new FfmpegStreamers
 
 app.get '/', (req, res)->
   res.send("I am the chunked_rtmp_streamer")
 
-app.put '/:streamName/:streamKey', (req, res)->
-  streamName = req.param('streamName')
-  streamKey = req.param('streamKey')
-  # debug("got data", streamName, streamKey)
-  streamers.getStreamer(streamName, streamKey).reversePipe(req)
+app.post '/start', (req, res)->
+  streamName = req.body.streamName
+  streamKey = req.body.streamKey
+  input = req.body.input
+  debug("starting", streamName, streamKey, input)
+
+  streamers.startStreamer(streamName, streamKey, input)
+
   res.sendStatus(200)
 
 app.post '/stop', (req, res)->

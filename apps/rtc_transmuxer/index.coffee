@@ -38,63 +38,42 @@ getKurentoClient = (callback) ->
     callback null, kurentoClient
 
 
-class RecorderPipeline
+class BroadcastPipeline
   constructor: (@kurentoClient, @streamName, @streamKey)->
   create: (callback)=>
-    debug("createing pipeline")
+    debug("creating pipeline")
 
-    @_createWebRtcEndpoint (err, @webRtcEndpoint)=>
-      callback(err)
+    @_createWebRtcEndpoint (err, @result)=>
+      @webRtcEndpoint = @result.webRtcEndpoint
+      @httpGetEndpoint = @result.httpGetEndpoint
+      @webRtcEndpoint.connect @httpGetEndpoint, callback
 
   _createWebRtcEndpoint: (callback)=>
 
-    recorderParams =
-      stopOnEndOfStream: true
-      mediaProfile: 'MP4'
-      uri: "http://#{CHUNKED_RTMP_STREMER_HOST}/#{@streamName}/#{@streamKey}"
-
-    debug("creating reporder pipeline", recorderParams)
-    @kurentoClient.create "MediaPipeline", (err, pipeline)=>
+    @kurentoClient.create "MediaPipeline", (err, @pipeline)=>
+      debug('got pipeline')
       return callback(err) if err
-      @pipeline = pipeline
       asynCalls =
-        recorder: (cb)->
-          pipeline.create "RecorderEndpoint", recorderParams, (err, recorderEndpoint) ->
-            return cb(err) if err
-            debug("created recorderEndpoint", recorderEndpoint)
-
-            recorderEndpoint.record (err)-> debug("starting recorder", err)
-            cb(null, recorderEndpoint)
+        httpGetEndpoint: (cb)->
+          options =
+            terminateOnEOS: true
+            mediaProfile: 'WEBM'
+          pipeline.create "HttpGetEndpoint", options, cb
         webRtcEndpoint: (cb)->
-          pipeline.create "WebRtcEndpoint", (err, webRtcEndpoint) ->
-            debug("CREATED WebRtcEndpoint", err, webRtcEndpoint)
-            # THis stuff is useless. The MediaSessionStarted does work
-            # But the MediaSessionTerminated never fired
-            # webRtcEndpoint.on 'MediaSessionStarted', (stuff)->
-            #   debug('webRtcEndpoint', 'MediaSessionStarted', stuff)
-            # webRtcEndpoint.on 'MediaSessionTerminated', (stuff)->
-            #   debug('webRtcEndpoint', 'MediaSessionTerminated', stuff)
-            return cb(err) if err
-            cb(null, webRtcEndpoint)
+          pipeline.create "WebRtcEndpoint", cb
 
-      pipeline.on 'release', ->
-        debug("released")
+      # pipeline.on 'release', ->
+      #   debug("released")
 
-      async.parallel asynCalls, (err, result)->
-        return callback(err) if err
+      async.parallel asynCalls, callback
 
-        webRtcEndpoint = result.webRtcEndpoint
-        webRtcEndpoint.connect result.recorder, (err)->
-          # webRtcEndpoint.connect result.httpGet, (err)->
-          callback(err, webRtcEndpoint)
 
   processOffer: (offer, callback)=>
     @webRtcEndpoint.processOffer offer, (error, sdpAnswer) ->
       return callback(error) if error
-
       callback null, sdpAnswer
 
-  _notifyChunkedRtmpStreamer: ->
+  _stopChunkedRtmpStreamer: ->
     options =
       url: "http://#{CHUNKED_RTMP_STREMER_HOST}/stop"
       json: true
@@ -102,13 +81,36 @@ class RecorderPipeline
         streamName: @streamName
     debug("stopping chunked-rtmp-streamer", options)
     request.post options, (err, response, body)->
-      return debug("_notifyChunkedRtmpStreamer", "err", err) if err
-      return debug("_notifyChunkedRtmpStreamer", "not 200", response.statusCode, body) if response.statusCode != 200
+      return debug("_stopChunkedRtmpStreamer", "err", err) if err
+      return debug("_stopChunkedRtmpStreamer", "not 200", response.statusCode, body) if response.statusCode != 200
       # do nothing
+
+  _startChunkedRtmpStreamer: (input)->
+    options =
+      url: "http://#{CHUNKED_RTMP_STREMER_HOST}/start"
+      json: true
+      body:
+        streamName: @streamName
+        streamKey: @streamKey
+        input: input
+    debug("starting chunked-rtmp-streamer", options)
+    request.post options, (err, response, body)->
+      return debug("_startChunkedRtmpStreamer", "err", err) if err
+      return debug("_startChunkedRtmpStreamer", "not 200", response.statusCode, body) if response.statusCode != 200
+      # do nothing
+  start: ->
+    @httpGetEndpoint.getUrl @_startStreaming
+  _startStreaming: (err, url)=>
+    debug("GOT URL", err, url)
+    return if err || !url
+
+    url = url.replace('kurento-media-server', 'docker-local.cine.io') if process.env.REPLACE_WITH_LOCAL
+
+    @_startChunkedRtmpStreamer(url)
 
   stop: ->
     @pipeline.release() if @pipeline
-    @_notifyChunkedRtmpStreamer()
+    @_stopChunkedRtmpStreamer()
 
 getStream = (streamId, streamKey, callback)->
   EdgecastStream.findById streamId, (err, stream)->
@@ -129,22 +131,23 @@ createBroadcaster = (webRTCBroadcastSession, sdp, streamId, streamKey, callback)
     getKurentoClient (err, kurentoClient) ->
       return callback(err) if err
       debug("got kurentoClient")
-      pipeline = new RecorderPipeline(kurentoClient, stream.streamName, streamKey)
-      webRTCBroadcastSession.setRecorderPipeline(pipeline, stream.streamName, streamKey)
+      pipeline = new BroadcastPipeline(kurentoClient, stream.streamName, streamKey)
+      webRTCBroadcastSession.setPipeline(pipeline, stream.streamName, streamKey)
       pipeline.create (err)->
         return callback(err) if err
         debug("created pipeline")
 
         pipeline.processOffer sdp.sdp, (err, sdpAnswer)->
           callback(err, sdpAnswer)
+          pipeline.start()
 
 webRTCBroadcastSessions = {}
 
 class WebRTCBroadcastSession
   constructor: (@spark)->
-  setRecorderPipeline: (@recorderPipeline)->
+  setPipeline: (@pipeline)->
   stop: ->
-    @recorderPipeline.stop() if @recorderPipeline
+    @pipeline.stop() if @pipeline
 
 primusOptions =
   transformer: 'sockjs'
@@ -189,7 +192,6 @@ primus.on 'connection', (spark)->
         stop(spark)
       when "auth"
         # TODO
-        # stop(spark)
       else
         response =
           id: "error"
