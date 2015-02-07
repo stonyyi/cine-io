@@ -3,6 +3,7 @@ Cine.config('connect_to_mongo')
 runMe = !module.parent
 
 http = require('http')
+request = require('request')
 async = require('async')
 Debug = require('debug')
 Primus = require('primus')
@@ -12,8 +13,7 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 RTMP_AUTHENTICATOR_HOST = process.env.RTMP_AUTHENTICATOR_HOST || 'rtmp-authenticator'
 CHUNKED_RTMP_STREMER_HOST = process.env.CHUNKED_RTMP_STREMER_HOST || 'chunked-rtmp-streamer'
 KURENTO_MEDIA_SERVER_HOST = process.env.KURENTO_MEDIA_SERVER_HOST || "kurento-media-server"
-KURENTO_PORT = process.env.KURENTO_MEDIA_SERVER_CONNECTION_PORT || 8888
-ws_uri = "ws://#{KURENTO_MEDIA_SERVER_HOST}:#{KURENTO_PORT}/kurento"
+kurentoWebsocketUri = "ws://#{KURENTO_MEDIA_SERVER_HOST}/kurento"
 
 Debug.enable('rtc_transmuxer:*')
 debug = Debug("rtc_transmuxer:index")
@@ -29,10 +29,11 @@ kurentoClient = null
 # Recover kurentoClient for the first time.
 getKurentoClient = (callback) ->
   return callback(null, kurentoClient) if kurentoClient isnt null
-  kurento ws_uri, (err, _kurentoClient) ->
+  debug("Connecting to kurento at", kurentoWebsocketUri)
+  kurento kurentoWebsocketUri, (err, _kurentoClient) ->
     if err
-      debug "Coult not find media server at address " + ws_uri
-      return callback("Could not find media server at address" + ws_uri + ". Exiting with err " + err)
+      debug "Coult not find media server at address " + kurentoWebsocketUri
+      return callback("Could not find media server at address" + kurentoWebsocketUri + ". Exiting with err " + err)
     kurentoClient = _kurentoClient
     callback null, kurentoClient
 
@@ -58,22 +59,33 @@ class RecorderPipeline
       @pipeline = pipeline
       asynCalls =
         recorder: (cb)->
-          pipeline.create "RecorderEndpoint", recorderParams, (err, recorder) ->
+          pipeline.create "RecorderEndpoint", recorderParams, (err, recorderEndpoint) ->
             return cb(err) if err
-            debug("created recorder", recorder)
-            recorder.record (err)-> debug("STARTING RECORDER", err)
-            cb(null, recorder)
+            debug("created recorderEndpoint", recorderEndpoint)
+
+            recorderEndpoint.record (err)-> debug("starting recorder", err)
+            cb(null, recorderEndpoint)
         webRtcEndpoint: (cb)->
           pipeline.create "WebRtcEndpoint", (err, webRtcEndpoint) ->
             debug("CREATED WebRtcEndpoint", err, webRtcEndpoint)
+            # THis stuff is useless. The MediaSessionStarted does work
+            # But the MediaSessionTerminated never fired
+            # webRtcEndpoint.on 'MediaSessionStarted', (stuff)->
+            #   debug('webRtcEndpoint', 'MediaSessionStarted', stuff)
+            # webRtcEndpoint.on 'MediaSessionTerminated', (stuff)->
+            #   debug('webRtcEndpoint', 'MediaSessionTerminated', stuff)
             return cb(err) if err
             cb(null, webRtcEndpoint)
+
+      pipeline.on 'release', ->
+        debug("released")
 
       async.parallel asynCalls, (err, result)->
         return callback(err) if err
 
         webRtcEndpoint = result.webRtcEndpoint
         webRtcEndpoint.connect result.recorder, (err)->
+          # webRtcEndpoint.connect result.httpGet, (err)->
           callback(err, webRtcEndpoint)
 
   processOffer: (offer, callback)=>
@@ -82,8 +94,21 @@ class RecorderPipeline
 
       callback null, sdpAnswer
 
+  _notifyChunkedRtmpStreamer: ->
+    options =
+      url: "http://#{CHUNKED_RTMP_STREMER_HOST}/stop"
+      json: true
+      body:
+        streamName: @streamName
+    debug("stopping chunked-rtmp-streamer", options)
+    request.post options, (err, response, body)->
+      return debug("_notifyChunkedRtmpStreamer", "err", err) if err
+      return debug("_notifyChunkedRtmpStreamer", "not 200", response.statusCode, body) if response.statusCode != 200
+      # do nothing
+
   stop: ->
     @pipeline.release() if @pipeline
+    @_notifyChunkedRtmpStreamer()
 
 getStream = (streamId, streamKey, callback)->
   EdgecastStream.findById streamId, (err, stream)->
@@ -130,12 +155,11 @@ primusOptions =
   # cluster:
   #   redis: newRedisClient
 
-
 stop = (spark)->
+  debug("stopping", spark.id)
   session = webRTCBroadcastSessions[spark.id]
   return unless session
   session.stop()
-  delete webRTCBroadcastSessions[spark.id]
 
 primus = new Primus(server, primusOptions)
 primus.on 'connection', (spark)->
@@ -174,5 +198,6 @@ primus.on 'connection', (spark)->
 
 primus.on 'disconnection', (spark)->
   stop(spark)
+  delete webRTCBroadcastSessions[spark.id]
 
 Base.listen server, 8184 if runMe
