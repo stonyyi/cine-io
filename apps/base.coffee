@@ -11,7 +11,7 @@ exports._recreateQueue = ->
 getJobs = ->
   jobs || exports._recreateQueue()
 
-exports.app = (title)->
+exports.app = (title, options={})->
   app = require('express')()
 
   # since we're running on heroku which uses nginx
@@ -20,7 +20,7 @@ exports.app = (title)->
 
   app.set 'title', title if title
 
-  Cine.middleware 'middleware_base', app
+  Cine.middleware 'middleware_base', app, options
 
 exports.listen = (appOrHTTPServer, defaultPort)->
   port = process.env.PORT || defaultPort
