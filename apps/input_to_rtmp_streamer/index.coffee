@@ -9,10 +9,10 @@ RTMP_REPLICATOR_HOST = process.env.RTMP_REPLICATOR_HOST || 'rtmp-replicator'
 ffmpeg = "ffmpeg"
 MAX_FFMPEG_RETRIES = 1
 
-Debug.enable('chunked_rtmp_streamer:*')
-debug = Debug("chunked_rtmp_streamer:index")
+Debug.enable('input_to_rtmp_streamer:*')
+debug = Debug("input_to_rtmp_streamer:index")
 
-app = exports.app = Base.app("chunked rtmp streamer", log: false)
+app = exports.app = Base.app("input to rtmp streamer", log: false)
 
 class FfmpegStreamer
   constructor: (@input, @output, @endCallback)->
@@ -117,7 +117,7 @@ class FfmpegStreamers
 streamers = new FfmpegStreamers
 
 app.get '/', (req, res)->
-  res.send("I am the chunked_rtmp_streamer")
+  res.send("I am the input_to_rtmp_streamer")
 
 app.post '/start', (req, res)->
   streamName = req.body.streamName
