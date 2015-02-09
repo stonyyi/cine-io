@@ -6,4 +6,5 @@ module.exports = (callback)->
 
 module.exports.byMonth = (month, callback)->
   calculateUsageStats.byMonth month, (err, collectiveStats)->
+    return callback(err) if err
     Stats.setUsage month, collectiveStats, callback
