@@ -11,3 +11,11 @@ exports.byMonth = (account, month, callback)->
 
   account.projects (err, projects)->
     async.reduce projects, 0, calculateProjectUsage, callback
+
+exports.byMonthWithKeenMilliseconds = (account, month, projectIdToPeerMilliseconds, callback)->
+  calculateProjectUsage = (accum, project, callback)->
+    projectPeerMilliseconds = projectIdToPeerMilliseconds[project._id.toString()] || 0
+    callback(null, accum + projectPeerMilliseconds)
+
+  account.projects (err, projects)->
+    async.reduce projects, 0, calculateProjectUsage, callback

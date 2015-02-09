@@ -1,5 +1,6 @@
 calculateAccountUsage = Cine.server_lib("reporting/calculate_account_usage")
 Account = Cine.server_model('account')
+Project = Cine.server_model('project')
 CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
 CalcualteAccountPeerMilliseconds = Cine.server_lib('reporting/peer/calculate_account_peer_milliseconds')
@@ -8,6 +9,10 @@ describe 'calculateAccountUsage', ->
   beforeEach (done)->
     @account = new Account billingProvider: 'cine.io'
     @account.save done
+
+  beforeEach (done)->
+    @project1 = new Project _account: @account._id
+    @project1.save done
 
   beforeEach ->
     @fakeBandwidthThisMonth = {}
@@ -73,6 +78,22 @@ describe 'calculateAccountUsage', ->
         peerMilliseconds: 444444
 
       calculateAccountUsage.byMonth @account, d, (err, results)->
+        expect(err).to.be.undefined
+        expect(results).to.deep.equal(expected)
+        done()
+
+  describe 'byMonthWithKeenMilliseconds', (done)->
+    it 'calculates the stats for each account', (done)->
+      d = new Date
+      d.setYear(d.getYear() - 1)
+      keenResults = {}
+      keenResults[@project1._id.toString()] = 1234
+      expected =
+        bandwidth: 99999
+        storage: 2222222
+        peerMilliseconds: 1234
+
+      calculateAccountUsage.byMonthWithKeenMilliseconds @account, d, keenResults, (err, results)->
         expect(err).to.be.undefined
         expect(results).to.deep.equal(expected)
         done()

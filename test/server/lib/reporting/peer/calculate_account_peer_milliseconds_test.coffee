@@ -35,3 +35,16 @@ describe 'calculateAccountPeerMlliseconds', ->
         expect(@nock2.isDone()).to.be.true
         expect(@nock3.isDone()).to.be.false
         done()
+
+  describe 'byMonthWithKeenMilliseconds', ->
+
+    it 'fetches and parses events for the month for each project', (done)->
+      keenResults = {}
+      keenResults[@project1._id.toString()] = 111
+      keenResults[@project2._id.toString()] = 222
+      keenResults[@project3._id.toString()] = 555
+
+      calculateAccountPeerMlliseconds.byMonthWithKeenMilliseconds @account, @month, keenResults, (err, totalTimeInMs)->
+        expect(err).to.be.undefined
+        expect(totalTimeInMs).to.equal(333)
+        done()

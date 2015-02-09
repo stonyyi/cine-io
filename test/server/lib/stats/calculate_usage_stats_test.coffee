@@ -1,5 +1,6 @@
 calculateUsageStats = Cine.server_lib("stats/calculate_usage_stats")
 Account = Cine.server_model('account')
+Project = Cine.server_model('project')
 CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
 CalcualteAccountPeerMilliseconds = Cine.server_lib('reporting/peer/calculate_account_peer_milliseconds')
@@ -16,6 +17,18 @@ describe 'calculateUsageStats', ->
   beforeEach (done)->
     @account3 = new Account billingProvider: 'cine.io'
     @account3.save done
+
+  beforeEach (done)->
+    @project1 = new Project _account: @account1._id
+    @project1.save(done)
+
+  beforeEach (done)->
+    @project2 = new Project _account: @account2._id
+    @project2.save(done)
+
+  beforeEach (done)->
+    @project3 = new Project _account: @account3._id
+    @project3.save(done)
 
   beforeEach ->
     @fakeBandwidthThisMonth = {}
@@ -53,23 +66,37 @@ describe 'calculateUsageStats', ->
   afterEach ->
     @storageStub.restore()
 
-  beforeEach ->
-    @fakePeerMillisecondsThisMonth = {}
-    @fakePeerMillisecondsThisMonth[@account1._id.toString()] = 989898
-    @fakePeerMillisecondsThisMonth[@account2._id.toString()] = 787878
-    @fakePeerMillisecondsThisMonth[@account3._id.toString()] = 676767
+  beforeEach (done)->
+    result1 =
+      projectId: @project1._id.toString()
+      result: 989898
+    result2 =
+      projectId: @project2._id.toString()
+      result: 787878
+    result3 =
+      projectId: @project3._id.toString()
+      result: 676767
+    response =
+      [result1, result2, result3]
+    requireFixture('nock/keen/sum_peer_milliseconds_group_by_project') response, new Date, (err, @keenNock)=>
+      done(err)
 
-    @fakePeerMillisecondsByMonth = {}
-    @fakePeerMillisecondsByMonth[@account1._id.toString()] = 565656
-    @fakePeerMillisecondsByMonth[@account2._id.toString()] = 454545
-    @fakePeerMillisecondsByMonth[@account3._id.toString()] = 343434
-
-    @peerStub = sinon.stub CalcualteAccountPeerMilliseconds, 'byMonth', (account, month, callback)=>
-      resource = if month.getYear() == (new Date).getYear() then @fakePeerMillisecondsThisMonth else @fakePeerMillisecondsByMonth
-      callback(null, resource[account._id.toString()])
-
-  afterEach ->
-    @peerStub.restore()
+  beforeEach (done)->
+    result1 =
+      projectId: @project1._id.toString()
+      result: 565656
+    result2 =
+      projectId: @project2._id.toString()
+      result: 454545
+    result3 =
+      projectId: @project3._id.toString()
+      result: 343434
+    response =
+      [result1, result2, result3]
+    d = new Date
+    d.setYear(d.getYear() - 1)
+    requireFixture('nock/keen/sum_peer_milliseconds_group_by_project') response, d, (err, @keenNock2)=>
+      done(err)
 
   describe 'thisMonth', ->
     it 'calculates the stats for each account', (done)->
@@ -89,6 +116,12 @@ describe 'calculateUsageStats', ->
       calculateUsageStats.thisMonth (err, results)->
         expect(err).to.be.null
         expect(results).to.deep.equal(expected)
+        done()
+
+    it 'calls out to keen', (done)->
+      calculateUsageStats.thisMonth (err, results)=>
+        expect(err).to.be.null
+        expect(@keenNock.isDone()).to.be.true
         done()
 
   describe 'byMonth', ->
@@ -112,4 +145,13 @@ describe 'calculateUsageStats', ->
       calculateUsageStats.byMonth d, (err, results)->
         expect(err).to.be.null
         expect(results).to.deep.equal(expected)
+        done()
+
+    it 'calls out to keen', (done)->
+      d = new Date
+      d.setYear(d.getYear() - 1)
+
+      calculateUsageStats.byMonth d, (err, results)=>
+        expect(err).to.be.null
+        expect(@keenNock2.isDone()).to.be.true
         done()

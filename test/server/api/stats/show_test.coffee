@@ -3,6 +3,7 @@ _ = require('underscore')
 Show = testApi Cine.api('stats/show')
 User = Cine.server_model('user')
 Account = Cine.server_model('account')
+Project = Cine.server_model('project')
 CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
 calculateAndSaveUsageStats = Cine.server_lib("stats/calculate_and_save_usage_stats")
@@ -26,6 +27,21 @@ describe 'Stats#Show', ->
   beforeEach (done)->
     @account3 = new Account billingProvider: 'cine.io', name: "account3 name"
     @account3.save done
+
+  beforeEach (done)->
+    @project1 = new Project _account: @account1._id
+    @project1.save(done)
+
+  beforeEach (done)->
+    @project2 = new Project _account: @account2._id
+    @project2.save(done)
+
+  beforeEach (done)->
+    @project3 = new Project _account: @account3._id
+    @project3.save(done)
+
+  beforeEach ->
+    @month = new Date
 
   beforeEach ->
     @fakeBandwidth = {}
@@ -51,20 +67,22 @@ describe 'Stats#Show', ->
   afterEach ->
     @storageStub.restore()
 
-  beforeEach ->
-    @fakePeerMilliseconds = {}
-    @fakePeerMilliseconds[@account1._id.toString()] = 989898
-    @fakePeerMilliseconds[@account2._id.toString()] = 787878
-    @fakePeerMilliseconds[@account3._id.toString()] = 676767
-
-    @peerStub = sinon.stub CalcualteAccountPeerMilliseconds, 'byMonth', (account, month, callback)=>
-      callback(null, @fakePeerMilliseconds[account._id.toString()])
-
-  afterEach ->
-    @peerStub.restore()
+  beforeEach (done)->
+    result1 =
+      projectId: @project1._id.toString()
+      result: 989898
+    result2 =
+      projectId: @project2._id.toString()
+      result: 787878
+    result3 =
+      projectId: @project3._id.toString()
+      result: 676767
+    response =
+      [result1, result2, result3]
+    requireFixture('nock/keen/sum_peer_milliseconds_group_by_project') response, @month, (err, @keenNock)=>
+      done(err)
 
   beforeEach (done)->
-    @month = new Date
     calculateAndSaveUsageStats.byMonth @month, done
 
   assertCorrectResponse = (response)->
