@@ -5,12 +5,20 @@ describe 'getKurentoClient', ->
   afterEach ->
     getKurentoClient._clear()
 
-  it 'tries to connect via websockets to a kurento client', (done)->
-    getKurentoClient (err, client)->
-      expect(err).to.contain("Could not find media server at address ws://kurento-media-server/kurento.")
-      done()
+  describe 'failure', ->
+    beforeEach ->
+      @connectStub = sinon.stub getKurentoClient, '_getClient'
+      @connectStub.callsArgWith 0, "fail"
 
-  describe 'stubbed connection', ->
+    afterEach ->
+      @connectStub.restore()
+
+    it 'tries to connect via websockets to a kurento client', (done)->
+      getKurentoClient (err, client)->
+        expect(err).to.contain("Could not find media server at address ws://kurento-media-server:8888/kurento.")
+        done()
+
+  describe 'success', ->
 
     beforeEach ->
       @connectStub = sinon.stub getKurentoClient, '_getClient'
