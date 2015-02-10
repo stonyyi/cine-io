@@ -1,5 +1,5 @@
 Project = Cine.server_model('project')
-
+noop = ->
 callMe = (cb)->
   cb()
 
@@ -12,7 +12,7 @@ projectForPublicKey = (publicKey, callback)->
       return callback("project not found")
     callback(null, project)
 
-exports.authenticateSpark = (spark, data, callback)->
+exports.authenticateSpark = (spark, data, callback=noop)->
   publicKey = data.publicKey
   projectForPublicKey publicKey, (err, project)->
     if err || !project

@@ -5,6 +5,8 @@ switch process.env.RUN_AS
     app = Cine.app('m3u8')
   when 'signaling'
     app = Cine.app('signaling')
+  when 'rtc_transmuxer'
+    app = Cine.app('rtc_transmuxer')
   else
     app = Cine.app('home')
 
@@ -36,3 +38,5 @@ if app
 switch process.env.RUN_AS
   when 'signaling'
     Cine.require('apps/signaling/start_primus', exports.server)
+  when 'rtc_transmuxer'
+    Cine.require('apps/rtc_transmuxer/start_primus', exports.server)

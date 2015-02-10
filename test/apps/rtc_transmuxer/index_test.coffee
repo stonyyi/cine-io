@@ -1,4 +1,4 @@
-app = Cine.require('apps/rtc_transmuxer').app
+app = Cine.require('apps/rtc_transmuxer')
 supertest = require('supertest')
 
 describe 'rtc_transmuxer', ->
