@@ -1,7 +1,9 @@
 mongoose = require 'mongoose'
 crypto = require('crypto')
+findOrCreate = require('mongoose-findorcreate')
 
-HARD_CODED_REALM_SAME_AS_TURN_SERVER = 'cine.io'
+Realm = Cine.server_model('realm')
+
 COTURN_COLLECTION_NAME = 'turnusers_lt'
 
 TurnUserSchema = new mongoose.Schema
@@ -9,7 +11,7 @@ TurnUserSchema = new mongoose.Schema
     type: String
   realm:
     type: String
-    default: HARD_CODED_REALM_SAME_AS_TURN_SERVER
+    default: Realm.HARD_CODED_REALM_SAME_AS_TURN_SERVER
   hmackey:
     type: String
   _project:
@@ -22,6 +24,8 @@ TurnUserSchema.methods.setHmackey = (password)->
   realmString = "#{@name}:#{@realm}:#{password}"
   shasum.update(realmString)
   @hmackey = shasum.digest('hex')
+
+TurnUserSchema.plugin(findOrCreate)
 
 TurnUser = mongoose.model 'TurnUser', TurnUserSchema, COTURN_COLLECTION_NAME
 
