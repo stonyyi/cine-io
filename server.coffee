@@ -3,7 +3,7 @@ process.env.TZ = 'UTC' # https://groups.google.com/forum/#!topic/nodejs/s1gCV44K
 cluster = require('cluster')
 clc = require "cli-color"
 
-if process.env.NODE_ENV == "production"
+if process.env.NODE_ENV == "production" && !process.env.NO_NEWRELIC
   try
     require 'newrelic'
   catch e
