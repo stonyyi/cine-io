@@ -222,4 +222,6 @@ module.exports = (grunt) ->
   grunt.registerTask 'npmPostInstall', ->
     return productionPostInstall.call(this) if process.env.NODE_ENV in ['production', 'staging']
     cb = @async()
-    npmInstallDirectory 'apps/signaling', cb
+    npmInstallDirectory 'apps/signaling', (err)->
+      return cb(err) if err
+      npmInstallDirectory 'apps/rtc_transmuxer', cb
