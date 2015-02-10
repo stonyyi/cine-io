@@ -1,10 +1,7 @@
-Debug = require('debug')
-Debug.enable('rtc_transmuxer:*')
+debug = require('debug')("cine:rtc_transmuxer:index")
 Primus = require('primus')
 WebRTCBroadcastSession = Cine.app("rtc_transmuxer/lib/webrtc_broadcast_session")
 {authenticateSpark, ensureProjectId, invalidPublicKeyOptions} = Cine.server_lib('primus/authenticate_spark')
-
-debug = Debug("rtc_transmuxer:index")
 
 primusOptions =
   transformer: 'sockjs'

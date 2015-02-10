@@ -1,6 +1,6 @@
 request = require('request')
 async = require('async')
-debug = require('debug')('broadcast_pipeline')
+debug = require('debug')('cine:broadcast_pipeline')
 INPUT_TO_RTMP_STREAMER_HOST = Cine.config('variables/rtc_transmuxer/input_to_rtmp_streamer_host')
 noop = ->
 

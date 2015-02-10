@@ -1,3 +1,5 @@
+Debug = require('debug')
+Debug.enable('cine:*')
 console.log('loaded rtc transmuxer')
 
 Base = Cine.require('apps/base')
