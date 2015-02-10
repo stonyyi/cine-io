@@ -3,6 +3,9 @@ kurento = require("kurento-client")
 
 describe 'getKurentoClient', ->
 
+  afterEach ->
+    getKurentoClient._clear()
+
   it 'tries to connect via websockets to a kurento client', (done)->
     getKurentoClient (err, client)->
       expect(err).to.contain("Could not find media server at address ws://kurento-media-server/kurento.")
