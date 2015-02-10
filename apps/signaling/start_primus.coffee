@@ -13,6 +13,7 @@ OmegaSupreme = require('omega-supreme')
 PrimusCluster = require('primus-cluster')
 validateSecureIdentity = Cine.server_lib('signaling/validate_secure_identity')
 RoomManager = Cine.server_lib('signaling/room_manager')
+{authenticateSpark, ensureProjectId, invalidPublicKeyOptions} = Cine.server_lib('primus/authenticate_spark')
 
 newRedisClient = ->
   client = redis.createClient(redisConfig.port, redisConfig.host)
@@ -36,15 +37,6 @@ generateRoomName = (callback)->
   crypto.randomBytes 32, (err, buf)->
     return callback(err) if err
     callback(null, buf.toString('hex'))
-
-projectForPublicKey = (publicKey, callback)->
-  projectParams = publicKey: publicKey
-  Project.findOne projectParams, (err, project)->
-    return callback(err) if err
-    unless project
-      console.error("COULD NOT FIND PROJECT", publicKey)
-      return callback("project not found")
-    callback(null, project)
 
 findOrCreatePeerIdentity = (projectId, identityName, callback)->
   identityParams =
@@ -105,35 +97,6 @@ removeCurrentConnectionOnIdentity = (spark)->
       else
         console.log("removed currentConnection", identity.currentConnections)
 
-invalidPublicKeyOptions = (publicKey)->
-  action: 'error', error: "INVALID_PUBLIC_KEY", message: "invalid publicKey: #{publicKey} provided"
-
-ensureProjectId = (spark, callback)->
-  return process.nextTick(callback) if spark.projectId
-  spark.projectCallbacks ||= []
-  spark.projectCallbacks.push(callback)
-
-callMe = (cb)->
-  cb()
-
-authenticateSpark = (spark, data)->
-  publicKey = data.publicKey
-  projectForPublicKey publicKey, (err, project)->
-    if err || !project
-      if spark.projectCallbacks
-        _.each spark.projectCallbacks, (cb)->
-          cb("invalid public key")
-      return spark.end invalidPublicKeyOptions(publicKey)
-    spark.projectId = project._id
-    spark.secretKey = project.secretKey
-    spark.signalingClient = data.client
-    spark.write action: 'ack', source: 'auth'
-    # tell client about stun and authenticated turn servers
-    sendSparkIceServers(spark, project)
-    if spark.projectCallbacks
-      spark.projectCallbacks.forEach callMe
-      delete spark.projectCallbacks
-
 
 module.exports = (server)->
 
@@ -190,7 +153,8 @@ module.exports = (server)->
       console.log(spark.clientUUID, "sent", data.action)
       switch data.action
         when 'auth'
-          authenticateSpark(spark, data)
+          authenticateSpark spark, data, (err, project)->
+            sendSparkIceServers(spark, project) unless err
 
         # BEGIN PeerConnection events
         when "rtc-ice"
@@ -322,4 +286,3 @@ module.exports = (server)->
     console.log('spark left all rooms', spark.id, rooms)
 
 PeerIdentity = Cine.server_model('peer_identity')
-Project = Cine.server_model('project')
