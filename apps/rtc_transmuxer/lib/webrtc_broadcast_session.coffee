@@ -1,5 +1,5 @@
-BroadcastPipeline = Cine.server_lib("rtc_transmuxer/broadcast_pipeline")
-getKurentoClient = Cine.server_lib('rtc_transmuxer/get_kurento_client')
+BroadcastPipeline = Cine.app("rtc_transmuxer/lib/broadcast_pipeline")
+getKurentoClient = Cine.app('rtc_transmuxer/lib/get_kurento_client')
 EdgecastStream = Cine.server_model('edgecast_stream')
 debug = require('debug')('webrtc_broadcast_session')
 

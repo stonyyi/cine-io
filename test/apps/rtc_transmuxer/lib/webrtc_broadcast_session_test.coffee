@@ -1,8 +1,8 @@
 async = require('async')
-WebRTCBroadcastSession = Cine.server_lib("rtc_transmuxer/webrtc_broadcast_session")
-getKurentoClient = Cine.server_lib('rtc_transmuxer/get_kurento_client')
+WebRTCBroadcastSession = Cine.app("rtc_transmuxer/lib/webrtc_broadcast_session")
+getKurentoClient = Cine.app('rtc_transmuxer/lib/get_kurento_client')
 EdgecastStream = Cine.server_model('edgecast_stream')
-BroadcastPipeline = Cine.server_lib("rtc_transmuxer/broadcast_pipeline")
+BroadcastPipeline = Cine.app("rtc_transmuxer/lib/broadcast_pipeline")
 FakeKurento = Cine.require('test/helpers/fake_kurento')
 
 describe 'WebRTCBroadcastSession', ->

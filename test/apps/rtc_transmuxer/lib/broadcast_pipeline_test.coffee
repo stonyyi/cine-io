@@ -1,4 +1,4 @@
-BroadcastPipeline = Cine.server_lib("rtc_transmuxer/broadcast_pipeline")
+BroadcastPipeline = Cine.app("rtc_transmuxer/lib/broadcast_pipeline")
 FakeKurento = Cine.require('test/helpers/fake_kurento')
 
 describe 'BroadcastPipeline', ->

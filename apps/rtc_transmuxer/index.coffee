@@ -5,7 +5,7 @@ runMe = !module.parent
 http = require('http')
 Debug = require('debug')
 Primus = require('primus')
-WebRTCBroadcastSession = Cine.server_lib("rtc_transmuxer/webrtc_broadcast_session")
+WebRTCBroadcastSession = Cine.app("rtc_transmuxer/lib/webrtc_broadcast_session")
 
 Debug.enable('rtc_transmuxer:*')
 debug = Debug("rtc_transmuxer:index")

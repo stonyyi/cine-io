@@ -1,4 +1,4 @@
-getKurentoClient = Cine.server_lib('rtc_transmuxer/get_kurento_client')
+getKurentoClient = Cine.app('rtc_transmuxer/lib/get_kurento_client')
 kurento = require("kurento-client")
 
 describe 'getKurentoClient', ->
