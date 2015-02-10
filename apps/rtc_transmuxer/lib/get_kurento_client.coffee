@@ -1,5 +1,5 @@
 KURENTO_HOST = Cine.config('variables/rtc_transmuxer/kurento_media_server_host')
-kurentoWebsocketUri = "ws://#{KURENTO_HOST}/kurento"
+kurentoWebsocketUri = "ws://#{KURENTO_HOST}:8888/kurento"
 kurento = require("kurento-client")
 debug = require('debug')('cine:get_kurento_client')
 
