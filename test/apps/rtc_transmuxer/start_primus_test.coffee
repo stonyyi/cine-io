@@ -93,6 +93,13 @@ describe 'socket calls', ->
 
       @client.write action: 'broadcast-start', offer: {sdp: 'some offer'}
 
+    it 'requires a streamType', (done)->
+      @client.on 'data', (data)->
+        return unless data.action == 'error' && data.error == 'streamType required'
+        done()
+
+      @client.write action: 'broadcast-start', offer: {sdp: 'some offer'}, streamId: 'some id', streamKey: 'some key'
+
     it "returns an answer (well now it's an error)", (done)->
       @client.on 'data', (data)->
         return unless data.action == 'error'
@@ -104,6 +111,7 @@ describe 'socket calls', ->
         offer: {sdp: 'valid offer'}
         streamId: @stream._id.toString()
         streamKey: 'my stream key'
+        streamType: 'camera'
       @client.write params
 
   describe 'broadcast-stop', ->
@@ -113,3 +121,23 @@ describe 'socket calls', ->
         done()
 
       @client.write action: 'broadcast-stop'
+
+  describe 'disconnect', ->
+    beforeEach ->
+      @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111'
+
+
+    it "stops all webrtcSessions (well this test really does nothing, I just want to make sure it doesn't crash)", (done)->
+      @client.on 'data', (data)=>
+        return unless data.action == 'error'
+        @client.end()
+
+      @client.on 'end', (data)->
+        done()
+      params =
+        action: 'broadcast-start'
+        offer: {sdp: 'valid offer'}
+        streamId: @stream._id.toString()
+        streamKey: 'my stream key'
+        streamType: 'camera'
+      @client.write params

@@ -12,16 +12,27 @@ primusOptions =
   # cluster:
   #   redis: newRedisClient
 
-stop = (spark)->
+stopAll = (spark)->
   debug("stopping", spark.id)
-  spark.webRTCBroadcastSession?.stop()
+  for streamType, webRTCBroadcastSession of spark.webRTCBroadcastSessions
+    webRTCBroadcastSession.stop()
+  delete spark.webRTCBroadcastSessions
+
+stop = (spark, streamType)->
+  debug("stopping", spark.id)
+  webRTCBroadcastSession = spark.webRTCBroadcastSessions[streamType]
+  return unless webRTCBroadcastSession
+  webRTCBroadcastSession.stop()
+  delete spark.webRTCBroadcastSessions[streamType]
 
 module.exports = (server)->
 
   primus = new Primus(server, primusOptions)
   newConnection = (spark)->
 
-    debug "Connection received with spark.id " + spark.id
+    spark.webRTCBroadcastSessions = {}
+
+    debug "Connection received with spark.id ", spark.id
 
     dataHandler = (data)->
       debug "Connection ", spark.id, " received message ", data
@@ -34,9 +45,11 @@ module.exports = (server)->
           offer = data.offer?.sdp
           return spark.write(action: 'error', error: 'invalid offer') unless offer
           return spark.write(action: 'error', error: 'stream key and stream id required') if !data.streamId || !data.streamKey
-          spark.webRTCBroadcastSession = new WebRTCBroadcastSession(data.streamId, data.streamKey)
-          spark.webRTCBroadcastSession.handleOffer offer, (err, sdpAnswer)->
+          return spark.write(action: 'error', error: 'streamType required') if !data.streamType
+          spark.webRTCBroadcastSessions[data.streamType] = new WebRTCBroadcastSession(data.streamId, data.streamKey)
+          spark.webRTCBroadcastSessions[data.streamType].handleOffer offer, (err, sdpAnswer)->
             if err
+              stop(spark, data.streamType)
               response =
                 streamType: data.streamType
                 action: "error"
@@ -51,7 +64,7 @@ module.exports = (server)->
 
         when "broadcast-stop"
           spark.write action: 'ack', source: 'broadcast-stop'
-          stop(spark)
+          stop(spark, data.streamType)
         else
           debug("unknown data", data)
 
@@ -60,4 +73,4 @@ module.exports = (server)->
   primus.on 'connection', newConnection
 
   primus.on 'disconnection', (spark)->
-    stop(spark)
+    stopAll(spark)
