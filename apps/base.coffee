@@ -4,6 +4,8 @@ os = require("os")
 
 noop = ->
 
+DEFAULT_PORT = 80
+
 jobs = null
 exports._recreateQueue = ->
   jobs = Cine.server_lib('create_queue')(force: jobs?)
@@ -22,8 +24,8 @@ exports.app = (title, options={})->
 
   Cine.middleware 'middleware_base', app, options
 
-exports.listen = (appOrHTTPServer, defaultPort)->
-  port = process.env.PORT || defaultPort
+exports.listen = (appOrHTTPServer)->
+  port = process.env.PORT || DEFAULT_PORT
   console.log("listening on", port)
   appOrHTTPServer.listen(port)
 

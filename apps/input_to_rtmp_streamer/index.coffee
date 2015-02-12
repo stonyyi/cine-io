@@ -34,4 +34,4 @@ app.post '/stop', (req, res)->
   streamers.stopStreamer(streamName)
   res.sendStatus(200)
 
-Base.listen app, 8185 if runMe
+Base.listen app if runMe

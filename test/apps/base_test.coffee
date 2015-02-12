@@ -54,13 +54,13 @@ describe 'Base', ->
       delete process.env.PORT
       process.env.PORT = @oldPort if @oldPort
 
-    it 'calls listen on an app with a port', ->
+    it 'calls listen on an app with a default port', ->
       app = Base.app()
       listenStub = sinon.stub(app, 'listen')
-      Base.listen(app, "the port")
+      Base.listen(app)
       expect(listenStub.calledOnce).to.be.true
       args = listenStub.firstCall.args
-      expect(args).to.deep.equal(["the port"])
+      expect(args).to.deep.equal([80])
 
     it 'calls listen on an app with an environment port', ->
       app = Base.app()

@@ -61,4 +61,4 @@ app.post '/', (req, res)->
 
     res.send("OK")
 
-Base.listen app, 8182 if runMe
+Base.listen app if runMe

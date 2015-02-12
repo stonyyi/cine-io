@@ -44,4 +44,4 @@ app.post '/', (req, res)->
       return res.status(402).send("project is disabled") if project.throttledAt
       res.send("OK")
 
-Base.listen app, 8183 if runMe
+Base.listen app if runMe
