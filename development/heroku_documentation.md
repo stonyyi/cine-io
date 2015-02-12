@@ -239,4 +239,4 @@ Before removing cine.io, you may export all your data via the get commands of pr
 
 ## Support
 
-All cine.io support and runtime issues should be submitted via on of the [Heroku Support channels](support-channels). Any non-support related issues or product feedback is welcome at [https://cineio.uservoice.com/](https://cineio.uservoice.com/).
+All cine.io support and runtime issues should be submitted via on of the [Heroku Support channels](support-channels). Any non-support related issues or product feedback is welcome at [http://support.cine.io/](http://support.cine.io/).

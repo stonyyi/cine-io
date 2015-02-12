@@ -125,7 +125,7 @@ var PeerPricing = React.createClass({
               <li>unlimited <strong>simultaneous calls</strong></li>
               <li><strong>no ads</strong> of any kind</li>
               <li>
-                <strong><a href="http://cineio.uservoice.com">email support</a></strong>
+                <strong><a href="http://support.cine.io">email support</a></strong>
                 from our developers
               </li>
               <li>Discounts for inbound links to cine.io.</li>
@@ -275,7 +275,7 @@ var BroadcastPricing = React.createClass({
               <li>distribution via our <strong>global CDN</strong></li>
               <li><strong>no ads</strong> of any kind</li>
               <li>
-                <strong><a href="http://cineio.uservoice.com">email support</a></strong>
+                <strong><a href="http://support.cine.io">email support</a></strong>
                 from our developers
               </li>
               <li>Discounts for inbound links to cine.io.</li>
