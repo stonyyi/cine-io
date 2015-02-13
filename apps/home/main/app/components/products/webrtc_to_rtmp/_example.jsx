@@ -4,10 +4,8 @@ var React = require('react'),
   flashDetect = Cine.lib('flash_detect'),
   cx = Cine.lib('cx'),
   InitializeCodeExample = Cine.component('products/webrtc_to_rtmp/code_examples/_initialize'),
-  EventsCodeExample = Cine.component('products/webrtc_to_rtmp/code_examples/_events'),
   PlayCodeExample = Cine.component('products/webrtc_to_rtmp/code_examples/_play');
   PublishCodeExample = Cine.component('products/webrtc_to_rtmp/code_examples/_publish');
-
 
 module.exports = React.createClass({
   displayName: 'PeerExample',
