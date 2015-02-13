@@ -41,8 +41,26 @@ module.exports = React.createClass({
         <li className={productsClasses}>
           <a href="" onClick={this.toggleProductsMoved}>Products</a>
           <ul className="dropdown">
-            <li><a href="/products/broadcast"><i className="cine-broadcast"></i>&nbsp;Broadcast</a></li>
-            <li><a href="/products/peer"><i className="cine-conference"></i>&nbsp;Peer</a></li>
+            <li>
+              <a href="/products/broadcast">
+                <i className="cine-broadcast" />
+                &nbsp;Broadcast
+              </a>
+            </li>
+            <li>
+              <a href="/products/peer">
+                <i className="cine-conference" />
+                &nbsp;Peer
+              </a>
+            </li>
+            <li>
+              <a href="/products/webrtc-broadcast">
+                <i className="cine-conference" />
+                <i className="fa fa-long-arrow-right" />
+                <i className="cine-broadcast" />
+                &nbsp;Bridge
+              </a>
+            </li>
           </ul>
         </li>
       )
