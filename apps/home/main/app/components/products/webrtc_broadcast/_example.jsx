@@ -14,7 +14,7 @@ module.exports = React.createClass({
     return {
       examplePublicKey: '18b4c471bdc2bc1d16ad3cb338108a33',
       streamId: '54daf4676b57790900eedfcf',
-      streamPassword: 'tune8',
+      streamPassword: 'notes19',
       playerId: 'player-example',
       hasPublished: false,
       publishing: false,
