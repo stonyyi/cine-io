@@ -100,7 +100,7 @@ module.exports = React.createClass({
               <PublishCodeExample streamId={this.state.streamId} password={this.state.streamPassword}/>
             </div>
 
-            <div className="show-for-medium-up" id={this.state.peersId}>
+            <div className="show-for-medium-up center-video" id={this.state.peersId}>
               {peers}
             </div>
           </div>

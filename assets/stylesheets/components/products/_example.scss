@@ -19,6 +19,15 @@
   .right-script {
     @include grid-column(12);
   }
+  .center-video{
+    background-color: black;
+    height: 291px;
+    video{
+      display: block;
+      margin: auto;
+      height: 291px;
+    }
+  }
   .aspect-wrapper{
     display: inline-block;
     position: relative;
