@@ -3,9 +3,10 @@ var React = require('react'),
   _ = require('underscore'),
   flashDetect = Cine.lib('flash_detect'),
   cx = Cine.lib('cx'),
-  InitializeCodeExample = Cine.component('products/peer/code_examples/_initialize'),
-  EventsCodeExample = Cine.component('products/peer/code_examples/_events'),
-  JoinCodeExample = Cine.component('products/peer/code_examples/_join');
+  InitializeCodeExample = Cine.component('products/webrtc_to_rtmp/code_examples/_initialize'),
+  EventsCodeExample = Cine.component('products/webrtc_to_rtmp/code_examples/_events'),
+  PlayCodeExample = Cine.component('products/webrtc_to_rtmp/code_examples/_play');
+  PublishCodeExample = Cine.component('products/webrtc_to_rtmp/code_examples/_publish');
 
 
 module.exports = React.createClass({
@@ -14,36 +15,40 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {
       examplePublicKey: '18b4c471bdc2bc1d16ad3cb338108a33',
-      hasTested: false,
-      testing: false,
+      streamId: '5423749488b97308000d0763',
+      streamPassword: 'tune8',
+      playerId: 'player-example',
+      hasPublished: false,
+      publishing: false,
       peersId: "peers",
-      room: 'homepage-room',
       peers: []
     };
   },
   peerExample: function(e){
     e.preventDefault();
     // very first call, setup event listeners
-    if (!this.state.hasTested){
+    if (!this.state.hasPublished){
+      CineIO.play(this.state.streamId, this.state.playerId, {mute: true});
       CineIOPeer.on('media-added', this._mediaAdded);
       CineIOPeer.on('media-removed', this._mediaRemoved);
     }
-    if (this.state.testing){
+    if (this.state.publishing){
       CineIOPeer.stopCameraAndMicrophone();
-      CineIOPeer.leave(this.state.room);
+      CineIOPeer.stopCameraAndMicrophoneBroadcast()
     }else{
       CineIOPeer.startCameraAndMicrophone();
-      CineIOPeer.join(this.state.room);
     }
-    this.setState({hasTested: true, testing: !this.state.testing});
+    this.setState({hasPublished: true, publishing: !this.state.publishing});
   },
   componentDidMount: function(){
+    CineIO.init(this.state.examplePublicKey);
     CineIOPeer.init(this.state.examplePublicKey);
   },
   // todo use update: http://facebook.github.io/react/docs/update.html
   // instead of force update
   _mediaAdded: function(data){
     this.state.peers.push(data.videoElement)
+    CineIOPeer.broadcastCameraAndMicrophone(this.state.streamId, this.state.streamPassword)
     this.forceUpdate();
   },
   _mediaRemoved: function(data){
@@ -53,12 +58,13 @@ module.exports = React.createClass({
     this.forceUpdate();
   },
   componentWillUnmount: function(){
+    CineIO.reset();
     CineIOPeer.reset();
     CineIOPeer.off('media-added', this._mediaAdded);
     CineIOPeer.off('media-removed', this._mediaRemoved);
   },
   render: function() {
-    var peerTry = this.state.testing ? 'Leave room' : (this.state.hasTested ? 'Join room' : 'Start demo')
+    var peerTry = this.state.publishing ? 'Stop publishing' : (this.state.hasPublished ? 'Start publishing' : 'Start demo')
       , peerStartClasses = cx({
           'hide': !flashDetect(),
           'row': true,
@@ -66,13 +72,13 @@ module.exports = React.createClass({
           'show-for-medium-up': true
         })
       , peers;
-    if (!this.state.hasTested){
+    if (!this.state.hasPublished){
       peers = (
         <div className="aspect-wrapper">
           <div className="main">
             <div className="center-wrapper">
               <div className='center-content'>
-                <p>During the demo, this box show people in the room.</p>
+                <p>During the demo, this box will be connected to your webcam.</p>
               </div>
             </div>
           </div>
@@ -91,20 +97,30 @@ module.exports = React.createClass({
           </div>
         </div>
         <div className="row">
-          <div className="left-script">
-            <div className='bottom-margin-1'>
-              <EventsCodeExample />
-            </div>
-          </div>
           <div className="right-script">
             <div className='bottom-margin-1'>
-              <JoinCodeExample room={this.state.room}/>
+              <PublishCodeExample streamId={this.state.streamId} password={this.state.streamPassword}/>
+            </div>
+
+            <div className="show-for-medium-up" id={this.state.peersId}>
+              {peers}
             </div>
           </div>
-        </div>
-        <div className="row show-for-medium-up">
-          <div id={this.state.peersId}>
-            {peers}
+          <div className="left-script">
+            <div className='bottom-margin-1'>
+              <PlayCodeExample streamId={this.state.streamId}/>
+            </div>
+            <div className="show-for-medium-up" id={this.state.playerId}>
+              <div className="aspect-wrapper">
+                <div className="main">
+                  <div className="center-wrapper">
+                    <div className='center-content'>
+                      <p>During the demo, this box will deliver your live-stream from our global CDN.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

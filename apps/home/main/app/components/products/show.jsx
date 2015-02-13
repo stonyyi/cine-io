@@ -2,6 +2,7 @@
 var React = require('react'),
 BroadcastProduct = Cine.component('products/_broadcast'),
 PeerProduct = Cine.component('products/_peer');
+WebrtcToRtmpProduct = Cine.component('products/_webrtc_to_rtmp');
 
 module.exports = React.createClass({
   displayName: 'ProductsShow',
@@ -12,6 +13,8 @@ module.exports = React.createClass({
       Product = BroadcastProduct;
     else if (this.props.options.product === 'peer')
       Product = PeerProduct;
+    else if (this.props.options.product === 'webrtc-to-rtmp')
+      Product = WebrtcToRtmpProduct;
     else
       throw new Error("unknown product")
     return (

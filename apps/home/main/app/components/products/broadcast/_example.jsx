@@ -52,14 +52,14 @@ module.exports = React.createClass({
         })
 
     return (
-      <section id="broadcast-example">
+      <section className="full-code-example">
         <div className="row">
           <div className="head-script">
             <InitializeCodeExample publicKey={this.state.examplePublicKey} />
           </div>
         </div>
         <div className="row">
-          <div className="publish-script">
+          <div className="left-script">
             <div className='bottom-margin-1'>
               <PublishCodeExample streamId={this.state.streamId} password={this.state.streamPassword}/>
             </div>
@@ -75,7 +75,7 @@ module.exports = React.createClass({
               </div>
             </div>
           </div>
-          <div className="play-script">
+          <div className="right-script">
             <div className='bottom-margin-1'>
               <PlayCodeExample streamId={this.state.streamId}/>
             </div>
