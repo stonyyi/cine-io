@@ -3,9 +3,9 @@ var React = require('react'),
   _ = require('underscore'),
   flashDetect = Cine.lib('flash_detect'),
   cx = Cine.lib('cx'),
-  InitializeCodeExample = Cine.component('products/webrtc_to_rtmp/code_examples/_initialize'),
-  PlayCodeExample = Cine.component('products/webrtc_to_rtmp/code_examples/_play');
-  PublishCodeExample = Cine.component('products/webrtc_to_rtmp/code_examples/_publish');
+  InitializeCodeExample = Cine.component('products/webrtc_broadcast/code_examples/_initialize'),
+  PlayCodeExample = Cine.component('products/webrtc_broadcast/code_examples/_play');
+  PublishCodeExample = Cine.component('products/webrtc_broadcast/code_examples/_publish');
 
 module.exports = React.createClass({
   displayName: 'WebRTCToRTMPExample',

@@ -53,7 +53,7 @@ module.exports = React.createClass({
           <h1>
             <i className="cine-conference"></i>
             <i className="fa fa-long-arrow-right"></i>
-            <i className="cine-broadcast"></i>&nbsp;WebRTC to RTMP</h1>
+            <i className="cine-broadcast"></i>&nbsp;WebRTC Broadcast</h1>
           <h3>The speed of peer, the power of broadcast.</h3>
         </div>
         <div className="show-for-small-only">

@@ -1,10 +1,10 @@
 /** @jsx React.DOM */
 var React = require('react'),
   PageWrapper = Cine.component('layout/_page_wrapper'),
-  Hero = Cine.component('products/webrtc_to_rtmp/_hero'),
-  About = Cine.component('products/webrtc_to_rtmp/_about'),
-  Example = Cine.component('products/webrtc_to_rtmp/_example'),
-  Libraries = Cine.component('products/webrtc_to_rtmp/_libraries'),
+  Hero = Cine.component('products/webrtc_broadcast/_hero'),
+  About = Cine.component('products/webrtc_broadcast/_about'),
+  Example = Cine.component('products/webrtc_broadcast/_example'),
+  Libraries = Cine.component('products/webrtc_broadcast/_libraries'),
   Consulting = Cine.component('shared/_consulting');
 
 module.exports = React.createClass({
