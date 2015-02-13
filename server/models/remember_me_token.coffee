@@ -4,6 +4,7 @@ crypto = require('crypto')
 RememberMeTokenSchema = new mongoose.Schema
   token:
     type: String
+    index: true
     unique: true
   _user:
     type: mongoose.Schema.Types.ObjectId

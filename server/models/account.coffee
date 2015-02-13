@@ -18,6 +18,8 @@ AccountSchema = new mongoose.Schema
     type: String
   masterKey:
     type: String
+    index: true
+    unique: true
   # links to config
   billingProvider:
     type: String
@@ -37,6 +39,8 @@ AccountSchema = new mongoose.Schema
     type: Date
   throttledAt:
     type: Date
+    index: true
+    sparse: true
   throttledReason:
     type: String
   unthrottleable:

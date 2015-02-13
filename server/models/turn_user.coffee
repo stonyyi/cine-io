@@ -16,6 +16,7 @@ TurnUserSchema = new mongoose.Schema
     type: String
   _project:
     type: mongoose.Schema.Types.ObjectId, ref: 'Project'
+    index: true
 
 # TOOD specify joint index used by coturn of realm, name
 

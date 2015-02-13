@@ -4,6 +4,8 @@ EdgecastStreamSchema = new mongoose.Schema
   _project:
     type: mongoose.Schema.Types.ObjectId
     ref: 'Project'
+    index: true
+    sparse: true
   assignedAt: #the date it is assigned to a project
     type: Date
   name:
@@ -14,6 +16,8 @@ EdgecastStreamSchema = new mongoose.Schema
     type: String
   streamName:
     type: String
+    index: true
+    unique: true
   streamKey:
     type: String
   expiration:

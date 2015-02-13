@@ -4,6 +4,7 @@ crypto = require('crypto')
 PasswordChangeRequestSchema = new mongoose.Schema
   identifier:
     type: String
+    index: true
     unique: true
   _user:
     type: mongoose.Schema.Types.ObjectId

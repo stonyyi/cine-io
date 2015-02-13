@@ -13,6 +13,8 @@ StreamRecordingsSchema = new Schema
   _edgecastStream:
     type: mongoose.Schema.Types.ObjectId
     ref: 'EdgecastStream'
+    index: true
+
   recordings: [StreamRecording]
 
 StreamRecordingsSchema.plugin(Cine.server_lib('mongoose_timestamps'))

@@ -5,6 +5,7 @@ StreamUsageReportSchema = new mongoose.Schema
   _edgecastStream:
     type: mongoose.Schema.Types.ObjectId
     ref: 'EdgecastStream'
+    index: true
   # in bytes
   logEntries: [
     # time and date of bandwidth consumption

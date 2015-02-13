@@ -33,6 +33,8 @@ UserSchema = new Schema
   #appdirect login
   appdirectUUID:
     type: String
+    index: true
+    sparse: true
   appdirectData: mongoose.Schema.Types.Mixed
   # Other Info
   _referringUser:
@@ -53,6 +55,8 @@ UserSchema = new Schema
     type: Date
   masterKey:
     type: String
+    index: true
+    sparse: true
 
 UserSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 UserSchema.plugin(findOrCreate)

@@ -10,6 +10,7 @@ ProjectSchema = new mongoose.Schema
     index: true
   secretKey:
     type: String
+    index: true
     unique: true
   turnPassword:
     type: String
@@ -22,6 +23,8 @@ ProjectSchema = new mongoose.Schema
     type: Date
   _account:
     type: mongoose.Schema.Types.ObjectId, ref: 'Account'
+    index: true
+    sparse: true
 
 ProjectSchema.plugin(Cine.server_lib('mongoose_timestamps'))
 
