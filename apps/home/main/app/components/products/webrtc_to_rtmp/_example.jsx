@@ -8,12 +8,12 @@ var React = require('react'),
   PublishCodeExample = Cine.component('products/webrtc_to_rtmp/code_examples/_publish');
 
 module.exports = React.createClass({
-  displayName: 'PeerExample',
+  displayName: 'WebRTCToRTMPExample',
   mixins: [Cine.lib('requires_app')],
   getInitialState: function() {
     return {
       examplePublicKey: '18b4c471bdc2bc1d16ad3cb338108a33',
-      streamId: '5423749488b97308000d0763',
+      streamId: '54daf4676b57790900eedfcf',
       streamPassword: 'tune8',
       playerId: 'player-example',
       hasPublished: false,
