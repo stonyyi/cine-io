@@ -14,12 +14,12 @@ module.exports = React.createClass({
       "var streamId = '"+this.props.streamId+"'"
     , "  , password = '"+this.props.password+"';"
     , ""
-    , "function callback(err){ console.log(\"started\") };"
+    , "CineIOPeer.startCameraAndMicrophone(function(err){"
+    , "  if (err) { return console.log(\"error\", err); }"
     , ""
-    , "CineIOPeer.startCameraAndMicrophone();"
-    , ""
-    , "CineIOPeer.broadcastCameraAndMicrophone("
-    , "  streamId, password, callback);"
+    , "  CineIOPeer.broadcastCameraAndMicrophone("
+    , "    streamId, password);"
+    , "});"
     ].join('\n')
     return (
       <div>

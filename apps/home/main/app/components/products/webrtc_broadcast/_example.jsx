@@ -34,7 +34,7 @@ module.exports = React.createClass({
       CineIOPeer.stopCameraAndMicrophone();
       CineIOPeer.stopCameraAndMicrophoneBroadcast()
     }else{
-      CineIOPeer.startCameraAndMicrophone();
+      CineIOPeer.startCameraAndMicrophone(this._startBroadcast);
     }
     this.setState({hasPublished: true, publishing: !this.state.publishing});
   },
@@ -46,8 +46,11 @@ module.exports = React.createClass({
   // instead of force update
   _mediaAdded: function(data){
     this.state.peers.push(data.videoElement)
-    CineIOPeer.broadcastCameraAndMicrophone(this.state.streamId, this.state.streamPassword)
     this.forceUpdate();
+  },
+  _startBroadcast: function(err){
+    if (err) {return console.log("ERROR", err);}
+    CineIOPeer.broadcastCameraAndMicrophone(this.state.streamId, this.state.streamPassword)
   },
   _mediaRemoved: function(data){
     var peers = this.state.peers;
