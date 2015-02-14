@@ -21,7 +21,7 @@ describe 'fullCurrentUserJson', ->
     @account3.save done
 
   beforeEach (done)->
-    @account4 = new Account(name: 'forth account', productPlans: {broadcast: []}, masterKey: '4mkey', billingProvider: 'cine.io', deletedAt: new Date)
+    @account4 = new Account(name: 'forth account', productPlans: {broadcast: []}, masterKey: '5mkey', billingProvider: 'cine.io', deletedAt: new Date)
     @account4.save done
 
   beforeEach (done)->

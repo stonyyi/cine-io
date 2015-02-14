@@ -92,7 +92,7 @@ describe 'createNewAccount', ->
 
   describe 'with a stream', ->
     beforeEach (done)->
-      @stream = new EdgecastStream(instanceName: 'cines')
+      @stream = new EdgecastStream(instanceName: 'cines', streamName: 'some-name')
       @stream.save done
 
     stubEdgecast()

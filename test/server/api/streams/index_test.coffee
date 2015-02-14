@@ -13,37 +13,37 @@ describe 'Streams#Index', ->
     d = new Date
     d.setHours(d.getMinutes() - 3)
 
-    @olderStream = new EdgecastStream(instanceName: 'abcd', _project: @project._id, name: 'ddd', createdAt: d)
+    @olderStream = new EdgecastStream(instanceName: 'abcd', _project: @project._id, name: 'ddd', createdAt: d, streamName: 'ddd-3')
     @olderStream.save done
 
   beforeEach (done)->
     d = new Date
     d.setHours(d.getMinutes() - 2)
-    @olderStream2 = new EdgecastStream(instanceName: 'abcd', _project: @project._id, name: 'ddd', createdAt: d)
+    @olderStream2 = new EdgecastStream(instanceName: 'abcd', _project: @project._id, name: 'ddd', createdAt: d, streamName: 'ddd-4')
     @olderStream2.save done
 
   beforeEach (done)->
     d = new Date
     d.setHours(d.getMinutes() - 1)
-    @olderStream3 = new EdgecastStream(instanceName: 'abcd', _project: @project._id, name: 'fff', createdAt: d)
+    @olderStream3 = new EdgecastStream(instanceName: 'abcd', _project: @project._id, name: 'fff', createdAt: d, streamName: 'fff-3')
     @olderStream3.save done
 
   beforeEach (done)->
     d = new Date
     d.setHours(d.getHours() - 1)
-    @newerStream = new EdgecastStream(instanceName: 'efgh', _project: @project._id, createdAt: d)
+    @newerStream = new EdgecastStream(instanceName: 'efgh', _project: @project._id, createdAt: d, streamName: 'efgh-name')
     @newerStream.save done
 
   beforeEach (done)->
-    @deletedStream = new EdgecastStream(instanceName: 'efgh', _project: @project._id, deletedAt: new Date)
+    @deletedStream = new EdgecastStream(instanceName: 'efgh', _project: @project._id, deletedAt: new Date, streamName: 'efgh-name2')
     @deletedStream.save done
 
   beforeEach (done)->
-    @noOrgStream = new EdgecastStream(instanceName: 'ijkl')
+    @noOrgStream = new EdgecastStream(instanceName: 'ijkl', streamName: 'ijkl-name')
     @noOrgStream.save done
 
   beforeEach (done)->
-    @otherOrgStream = new EdgecastStream(instanceName: 'ijkl', _project: (new Project)._id)
+    @otherOrgStream = new EdgecastStream(instanceName: 'ijkl', _project: (new Project)._id, streamName: 'random-1')
     @otherOrgStream.save done
 
   it 'returns the edgecast streams with publish options when given an secret key', (done)->

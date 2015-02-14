@@ -12,6 +12,7 @@ describe 'Streams#Delete', ->
   beforeEach (done)->
     @projectStream = new EdgecastStream
       instanceName: 'cines'
+      streamName: 'this stream'
       _project: @project._id
     @projectStream.save done
 

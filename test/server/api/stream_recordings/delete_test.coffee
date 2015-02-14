@@ -27,7 +27,7 @@ describe 'StreamRecordings#Delete', ->
     @projectStream.save done
 
   beforeEach (done)->
-    @notProjectStream = new EdgecastStream(instanceName: 'cines')
+    @notProjectStream = new EdgecastStream(instanceName: 'cines', streamName: 'name')
     @notProjectStream.save done
 
   beforeEach (done)->

@@ -18,6 +18,7 @@ EdgecastStreamSchema = new mongoose.Schema
     type: String
     index: true
     unique: true
+    required: true
   streamKey:
     type: String
   expiration:

@@ -11,14 +11,14 @@ describe 'UsageReports/Streams#Show', ->
     @project = new Project(secretKey: "dat secret key", name: 'the project')
     @project.save done
   beforeEach (done)->
-    @stream1 = new EdgecastStream(_project: @project._id)
+    @stream1 = new EdgecastStream(_project: @project._id, streamName: 'random-1')
     @stream1.save done
   beforeEach (done)->
-    @stream2 = new EdgecastStream(_project: @project._id)
+    @stream2 = new EdgecastStream(_project: @project._id, streamName: 'random-2')
     @stream2.save done
 
   beforeEach (done)->
-    @stream3 = new EdgecastStream
+    @stream3 = new EdgecastStream(streamName: 'random-3')
     @stream3.save done
 
   beforeEach ->

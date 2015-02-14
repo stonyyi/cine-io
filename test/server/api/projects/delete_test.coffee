@@ -12,15 +12,15 @@ describe 'Projects#Delete', ->
     @project.save done
 
   beforeEach (done)->
-    @stream1 = new EdgecastStream(_project: @project)
+    @stream1 = new EdgecastStream(_project: @project, streamName: 'random-1')
     @stream1.save done
 
   beforeEach (done)->
-    @stream2 = new EdgecastStream(_project: @project)
+    @stream2 = new EdgecastStream(_project: @project, streamName: 'random-2')
     @stream2.save done
 
   beforeEach (done)->
-    @notProjectStream = new EdgecastStream
+    @notProjectStream = new EdgecastStream streamName: 'random-3'
     @notProjectStream.save done
 
   beforeEach (done)->

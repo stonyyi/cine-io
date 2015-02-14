@@ -9,13 +9,13 @@ describe 'CalculateProjectStorage', ->
     @project = new Project(name: 'the project')
     @project.save done
   beforeEach (done)->
-    @stream1 = new EdgecastStream(_project: @project._id)
+    @stream1 = new EdgecastStream(_project: @project._id, streamName: 'random-1')
     @stream1.save done
   beforeEach (done)->
-    @stream2 = new EdgecastStream(_project: @project._id)
+    @stream2 = new EdgecastStream(_project: @project._id, streamName: 'random-2')
     @stream2.save done
   beforeEach (done)->
-    @notProjectStream = new EdgecastStream()
+    @notProjectStream = new EdgecastStream(streamName: 'random-3')
     @notProjectStream.save done
 
   addRecordings = (recording, thisMonth, lastMonth)->

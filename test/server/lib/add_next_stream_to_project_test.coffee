@@ -19,7 +19,7 @@ describe 'addNextStreamToProject', ->
     @notOwnedByAccount.save done
 
   beforeEach (done)->
-    @stream = new EdgecastStream(instanceName: 'cines')
+    @stream = new EdgecastStream(instanceName: 'cines', streamName: 'this stream')
     @stream.save done
 
   stubEdgecast()

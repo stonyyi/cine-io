@@ -13,6 +13,7 @@ describe 'Streams#Update', ->
     @projectStream = new EdgecastStream
       instanceName: 'cines'
       _project: @project._id
+      streamName: 'this stream'
     @projectStream.save done
 
   describe 'failure', ->

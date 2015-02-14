@@ -9,13 +9,13 @@ describe 'CalculateProjectBandwidth', ->
     @project = new Project(name: 'the project')
     @project.save done
   beforeEach (done)->
-    @stream1 = new EdgecastStream(_project: @project._id)
+    @stream1 = new EdgecastStream(_project: @project._id, streamName: 'stream-1')
     @stream1.save done
   beforeEach (done)->
-    @stream2 = new EdgecastStream(_project: @project._id)
+    @stream2 = new EdgecastStream(_project: @project._id, streamName: 'stream-2')
     @stream2.save done
   beforeEach (done)->
-    @notProjectStream = new EdgecastStream()
+    @notProjectStream = new EdgecastStream(streamName: 'stream-3')
     @notProjectStream.save done
 
   addReportEntries = (report, thisMonth, lastMonth)->

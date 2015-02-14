@@ -76,7 +76,7 @@ describe 'local authentication', ->
   describe 'new user', ->
 
     beforeEach (done)->
-      @stream = new EdgecastStream(instanceName: 'cines')
+      @stream = new EdgecastStream(instanceName: 'cines', streamName: 'random-1')
       @stream.save done
 
     stubEdgecast()

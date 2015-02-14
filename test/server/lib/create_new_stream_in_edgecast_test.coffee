@@ -6,12 +6,12 @@ describe 'createNewStreamInEdgecast', ->
 
   describe 'creating a new stream', ->
     beforeEach (done)->
-      @stream1 = new EdgecastStream(instanceName: 'cines', streamName: 'name1')
-      @stream1.save done
+      stream1 = new EdgecastStream(instanceName: 'cines', streamName: 'name1')
+      stream1.save done
 
     beforeEach (done)->
-      @stream1 = new EdgecastStream(instanceName: 'bobs', streamName: 'name1')
-      @stream1.save done
+      stream2 = new EdgecastStream(instanceName: 'bobs', streamName: 'name2')
+      stream2.save done
 
     stubEdgecast(streamName: 'yoooo')
 

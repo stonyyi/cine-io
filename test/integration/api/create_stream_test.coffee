@@ -17,7 +17,7 @@ describe 'create stream', ->
     @project.save done
 
   beforeEach (done)->
-    @stream = new EdgecastStream(instanceName: 'this-instance')
+    @stream = new EdgecastStream(instanceName: 'this-instance', streamName: 'my-name')
     @stream.save done
 
 

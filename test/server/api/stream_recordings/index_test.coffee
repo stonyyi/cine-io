@@ -26,7 +26,7 @@ describe 'StreamRecordings#Index', ->
     @projectStream.save done
 
   beforeEach (done)->
-    @notProjectStream = new EdgecastStream(instanceName: 'cines')
+    @notProjectStream = new EdgecastStream(instanceName: 'cines', streamName: 'one')
     @notProjectStream.save done
 
   describe 'failure', ->

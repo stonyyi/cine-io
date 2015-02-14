@@ -19,19 +19,19 @@ describe 'CalculateAccountBandwidth', ->
     @notOwnedProject = new Project(name: 'notOwnedProject')
     @notOwnedProject.save done
   beforeEach (done)->
-    @stream1 = new EdgecastStream(_project: @project1._id)
+    @stream1 = new EdgecastStream(_project: @project1._id, streamName: 'random-1')
     @stream1.save done
   beforeEach (done)->
-    @stream2 = new EdgecastStream(_project: @project1._id)
+    @stream2 = new EdgecastStream(_project: @project1._id, streamName: 'random-2')
     @stream2.save done
   beforeEach (done)->
-    @stream3 = new EdgecastStream(_project: @project2._id)
+    @stream3 = new EdgecastStream(_project: @project2._id, streamName: 'random-3')
     @stream3.save done
   beforeEach (done)->
-    @stream4 = new EdgecastStream(_project: @project2._id)
+    @stream4 = new EdgecastStream(_project: @project2._id, streamName: 'random-4')
     @stream4.save done
   beforeEach (done)->
-    @notProjectStream = new EdgecastStream()
+    @notProjectStream = new EdgecastStream(streamName: 'random-m')
     @notProjectStream.save done
 
   addReportEntries = (report, thisMonth, lastMonth)->

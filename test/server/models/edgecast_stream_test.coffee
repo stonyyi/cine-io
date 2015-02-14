@@ -4,7 +4,7 @@ modelTimestamps = Cine.require('test/helpers/model_timestamps')
 _ = require('underscore')
 
 describe 'EdgecastStream', ->
-  modelTimestamps EdgecastStream
+  modelTimestamps EdgecastStream, streamName: 'this name'
 
   describe 'record', ->
     it 'defaults to false', (done)->
