@@ -96,9 +96,8 @@ describe 'Stats#Show', ->
     expectedResult[@account3._id.toString()] = {name: 'account3 name', usage: {bandwidth: 12121, storage: 333333, peerMilliseconds: 676767}}
 
     expect(usageForMonth).to.have.length(3)
-
     _.each usageForMonth, (accountUsageReport)->
-      expected = expectedResult[accountUsageReport._id.toString()]
+      expected = expectedResult[accountUsageReport.id.toString()]
       expect(accountUsageReport.name).to.equal(expected.name)
       expect(accountUsageReport.usage).to.deep.equal(expected.usage)
 
