@@ -63,7 +63,7 @@ describe 'hls_sender', ->
 
       beforeEach (done)->
         fixture = requireFixture('nock/cloudfront/create_cloudfront_distribution')
-        @cloudfrontNock = fixture(callerReference: 'short-id-generated', origin: "TEST-HOST.cine.io")
+        @cloudfrontNock = fixture(callerReference: 'short-id-generated', origin: "TEST-HOST.cine.io", logging: {bucket: 'cine-cloudfront-logging.s3.amazonaws.com', prefix: 'TEST-HOST'})
         @cloudfrontNock2 = requireFixture('nock/cloudfront/get_cloudfront_distribution')(id: 'EQGIDG4E7DZCZ')
         @oldCloudfront = HlsSender._cloudFrontURL
         HlsSender._setupCloudfrontForHls(done)
