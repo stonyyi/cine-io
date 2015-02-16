@@ -20,7 +20,7 @@ module.exports = React.createClass({
   render: function(){
     var language = 'language-'+this.props.language;
     return (
-      <pre>
+      <pre className={language}>
         <code ref='theCode' className={language} dangerouslySetInnerHTML={{__html: this.props.code }} />
       </pre>
     );
