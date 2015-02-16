@@ -29,6 +29,7 @@ module.exports = React.createClass({
       CineIO.play(this.state.streamId, this.state.playerId, {mute: true});
       CineIOPeer.on('media-added', this._mediaAdded);
       CineIOPeer.on('media-removed', this._mediaRemoved);
+      this.props.app.tracker.startedDemo('webrtc-broadcast')
     }
     if (this.state.publishing){
       CineIOPeer.stopCameraAndMicrophone();

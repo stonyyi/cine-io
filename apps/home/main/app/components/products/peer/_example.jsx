@@ -27,6 +27,7 @@ module.exports = React.createClass({
     if (!this.state.hasTested){
       CineIOPeer.on('media-added', this._mediaAdded);
       CineIOPeer.on('media-removed', this._mediaRemoved);
+      this.props.app.tracker.startedDemo('peer')
     }
     if (this.state.testing){
       CineIOPeer.stopCameraAndMicrophone();

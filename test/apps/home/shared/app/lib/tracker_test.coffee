@@ -133,13 +133,13 @@ describe 'tracker', ->
 
     describe '#startedDemo', ->
       beforeEach ->
-        tracker.startedDemo()
+        tracker.startedDemo('peer')
 
       it 'does not send a ga event', ->
         expect(global.ga.called).to.be.false
 
       it 'sends a mixpanel event', ->
-        assertMixpanel('startedDemo')
+        assertMixpanel('startedDemo', kind: 'peer')
 
     describe '#planChange', ->
       beforeEach ->

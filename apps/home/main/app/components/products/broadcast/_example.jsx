@@ -27,7 +27,7 @@ module.exports = React.createClass({
     if (!this.state.hasPublished){
       CineIO.play(this.state.streamId, this.state.playerId, {mute: true});
       this.publisher = CineIO.publish(this.state.streamId, this.state.streamPassword, this.state.publisherId);
-      this.props.app.tracker.startedDemo()
+      this.props.app.tracker.startedDemo('broadcast')
     }
     this.setState({hasPublished: true});
     if (this.state.publishing){

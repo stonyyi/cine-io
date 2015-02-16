@@ -36,8 +36,8 @@ tracker.addedCard = ->
 tracker.getApiKey = (data)->
   trackEvent('getApiKey', data)
 
-tracker.startedDemo = ->
-  trackEvent('startedDemo', {}, noGA: true)
+tracker.startedDemo = (kind)->
+  trackEvent('startedDemo', {kind: kind}, noGA: true)
 
 tracker.planChange = (newPlan)->
   trackEvent('planChange', {plan: newPlan}, noGA: true)
