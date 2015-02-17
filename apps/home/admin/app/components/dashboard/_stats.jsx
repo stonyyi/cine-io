@@ -26,7 +26,7 @@ module.exports = React.createClass({
     selectedMonth = this.state.selectedMonth,
     accounts = model.getSortedUsage('bandwidth', selectedMonth);
 
-    splitByProvider = _.countBy(accounts, function(account) {return account.get('billingProvider')})
+    splitByProvider = _.countBy(accounts, function(account) {return account.get('provider')})
     splitByPlan = _.countBy(accounts, function(account) {return account.firstPlan()})
 
     splitByPlanAndIsPaying = _.chain(accounts).select(function(account){
@@ -67,8 +67,8 @@ module.exports = React.createClass({
         usage = account.get('usage');
       return (<tr key={account.id}>
         <td>{name}</td>
-        <td>{account.get('billingEmail')}</td>
-        <td>{account.get('billingProvider')}</td>
+        <td>{account.get('email')}</td>
+        <td>{account.get('provider')}</td>
         <td>{account.firstPlan()}</td>
         <td>{humanizeBytes(usage.bandwidth)}</td>
         <td>{humanizeBytes(usage.storage)}</td>
