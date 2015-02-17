@@ -22,6 +22,15 @@ describe 'Account', ->
       account = new Account(provider: 'cine.io')
       expect(account.isAppdirect()).to.be.false
 
+  describe '#isCine', ->
+    it 'is true with appdirect', ->
+      account = new Account(provider: 'cine.io')
+      expect(account.isCine()).to.be.true
+
+    it 'is false without appdirect', ->
+      account = new Account(provider: 'appdirect')
+      expect(account.isCine()).to.be.false
+
   describe 'needsCreditCard', ->
     it 'returns true for an account on a paid broadcast plan without a credit card', ->
       account = new Account(productPlans: {broadcast: ['pro']}, provider: 'cine.io')

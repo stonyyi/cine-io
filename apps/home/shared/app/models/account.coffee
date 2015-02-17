@@ -18,13 +18,16 @@ module.exports = class Account extends Base
   isAppdirect: ->
     @get('provider') == 'appdirect'
 
+  isCine: ->
+    @get('provider') == 'cine.io'
+
   @include Cine.lib('date_value')
 
   isDisabled: ->
     @get('isDisabled')
 
   needsCreditCard: ->
-    return false unless @get('provider') == 'cine.io'
+    return false unless @isCine()
     return false if @get('cannotBeDisabled')
     return false if _.all(@broadcastPlans(), planIsFree('broadcast')) && _.all(@peerPlans(), planIsFree('peer'))
     !@get('stripeCard')?

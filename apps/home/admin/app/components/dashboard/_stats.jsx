@@ -20,7 +20,7 @@ module.exports = React.createClass({
   },
   render: function() {
     var usageStats, accounts,
-    splitByProvider, splitByPlan, splitByProviderHtml, splitByPlanHtml,
+    splitByPlan, splitByPlanAndIsPaying, splitByProvider, splitByPlanHtml, splitByPlanAndIsPayingHtml, splitByProviderHtml
     self = this,
     model = this.props.model,
     selectedMonth = this.state.selectedMonth,
@@ -28,6 +28,18 @@ module.exports = React.createClass({
 
     splitByProvider = _.countBy(accounts, function(account) {return account.get('billingProvider')})
     splitByPlan = _.countBy(accounts, function(account) {return account.firstPlan()})
+
+    splitByPlanAndIsPaying = _.chain(accounts).select(function(account){
+      // are cine accounts
+      // not disabled
+      // not cannot be disabled (ie the cine accounts)
+      // have a stripe card
+      var shouldConsiderAccount = account.isCine() && !account.isDisabled() && !account.get('cannotBeDisabled') && account.get('stripeCard')
+      return shouldConsiderAccount;
+    }).countBy(function(account) {
+      return account.firstPlan()
+    }).value();
+
     splitByProviderHtml = _.map(splitByProvider, function(number, provider){
       return (<tr key={provider}>
         <td>{provider}</td>
@@ -36,6 +48,13 @@ module.exports = React.createClass({
     });
 
     splitByPlanHtml = _.map(splitByPlan, function(number, plan){
+      return (<tr key={plan}>
+        <td>{plan}</td>
+        <td>{number}</td>
+        </tr>)
+    });
+
+    splitByPlanAndIsPayingHtml = _.map(splitByPlanAndIsPaying, function(number, plan){
       return (<tr key={plan}>
         <td>{plan}</td>
         <td>{number}</td>
@@ -95,6 +114,19 @@ module.exports = React.createClass({
             </tr>
           </tfoot>
         </table>
+        Paying cine accounts:
+        <table>
+          <thead>
+            <tr>
+              <th>Plan</th>
+              <th># accounts</th>
+            </tr>
+          </thead>
+          <tbody>
+            {splitByPlanAndIsPayingHtml}
+          </tbody>
+        </table>
+        Total plans:
         <table>
           <thead>
             <tr>
