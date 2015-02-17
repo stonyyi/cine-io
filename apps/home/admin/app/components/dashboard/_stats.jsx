@@ -56,10 +56,12 @@ module.exports = React.createClass({
         </tr>)
     });
     var revenueTotal = 0;
+    var payingCustomerTotal = 0;
     splitByPlanAndIsPayingHtml = _.map(splitByPlanAndIsPaying, function(number, plan){
       var
         planCost = ProvidersAndPlans['cine.io'].broadcast.plans[plan].price,
         revenue = number * planCost;
+      payingCustomerTotal += number;
       revenueTotal += revenue;
       return (<tr key={plan}>
         <td>{plan}</td>
@@ -69,7 +71,8 @@ module.exports = React.createClass({
     });
     var totalPaying = (
       <tr key="total">
-        <td colSpan="2">Total</td>
+        <td>Total</td>
+        <td>{humanizeNumber(payingCustomerTotal)}</td>
         <td>${humanizeNumber(revenueTotal)}</td>
       </tr>
     );
@@ -135,6 +138,7 @@ module.exports = React.createClass({
             <tr>
               <th>Plan</th>
               <th># accounts</th>
+              <th>Revenue</th>
             </tr>
           </thead>
           <tbody>
