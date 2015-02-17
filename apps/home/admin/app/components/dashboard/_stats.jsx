@@ -4,7 +4,8 @@ var
   _ = require('underscore'),
   Stats = Cine.model('stats'),
   humanizeBytes = Cine.lib('humanize_bytes'),
-  humanizeTime = Cine.lib('humanize_time')
+  humanizeTime = Cine.lib('humanize_time'),
+  ProvidersAndPlans = Cine.require('config/providers_and_plans')
 ;
 
 module.exports = React.createClass({
@@ -53,13 +54,26 @@ module.exports = React.createClass({
         <td>{number}</td>
         </tr>)
     });
-
+    var revenueTotal = 0;
     splitByPlanAndIsPayingHtml = _.map(splitByPlanAndIsPaying, function(number, plan){
+      var
+        planCost = ProvidersAndPlans['cine.io'].broadcast.plans[plan].price,
+        revenue = number * planCost;
+      revenueTotal += revenue;
       return (<tr key={plan}>
         <td>{plan}</td>
         <td>{number}</td>
+        <td>{revenue}</td>
         </tr>)
     });
+    var totalPaying = (
+      <tr key="total">
+        <td colspan="2">Total</td>
+        <td>{revenueTotal}</td>
+      </tr>
+    );
+
+    splitByPlanAndIsPayingHtml.push(totalPaying);
 
     usageStats = _.map(accounts, function(account){
       var
