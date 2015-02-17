@@ -14,7 +14,7 @@ module.exports = React.createClass({
   render: function() {
       return (
         <PageWrapper app={this.props.app} wide={true} fixedNav={true} fadeLogo={true} className="homepage-logged-out">
-          <HomeHero />
+          <HomeHero app={this.props.app} />
           <Products />
           <Consulting />
         </PageWrapper>

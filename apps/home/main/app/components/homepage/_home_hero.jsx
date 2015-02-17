@@ -3,6 +3,13 @@ var React = require('react');
 
 module.exports = React.createClass({
   displayName: 'HomeHero',
+  getApiKey: function(e){
+    e.preventDefault();
+
+    this.props.app.tracker.getApiKey({value: 0});
+    this.props.app.trigger('show-login');
+  },
+
   render: function() {
     return (
       <div className="home-hero">
