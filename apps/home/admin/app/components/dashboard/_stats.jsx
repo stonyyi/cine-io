@@ -23,7 +23,9 @@ var isPayingCustomer = function(account){
   if (account.isCine()){
     return account.get('stripeCard')
   }
-  return account.firstPlan() != 'free' && account.firstPlan() != 'test'
+  // for now assume nobody is paying who is not a cine.io customer
+  return false;
+  // return account.firstPlan() != 'free' && account.firstPlan() != 'test'
 }
 
 module.exports = React.createClass({
