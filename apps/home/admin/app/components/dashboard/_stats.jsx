@@ -95,11 +95,12 @@ module.exports = React.createClass({
     usageStats = _.map(accounts, function(account){
       var
         name = account.get('name') || account.get('billingEmail'),
-        usage = account.get('usage');
+        usage = account.get('usage')
+        paying = isPayingCustomer(account) ? 'true' : '';
       return (<tr key={account.id}>
         <td>{name}</td>
         <td>{account.get('email')}</td>
-        <td>{isPayingCustomer(account)}</td>
+        <td>{paying}</td>
         <td>{account.get('provider')}</td>
         <td>{account.firstPlan()}</td>
         <td>{humanizeBytes(usage.bandwidth)}</td>
