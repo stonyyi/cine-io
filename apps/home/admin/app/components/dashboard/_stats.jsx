@@ -69,7 +69,7 @@ module.exports = React.createClass({
     });
     var totalPaying = (
       <tr key="total">
-        <td colspan="2">Total</td>
+        <td colSpan="2">Total</td>
         <td>${humanizeNumber(revenueTotal)}</td>
       </tr>
     );
