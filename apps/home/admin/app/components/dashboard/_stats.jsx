@@ -5,7 +5,8 @@ var
   Stats = Cine.model('stats'),
   humanizeBytes = Cine.lib('humanize_bytes'),
   humanizeTime = Cine.lib('humanize_time'),
-  ProvidersAndPlans = Cine.require('config/providers_and_plans')
+  ProvidersAndPlans = Cine.require('config/providers_and_plans'),
+  humanizeNumber = Cine.lib('humanize_number')
 ;
 
 module.exports = React.createClass({
@@ -63,13 +64,13 @@ module.exports = React.createClass({
       return (<tr key={plan}>
         <td>{plan}</td>
         <td>{number}</td>
-        <td>{revenue}</td>
+        <td>${humanizeNumber(revenue)}</td>
         </tr>)
     });
     var totalPaying = (
       <tr key="total">
         <td colspan="2">Total</td>
-        <td>{revenueTotal}</td>
+        <td>${humanizeNumber(revenueTotal)}</td>
       </tr>
     );
 
