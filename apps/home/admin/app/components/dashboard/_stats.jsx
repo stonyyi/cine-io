@@ -9,6 +9,23 @@ var
   humanizeNumber = Cine.lib('humanize_number')
 ;
 
+var isPayingCustomer = function(account){
+  // are cine accounts
+  // not disabled
+  // not cannot be disabled (ie the cine accounts)
+  // have a stripe card
+  if (account.isDisabled()){
+    return false;
+  }
+  if (account.get('cannotBeDisabled')){
+    return false;
+  }
+  if (account.isCine()){
+    return account.get('stripeCard')
+  }
+  return account.firstPlan() != 'free' && account.firstPlan() != 'test'
+}
+
 module.exports = React.createClass({
   displayName: 'DashboardStats',
   getInitialState: function(){
@@ -31,14 +48,7 @@ module.exports = React.createClass({
     splitByProvider = _.countBy(accounts, function(account) {return account.get('provider')})
     splitByPlan = _.countBy(accounts, function(account) {return account.firstPlan()})
 
-    splitByPlanAndIsPaying = _.chain(accounts).select(function(account){
-      // are cine accounts
-      // not disabled
-      // not cannot be disabled (ie the cine accounts)
-      // have a stripe card
-      var shouldConsiderAccount = account.isCine() && !account.isDisabled() && !account.get('cannotBeDisabled') && account.get('stripeCard')
-      return shouldConsiderAccount;
-    }).countBy(function(account) {
+    splitByPlanAndIsPaying = _.chain(accounts).select(isPayingCustomer).countBy(function(account) {
       return account.firstPlan()
     }).value();
 
@@ -69,6 +79,7 @@ module.exports = React.createClass({
         <td>${humanizeNumber(revenue)}</td>
         </tr>)
     });
+
     var totalPaying = (
       <tr key="total">
         <td>Total</td>
@@ -87,6 +98,7 @@ module.exports = React.createClass({
         <td>{name}</td>
         <td>{account.get('email')}</td>
         <td>{account.get('provider')}</td>
+        <td>{isPayingCustomer(account)}</td>
         <td>{account.firstPlan()}</td>
         <td>{humanizeBytes(usage.bandwidth)}</td>
         <td>{humanizeBytes(usage.storage)}</td>
@@ -113,6 +125,7 @@ module.exports = React.createClass({
             <tr>
               <th>Name</th>
               <th>Email</th>
+              <th>Paying</th>
               <th>Provider</th>
               <th>Plan</th>
               <th>Bandwidth</th>
