@@ -21,7 +21,7 @@ var isPayingCustomer = function(account){
     return false;
   }
   if (account.isCine()){
-    return account.get('stripeCard')
+    return account.get('stripeCard') != null
   }
   // for now assume nobody is paying who is not a cine.io customer
   return false;
@@ -99,8 +99,8 @@ module.exports = React.createClass({
       return (<tr key={account.id}>
         <td>{name}</td>
         <td>{account.get('email')}</td>
-        <td>{account.get('provider')}</td>
         <td>{isPayingCustomer(account)}</td>
+        <td>{account.get('provider')}</td>
         <td>{account.firstPlan()}</td>
         <td>{humanizeBytes(usage.bandwidth)}</td>
         <td>{humanizeBytes(usage.storage)}</td>
