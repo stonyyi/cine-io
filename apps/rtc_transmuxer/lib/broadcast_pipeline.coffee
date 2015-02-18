@@ -40,13 +40,13 @@ module.exports = class BroadcastPipeline
       debug('got pipeline')
       return callback(err) if err
       asynCalls =
-        httpGetEndpoint: (cb)->
+        httpGetEndpoint: (cb)=>
           options =
             terminateOnEOS: true
             mediaProfile: 'WEBM'
-          pipeline.create "HttpGetEndpoint", options, cb
-        webRtcEndpoint: (cb)->
-          pipeline.create "WebRtcEndpoint", cb
+          @pipeline.create "HttpGetEndpoint", options, cb
+        webRtcEndpoint: (cb)=>
+          @pipeline.create "WebRtcEndpoint", cb
 
       # pipeline.on 'release', ->
       #   debug("released")

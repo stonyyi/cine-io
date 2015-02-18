@@ -33,7 +33,7 @@ class VodTranslator
 
   # returns(err, outputFile)
   process: (@callback)=>
-    @handler.process(callback)
+    @handler.process(@callback)
 
 class FFmpegHandler
   constructor: (@options)->
