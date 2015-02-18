@@ -49,8 +49,8 @@ describe 'Server#Nearest', ->
       done()
 
   it 'will return a localized publish value for a client ip address', (done)->
-    # 93.191.59.34 is russia
-    params = remoteIpAddress: "93.191.59.34"
+    # 61.93.0.0 is hong kong
+    params = remoteIpAddress: "61.93.0.0"
     Nearest params, (err, response, options)->
       expect(err).to.be.null
       expect(response).to.deep.equal
