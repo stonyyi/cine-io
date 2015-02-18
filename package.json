@@ -30,7 +30,7 @@
     "express": "4.11.2",
     "express-session": "1.10.3",
     "ftp": "0.3.8",
-    "geoip-lite": "1.1.4",
+    "geoip-lite": "git://github.com/bluesmoon/node-geoip.git#eb5c4ee60fec4eae6bf215f79fefd3a2a666a50f",
     "grunt": "0.4.5",
     "grunt-cli": "0.1.13",
     "grunt-contrib-concat": "0.5.0",
