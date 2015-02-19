@@ -31,11 +31,12 @@ module.exports = (month, callback)->
       start: firstSecondInMonth.toISOString()
       end: lastSecondInMonth.toISOString()
 
-  # debug("running keen query", queryOptions)
+  debug("running keen query", queryOptions)
 
   query = new Keen.Query("sum", queryOptions)
 
   client.run query, (err, response)->
+    debug("ran keen query", err, response)
     if err
       console.dir(err)
       return callback(err)
