@@ -99,6 +99,9 @@ describe 'calculateUsageStats', ->
       done(err)
 
   describe 'thisMonth', ->
+    beforeEach ->
+      @keenSuccess = requireFixture('nock/keen/status_check_success')()
+
     it 'calculates the stats for each account', (done)->
       expected = {}
       expected[@account1._id.toString()] =
@@ -122,9 +125,13 @@ describe 'calculateUsageStats', ->
       calculateUsageStats.thisMonth (err, results)=>
         expect(err).to.be.null
         expect(@keenNock.isDone()).to.be.true
+        expect(@keenSuccess.isDone()).to.be.true
         done()
 
   describe 'byMonth', ->
+    beforeEach ->
+      @keenSuccess = requireFixture('nock/keen/status_check_success')()
+
     it 'calculates the stats for each account', (done)->
       d = new Date
       d.setYear(d.getYear() - 1)
@@ -154,4 +161,5 @@ describe 'calculateUsageStats', ->
       calculateUsageStats.byMonth d, (err, results)=>
         expect(err).to.be.null
         expect(@keenNock2.isDone()).to.be.true
+        expect(@keenSuccess.isDone()).to.be.true
         done()
