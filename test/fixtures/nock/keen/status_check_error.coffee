@@ -19,4 +19,4 @@ module.exports = ->
     'x-statuspage-version': '9577b483d85e06d1848bc6995657efd2a03072ea',
     'x-xss-protection': '1; mode=block',
     'transfer-encoding': 'chunked',
-    connection: 'keep-alive' });
+    connection: 'keep-alive' })
