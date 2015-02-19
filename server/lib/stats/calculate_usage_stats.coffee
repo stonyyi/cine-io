@@ -1,3 +1,4 @@
+debug = require('debug')('cine:calculate_usage_stats')
 require "mongoose-querystream-worker"
 Account = Cine.server_model('account')
 calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
@@ -8,7 +9,9 @@ exports.thisMonth = (done)->
 
 exports.byMonth = (month, done)->
   collectiveStats = {}
+  debug("fetching keen peer milliseconds")
   fetchAllProjectsPeerMilliseconds month, (err, projectIdToPeerMilliseconds)->
+    debug("fetched keen peer milliseconds")
     return done(err) if err
     calculateUsageForAccount = (account, callback)->
       calculateAccountUsage.byMonthWithKeenMilliseconds account, month, projectIdToPeerMilliseconds, (err, result)->
@@ -19,6 +22,7 @@ exports.byMonth = (month, done)->
         callback()
 
     endFunction = (err)->
+      debug("done processing all accounts", err)
       done(err, collectiveStats)
 
     scope = Account.find().where(deletedAt: {$exists: false})

@@ -1,3 +1,4 @@
+debug = require('debug')('cine:calculate_account_usage')
 async = require('async')
 CalculateAccountBandwidth = Cine.server_lib('reporting/broadcast/calculate_account_bandwidth')
 CalculateAccountStorage = Cine.server_lib('reporting/storage/calculate_account_storage')
@@ -18,6 +19,7 @@ exports.byMonth = (account, month, callback)->
   async.parallel asyncCalls, callback
 
 exports.byMonthWithKeenMilliseconds = (account, month, projectIdToPeerMilliseconds, callback)->
+  debug("calculating account byMonthWithKeenMilliseconds", account._id, month)
   asyncCalls =
     bandwidth: (cb)->
       CalculateAccountBandwidth.byMonth account, month, cb
@@ -26,4 +28,6 @@ exports.byMonthWithKeenMilliseconds = (account, month, projectIdToPeerMillisecon
     peerMilliseconds: (cb)->
       CalcualteAccountPeerMilliseconds.byMonthWithKeenMilliseconds account, month, projectIdToPeerMilliseconds, cb
 
-  async.parallel asyncCalls, callback
+  async.parallel asyncCalls, (err, results)->
+    debug("calculated account byMonthWithKeenMilliseconds", account._id, month)
+    callback(err, results)
