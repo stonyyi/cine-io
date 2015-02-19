@@ -79,6 +79,7 @@ describe 'Stats#Show', ->
       result: 676767
     response =
       [result1, result2, result3]
+    @keenSuccess = requireFixture('nock/keen/status_check_success')()
     requireFixture('nock/keen/sum_peer_milliseconds_group_by_project') response, @month, (err, @keenNock)=>
       done(err)
 
@@ -107,6 +108,17 @@ describe 'Stats#Show', ->
     callback = (err, response)=>
       expect(err).to.be.null
       assertCorrectResponse.call(this, response)
+      done()
+
+    Show params, session, callback
+
+  it 'goes to keen', (done)->
+    params = {id: 'some-stats'}
+    session = user: @siteAdmin
+    callback = (err, response)=>
+      expect(err).to.be.null
+      expect(@keenSuccess.isDone()).to.be.true
+      expect(@keenNock.isDone()).to.be.true
       done()
 
     Show params, session, callback
