@@ -2,6 +2,7 @@ _ = require('underscore')
 rendrDir = 'node_modules/rendr';
 rendrHandlebarsDir = 'node_modules/rendr-handlebars';
 rendrModulesDir = rendrDir + '/node_modules';
+remapify = require('remapify')
 exec = require('child_process').exec
 spawn = require('child_process').spawn
 
@@ -24,7 +25,7 @@ module.exports = (grunt) ->
             'bower_components/prism/prism.js'
           ],
           npmDependencies:
-            underscore: '../rendr/node_modules/underscore/underscore.js'
+            underscore: '../underscore/underscore.js'
             backbone: '../rendr/node_modules/backbone/backbone.js'
             qs: "../qs/index.js"
             handlebars: '../rendr-handlebars/node_modules/handlebars/dist/handlebars.runtime.js'
@@ -40,6 +41,7 @@ module.exports = (grunt) ->
             {from: rendrDir + '/shared', to: 'rendr/shared'},
             {from: rendrHandlebarsDir, to: 'rendr-handlebars'},
             {from: rendrHandlebarsDir + '/shared', to: 'rendr-handlebars/shared'}
+            {from: rendrHandlebarsDir + '/lib', to: 'rendr-handlebars/lib'}
           ]
         files: [{
           dest: "public/compiled/#{rendrProject}/mergedAssets.js"
@@ -53,13 +55,40 @@ module.exports = (grunt) ->
             rendrDir + '/client/**/*.js'
             rendrDir + '/shared/**/*.js'
             rendrHandlebarsDir + '/index.js'
-            rendrHandlebarsDir + '/shared/*.js'
+            rendrHandlebarsDir + '/shared/**/*.js'
+            rendrHandlebarsDir + '/lib/**/*.js'
           ]
         }]
 
   grunt.initConfig
     pkg: grunt.file.readJSON("package.json")
-
+    browserify:
+      basic:
+        src: ['apps/home/cine.coffee', 'apps/home/main/app/**/*.coffee', 'compiled/main/components/**/*.js']
+        dest: 'public/compiled/main/mergedAssets.js'
+        extensions: ['.coffee', '.js']
+        options:
+          extensions: ['.coffee', '.js']
+          debug: true
+          transform: ['coffeeify']
+          alias:[
+            './node_modules/rendr-handlebars:rendr-handlebars',
+          ]
+          preBundleCB: (b)->
+            b.plugin(remapify,
+              [
+                {
+                  cwd: 'apps/home/main/app/'
+                  src: '**/*.js'
+                  expose: 'app'
+                }
+                {
+                  cwd: 'compiled/main/components/'
+                  src: '**/*.js'
+                  expose: 'components'
+                }
+              ]
+            )
     sass:
       options:
         includePaths: [
@@ -101,7 +130,7 @@ module.exports = (grunt) ->
 
       main:
         files: ["apps/home/main/app/**/*.coffee", "apps/home/admin/app/**/*.coffee"]
-        tasks: ["rendr_stitch"]
+        # tasks: ["rendr_stitch"]
 
     react:
       dynamic_mappings:
@@ -138,12 +167,13 @@ module.exports = (grunt) ->
           "public/compiled/main/mergedAssets.js": ["public/compiled/main/mergedAssets.js"]
           "public/compiled/admin/mergedAssets.js": ["public/compiled/admin/mergedAssets.js"]
 
+  grunt.loadNpmTasks 'grunt-browserify'
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-sass"
   grunt.loadNpmTasks "grunt-nodemon"
   grunt.loadNpmTasks "grunt-contrib-watch"
   grunt.loadNpmTasks "grunt-concurrent"
-  grunt.registerTask "compile", ["react", "rendr_stitch"]
+  grunt.registerTask "compile", ["react", "browserify"]
   grunt.registerTask "build", ["compile", "sass", "concat"]
   grunt.registerTask "prepareProductionAssets", ["compile", "sass", "concat", "uglify"]
   grunt.registerTask "dev", ["build", "concurrent:dev"]

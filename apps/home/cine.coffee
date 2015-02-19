@@ -4,7 +4,9 @@ if typeof window == 'undefined'
   clientOrServerRequire = (path, app)->
     Cine.require("apps/home/#{app}/#{path}")
 else
+  window.Cine = Cine
   clientOrServerRequire = (path, app)->
+    # Cine.require("apps/home/#{app}/#{path}")
     Cine.require(path)
 
 # Client
