@@ -44,7 +44,6 @@ describe 'UsageReports/Accounts#Show', ->
       else if monthIsTwoMonthsAgo(date.getMonth(), today.getMonth())
         callback(null, 789)
       else
-        console.log(date, today)
         throw new Error("requesting longer date")
 
   afterEach ->

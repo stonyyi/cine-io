@@ -1,3 +1,4 @@
+debug = require('debug')('cine:charge_all_accounts')
 _ = require('underscore')
 Account = Cine.server_model('account')
 require "mongoose-querystream-worker"
@@ -13,7 +14,7 @@ module.exports = (done)->
   accountErrs = {}
   billed = {}
   billAcount = (account, callback)->
-    # console.log("billing account", account)
+    # debug("billing account", account)
     chargeAccountForMonth account, monthToBill, (err, data)->
       accountErrs[account._id.toString()] = err if err
       billed[account._id.toString()] = data.results if data && data.results

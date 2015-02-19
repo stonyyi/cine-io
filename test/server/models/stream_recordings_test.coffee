@@ -31,7 +31,6 @@ describe 'StreamRecordings', ->
   beforeEach (done)->
     @recording = new StreamRecordings
     @thisMonth = new Date
-    console.log("This month", @thisMonth)
     @thisMonth2 = new Date
     if @thisMonth.getDate() == 1
       @thisMonth2.setDate(@thisMonth2.getDate() + 1)

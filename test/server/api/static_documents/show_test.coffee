@@ -5,8 +5,6 @@ describe 'StaticDocument#show', ->
   it 'requires an id', (done)->
     params = {}
     callback = (err, response, options)->
-      console.log "response", response
-      console.log "options", options
       expect(err).to.equal("id required")
       expect(response).to.be.null
       expect(options).to.deep.equal(status: 404)
@@ -16,8 +14,6 @@ describe 'StaticDocument#show', ->
   it 'requires the document exist', (done)->
     params = {id: 'MISSING'}
     callback = (err, response, options)->
-      console.log "response", response
-      console.log "options", options
       expect(err).to.equal("not found")
       expect(response).to.be.null
       expect(options).to.deep.equal(status: 404)

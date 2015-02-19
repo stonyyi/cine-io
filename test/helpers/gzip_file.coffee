@@ -11,7 +11,6 @@ exports.createNewFile = (inFile, outFile, callback)->
     callback()
 
 exports.replaceFile = (inFile, callback)->
-  console.log("gzip", inFile)
   gzipProcess = spawn 'gzip', ["--force", inFile]
   gzipProcess.on 'close', (code)->
     return callback(code) if code != 0

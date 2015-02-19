@@ -7,7 +7,6 @@ _str = require('underscore.string')
 writeExampleFmsFile = (outputStream, callback)->
   fmsExampleLog = Cine.path('test/fixtures/edgecast_logs/fms_example.log')
   unZipFile = outputStream.path.slice(0, outputStream.path.length-3)
-  console.log('writing fake file to', unZipFile)
   copyFile fmsExampleLog, unZipFile, (err)->
     expect(err).to.be.undefined
     gzipFile.replaceFile unZipFile, (err)->

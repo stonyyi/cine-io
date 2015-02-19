@@ -1,9 +1,10 @@
+debug = require('debug')('cine:data_adapter')
 utils = require("rendr/server/utils")
 _ = require("underscore")
 clc = require "cli-color"
 
 createApiErr = (message, response, status, path, params)->
-  console.log('sending an err from the data_adapter', err, status)
+  debug('sending an err from the data_adapter', err, status)
   err = new Error(message)
   err.status = status || message.status
   err.extra = {path: path, params: params}
@@ -57,7 +58,7 @@ class DataAdapter
     params.sessionUserId = req.user
     params.remoteIpAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
 
-    console.log(clc.blueBright("[API]"), "#{method} #{path}", params)
+    debug(clc.blueBright("[API]"), "#{method} #{path}", params)
 
     apiReq = new InternalApiRequest(@routes, method, path, params)
     rendrResponse = new FormatResponseForRendr(params.callback, callback, path, params)
@@ -66,7 +67,7 @@ class DataAdapter
   # Convert 4xx, 5xx responses to be errors.
   # TODO-TJS use this
   getErrForResponse: (res, options) ->
-    console.log('in getErrForResponse')
+    debug('in getErrForResponse')
     status = undefined
     err = undefined
     status = +res.statusCode

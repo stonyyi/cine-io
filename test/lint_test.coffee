@@ -1,3 +1,4 @@
+debug = require('debug')('cine:test:lint_test')
 walkDirectory = Cine.require('test/helpers/walk_directory')
 fs = require('fs')
 _ = require('underscore')
@@ -77,6 +78,6 @@ describe 'the test suite', ->
       return done(err) if err
       async.filter files, fileHasItOnly, (filesWithItOnly)->
         if filesWithItOnly.length > 0
-          console.log("files with #{itOnly}", filesWithItOnly)
+          debug("files with #{itOnly}", filesWithItOnly)
         expect(filesWithItOnly).to.have.length(0)
         done()

@@ -1,3 +1,4 @@
+debug = require('debug')('cine:download_and_parse_edgecast_logs')
 async = require('async')
 fs = require("fs")
 _ = require('underscore')
@@ -8,12 +9,12 @@ ParsedLog = Cine.server_model('parsed_log')
 edgecastFtpClientFactory = Cine.server_lib('edgecast_ftp_client_factory')
 
 parseLogFile = (logName, outputFile, callback)->
-  console.log("creating ParsedLog", logName)
+  debug("creating ParsedLog", logName)
   parsedLog = new ParsedLog(hasStarted: true, logName: logName, source: 'edgecast')
   parsedLog.save (err)->
     return callback(err) if err
     unzipAndProcessFile outputFile, parseEdgecastLog, (err)->
-      console.log("parsed edgecast log file", logName, err)
+      debug("parsed edgecast log file", logName, err)
       parsedLog.parseErrors = err if err
       parsedLog.isComplete = true
       parsedLog.save (err)->
@@ -24,15 +25,15 @@ downloadAndParseEdgecastLogs = (done)->
   mkdirp.sync directory
 
   processEdgecastLogFile = (logName, callback)->
-    console.log("parsing", logName)
+    debug("parsing", logName)
     outputFile = "#{directory}#{logName}"
 
     ftpClient.get "/logs/#{logName}", (err, stream)->
-      console.log("streaming to outputfile", logName, outputFile)
+      debug("streaming to outputfile", logName, outputFile)
 
       return callback(err) if err
       stream.once 'readable', ->
-        console.log("Ready to read data", logName)
+        debug("Ready to read data", logName)
       stream.once 'close', ->
         parseLogFile(logName, outputFile, callback)
       stream.pipe(fs.createWriteStream(outputFile))
@@ -44,7 +45,7 @@ downloadAndParseEdgecastLogs = (done)->
         return done(err) if err
         parsedLogNames = _.pluck(parsedLogs, 'logName')
         toProcess = _.without(ftpLogNames, parsedLogNames...)
-        console.log("Going to process: ", toProcess)
+        debug("Going to process: ", toProcess)
         async.eachLimit toProcess, 1, processEdgecastLogFile, (err)->
           ftpClient.end()
           done(err)

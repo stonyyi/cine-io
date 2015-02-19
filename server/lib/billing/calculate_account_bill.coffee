@@ -1,3 +1,4 @@
+debug = require('debug')('cine:calculate_account_bill')
 _ = require('underscore')
 calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 ProvidersAndPlans = Cine.require('config/providers_and_plans')
@@ -14,7 +15,7 @@ accountPlanAmount = (account)->
       accum + (plans[plan].price * 100)
   broadcast = _.inject account.productPlans.broadcast, addPlanAmount('broadcast'), 0
   peer = _.inject account.productPlans.peer, addPlanAmount('peer'), 0
-  # console.log("Adding", broadcast, peer)
+  debug("Adding", broadcast, peer)
   broadcast + peer
 
 accountIsCreatedInThisMonth = (account, monthToBill)->
@@ -55,7 +56,7 @@ module.exports = (account, monthToBill, callback)->
   calculateAccountUsage.byMonth account, monthToBill, (err, accountUsageResult)->
     return callback(err) if err
     ensureZeros(accountUsageResult)
-    # console.log("Calculated", accountUsageResult)
+    debug("Calculated", accountUsageResult)
     prorate = shouldProrateNewAccounts(account, monthToBill, accountUsageResult)
     planBill = if prorate then proratedAccountPlanAmount(account, accountUsageResult) else accountPlanAmount(account)
     result =

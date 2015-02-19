@@ -1,3 +1,5 @@
+Debug = require('debug')
+Debug.enable('cine:*')
 require('coffee-script/register')
 _ = require('underscore')
 Cine = require('./config/cine_server')

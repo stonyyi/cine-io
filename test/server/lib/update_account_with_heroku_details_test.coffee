@@ -9,7 +9,6 @@ describe 'updateAccountWithHerokuDetails', ->
 
   it 'errs when it cannot find an account', (done)->
     account = new Account
-    console.log("new account", account)
     updateAccountWithHerokuDetails accountId: account._id, (err)->
       expect(err).to.equal("account not found for id: #{account._id}")
       done()

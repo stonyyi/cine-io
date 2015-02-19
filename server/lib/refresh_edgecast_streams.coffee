@@ -1,3 +1,4 @@
+debug = require('debug')('cine:refresh_edgecast_streams')
 request = require('request')
 moment = require('moment')
 async = require('async')
@@ -20,20 +21,20 @@ edgecastStreamHasAllData = (streamInDb, edgecastData)->
 
 ensureEdgecastStream = (streamData, callback)->
   unless _.isEqual(_.keys(streamData).sort(), expectedFields)
-    console.log('stream data missing fields', expectedFields, _.keys(streamData).sort())
+    debug('stream data missing fields', expectedFields, _.keys(streamData).sort())
     return callback()
   params = _.pick(streamData, 'eventName', 'instanceName', 'streamKey', 'streamName')
   EdgecastStream.findOne params, (err, edgecastStream)->
     return callback(err) if err
     if edgecastStream
       if edgecastStreamHasAllData(edgecastStream, streamData)
-        console.log('stream good', _.pick(streamData, 'streamName', 'instanceName'))
+        debug('stream good', _.pick(streamData, 'streamName', 'instanceName'))
         return callback()
-      console.log('new data', streamData)
+      debug('new data', streamData)
       edgecastStream.set streamData
       edgecastStream.save callback
     else
-      console.log('new stream', streamData)
+      debug('new stream', streamData)
       stream = new EdgecastStream streamData
       stream.save callback
 
@@ -80,9 +81,9 @@ ensureNoLonelyHlsEndpointsOrFMSEndpoints = (fromStreamKeysToEdgecastData, hlsEnd
 mergeResponses = (edgecastCallResponses)->
   fromStreamKeysToEdgecastData = _.map edgecastCallResponses.streamKeyData, (streamData)->
     edgecastStreamData = streamKeyResponseItemToEdgecastInfo(streamData)
-    # console.log('streamKeyData', edgecastStreamData)
+    # debug('streamKeyData', edgecastStreamData)
     edgecastHlsEndpoint = findEdgecastHlsEndpointFromStreamKey(edgecastCallResponses.hlsEndpoints, edgecastStreamData)
-    # console.log('edgecastHlsEndpoint', edgecastHlsEndpoint)
+    # debug('edgecastHlsEndpoint', edgecastHlsEndpoint)
     return edgecastStreamData unless edgecastHlsEndpoint
     edgecastStreamData.eventName = edgecastHlsEndpoint.EventName
     edgecastStreamData.expiration = new Date(edgecastHlsEndpoint.Expiration)

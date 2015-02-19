@@ -1,3 +1,4 @@
+debug = require('debug')('cine:charge_account_for_month')
 _ = require('underscore')
 stripe = require('stripe')(Cine.config('variables/stripe').secretKey)
 calculateAccountBill = Cine.server_lib("billing/calculate_account_bill.coffee")
@@ -44,7 +45,7 @@ findPrimaryCard = (account)->
 
 chargeStripe = (account, results, callback)->
   amount = results.billing.plan
-  console.log("charging stripe for account", account._id, amount)
+  debug("charging stripe for account", account._id, amount)
   stripeData =
     amount: Math.floor(amount)
     currency: "USD"
@@ -61,7 +62,7 @@ saveNewCharge = (abh, recordId, monthToBill, stripeResults, callback)->
 
 sendEmailReceipt = (account, abh, recordId, monthToBill, callback)->
   mailer.monthlyBill account, abh, recordId, monthToBill, (err, emailResult)->
-    # console.log("sent email", err, emailResult)
+    # debug("sent email", err, emailResult)
     record = abh.history.id(recordId)
     record.mandrillEmailId = emailResult[0]._id
     abh.save callback
@@ -84,10 +85,10 @@ chargeAccount = (account, abh, recordId, monthToBill, results, callback)->
   return callback("account has no primary card") unless findPrimaryCard(account)
   chargeStripe account, results, (err, stripeResults)->
     if err
-      console.log("got error charging account", err, stripeResults)
+      debug("got error charging account", err, stripeResults)
       return saveChargeError account, abh, recordId, monthToBill, err, (err2)->
         return callback(err2)
-    console.log("got stripe results", stripeResults)
+    debug("got stripe results", stripeResults)
     saveNewCharge abh, recordId, monthToBill, stripeResults, (err)->
       return callback(err) if err
 
@@ -108,22 +109,22 @@ module.exports = (account, monthToBill, callback)->
 # spyable function
 module.exports.__work = (account, monthToBill, callback)->
   return callback("can only charge cine.io accounts") if account.billingProvider != 'cine.io'
-  # console.log("charging account", account)
+  # debug("charging account", account)
   return callback(null, message: "free accounts do not recieve non-invoice emails") if calculateAccountBill.accountPlanAmount(account) == 0
   findOrCreateAccountBillingHistory account, (err, abh)->
     return callback(err) if err
     if abh.hasBilledForMonth(monthToBill)
-      console.log("already charged for this month", account._id)
+      debug("already charged for this month", account._id)
       return callback(null, message: "already charged account for this month")
     calculateAccountBill account, monthToBill, (err, results)->
       return callback(err) if err
-      # console.log("calculated", err, results)
+      # debug("calculated", err, results)
       saveResultsToRecord abh, account, monthToBill, results, (err, recordId)->
-        # console.log("saved results to record", err)
+        # debug("saved results to record", err)
         return callback(err) if err
 
         if canBill(account, results)
-          console.log("will bill account", account._id, account.billingEmail)
+          debug("will bill account", account._id, account.billingEmail)
           chargeAccount account, abh, recordId, monthToBill, results, (err)->
             record = abh.history.id(recordId)
             results =
@@ -131,6 +132,6 @@ module.exports.__work = (account, monthToBill, callback)->
               amount: Math.floor(results.billing.plan)
             callback(err, results: results)
         else
-          console.log("will not bill account", account._id, account.billingEmail)
+          debug("will not bill account", account._id, account.billingEmail)
           couldNotBill account, abh, recordId, monthToBill, (err)->
             callback(err || "no credit card for account")

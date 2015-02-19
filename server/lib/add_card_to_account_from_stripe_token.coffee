@@ -1,3 +1,4 @@
+debug = require('debug')('cine:add_card_to_account_from_stripe_token')
 stripe = require('stripe')(Cine.config('variables/stripe').secretKey)
 _ = require 'underscore'
 _.str = require 'underscore.string'
@@ -10,7 +11,7 @@ module.exports = class AddCardToAccountFromStripeToken
     return callback('no stripe token') if _.str.isBlank(@stripeToken)
     stripe.customers.createCard @account.stripeCustomer.stripeCustomerId, card: @stripeToken, (err, response)=>
       return callback(err) if err
-      console.log("got stripe response", response)
+      debug("got stripe response", response)
 
       @_addCardToAccount(response)
       @account.save callback

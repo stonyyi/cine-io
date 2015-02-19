@@ -1,3 +1,4 @@
+debug = require('debug')('cine:log_event_in_keen')
 _ = require('underscore')
 client = Cine.server_lib('keen_client')
 debug = require('debug')('cine:log_event_in_keen')
@@ -7,7 +8,7 @@ noop = ->
 KEEN_COLLECTION = 'peer-minutes'
 
 sendToKeen = (collection, data, callback)->
-  # console.log("sending to keen", collection, data)
+  # debug("sending to keen", collection, data)
   client.addEvent collection, data, callback
 
 exports.userTalkedInRoom = (projectId, room, extraData={}, callback=noop)->

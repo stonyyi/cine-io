@@ -1,3 +1,5 @@
+debug = require('debug')('cine:update_account_with_heroku_details')
+
 getHerokuAccountDetails = Cine.server_lib('get_heroku_account_details')
 Account = Cine.server_model('account')
 
@@ -14,5 +16,5 @@ module.exports = (payload, callback)->
       return callback(err) if err
       account.billingEmail = details.owner_email
       account.herokuData = details
-      console.log("setting heroku data", account, details)
+      debug("setting heroku data", account, details)
       account.save callback

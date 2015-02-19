@@ -1,3 +1,4 @@
+debug = require('debug')('cine:verify_oauth_signature')
 _ = require('underscore')
 sign = require('oauth-sign').hmacsign
 consumerSecret = Cine.config('variables/appdirect').oauthConsumerSecret
@@ -28,7 +29,7 @@ isValid = (authorization, reqUrl, reqParams={}, httpMethod="GET")->
   authObj = extractOauthParams(authorization)
   oauthParams = getOauthParams(authObj)
   generated = generate(oauthParams, reqUrl, reqParams, httpMethod)
-  # console.log("ACTUAL", generated, "EXPECTED", authObj.oauth_signature)
+  debug("ACTUAL", generated, "EXPECTED", authObj.oauth_signature)
   generated == authObj.oauth_signature
 
 

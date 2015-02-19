@@ -18,7 +18,6 @@ describe 'unzipAndProcessFile', ->
 
   beforeEach (done)->
     @gzippedFileName = "#{@gzExampleFile}.gz"
-    console.log("Filenames", @gzippedFileName, @gzExampleFile)
     gzipFile.replaceFile @gzExampleFile, done
 
   beforeEach (done)->

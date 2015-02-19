@@ -1,3 +1,4 @@
+debug = require('debug')('cine:update_or_throttle_accounts_who_cannot_pay_for_overages')
 _ = require('underscore')
 Account = Cine.server_model('account')
 require "mongoose-querystream-worker"
@@ -41,7 +42,7 @@ calculateAccountLimit = (account, results)->
   # results.bandwidth <= maxBandwidth && results.storage <= maxStorage
 
 throttleAccount = (account, callback)->
-  # console.log("Throttling", account)
+  # debug("Throttling", account)
   AccountThrottler.throttle account, 'overLimit', (err, account)->
     return callback(err) if err
     mailer.admin.throttledAccount account
@@ -53,7 +54,7 @@ overAccountLimit = (accountLimitResults)->
   accountLimitResults.peerMillisecondsPercent > 1
 
 at90PercentOfAccountLimit = (accountLimitResults)->
-  # console.log("accountLimitResults", accountLimitResults)
+  # debug("accountLimitResults", accountLimitResults)
   accountLimitResults.bandwidthPercent > 0.9        ||
   accountLimitResults.storagePercent > 0.9          ||
   accountLimitResults.peerMillisecondsPercent > 0.9
@@ -77,37 +78,37 @@ notifyUserTheyWillBeUpgraded = (date, account, results, callback)->
 checkAccount = (account, callback)->
   date = new Date
   calculateAccountUsage.thisMonth account, (err, results)->
-    # console.log("calculated", err, results)
+    # debug("calculated", err, results)
     return callback(err) if err
 
     # it's cool if an account is < 1 GiB and < 60 minutes for peer, no need to check anything
     return callback() if underFreePlanStorageAndBandwidthAndPeer(results)
 
     accountLimit = calculateAccountLimit(account, results)
-    # console.log("calculated account limit", accountLimit)
+    # debug("calculated account limit", accountLimit)
     if isCineAccount(account)
       # they have no credit card, throttle them
       unless hasPrimaryCard(account)
-        # console.log("THROTTLEING")
+        # debug("THROTTLEING")
         return throttleAccount(account, callback)
       # over account limit, upgrade their account
       if overAccountLimit(accountLimit)
-        # console.log("UPGRADE")
+        # debug("UPGRADE")
         return upgradeAccountToCorrectUsagePlan(account, results, callback)
       # within 90 percent, notify them they will be upgraded
       if at90PercentOfAccountLimit(accountLimit)
-        # console.log("NOTIFY")
+        # debug("NOTIFY")
         return notifyUserTheyWillBeUpgraded(date, account, results, callback)
       # all good, carry on
-      # console.log("ALL GOOD")
+      # debug("ALL GOOD")
       callback()
     else # not a cine.io account
       # throttle if they are over the account limit
       if overAccountLimit(accountLimit)
-        # console.log("THROTTLING")
+        # debug("THROTTLING")
         return throttleAccount(account, callback)
       # not over acccount limit, carry on
-      # console.log("ALL GOOD")
+      # debug("ALL GOOD")
       callback()
 
 module.exports = (callback)->

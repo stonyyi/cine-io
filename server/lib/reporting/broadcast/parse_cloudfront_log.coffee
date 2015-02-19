@@ -1,3 +1,4 @@
+debug = require('debug')('cine:parse_cloudfront_log')
 csv = require("csv")
 fs = require("fs")
 StreamUsageReport = Cine.server_model('stream_usage_report')
@@ -23,13 +24,13 @@ edgecastStreamReportByInstanceNameAndStreamName = (streamName, callback)->
 saveDataOnRecord = (streamName, entryData, callback)->
   edgecastStreamReportByInstanceNameAndStreamName streamName, (err, esr)->
     if err
-      console.log(err, entryData)
+      debug(err, entryData)
       return callback(err)
     esr.logEntries.push entryData
     esr.save callback
 
 module.exports = (absoluteFileName, done)->
-  console.log('parsing', absoluteFileName)
+  debug('parsing', absoluteFileName)
   errs = []
 
   errorFunction = (err)->
@@ -37,7 +38,7 @@ module.exports = (absoluteFileName, done)->
     done(err)
 
   closeFunction = (count) ->
-    console.log "Number of lines: " + count
+    debug "Number of lines: " + count
     return done(errs) if errs.length > 0
     done()
 
@@ -66,7 +67,7 @@ module.exports = (absoluteFileName, done)->
       errs.push(data: data, rowNumber: rowNumber, error: "unknown uri")
       return callback()
     saveDataOnRecord streamName, entryData, (err)->
-      # console.log('saved', err)
+      # debug('saved', err)
       errs.push(data: data, rowNumber: rowNumber, error: err) if err
       callback()
 

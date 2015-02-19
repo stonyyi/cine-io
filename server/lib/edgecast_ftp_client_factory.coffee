@@ -1,4 +1,5 @@
 FtpClient = require('ftp')
+debug = require('debug')('cine:edgecast_ftp_client_factory')
 
 edgecastFtpClientFactory = (originalCallback, readyCallback)->
   ftpClient = edgecastFtpClientFactory.builder()
@@ -8,16 +9,16 @@ edgecastFtpClientFactory = (originalCallback, readyCallback)->
     readyCallback()
 
   ftpClient.on "error", (error)->
-    console.log("FTP ERROR", error)
+    debug("FTP ERROR", error)
     calledBack = true
     originalCallback(error)
 
   ftpClient.on "end", ->
-    console.log("FTP END")
+    debug("FTP END")
     return originalCallback("ended before ready or error") unless calledBack
 
   ftpClient.on "greeting", (msg)->
-    console.log('got ftp greeting', msg)
+    debug('got ftp greeting', msg)
 
   ftpClient.connect Cine.config('variables/edgecast').ftp
   return ftpClient

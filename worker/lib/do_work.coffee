@@ -1,3 +1,4 @@
+debug = require('debug')('cine:do_work')
 moment = require('moment')
 _ = require('underscore')
 async = require('async')
@@ -18,7 +19,7 @@ scheduledTasks =
     ]
 
 runServerLib = (libraryName, payload, callback)->
-  console.log("running #{libraryName} with", payload, "at", moment().format('MMMM Do YYYY, h:mm:ss a'))
+  debug("running #{libraryName} with", payload, "at", moment().format('MMMM Do YYYY, h:mm:ss a'))
   library = Cine.server_lib(libraryName)
   switch library.length
     when 1 then library(callback)
@@ -27,11 +28,11 @@ runServerLib = (libraryName, payload, callback)->
 
 currentEnvironment = (jobName, payload, done)->
   runServerLib jobName, payload, (err, response)->
-    console.log(response)
+    debug(response)
     done(err, response)
 
 runScheduledJob = (jobName, payload, done)->
-  console.log("Running scheduled job", jobName)
+  debug("Running scheduled job", jobName)
   runner = (libName, callback)-> runServerLib(libName, payload, callback)
   # needs to be series because recordings_processor needs to move files, then reap them
   async.eachSeries scheduledTasks[jobName], runner, done

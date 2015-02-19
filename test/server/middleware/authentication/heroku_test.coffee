@@ -162,7 +162,6 @@ describe 'heroku authentication', ->
         .send(generateSSOParams(method, @account))
         .expect(302)
         .end (err, res)=>
-          console.log(err)
           expect(err).to.be.null
           @agent.saveCookies(res)
           @res = res

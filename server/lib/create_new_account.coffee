@@ -1,3 +1,4 @@
+debug = require('debug')('cine:create_new_account')
 Account = Cine.server_model("account")
 User = Cine.server_model("user")
 Project = Cine.server_model("project")
@@ -77,7 +78,7 @@ module.exports = (accountAttributes, userAttributes={}, projectAttributes={}, st
       return callback(err) if err
       results.user = user if user
       addFirstProjectToAccount account, projectAttributes, streamAttributes, (err, projectAndStream)->
-        # console.log("done results", results)
+        # debug("done results", results)
         # we still want to allow the user to be created even if there is no stream
         err = null if err == 'Next stream not available, please try again later'
         return callback(err) if err

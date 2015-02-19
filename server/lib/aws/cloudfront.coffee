@@ -1,3 +1,4 @@
+debug = require('debug')('cine:cloudfront')
 _ = require('underscore')
 AWS = Cine.server_lib('aws/aws')
 
@@ -14,7 +15,7 @@ exports.ensureDistributionForOrigin = (origin, options={}, callback)->
 
   # waitForDistributionToBeDeployed(null, callback)
   exports.distrubtionForOrigin origin, (err, distribution)->
-    # console.log("FOUND DISTRO", distribution)
+    # debug("FOUND DISTRO", distribution)
     if distribution
       return callback(null, distribution) if distributionIsDeployed(distribution)
       waitForDistributionToBeDeployed(distribution, callback)
@@ -25,7 +26,7 @@ exports.ensureDistributionForOrigin = (origin, options={}, callback)->
 exports.distrubtionForOrigin = (origin, callback)->
   exports.listDistributions (err, response)->
     return callback(err) if err
-    # console.log("GOT RESPONSE", response)
+    # debug("GOT RESPONSE", response)
     distribution = findDistributionForOrigin(origin, response.Items)
     callback(null, distribution)
 
@@ -36,15 +37,15 @@ createAndWaitForDistribution = (origin, options, callback)->
 
 waitForDistributionToBeDeployed = (distribution, callback)->
   cloudfront.waitFor 'distributionDeployed', Id: distribution.Id, (err, distro)->
-    # console.log("DONE", err, distro)
+    # debug("DONE", err, distro)
     callback(err, distro)
 
 findDistributionForOrigin = (origin, response)->
   _.find response, (distribution)->
-    # console.log("SEARCHING distribution", distribution)
+    # debug("SEARCHING distribution", distribution)
     return false if distribution.Origins.Quantity == 0
     _.any distribution.Origins.Items, (distroOrigin)->
-      # console.log("SEARCHING distroOrigin", distroOrigin)
+      # debug("SEARCHING distroOrigin", distroOrigin)
       distroOrigin.DomainName == origin
 
 # callback(err, res)

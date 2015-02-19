@@ -1,3 +1,4 @@
+debug = require('debug')('cine:analyze_kue_queue')
 async = require('async')
 _ = require('underscore')
 createQueue = Cine.server_lib('create_queue')
@@ -15,11 +16,11 @@ tenMinutesAgo = ->
   d
 
 logError = (message)->
-  console.log("logging error!!!", message)
+  debug("logging error!!!", message)
 
 jobWaitingLongerThan10Minutes = (job)->
   maxAge = tenMinutesAgo()
-  # console.log("UPDATED AT", job.updated_at)
+  # debug("UPDATED AT", job.updated_at)
   updatedAt = new Date(Number(job.updated_at))
   maxAge > updatedAt
 
@@ -27,7 +28,7 @@ jobWaitingLongerThan10Minutes = (job)->
 checkState = (queueName, state, callback)->
   getQueueResults queueName, state, (err, jobs)->
     return callback(err) if err
-    console.log("Checking", jobs.length, "jobs in", queueName)
+    debug("Checking", jobs.length, "jobs in", queueName)
     jobsRunningTooLong = _.any jobs, jobWaitingLongerThan10Minutes
     return callback("Jobs in #{state} state longer than 10 minutes") if jobsRunningTooLong
     callback()

@@ -1,3 +1,4 @@
+debug = require('debug')('cine:parse_edgecast_log')
 csv = require("csv")
 fs = require("fs")
 StreamUsageReport = Cine.server_model('stream_usage_report')
@@ -30,7 +31,7 @@ saveDataOnRecord = (instanceName, streamName, entryData, callback)->
   return callback() if isInvalidInstanceName(instanceName)
   edgecastStreamReportByInstanceNameAndStreamName instanceName, streamName, (err, esr)->
     if err
-      console.log(err, entryData)
+      debug(err, entryData)
       return callback(err)
     esr.logEntries.push entryData
     esr.save callback
@@ -45,7 +46,7 @@ convertCReferrerToInstanceAndStream = (cReferrer)->
 
 
 module.exports = (absoluteFileName, done)->
-  console.log('parsing', absoluteFileName)
+  debug('parsing', absoluteFileName)
   errs = []
 
   errorFunction = (err)->
@@ -53,7 +54,7 @@ module.exports = (absoluteFileName, done)->
     done(err)
 
   closeFunction = (count) ->
-    console.log "Number of lines: " + count
+    debug "Number of lines: " + count
     return done(errs) if errs.length > 0
     done()
 
@@ -68,7 +69,7 @@ module.exports = (absoluteFileName, done)->
       duration: Number data['x-duration']
       kind: 'fms'
     saveDataOnRecord instanceName, streamName, entryData, (err)->
-      console.log('saved', err)
+      debug('saved', err)
       errs.push(data: data, rowNumber: rowNumber, error: err) if err
       callback()
 
@@ -92,7 +93,7 @@ module.exports = (absoluteFileName, done)->
     # Most of the log entries are either 500 bytes or 2-4 mb.
     # just save the mb calls, which I imagine is the actual streaming.
     return callback() unless entryData.bytes > 1000
-    # console.log(data['sc-status'], entryData.bytes, data['rs-bytes'])
+    # debug(data['sc-status'], entryData.bytes, data['rs-bytes'])
     # callback()
     saveDataOnRecord streamData.instanceName, streamData.streamName, entryData, (err)->
       errs.push(data: data, rowNumber: rowNumber, error: err) if err

@@ -1,3 +1,4 @@
+debug = require('debug')('cine:add_next_stream_to_project')
 _ = require('underscore')
 EdgecastStream = Cine.server_model('edgecast_stream')
 Project = Cine.server_model('project')
@@ -51,6 +52,6 @@ module.exports = (project, options, callback)->
     callback = options
     options = {}
   ensureAccountCanAddAnotherStream project, (err, canAddAnotherStream)->
-    # console.log("checked", err, canAddAnotherStream)
+    # debug("checked", err, canAddAnotherStream)
     return returnExistingStream(project, callback) unless canAddAnotherStream
     allocateNewStreamToProject(project, options, callback)

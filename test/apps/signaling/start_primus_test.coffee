@@ -13,7 +13,6 @@ describe 'socket calls', ->
   before (done)->
     portfinder.getPort (err, port)=>
       return done(err) if err
-      console.log("Found port", port)
       @availablePort = port
       newEnv = _.clone(process.env)
       newEnv.PORT = @availablePort

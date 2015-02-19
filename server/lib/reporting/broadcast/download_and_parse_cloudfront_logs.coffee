@@ -1,3 +1,4 @@
+debug = require('debug')('cine:download_and_parse_cloudfront_logs')
 async = require('async')
 fs = require("fs")
 path = require("path")
@@ -15,7 +16,7 @@ parseLogFile = (logName, outputFile, callback)->
   parsedLog.save (err)->
     return callback(err) if err
     unzipAndProcessFile outputFile, parseCloudfrontLog, (err)->
-      console.log("parsed cloudfront log file", logName, err)
+      debug("parsed cloudfront log file", logName, err)
       parsedLog.parseErrors = err if err
       parsedLog.isComplete = true
       parsedLog.save (err)->
@@ -44,11 +45,11 @@ downloadAndParseEdgecastLogs = (done)->
   mkdirp.sync directory
 
   processCloudfrontFile = (file, callback)->
-    console.log("PROCESSING", file)
+    debug("PROCESSING", file)
     localPath = "#{directory}#{path.basename(file)}"
     s3Client.downloadFile localPath, LOG_BUCKET, file, (err)->
       if err
-        console.log("download error", err)
+        debug("download error", err)
         return callback(err)
       parseLogFile file, localPath, callback
 
@@ -66,7 +67,7 @@ downloadAndParseEdgecastLogs = (done)->
   # processCloudfrontFile("hls/publish-sfo1/EBXGNCBDF3ULO.2014-11-24-19.b5342c87.gz", done)
   processCloudfrontFolders = (data, callback)->
     folders = _.pluck(data.CommonPrefixes, 'Prefix')
-    console.log("PROCESSING hls folders", folders)
+    debug("PROCESSING hls folders", folders)
     async.each folders, processCloudfrontFolder, callback
 
   asyncCalls = [

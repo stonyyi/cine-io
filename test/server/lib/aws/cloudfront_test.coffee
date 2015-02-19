@@ -27,7 +27,6 @@ describe 'cloudfront', ->
 
       it 'waits for the distro to be deployed if being created now', (done)->
         cloudfront.ensureDistributionForOrigin "cine-io-hls.s3.amazonaws.com", (err, distro)=>
-          console.log("DONE")
           expect(err).to.be.null
           expect(distro.Id).to.equal("E3A4KOLOH12OAV")
           expect(@cloudfrontNock.isDone()).to.be.true

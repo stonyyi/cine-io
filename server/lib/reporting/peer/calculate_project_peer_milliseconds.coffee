@@ -1,3 +1,4 @@
+debug = require('debug')('cine:calculate_project_peer_milliseconds')
 Keen = require('keen-js')
 client = Cine.server_lib('keen_client')
 
@@ -30,7 +31,7 @@ exports.byMonth = (projectId, month, callback)->
       start: firstSecondInMonth.toISOString()
       end: lastSecondInMonth.toISOString()
 
-  # console.log("running keen query", queryOptions)
+  # debug("running keen query", queryOptions)
 
   query = new Keen.Query("sum", queryOptions)
 

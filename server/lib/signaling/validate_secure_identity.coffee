@@ -1,3 +1,4 @@
+debug = require('debug')('cine:validate_secure_identity')
 crypto = require('crypto')
 
 generateExpectedSignature = (identity, timestamp, secretKey)->
@@ -11,5 +12,5 @@ generateExpectedSignature = (identity, timestamp, secretKey)->
 
 module.exports = (identity, secretKey, timestamp, actualSignature)->
   expectedSignature = generateExpectedSignature(identity, timestamp, secretKey)
-  # console.log expectedSignature, actualSignature
+  # debug expectedSignature, actualSignature
   expectedSignature == actualSignature

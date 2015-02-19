@@ -1,3 +1,4 @@
+debug = require('debug')('cine:room_manager')
 async = require('async')
 logEventInKeen = Cine.server_lib('reporting/peer/log_event_in_keen')
 redisClient = Cine.server_lib('redis_client')
@@ -66,7 +67,7 @@ sendTalkTimeToKeen = (talkTimeInMilliseconds, numberOfMembers, projectId, room, 
   data =
     talkTimeInMilliseconds: talkTimeInMilliseconds * numberOfMembers
     userCount: numberOfMembers
-  # console.log("SENDING EVENT", extraData)
+  # debug("SENDING EVENT", extraData)
   logEventInKeen.userTalkedInRoom projectId, room, data, callback
 
 module.exports = class RoomManager
@@ -80,7 +81,7 @@ module.exports = class RoomManager
     roomName.replace(regex, '')
 
   joinedRoom: (spark, room, callback=noop)=>
-    # console.log('joined room', room)
+    # debug('joined room', room)
     asyncCalls =
       redisLog: (cb)->
         logJoinInRedis(spark, room, cb)
@@ -89,7 +90,7 @@ module.exports = class RoomManager
     async.parallel asyncCalls, callback
 
   leftRoom: (spark, room, callback=noop)=>
-    # console.log('left room', room)
+    # debug('left room', room)
     asyncCalls =
       logMinutes: (cb)->
         logLeaveInRedis(spark, room, cb)

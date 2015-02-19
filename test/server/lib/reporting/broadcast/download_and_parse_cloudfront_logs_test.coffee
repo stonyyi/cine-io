@@ -47,7 +47,6 @@ describe 'downloadAndParseCloudfrontLogs', ->
         expect(@s3Nock3.isDone()).to.be.true
         ParsedLog.find (err, parsedLogs)=>
           expect(parsedLogs).to.have.length(2)
-          console.log(parsedLogs)
           parsedLog = _.findWhere parsedLogs, logName: "hls/publish-sfo1/EBXGNCBDF3ULO.2014-11-24-19.b5342c87.gz"
           expect(parsedLog.hasStarted).to.be.true
           expect(parsedLog.source).to.equal('cloudfront')

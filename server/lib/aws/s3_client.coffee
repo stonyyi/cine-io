@@ -1,3 +1,4 @@
+debug = require('debug')('cine:s3_client')
 s3 = require('s3')
 _ = require('underscore')
 s3Credentials = Cine.config('variables/s3')
@@ -22,7 +23,7 @@ exports.uploadFile = (localFile, bucket, remoteFile, options={}, callback)->
       Key: remoteFile
       ACL: options.ACL
 
-  console.log("uploading", params)
+  debug("uploading", params)
 
   uploader = s3Client.uploadFile(params)
 
@@ -31,10 +32,10 @@ exports.uploadFile = (localFile, bucket, remoteFile, options={}, callback)->
     callback(err)
 
   # uploader.on 'progress', ->
-  #   console.log("progress", uploader.progressMd5Amount, uploader.progressAmount, uploader.progressTotal)
+  #   debug("progress", uploader.progressMd5Amount, uploader.progressAmount, uploader.progressTotal)
 
   uploader.on 'end', ->
-    console.log("done uploading", params)
+    debug("done uploading", params)
     callback()
 
 exports.downloadFile = (localFile, bucket, remoteFile, callback)->
@@ -48,14 +49,14 @@ exports.downloadFile = (localFile, bucket, remoteFile, callback)->
     console.error("unable to download:", err.stack)
     callback(err)
   # downloader.on 'progress', ->
-  #   console.log("progress", downloader.progressAmount, downloader.progressTotal)
+  #   debug("progress", downloader.progressAmount, downloader.progressTotal)
 
   downloader.on 'end', ->
-    # console.log("done downloading")
+    # debug("done downloading")
     callback()
 
 # lister = list("bucket", 'hello/abc/')
-# lister.on 'data', (data)-> console.log("got data")
+# lister.on 'data', (data)-> debug("got data")
 # lister.on 'error', callback(err)
 # lister.on 'end', callback
 exports.list = (bucket, directory='')->
@@ -64,7 +65,7 @@ exports.list = (bucket, directory='')->
       Bucket: bucket
       Prefix: directory
       Delimiter: '/'
-  # console.log("Calling listObjects", params)
+  # debug("Calling listObjects", params)
   lister = s3Client.listObjects(params)
 
 fileNameToDeleteObject = (fileName)->
@@ -76,7 +77,7 @@ exports.delete = (bucket, files..., callback)->
     Delete:
       Objects: _.map(files, fileNameToDeleteObject)
 
-  # console.log("Calling deleteObjects", params)
+  # debug("Calling deleteObjects", params)
 
   deleter = s3Client.deleteObjects(params)
   deleter.on 'error', (err)->
@@ -84,7 +85,7 @@ exports.delete = (bucket, files..., callback)->
     callback(err)
 
   deleter.on 'end', ->
-    # console.log("done uploading")
+    # debug("done uploading")
     callback()
 
 exports._s3Client = s3Client

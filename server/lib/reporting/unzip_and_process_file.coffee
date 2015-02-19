@@ -1,9 +1,10 @@
+debug = require('debug')('cine:unzip_and_process_file')
 spawn = require('child_process').spawn
 fs = require('fs')
 async = require('async')
 
 module.exports = (gzippedFileName, unzippedFileFunction, done)->
-  console.log('unzipping', gzippedFileName)
+  debug('unzipping', gzippedFileName)
   unZipFile = gzippedFileName.slice(0, gzippedFileName.length-3)
   upzipProcess = spawn 'gunzip', [gzippedFileName]
   removeZippedFile = (err)->
