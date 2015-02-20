@@ -80,7 +80,12 @@ describe 'Stats#Show', ->
     response =
       [result1, result2, result3]
     @keenSuccess = requireFixture('nock/keen/status_check_success')()
-    requireFixture('nock/keen/sum_peer_milliseconds_group_by_project') response, @month, (err, @keenNock)=>
+
+    firstSecondInMonth = new Date(@month.getFullYear(), @month.getMonth(), 1)
+    lastSecondInMonth = new Date(@month.getFullYear(), @month.getMonth() + 1)
+    lastSecondInMonth.setSeconds(-1)
+
+    requireFixture('nock/keen/sum_peer_milliseconds_group_by_project') response, firstSecondInMonth, lastSecondInMonth, (err, @keenNock)=>
       done(err)
 
   beforeEach (done)->
