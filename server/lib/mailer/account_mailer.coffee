@@ -230,11 +230,15 @@ exports.welcomeEmail = (user, callback=noop)->
       content: """
       <p>Welcome to <a href='https://www.cine.io'>cine.io</a>!</p>
       <p>All of our APIs and common workflows are documented on our <a href='http://developer.cine.io/'>documentation page</a>.</p>
-      <p>We have a <a href="https://github.com/cine-io/broadcast-js-sdk">Broadcast JavaScript SDK</a> for easy playing and publishing live streams.</p>
+      <p>We have a <a href="https://github.com/cine-io/broadcast-js-sdk">JavaScript SDK</a>, <a href="https://github.com/cine-io/cineio-broadcast-ios">iOS pod</a>, and <a href="https://github.com/cine-io/cineio-broadcast-android">Android package</a> for easy playing and publishing live streams.</p>
+      <p>We have a <a href="https://github.com/cine-io/peer-js-sdk">JavaScript SDK</a> and <a href="https://github.com/cine-io/cineio-peer-android">Android package</a> for easy real time video chat. We can also broadcast your WebRTC streams to cine.io rtmp/hls live streams.</p>
+      <br/>
       <p>We have server side packages for <a href="https://github.com/cine-io/cineio-ruby">ruby</a>, <a href="https://github.com/cine-io/cineio-node">node</a>, and <a href="https://github.com/cine-io/cineio-python">python</a>.</p>
-      <p>We also have an <a href="https://github.com/cine-io/cineio-ios">iOS pod</a>, with Android coming soon.</p>
-      <p>All of our repositories and some sample apps can be found on our  <a href="http://git.cine.io">Github page</a>.</p>
-      <p>Don't hesitate to contact us if you have any questions or comments.</p>
+      <br/>
+      <p>All of our repositories and some sample apps can be found on our <a href="http://git.cine.io">Github page</a>.</p>
+      <br/>
+      <p>#{ENJOY_AND_QUESTIONS}</p>
+      <p>Happy Coding.</p>
       <p>Regards,<br/>
       Thomas Shafer<br/>
       Technical Officer, cine.io</p>
