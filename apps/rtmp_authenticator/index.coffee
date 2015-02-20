@@ -34,6 +34,8 @@ app.post '/', (req, res)->
   return res.status(404).send("no stream name provided") unless streamName
   query =
     streamName: streamName
+    deletedAt:
+      $exists: false
   EdgecastStream.findOne query, (err, stream)->
     return res.status(400).send(err) if err
     return res.status(404).send("invalid stream: #{streamName}") unless stream

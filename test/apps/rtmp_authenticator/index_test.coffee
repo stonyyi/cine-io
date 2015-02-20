@@ -18,6 +18,10 @@ describe 'RtmpAuthenticator', ->
     @stream = new EdgecastStream(streamName: 'myStream', streamKey: 'myKey', _project: @project._id)
     @stream.save done
 
+  beforeEach (done)->
+    @deletedStream = new EdgecastStream(streamName: 'myStream2', streamKey: 'myKey', _project: @project._id, deletedAt: new Date)
+    @deletedStream.save done
+
   describe '/', ->
 
     it "needs a name", (done)->
@@ -44,6 +48,16 @@ describe 'RtmpAuthenticator', ->
         .end (err, res)->
           expect(err).to.be.null
           expect(res.text).to.contain("unauthorized")
+          done()
+
+    it "requires the stream not be deleted", (done)->
+      @agent
+        .post('/')
+        .send(name: "myStream2", myKey: '')
+        .expect(404)
+        .end (err, res)->
+          expect(err).to.be.null
+          expect(res.text).to.contain("invalid stream")
           done()
 
     describe 'without a project', ->
