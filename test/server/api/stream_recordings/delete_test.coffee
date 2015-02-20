@@ -47,6 +47,14 @@ describe 'StreamRecordings#Delete', ->
         expect(options.status).to.equal(400)
         done()
 
+    it 'requires a valid id', (done)->
+      params = secretKey: @project.secretKey, id: 'not an id'
+      Delete params, (err, response, options)->
+        expect(err).to.equal('stream not found')
+        expect(response).to.be.null
+        expect(options.status).to.equal(404)
+        done()
+
     it 'will not return a stream not owned by a different project', (done)->
       params = secretKey: @project.secretKey, id: @notProjectStream._id
       Delete params, (err, response, options)->

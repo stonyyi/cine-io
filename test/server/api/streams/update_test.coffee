@@ -25,6 +25,14 @@ describe 'Streams#Update', ->
         expect(options).to.deep.equal(status: 400)
         done()
 
+    it 'requires a valid id', (done)->
+      params = secretKey: @project.secretKey, id: 'not an id'
+      Update params, (err, response, options)->
+        expect(err).to.equal('stream not found')
+        expect(response).to.be.null
+        expect(options).to.deep.equal(status: 404)
+        done()
+
   it 'sets the name on the stream', (done)->
     params = secretKey: @project.secretKey, id: @projectStream._id, name: 'new name'
     Update params, (err, response, options)=>

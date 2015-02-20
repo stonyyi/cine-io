@@ -25,6 +25,14 @@ describe 'Streams#Delete', ->
         expect(options).to.deep.equal(status: 400)
         done()
 
+    it 'requires a valid id', (done)->
+      params = secretKey: @project.secretKey, id: 'not an id'
+      Delete params, (err, response, options)->
+        expect(err).to.equal('stream not found')
+        expect(response).to.be.null
+        expect(options).to.deep.equal(status: 404)
+        done()
+
   it 'adds deletedAt to the stream', (done)->
     params = secretKey: @project.secretKey, id: @projectStream._id
     Delete params, (err, response, options)=>

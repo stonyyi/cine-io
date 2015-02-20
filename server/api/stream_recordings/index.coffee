@@ -3,6 +3,7 @@ EdgecastStream = Cine.server_model('edgecast_stream')
 getProject = Cine.server_lib('get_project')
 StreamRecordings = Cine.server_model('stream_recordings')
 async = require('async')
+canCastAsObjectId = Cine.server_lib('can_cast_as_object_id')
 
 isDeleted = (item)->
   item.deletedAt
@@ -11,6 +12,7 @@ module.exports = (params, callback)->
   getProject params, requires: 'either', userOverride: true, (err, project, options)->
     return callback(err, project, options) if err
     return callback("id required", null, status: 400) unless params.id
+    return callback("stream not found", null, status: 404) unless canCastAsObjectId(params.id)
 
     toRecordingJSON = (recording)->
       name: recording.name

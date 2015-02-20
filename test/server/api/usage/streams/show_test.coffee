@@ -101,6 +101,16 @@ describe 'UsageReports/Streams#Show', ->
 
     ShowUsageReportsStream params, callback
 
+  it 'requires a valid id', (done)->
+    params = {secretKey: 'dat secret key', id: 'not an id', month: 'some month'}
+    callback = (err, response, options)->
+      expect(err).to.contain('stream not found')
+      expect(response).to.be.null
+      expect(options.status).to.equal(404)
+      done()
+
+    ShowUsageReportsStream params, callback
+
   it 'requires a month', (done)->
     params = {secretKey: 'dat secret key', id: 'some id'}
     callback = (err, response, options)->

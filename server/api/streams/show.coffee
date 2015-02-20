@@ -6,6 +6,7 @@ BASE_URL = "rtmp://fml.cine.io/20C45E"
 convertIpAddressToEdgecastServer = Cine.server_lib('convert_ip_address_to_edgecast_server')
 NearestServer = Cine.api('server/nearest')
 _ = require('underscore')
+canCastAsObjectId = Cine.server_lib('can_cast_as_object_id')
 
 fmleProfile = (stream, options, callback)->
   if typeof options == "function"
@@ -61,6 +62,8 @@ Show = (params, callback)->
   getProject params, requires: 'either', (err, project, options)->
     return callback(err, project, options) if err
     return callback("id required", null, status: 400) unless params.id
+    return callback("stream not found", null, status: 404) unless canCastAsObjectId(params.id)
+
     query =
       _id: params.id
       _project: project._id

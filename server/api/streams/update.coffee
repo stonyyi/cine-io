@@ -2,11 +2,14 @@ _ = require('underscore')
 EdgecastStream = Cine.server_model('edgecast_stream')
 getProject = Cine.server_lib('get_project')
 StreamShow = Cine.api('streams/show')
+canCastAsObjectId = Cine.server_lib('can_cast_as_object_id')
 
 module.exports = (params, callback)->
   getProject params, requires: 'secret', userOverride: true, (err, project, options)->
     return callback(err, project, options) if err
     return callback("id required", null, status: 400) unless params.id
+    return callback("stream not found", null, status: 404) unless canCastAsObjectId(params.id)
+
     query =
       _id: params.id
       _project: project._id

@@ -4,6 +4,7 @@ async = require('async')
 EdgecastStream = Cine.server_model('edgecast_stream')
 StreamUsageReport = Cine.server_model('stream_usage_report')
 StreamRecordings = Cine.server_model('stream_recordings')
+canCastAsObjectId = Cine.server_lib('can_cast_as_object_id')
 
 getProject = Cine.server_lib('get_project')
 
@@ -12,6 +13,8 @@ module.exports = (params, callback)->
     return callback(err, project, status) if err
     return callback("id parameter required", null, status: 400) unless params.id
     return callback("month parameter required", null, status: 400) unless params.month
+    return callback("stream not found", null, status: 404) unless canCastAsObjectId(params.id)
+
     month = new Date(params.month)
     return callback("invalid month, please use ISO 8601 (http://en.wikipedia.org/wiki/ISO_8601)", null, status: 400) if isNaN(month.getTime())
 

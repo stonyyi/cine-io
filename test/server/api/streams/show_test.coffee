@@ -37,6 +37,14 @@ describe 'Streams#Show', ->
         expect(options.status).to.equal(400)
         done()
 
+    it 'requires a valid object id id', (done)->
+      params = publicKey: @project.publicKey, id: 'not an id'
+      Show params, (err, response, options)->
+        expect(err).to.equal('stream not found')
+        expect(response).to.be.null
+        expect(options.status).to.equal(404)
+        done()
+
     it 'will not return a stream not owned by a different project', (done)->
       params = publicKey: @project.publicKey, id: @notProjectStream._id
       Show params, (err, response, options)->

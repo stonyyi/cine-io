@@ -3,6 +3,7 @@ getProject = Cine.server_lib('get_project')
 deleteStreamRecordingOnS3 = Cine.server_lib('stream_recordings/delete_stream_recording_on_s3')
 StreamRecordings = Cine.server_model('stream_recordings')
 _ = require('underscore')
+canCastAsObjectId = Cine.server_lib('can_cast_as_object_id')
 
 findRecording = (recordings, name)->
   _.find recordings.recordings, (recording)->
@@ -12,6 +13,8 @@ module.exports = (params, callback)->
   getProject params, requires: 'secret', userOverride: true, (err, project, options)->
     return callback(err, project, options) if err
     return callback("id required", null, status: 400) unless params.id
+    return callback("stream not found", null, status: 404) unless canCastAsObjectId(params.id)
+
     query =
       _id: params.id
       _project: project._id
