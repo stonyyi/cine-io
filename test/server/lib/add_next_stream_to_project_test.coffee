@@ -60,6 +60,21 @@ describe 'addNextStreamToProject', ->
           expect(stream._id.toString()).to.equal(@stream._id.toString())
           done()
 
+      describe 'when the previous stream is deleted', ->
+        beforeEach (done)->
+          @stream.deletedAt = new Date
+          @stream.save done
+
+        beforeEach (done)->
+          @stream2 = new EdgecastStream(instanceName: 'cines', streamName: 'this stream2', _project: @project)
+          @stream2.save done
+
+        it.only 'returns the one allocated stream', (done)->
+          addNextStreamToProject @project, (err, stream)=>
+            expect(err).to.be.null
+            expect(stream._id.toString()).to.equal(@stream2._id.toString())
+            done()
+
   describe 'pro plan', ->
     beforeEach (done)->
       @account.productPlans = {broadcast: ['pro']}

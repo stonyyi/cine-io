@@ -11,7 +11,7 @@ returnExistingStream = (project, callback)->
   # we want 0,1,2,3,4 not 0,1,2,3,4,5
   # offset by 5 returns null
   offset = _.random(project.streamsCount - 1)
-  scope = EdgecastStream.findOne(_project: project._id).skip(offset)
+  scope = EdgecastStream.findOne(_project: project._id, deletedAt: {$exists: false}).skip(offset)
   scope.exec callback
 
 projectSummer = (accumulator, project)->
