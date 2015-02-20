@@ -69,7 +69,7 @@ describe 'addNextStreamToProject', ->
           @stream2 = new EdgecastStream(instanceName: 'cines', streamName: 'this stream2', _project: @project)
           @stream2.save done
 
-        it.only 'returns the one allocated stream', (done)->
+        it 'returns the one allocated stream', (done)->
           addNextStreamToProject @project, (err, stream)=>
             expect(err).to.be.null
             expect(stream._id.toString()).to.equal(@stream2._id.toString())
