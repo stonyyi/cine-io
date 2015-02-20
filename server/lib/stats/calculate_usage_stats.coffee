@@ -12,7 +12,7 @@ exports.byMonth = (month, done)->
     return done(err) if err
     collectiveStats = {}
     debug("fetching keen peer milliseconds")
-    fetchAllProjectsPeerMilliseconds month, (err, projectIdToPeerMilliseconds)->
+    fetchAllProjectsPeerMilliseconds.byMonth month, (err, projectIdToPeerMilliseconds)->
       debug("fetched keen peer milliseconds", err)
       return done(err) if err
       calculateUsageForAccount = (account, callback)->

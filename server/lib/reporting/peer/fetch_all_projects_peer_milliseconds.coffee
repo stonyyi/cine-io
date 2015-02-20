@@ -10,11 +10,13 @@ moveKeenArrayToObject = (accum, keenResultItem)->
   accum[keenResultItem.projectId] = keenResultItem.result
   accum
 
-module.exports = (month, callback)->
+exports.byMonth = (month, callback)->
   firstSecondInMonth = new Date(month.getFullYear(), month.getMonth(), 1)
   lastSecondInMonth = new Date(month.getFullYear(), month.getMonth() + 1)
   lastSecondInMonth.setSeconds(-1)
+  exports.between(firstSecondInMonth, lastSecondInMonth, callback)
 
+exports.between = (start, end, callback)->
   queryOptions =
     eventCollection: "peer-minutes"
     filters:
@@ -28,8 +30,8 @@ module.exports = (month, callback)->
     groupBy: 'projectId'
     targetProperty: "talkTimeInMilliseconds"
     timeframe:
-      start: firstSecondInMonth.toISOString()
-      end: lastSecondInMonth.toISOString()
+      start: start.toISOString()
+      end:   end.toISOString()
 
   debug("running keen query", queryOptions)
 

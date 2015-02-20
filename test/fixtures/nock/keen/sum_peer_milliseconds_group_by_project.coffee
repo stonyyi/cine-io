@@ -9,10 +9,7 @@ getResponse = (response, done)->
     done err, [result.toString('hex')]
 
 # response must look like: [{"projectId": "54adafdbaf652c8cb8624821", "result": 396963687}]
-module.exports = (expectedResponse, month, done)->
-  firstSecondInMonth = new Date(month.getFullYear(), month.getMonth(), 1)
-  lastSecondInMonth = new Date(month.getFullYear(), month.getMonth() + 1)
-  lastSecondInMonth.setSeconds(-1)
+module.exports = (expectedResponse, start, end, done)->
 
   getResponse expectedResponse, (err, response)->
     return done(err) if err
@@ -28,8 +25,8 @@ module.exports = (expectedResponse, month, done)->
       group_by: "projectId"
       target_property: "talkTimeInMilliseconds"
       timeframe:
-        start: firstSecondInMonth.toISOString()
-        end: lastSecondInMonth.toISOString()
+        start: start.toISOString()
+        end: end.toISOString()
       timezone: 0
 
     responseHeaders =

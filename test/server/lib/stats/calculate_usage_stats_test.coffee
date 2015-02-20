@@ -78,7 +78,13 @@ describe 'calculateUsageStats', ->
       result: 676767
     response =
       [result1, result2, result3]
-    requireFixture('nock/keen/sum_peer_milliseconds_group_by_project') response, new Date, (err, @keenNock)=>
+    @month = new Date
+    firstSecondInMonth = new Date(@month.getFullYear(), @month.getMonth(), 1)
+    lastSecondInMonth = new Date(@month.getFullYear(), @month.getMonth() + 1)
+    lastSecondInMonth.setSeconds(-1)
+
+
+    requireFixture('nock/keen/sum_peer_milliseconds_group_by_project') response, firstSecondInMonth, lastSecondInMonth, (err, @keenNock)=>
       done(err)
 
   beforeEach (done)->
@@ -93,9 +99,13 @@ describe 'calculateUsageStats', ->
       result: 343434
     response =
       [result1, result2, result3]
-    d = new Date
-    d.setYear(d.getYear() - 1)
-    requireFixture('nock/keen/sum_peer_milliseconds_group_by_project') response, d, (err, @keenNock2)=>
+    @month = new Date
+    @month.setYear(@month.getYear() - 1)
+    firstSecondInMonth = new Date(@month.getFullYear(), @month.getMonth(), 1)
+    lastSecondInMonth = new Date(@month.getFullYear(), @month.getMonth() + 1)
+    lastSecondInMonth.setSeconds(-1)
+
+    requireFixture('nock/keen/sum_peer_milliseconds_group_by_project') response, firstSecondInMonth, lastSecondInMonth, (err, @keenNock2)=>
       done(err)
 
   describe 'thisMonth', ->
