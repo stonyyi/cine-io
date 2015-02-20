@@ -107,7 +107,7 @@ describe 'accountMailer', ->
       expectedMergeVars =
         header_blurb: "Welcome to cine.io."
         name: "my name"
-      expect(mergeVars.templateVars.content).to.include('<a href="https://github.com/cine-io/broadcast-js-sdk">Broadcast JavaScript SDK</a>')
+      expect(mergeVars.templateVars.content).to.include('<a href="https://github.com/cine-io/broadcast-js-sdk">JavaScript SDK</a>')
       expect(mergeVars.templateVars.content).to.include("<a href='http://developer.cine.io/'>documentation page</a>")
       # content is huge, don't want to include it here
       expectedMergeVars.content = mergeVars.templateVars.content
