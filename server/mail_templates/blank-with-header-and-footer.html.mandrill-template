@@ -791,7 +791,7 @@ body.outlook p {
                       <table class="twelve columns">
                         <tr>
                           <td>
-                            <h3>Hi, *|name|*.</h3>
+                            <h3>Hi *|name|*,</h3>
                             *|content|*
                           </td>
                           <td class="expander"></td>
