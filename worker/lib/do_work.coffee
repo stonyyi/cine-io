@@ -4,8 +4,10 @@ _ = require('underscore')
 async = require('async')
 
 scheduledTasks =
-  bill_customers_once_a_month:
-    ['billing/charge_all_accounts']
+  once_a_day_worker:
+    [
+      'notify_accounts_three_days_after_signing_up'
+    ]
   once_an_hour_worker:
     [
       'reporting/broadcast/download_and_parse_edgecast_logs'

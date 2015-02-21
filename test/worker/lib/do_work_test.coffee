@@ -18,6 +18,12 @@ describe 'doWork', ->
     describe 'scheduled tasks', ->
       schedulableJobs = [
         {
+          name: 'once_a_day_worker'
+          libs: [
+            'notify_accounts_three_days_after_signing_up'
+          ]
+        }
+        {
           name: 'once_an_hour_worker'
           libs: [
             'reporting/broadcast/download_and_parse_edgecast_logs'
@@ -30,12 +36,6 @@ describe 'doWork', ->
           name: 'once_every_10_minutes'
           libs: [
             'analyze_kue_queue'
-          ]
-        }
-        {
-          name: 'bill_customers_once_a_month'
-          libs: [
-            'billing/charge_all_accounts'
           ]
         }
       ]
