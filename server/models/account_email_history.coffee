@@ -27,6 +27,9 @@ AccountEmailHistorySchema.methods.recordForMonth = (dateToCheck, kind)->
     entry.kind == kind && isSameMonth(entry.sentAt, dateToCheck)
   _.find @history, trueIfSameMonth
 
+AccountEmailHistorySchema.methods.findKind = (kind)->
+  _.findWhere @history, kind: kind
+
 AccountEmailHistory = mongoose.model 'AccountEmailHistory', AccountEmailHistorySchema
 
 module.exports = AccountEmailHistory

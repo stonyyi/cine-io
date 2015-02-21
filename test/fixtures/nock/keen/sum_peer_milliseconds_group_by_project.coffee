@@ -1,3 +1,4 @@
+debug = require('debug')('cine:test:sum_peer_milliseconds_group_by_project')
 zlib = require('zlib')
 # originalResult = [
 #   "1f8b08000f03d95402ffab562a4a2d2ecd2951b25288ae562a28cacf4a4d2ef14c0172954c4d125312d3529212d3cc4c8d922d92932ccc8c4c2c8c0c957414109a8c2dcd2ccd8ccd2ccc6b636b019f8908314c000000"
@@ -28,7 +29,6 @@ module.exports = (expectedResponse, start, end, done)->
         start: start.toISOString()
         end: end.toISOString()
       timezone: 0
-
     responseHeaders =
       server: 'nginx',
       date: 'Mon, 09 Feb 2015 18:57:18 GMT',
@@ -42,6 +42,8 @@ module.exports = (expectedResponse, start, end, done)->
       'cache-control': 'private, no-cache, no-cache=Set-Cookie, max-age=0, s-maxage=0',
       'access-control-allow-origin': '*',
       'access-control-allow-headers': 'origin, content-type, accept, authorization, user-agent'
+
+    debug('nocking keen', params)
 
     thing = nock('https://api.keen.io:443')
     .post('/3.0/projects/548b844ac2266c05648b501e/queries/sum', params)

@@ -37,3 +37,23 @@ describe 'AccountEmailHistory', ->
 
     it 'returns null for an aeh without a history record for that date', ->
       expect(@aeh.recordForMonth(@twoMonthsAgo, 'some-kind')).to.be.undefined
+
+  describe '#findKind', ->
+    beforeEach (done)->
+      @account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['basic', 'pro']})
+      @account.save done
+
+    beforeEach (done)->
+      @thisMonth = new Date
+
+      @aeh = new AccountEmailHistory(_account: @account._id)
+      @aeh.history.push
+        sentAt: @thisMonth
+        kind: 'some-kind'
+      @aeh.save done
+
+    it 'returns a record when there is a record for that kind', ->
+      expect(@aeh.findKind('some-kind').sentAt).to.equal(@thisMonth)
+
+    it 'returns null for an aeh without a history record for that kind', ->
+      expect(@aeh.recordForMonth('some-kind-2')).to.be.undefined
