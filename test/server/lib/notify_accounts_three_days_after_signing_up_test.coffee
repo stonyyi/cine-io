@@ -97,7 +97,7 @@ describe 'notify_account_three_days_after_signing_up', ->
       didSendBandwidth: [@onlyBroadcast._id]
       unknown: []
 
-    notifyAccountsThreeDaysAfterSigningUp (err, results)=>
+    notifyAccountsThreeDaysAfterSigningUp (err, results)->
       expect(err).to.be.null
       expect(results).to.deep.equal(expected)
       done()
@@ -117,7 +117,7 @@ describe 'notify_account_three_days_after_signing_up', ->
   it "will not notify an account if they have received an email already", (done)->
     notifyAccountsThreeDaysAfterSigningUp (err, results)=>
       expect(err).to.be.null
-      AccountEmailHistory.findOne _account: @alreadyGotEmail._id, (err, aeh)=>
+      AccountEmailHistory.findOne _account: @alreadyGotEmail._id, (err, aeh)->
         expect(err).to.be.null
         expect(aeh).to.be.ok
         result = aeh.findKind('threeDayNotification')
