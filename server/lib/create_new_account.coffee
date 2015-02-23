@@ -31,8 +31,13 @@ addProjectToAccount = (account, projectAttributes, streamAttributes, callback)->
     return callback(err) if err
     createTurnUserForProject project, (err)->
       return callback(err) if err
-      addNextStreamToProject project, name: streamAttributes.name, (err, stream)->
-        callback(err, stream: stream, project: project)
+      if account.productPlans?.broadcast?.length > 0
+        # with broadcast plan
+        addNextStreamToProject project, name: streamAttributes.name, (err, stream)->
+          callback(err, stream: stream, project: project)
+      else
+        # no broadcast plan
+        callback(null, project: project)
 
 # callback err, project: project, stream: stream
 addFirstProjectToAccount = (account, projectAttributes, streamAttributes, callback)->
