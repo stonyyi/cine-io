@@ -75,6 +75,17 @@ describe 'addNextStreamToProject', ->
             expect(stream._id.toString()).to.equal(@stream2._id.toString())
             done()
 
+      describe 'when there is a second empty project', ->
+        beforeEach (done)->
+          @secondProject = new Project(name: 'second project', _account: @account._id)
+          @secondProject.save done
+
+        it 'returns an appropriate error', (done)->
+          addNextStreamToProject @secondProject, (err, stream)->
+            expect(err).to.equal("No streams can be allocated to this project")
+            expect(stream).to.be.undefined
+            done()
+
   describe 'pro plan', ->
     beforeEach (done)->
       @account.productPlans = {broadcast: ['pro']}

@@ -12,7 +12,10 @@ returnExistingStream = (project, callback)->
   # offset by 5 returns null
   offset = _.random(project.streamsCount - 1)
   scope = EdgecastStream.findOne(_project: project._id, deletedAt: {$exists: false}).skip(offset)
-  scope.exec callback
+  scope.exec (err, stream)->
+    return callback(err) if err
+    return callback("No streams can be allocated to this project") if !stream
+    return callback(null, stream)
 
 projectSummer = (accumulator, project)->
   project.streamsCount + accumulator
