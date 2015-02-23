@@ -1,18 +1,55 @@
 updateOrThrottleAccountsWhoCannotPayForOverages = Cine.server_lib('billing/update_or_throttle_accounts_who_cannot_pay_for_overages')
 Account = Cine.server_model("account")
+Project = Cine.server_model("project")
 AccountEmailHistory = Cine.server_model("account_email_history")
 humanizeBytes = Cine.lib('humanize_bytes')
 mailer = Cine.server_lib("mailer")
 assertEmailSent = Cine.require 'test/helpers/assert_email_sent'
 calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
+calculateAndSaveUsageStats = Cine.server_lib("stats/calculate_and_save_usage_stats")
 
 THOUSAND = 1000
 MINUTES = 60 * THOUSAND # in milliseconds
 
 describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
+  beforeEach ->
+    @month = new Date
+
   beforeEach (done)->
     @account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['solo'], peer: ['basic']})
     @account.save done
+
+  beforeEach (done)->
+    @project = new Project(_account: @account._id)
+    @project.save done
+
+  stubUsage = (options)->
+    beforeEach ->
+      @usageStub = sinon.stub(calculateAccountUsage, 'byMonthWithKeenMilliseconds')
+      @usageStub.callsArgWith(3, null, bandwidth: options.bandwidth, storage: options.storage, peerMilliseconds: options.peerMilliseconds)
+
+    afterEach ->
+      @usageStub.restore()
+
+    beforeEach ->
+      @keenSuccess = requireFixture('nock/keen/status_check_success')()
+
+    beforeEach (done)->
+      result1 =
+        projectId: @project._id.toString()
+        result: options.peerMilliseconds
+      response =
+        [result1]
+
+      firstSecondInMonth = new Date(@month.getFullYear(), @month.getMonth(), 1)
+      lastSecondInMonth = new Date(@month.getFullYear(), @month.getMonth() + 1)
+      lastSecondInMonth.setSeconds(-1)
+
+      requireFixture('nock/keen/sum_peer_milliseconds_group_by_project') response, firstSecondInMonth, lastSecondInMonth, (err, @keenNock)=>
+        done(err)
+
+    beforeEach (done)->
+      calculateAndSaveUsageStats.byMonth @month, done
 
   describe 'cine.io accounts', ->
     beforeEach (done)->
@@ -27,15 +64,9 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
         @account.save done
 
       describe '80% of account limit for broadcast', ->
-        beforeEach ->
-          @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
-          usedBandwidth = humanizeBytes.GiB * 20 * 0.81
-          usedStorage = humanizeBytes.GiB * 5
-          usedPeerMilliseconds = 1 * MINUTES
-          @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
-
-        afterEach ->
-          @usageStub.restore()
+        stubUsage
+          bandwidth: humanizeBytes.GiB * 20 * 0.81
+          storage: humanizeBytes.GiB * 5
 
         describe 'without a prior email this month', ->
           assertEmailSent 'willUpgradeAccount'
@@ -72,15 +103,11 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
             updateOrThrottleAccountsWhoCannotPayForOverages done
 
       describe '80% of account limit for peer', ->
-        beforeEach ->
-          @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
-          usedBandwidth = humanizeBytes.GiB
-          usedStorage = humanizeBytes.GiB
-          usedPeerMilliseconds = 11.3 * THOUSAND * MINUTES
-          @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
 
-        afterEach ->
-          @usageStub.restore()
+        stubUsage
+          bandwidth: humanizeBytes.GiB
+          storage: humanizeBytes.GiB
+          peerMilliseconds: 11.3 * THOUSAND * MINUTES
 
         describe 'without a prior email this month', ->
           assertEmailSent 'willUpgradeAccount'
@@ -117,15 +144,10 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
             updateOrThrottleAccountsWhoCannotPayForOverages done
 
       describe 'over account limit', ->
-        beforeEach ->
-          @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
-          usedBandwidth = humanizeBytes.GiB * 250
-          usedStorage = humanizeBytes.GiB * 1000
-          usedPeerMilliseconds = 13 * THOUSAND * MINUTES
-          @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
-
-        afterEach ->
-          @usageStub.restore()
+        stubUsage
+          bandwidth: humanizeBytes.GiB * 250
+          storage: humanizeBytes.GiB * 1000
+          peerMilliseconds: 13 * THOUSAND * MINUTES
 
         assertEmailSent 'automaticallyUpgradedAccount'
         assertEmailSent.admin 'automaticallyUpgradedAccount'
@@ -150,14 +172,9 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
               done()
 
     describe 'with low bandwidth', ->
-      beforeEach ->
-        @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
-        usedBandwidth = humanizeBytes.GiB * 0.9
-        usedStorage = humanizeBytes.GiB * 0.9
-        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
-
-      afterEach ->
-        @usageStub.restore()
+      stubUsage
+        bandwidth: humanizeBytes.GiB * 0.9
+        storage: humanizeBytes.GiB * 0.9
 
       it 'does not throttle accounts who have not entered a credit card but are under 1 GiBeezy', (done)->
         updateOrThrottleAccountsWhoCannotPayForOverages (err)=>
@@ -168,15 +185,10 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
             done()
 
     describe 'over account limit for broadcast', ->
-      beforeEach ->
-        @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
-        usedBandwidth = humanizeBytes.GiB * 1.1
-        usedStorage = humanizeBytes.GiB * 0.9
-        usedPeerMilliseconds = 1 * MINUTES
-        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
-
-      afterEach ->
-        @usageStub.restore()
+      stubUsage
+        bandwidth: humanizeBytes.GiB * 1.1
+        storage: humanizeBytes.GiB * 0.9
+        peerMilliseconds: 1 * MINUTES
 
       assertEmailSent 'throttledAccount'
       assertEmailSent.admin 'throttledAccount'
@@ -200,15 +212,10 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
           done()
 
     describe 'over account limit for peer', ->
-      beforeEach ->
-        @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
-        usedBandwidth = humanizeBytes.GiB
-        usedStorage = humanizeBytes.GiB
-        usedPeerMilliseconds = 13 * THOUSAND * MINUTES
-        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage, peerMilliseconds: usedPeerMilliseconds)
-
-      afterEach ->
-        @usageStub.restore()
+      stubUsage
+        bandwidth: humanizeBytes.GiB
+        storage: humanizeBytes.GiB
+        peerMilliseconds: 13 * THOUSAND * MINUTES
 
       assertEmailSent 'throttledAccount'
       assertEmailSent.admin 'throttledAccount'
@@ -238,14 +245,9 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
       @account.save done
 
     describe 'within account limit', ->
-      beforeEach ->
-        @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
-        usedBandwidth = humanizeBytes.GiB * 1.1
-        usedStorage = humanizeBytes.GiB * 0.9
-        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
-
-      afterEach ->
-        @usageStub.restore()
+      stubUsage
+        bandwidth: humanizeBytes.GiB * 1.1
+        storage: humanizeBytes.GiB * 0.9
 
       it 'does not throttle accounts if they are within their limit', (done)->
         updateOrThrottleAccountsWhoCannotPayForOverages (err)=>
@@ -256,14 +258,9 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
             done()
 
     describe 'not in account limit', ->
-      beforeEach ->
-        @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
-        usedBandwidth = humanizeBytes.GiB * 110.1
-        usedStorage = humanizeBytes.GiB * 0.9
-        @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
-
-      afterEach ->
-        @usageStub.restore()
+      stubUsage
+        bandwidth: humanizeBytes.GiB * 110.1
+        storage: humanizeBytes.GiB * 0.9
 
       assertEmailSent 'throttledAccount'
       assertEmailSent.admin 'throttledAccount'
@@ -293,14 +290,9 @@ describe 'updateOrThrottleAccountsWhoCannotPayForOverages', ->
       @account.unthrottleable = true
       @account.save done
 
-    beforeEach ->
-      @usageStub = sinon.stub(calculateAccountUsage, 'thisMonth')
-      usedBandwidth = humanizeBytes.GiB * 1.1
-      usedStorage = humanizeBytes.GiB * 0.9
-      @usageStub.callsArgWith(1, null, bandwidth: usedBandwidth, storage: usedStorage)
-
-    afterEach ->
-      @usageStub.restore()
+    stubUsage
+      bandwidth: humanizeBytes.GiB * 1.1
+      storage: humanizeBytes.GiB * 0.9
 
     it 'does not throttle accounts which have not entered a credit card if they are over the limit', (done)->
       updateOrThrottleAccountsWhoCannotPayForOverages (err)=>

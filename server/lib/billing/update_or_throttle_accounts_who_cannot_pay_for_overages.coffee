@@ -2,7 +2,6 @@ debug = require('debug')('cine:update_or_throttle_accounts_who_cannot_pay_for_ov
 _ = require('underscore')
 Account = Cine.server_model('account')
 require "mongoose-querystream-worker"
-calculateAccountUsage = Cine.server_lib('reporting/calculate_account_usage')
 upgradeAccountToCorrectUsagePlan = Cine.server_lib('billing/upgrade_account_to_correct_usage_plan')
 humanizeBytes = Cine.lib('humanize_bytes')
 UsageReport = Cine.model('usage_report')
@@ -10,6 +9,7 @@ BackboneAccount = Cine.model('account')
 AccountEmailHistory = Cine.server_model("account_email_history")
 mailer = Cine.server_lib("mailer")
 AccountThrottler = Cine.server_lib('account_throttler')
+Stats = Cine.server_lib("stats")
 
 MINUTES = 60 * 1000
 
@@ -75,30 +75,34 @@ notifyUserTheyWillBeUpgraded = (date, account, results, callback)->
         sentAt: new Date
       aeh.save callback
 
-checkAccount = (account, callback)->
-  date = new Date
-  calculateAccountUsage.thisMonth account, (err, results)->
-    # debug("calculated", err, results)
-    return callback(err) if err
+createAccountChecker = (month, stats)->
+  (account, callback)->
+    debug("checking account", account._id)
+    results = stats[account._id.toString()]
 
+    unless results
+      debug("no results", account._id)
+      return callback('NO results')
     # it's cool if an account is < 1 GiB and < 60 minutes for peer, no need to check anything
-    return callback() if underFreePlanStorageAndBandwidthAndPeer(results)
+    if underFreePlanStorageAndBandwidthAndPeer(results)
+      debug("under free plan", account._id)
+      return callback()
 
     accountLimit = calculateAccountLimit(account, results)
-    # debug("calculated account limit", accountLimit)
+    debug("calculated account limit", account._id, accountLimit)
     if isCineAccount(account)
       # they have no credit card, throttle them
       unless hasPrimaryCard(account)
-        # debug("THROTTLEING")
+        debug("THROTTLEING", account._id)
         return throttleAccount(account, callback)
       # over account limit, upgrade their account
       if overAccountLimit(accountLimit)
-        # debug("UPGRADE")
+        debug("UPGRADE", account._id)
         return upgradeAccountToCorrectUsagePlan(account, results, callback)
       # within 90 percent, notify them they will be upgraded
       if at90PercentOfAccountLimit(accountLimit)
-        # debug("NOTIFY")
-        return notifyUserTheyWillBeUpgraded(date, account, results, callback)
+        debug("NOTIFY", account._id)
+        return notifyUserTheyWillBeUpgraded(month, account, results, callback)
       # all good, carry on
       # debug("ALL GOOD")
       callback()
@@ -112,8 +116,16 @@ checkAccount = (account, callback)->
       callback()
 
 module.exports = (callback)->
-  scope = Account.find()
-    .exists('deletedAt', false)
-    .exists('throttledAt', false)
-    .exists('unthrottleable', false)
-  scope.stream().concurrency(20).work checkAccount, callback
+  month = new Date
+  Stats.getUsage month, (err, stats)->
+    return callback(err) if err
+    debug("got stats", stats)
+    accountIds = _.keys(stats)
+    debug("querying account ids", accountIds)
+    query =
+      _id: {$in: accountIds}
+    scope = Account.where(query)
+      .exists('deletedAt', false)
+      .exists('throttledAt', false)
+      .exists('unthrottleable', false)
+    scope.stream().concurrency(20).work createAccountChecker(month, stats), callback
