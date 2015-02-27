@@ -1,4 +1,5 @@
 Project = Cine.server_model('project')
+debug = require('debug')('cine:authenticateSpark')
 noop = ->
 callMe = (cb)->
   cb()
@@ -16,6 +17,7 @@ exports.authenticateSpark = (spark, data, callback=noop)->
   publicKey = data.publicKey
   projectForPublicKey publicKey, (err, project)->
     if err || !project
+      debug("invalid pubic key", err, data)
       callback('invalid public key')
       if spark.projectCallbacks
         _.each spark.projectCallbacks, (cb)->
