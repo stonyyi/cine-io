@@ -1,5 +1,4 @@
 connect_redis = require('connect-redis')
-_ = require('underscore')
 session = require('express-session')
 cookieParser = require('cookie-parser')
 
