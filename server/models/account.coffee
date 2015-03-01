@@ -82,6 +82,13 @@ AccountSchema.path('throttledReason').validate ((value)->
   /overLimit|cardDeclined/.test value
 ), 'Invalid throttledReason'
 
+AccountSchema.pre 'validate', (next)->
+  @productPlans.broadcast = _.select @productPlans.broadcast, (plan)=>
+    _.has(ProvidersAndPlans[@billingProvider].broadcast.plans, plan)
+  @productPlans.peer = _.select @productPlans.peer, (plan)=>
+    _.has(ProvidersAndPlans[@billingProvider].peer.plans, plan)
+  next()
+
 AccountSchema.pre 'save', (next)->
   return next() if @masterKey
   crypto.randomBytes 32, (ex, buf)=>

@@ -27,6 +27,33 @@ describe 'Account', ->
           expect(err.errors.billingProvider.message).to.equal('Invalid billing provider')
           done()
 
+    describe 'plans', ->
+
+      it 'cannot be an unknown value', (done)->
+        account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['enterprise'], peer: ["undefined"]})
+        account.save (err, member)->
+          expect(member.productPlans.peer).to.have.length(0)
+          expect(member.productPlans.broadcast).to.have.length(1)
+          expect(member.productPlans.broadcast[0]).to.equal('enterprise')
+          done()
+
+      it 'will preserve the known value', (done)->
+        account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['enterprise'], peer: ["free", "undefined"]})
+        account.save (err, member)->
+          expect(member.productPlans.peer).to.have.length(1)
+          expect(member.productPlans.peer[0]).to.equal('free')
+          expect(member.productPlans.broadcast).to.have.length(1)
+          expect(member.productPlans.broadcast[0]).to.equal('enterprise')
+          done()
+
+      it 'cannot be a strange value', (done)->
+        account = new Account(billingProvider: 'cine.io', productPlans: {broadcast: ['enterprise'], peer: "wtf"})
+        account.save (err, member)->
+          expect(member.productPlans.peer).to.have.length(0)
+          expect(member.productPlans.broadcast).to.have.length(1)
+          expect(member.productPlans.broadcast[0]).to.equal('enterprise')
+          done()
+
     describe 'throttledReason', ->
 
       _.each ['cardDeclined', 'overLimit'], (throttledReason)->
