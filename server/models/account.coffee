@@ -84,8 +84,10 @@ AccountSchema.path('throttledReason').validate ((value)->
 
 AccountSchema.pre 'validate', (next)->
   @productPlans.broadcast = _.select @productPlans.broadcast, (plan)=>
+    return false unless ProvidersAndPlans[@billingProvider].broadcast
     _.has(ProvidersAndPlans[@billingProvider].broadcast.plans, plan)
   @productPlans.peer = _.select @productPlans.peer, (plan)=>
+    return false unless ProvidersAndPlans[@billingProvider].peer
     _.has(ProvidersAndPlans[@billingProvider].peer.plans, plan)
   next()
 

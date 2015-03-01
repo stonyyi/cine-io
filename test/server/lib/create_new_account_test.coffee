@@ -19,16 +19,16 @@ describe 'createNewAccount', ->
   describe 'with peer', ->
 
     beforeEach (done)->
-      @accountAttributes.productPlans = {peer: 'solo'}
+      @accountAttributes.productPlans = {broadcast: 'solo'}
       createNewAccount @accountAttributes, @userAttributes, @projectAttributes, @streamAttributes, (err, results)=>
         @results = results
         done(err)
 
     it 'adds the plan', ->
       # doing a deep equal of a mongo array vs js array doesn't work
-      expect(@results.account.productPlans.broadcast).to.have.length(0)
-      expect(@results.account.productPlans.peer).to.have.length(1)
-      expect(@results.account.productPlans.peer[0]).to.equal('solo')
+      expect(@results.account.productPlans.peer).to.have.length(0)
+      expect(@results.account.productPlans.broadcast).to.have.length(1)
+      expect(@results.account.productPlans.broadcast[0]).to.equal('solo')
 
   describe 'without a stream', ->
     beforeEach (done)->

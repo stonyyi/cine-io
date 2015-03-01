@@ -11,36 +11,36 @@ describe 'Accounts#update', ->
     @account.save done
 
   it "updates the account fields", (done)->
-    params = {masterKey: @account.masterKey, name: 'New Name', productPlans: {broadcast: ['starter']}}
+    params = {masterKey: @account.masterKey, name: 'New Name', productPlans: {broadcast: ['solo']}}
     callback = (err, response)=>
       expect(err).to.equal(null)
       expect(response.name).to.equal('New Name')
       expect(response.productPlans.peer).to.have.length(0)
       expect(response.productPlans.broadcast).to.have.length(1)
-      expect(response.productPlans.broadcast[0]).to.equal('starter')
+      expect(response.productPlans.broadcast[0]).to.equal('solo')
       Account.findById @account._id, (err, account)->
         expect(account.name).to.equal('New Name')
         expect(account.productPlans.peer).to.have.length(0)
         expect(account.productPlans.broadcast).to.have.length(1)
-        expect(account.productPlans.broadcast[0]).to.equal('starter')
+        expect(account.productPlans.broadcast[0]).to.equal('solo')
         done()
 
     UpdateAccount params, callback
 
   describe "won't overwrite with blank values", ->
     it "won't overwrite with blank name", (done)->
-      params = {masterKey: @account.masterKey, name: '', productPlans: {broadcast: ['starter']}}
+      params = {masterKey: @account.masterKey, name: '', productPlans: {broadcast: ['solo']}}
       callback = (err, response)=>
         expect(err).to.equal(null)
         expect(response.name).to.equal('Chillin')
         expect(response.productPlans.peer).to.have.length(0)
         expect(response.productPlans.broadcast).to.have.length(1)
-        expect(response.productPlans.broadcast[0]).to.equal('starter')
+        expect(response.productPlans.broadcast[0]).to.equal('solo')
         Account.findById @account._id, (err, account)->
           expect(account.name).to.equal('Chillin')
           expect(account.productPlans.peer).to.have.length(0)
           expect(account.productPlans.broadcast).to.have.length(1)
-          expect(account.productPlans.broadcast[0]).to.equal('starter')
+          expect(account.productPlans.broadcast[0]).to.equal('solo')
           done()
 
       UpdateAccount params, callback
