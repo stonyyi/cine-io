@@ -131,8 +131,9 @@ describe 'chargeAccountForMonth', ->
       @usageStub.restore()
 
     beforeEach (done)->
+      @date = new Date("February 12 2015")
       @account.productPlans.broadcast = ['basic']
-      @account.createdAt = new Date(@now.toString())
+      @account.createdAt = @date
       @account.createdAt.setDate(5)
       @chargeAmount = 94285
       @fullAmount = 94285.71428571428
@@ -149,7 +150,7 @@ describe 'chargeAccountForMonth', ->
       @mailerSpy.restore()
 
     beforeEach (done)->
-      chargeAccountForMonth @account, @now, done
+      chargeAccountForMonth @account, @date, done
 
     it 'creates a record in AccountBillingHistory with a rounded down number', (done)->
       AccountBillingHistory.findOne _account: @account._id, (err, abh)=>
@@ -157,7 +158,7 @@ describe 'chargeAccountForMonth', ->
         expect(abh.history).to.have.length(1)
         lastCharge = abh.history[0]
         expect(lastCharge.billingDate).to.be.instanceOf(Date)
-        expect(lastCharge.billingDate.toString()).to.equal(@now.toString())
+        expect(lastCharge.billingDate.toString()).to.equal(@date.toString())
         expect(lastCharge.billedAt).to.be.instanceOf(Date)
         expect(lastCharge.paid).to.be.true
         expect(lastCharge.stripeChargeId).to.equal("ch_102dM82AL5avr9E4B8GOejKB")
