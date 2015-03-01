@@ -171,62 +171,125 @@ describe 'accountMailer', ->
         assertMailSent.call(this, err, response, done)
 
   describe 'monthlyBill', ->
-    beforeEach (done)->
-      results =
-        billing:
-          plan: 500
-          bandwidthOverage: 0
-          storageOverage: 0
-        usage:
-          bandwidth: humanizeBytes.TiB
-          storage: humanizeBytes.GiB * 2
-          peerMilliseconds: 123 * THOUSAND * MINUTES
-          bandwidthOverage: humanizeBytes.Gib * 5
-          storageOverage: humanizeBytes.Gib * 2
-      @now = new Date
-      @abh = new AccountBillingHistory(_account: @account._id)
-      @abh.history.push
-        stripeChargeId: 'this month charge'
-        billingDate: @now
-        billedAt: new Date
-        details: results
-        accountPlans: @account.productPlans
-        paid: true
+    describe 'all normal', ->
+      beforeEach (done)->
+        results =
+          billing:
+            plan: 500
+            bandwidthOverage: 0
+            storageOverage: 0
+          usage:
+            bandwidth: humanizeBytes.TiB
+            storage: humanizeBytes.GiB * 2
+            peerMilliseconds: 123 * THOUSAND * MINUTES
+            bandwidthOverage: humanizeBytes.Gib * 5
+            storageOverage: humanizeBytes.Gib * 2
+        @now = new Date
+        @abh = new AccountBillingHistory(_account: @account._id)
+        @abh.history.push
+          stripeChargeId: 'this month charge'
+          billingDate: @now
+          billedAt: new Date
+          details: results
+          accountPlans: @account.productPlans
+          paid: true
 
-      lastMonth = new Date
-      lastMonth.setDate(1)
-      lastMonth.setMonth(lastMonth.getMonth() - 1)
-      @abh.history.push
-        billingDate: lastMonth
-        stripeChargeId: 'last month charge'
-        paid: true
-      @abh.save done
+        lastMonth = new Date
+        lastMonth.setDate(1)
+        lastMonth.setMonth(lastMonth.getMonth() - 1)
+        @abh.history.push
+          billingDate: lastMonth
+          stripeChargeId: 'last month charge'
+          paid: true
+        @abh.save done
 
-    assertCorrectMergeVars = (mergeVars, billingMonthDate)->
-      month = moment(billingMonthDate).format("MMM YYYY")
-      expectedMergeVars =
-        header_blurb: "Thank you for using cine.io."
-        ACCOUNT_NAME: "my account name"
-        BILLING_MONTH: month
-        BILL_TOTAL: "$5.00"
-        PLAN_BANDWIDTH: "1.15 TiB"
-        PLAN_MINUTES: "400.0k"
-        PLAN_STORAGE: "125.00 GiB"
-        USAGE_BANDWIDTH: "1.00 TiB"
-        USAGE_MINUTES: "123.0k"
-        BROADCAST_PLAN: "Basic ($100 / month) and Pro ($500 / month)"
-        PEER_PLAN: "Business ($2,000 / month)"
-        USAGE_STORAGE: "2.00 GiB"
-      expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
-      assertMergeVarsInVars(mergeVars, expectedMergeVars)
+      assertCorrectMergeVars = (mergeVars, billingMonthDate)->
+        month = moment(billingMonthDate).format("MMM YYYY")
+        expectedMergeVars =
+          header_blurb: "Thank you for using cine.io."
+          ACCOUNT_NAME: "my account name"
+          BILLING_MONTH: month
+          BILL_TOTAL: "$5.00"
+          PLAN_BANDWIDTH: "1.15 TiB"
+          PLAN_MINUTES: "400.0k"
+          PLAN_STORAGE: "125.00 GiB"
+          USAGE_BANDWIDTH: "1.00 TiB"
+          USAGE_MINUTES: "123.0k"
+          BROADCAST_PLAN: "Basic ($100 / month) and Pro ($500 / month)"
+          PEER_PLAN: "Business ($2,000 / month)"
+          USAGE_STORAGE: "2.00 GiB"
+        expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
+        assertMergeVarsInVars(mergeVars, expectedMergeVars)
 
-    it 'sends the billing email', (done)->
-      accountMailer.monthlyBill @account, @abh, @abh.history[0]._id, @now, (err, response)=>
-        options = getMailOptions.call(this)
-        expect(options.subject).to.equal("Your cine.io invoice")
-        assertToAccount(options, @account)
-        assertCorrectMergeVars accountMergeVars(options, @account), @now
-        assertMailSent.call(this, err, response, done)
+      it 'sends the billing email', (done)->
+        accountMailer.monthlyBill @account, @abh, @abh.history[0]._id, @now, (err, response)=>
+          options = getMailOptions.call(this)
+          expect(options.subject).to.equal("Your cine.io invoice")
+          assertToAccount(options, @account)
+          assertCorrectMergeVars accountMergeVars(options, @account), @now
+          assertMailSent.call(this, err, response, done)
+
+    describe 'without peer', ->
+      beforeEach (done)->
+        results =
+          billing:
+            plan: 500
+            bandwidthOverage: 0
+            storageOverage: 0
+          usage:
+            bandwidth: humanizeBytes.TiB
+            storage: humanizeBytes.GiB * 2
+            peerMilliseconds: 0
+            bandwidthOverage: humanizeBytes.Gib * 5
+            storageOverage: humanizeBytes.Gib * 2
+        @now = new Date
+        @abh = new AccountBillingHistory(_account: @account._id)
+        @abh.history.push
+          stripeChargeId: 'this month charge'
+          billingDate: @now
+          billedAt: new Date
+          details: results
+          accountPlans: @account.productPlans
+          paid: true
+
+        lastMonth = new Date
+        lastMonth.setDate(1)
+        lastMonth.setMonth(lastMonth.getMonth() - 1)
+        @abh.history.push
+          billingDate: lastMonth
+          stripeChargeId: 'last month charge'
+          paid: true
+        @abh.save done
+
+      assertCorrectMergeVars = (mergeVars, billingMonthDate)->
+        month = moment(billingMonthDate).format("MMM YYYY")
+        expectedMergeVars =
+          header_blurb: "Thank you for using cine.io."
+          ACCOUNT_NAME: "my account name"
+          BILLING_MONTH: month
+          BILL_TOTAL: "$5.00"
+          PLAN_BANDWIDTH: "1.15 TiB"
+          PLAN_MINUTES: ""
+          PLAN_STORAGE: "125.00 GiB"
+          USAGE_BANDWIDTH: "1.00 TiB"
+          USAGE_MINUTES: ""
+          BROADCAST_PLAN: "Basic ($100 / month) and Pro ($500 / month)"
+          PEER_PLAN: undefined
+          USAGE_STORAGE: "2.00 GiB"
+        expect(mergeVars.templateVars).to.deep.equal(expectedMergeVars)
+        assertMergeVarsInVars(mergeVars, expectedMergeVars)
+
+      beforeEach (done)->
+        @account.productPlans = {broadcast: ['basic', 'pro'], peer: []}
+        @account.save done
+
+      it 'sends the billing email', (done)->
+        accountMailer.monthlyBill @account, @abh, @abh.history[0]._id, @now, (err, response)=>
+          options = getMailOptions.call(this)
+          expect(options.subject).to.equal("Your cine.io invoice")
+          assertToAccount(options, @account)
+          assertCorrectMergeVars accountMergeVars(options, @account), @now
+          assertMailSent.call(this, err, response, done)
 
   describe 'underOneGibBill', ->
     beforeEach (done)->
