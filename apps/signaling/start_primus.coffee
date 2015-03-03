@@ -140,7 +140,7 @@ module.exports = (server)->
   roomManager = new RoomManager(primus)
 
   primus.on 'connection', (spark)->
-    # console.log("new connection")
+    console.log("new connection", spark.id)
     spark.connectedRooms = {}
 
     spark.on 'data', (data)->
