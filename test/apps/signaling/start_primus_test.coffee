@@ -69,14 +69,14 @@ describe 'socket calls', ->
         @client.on 'end', (data)->
           gotEnd = true
           done() if gotData
-        @client.write action: 'auth', publicKey: 'INVALID_PUBLIC_KEY'
+        @client.write action: 'auth', publicKey: 'INVALID_PUBLIC_KEY', support: {trickleIce: true}
 
       it 'keeps the connection open if the publicKey is correct', (done)->
         @client.on 'data', (data)->
           return if data.action == 'rtc-servers'
           expect(data).to.deep.equal(action: 'ack', source: 'auth')
           done()
-        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111'
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111', support: {trickleIce: true}
 
       it 'recieves rtc-servers', (done)->
         @client.on 'data', (data)=>
@@ -88,12 +88,12 @@ describe 'socket calls', ->
           expect(data.data[1].credential).to.equal(@project.turnPassword)
           expect(data.data[1].username).to.equal('this-is-a-real-api-key')
           done()
-        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111'
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111', support: {trickleIce: true}
 
     describe 'rooms', ->
       beforeEach ->
-        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111'
-        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '222'
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111', support: {trickleIce: true}
+        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '222', support: {trickleIce: true}
 
       beforeEach (done)->
         joinTestRoom @client, done
@@ -173,8 +173,8 @@ describe 'socket calls', ->
           @fourthClient.end()
 
         beforeEach ->
-          @thirdClient.write action: 'auth', publicKey: 'this-is-a-second-key', uuid: '333'
-          @fourthClient.write action: 'auth', publicKey: 'this-is-a-second-key', uuid: '444'
+          @thirdClient.write action: 'auth', publicKey: 'this-is-a-second-key', uuid: '333', support: {trickleIce: true}
+          @fourthClient.write action: 'auth', publicKey: 'this-is-a-second-key', uuid: '444', support: {trickleIce: true}
 
         it "does not conflict with the other project", (done)->
           @client.on 'data', (data)->
@@ -193,8 +193,8 @@ describe 'socket calls', ->
     describe 'PeerConnection conversation', ->
 
       beforeEach ->
-        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111'
-        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '222'
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111', support: {trickleIce: true}
+        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '222', support: {trickleIce: true}
 
       beforeEach (done)->
         joinTestRoom @client, done
@@ -223,6 +223,7 @@ describe 'socket calls', ->
           return unless data.action == 'rtc-offer'
           expect(data.offer).to.equal('fake offer')
           expect(data.sparkUUID).to.equal('111')
+          expect(data.support).to.deep.equal(trickleIce: true)
           done()
 
         joinTestRoom @otherClient
@@ -237,6 +238,7 @@ describe 'socket calls', ->
           return unless data.action == 'rtc-answer'
           expect(data.answer).to.equal('fake answer')
           expect(data.sparkUUID).to.equal('111')
+          expect(data.support).to.deep.equal(trickleIce: true)
           done()
 
         joinTestRoom @otherClient
@@ -244,8 +246,8 @@ describe 'socket calls', ->
     describe 'point to point calling', ->
 
       beforeEach ->
-        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111'
-        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '222'
+        @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111', support: {trickleIce: true}
+        @otherClient.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '222', support: {trickleIce: true}
 
       identify = (client, name, timestamp, signature)->
         client.write action: 'identify', client: 'test-client', identity: name, timestamp: timestamp, signature: signature, publicKey: 'this-is-a-real-api-key'
@@ -298,6 +300,7 @@ describe 'socket calls', ->
             expect(data.room).to.have.length(64)
             expect(data.sparkId).to.have.length(36)
             expect(data.sparkUUID).to.equal('222')
+            expect(data.support).to.deep.equal(trickleIce: true)
             done()
           ensurePeerConnecitonMade 1, (err)=>
             return done(err) if err
@@ -319,8 +322,8 @@ describe 'socket calls', ->
             @fourthClient.end()
 
           beforeEach ->
-            @thirdClient.write action: 'auth', publicKey: 'this-is-a-second-key', uuid: '333'
-            @fourthClient.write action: 'auth', publicKey: 'this-is-a-second-key', uuid: '444'
+            @thirdClient.write action: 'auth', publicKey: 'this-is-a-second-key', uuid: '333', support: {trickleIce: true}
+            @fourthClient.write action: 'auth', publicKey: 'this-is-a-second-key', uuid: '444', support: {trickleIce: true}
 
           beforeEach (done)->
             identify @thirdClient, 'meee', '1418075572', '7e6d5459d538a1d4beeae449ee7aae477b5611ac'
@@ -337,6 +340,7 @@ describe 'socket calls', ->
               expect(data.room).to.have.length(64)
               expect(data.sparkId).to.have.length(36)
               expect(data.sparkUUID).to.equal('444')
+              expect(data.support).to.deep.equal(trickleIce: true)
               done()
             ensurePeerConnecitonMade 1, (err)=>
               return done(err) if err
@@ -362,6 +366,7 @@ describe 'socket calls', ->
             expect(data.room).to.be.ok
             expect(data.room).to.equal(room)
             expect(data.sparkUUID).to.equal('111')
+            expect(data.support).to.deep.equal(trickleIce: true)
             done()
           ensurePeerConnecitonMade 1, (err)=>
             return done(err) if err
@@ -382,10 +387,12 @@ describe 'socket calls', ->
           originalRoom = null
           @client.on 'data', (data)->
             if data.action == 'call'
+              console.log("GOT DATA", data)
               originalRoom = data.room
               expect(data.room).to.have.length(64)
               expect(data.sparkId).to.have.length(36)
               expect(data.sparkUUID).to.equal('222')
+              expect(data.support).to.deep.equal(trickleIce: true)
             if data.action == 'call-cancel'
               expect(data.room).to.equal(originalRoom)
               expect(data.identity).to.equal('other')

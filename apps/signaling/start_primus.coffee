@@ -91,7 +91,7 @@ removeCurrentConnectionOnIdentity = (spark)->
     identity.save (err, identity)->
       if err
         return console.log("could not remove current connection", err)
-      # TODO: change this to check fro connection.sparkId
+      # TODO: change this to check for connection.sparkId
       if _.findWhere(identity.currentConnections, sparkId: spark.id)
         console.log("PeerIdentity still has current connection")
       else
@@ -129,6 +129,7 @@ module.exports = (server)->
       action: 'call'
       room: roomName
       identity: spark.identity
+      support: spark.support
     sendToIdentity spark, otheridentity, dataToSend
 
   sendToOtherSpark = (senderSpark, receivingSparkId, data)->
@@ -142,6 +143,9 @@ module.exports = (server)->
   primus.on 'connection', (spark)->
     console.log("new connection", spark.id)
     spark.connectedRooms = {}
+    # options for support
+    #   trickleIce: true|false
+    spark.support = {}
 
     spark.on 'data', (data)->
       # iOS sends buffers somehow. Probably double escaped
@@ -153,27 +157,30 @@ module.exports = (server)->
       console.log(spark.clientUUID, "sent", data.action)
       switch data.action
         when 'auth'
+          # set what the spark supports
+          spark.support = data.support
           authenticateSpark spark, data, (err, project)->
+            console.log(spark.clientUUID, "support", spark.support)
             sendSparkIceServers(spark, project) unless err
 
         # BEGIN PeerConnection events
         when "rtc-ice"
           # console.log "i am", spark.id
           # console.log "sending ice to", data.sparkId, data.candidate
-          sendToOtherSpark spark, data.sparkId, action: "rtc-ice", candidate: data.candidate
+          sendToOtherSpark spark, data.sparkId, action: "rtc-ice", candidate: data.candidate, support: spark.support
           spark.write action: 'ack', source: 'rtc-ice'
 
         when "rtc-offer"
           # console.log "i am", spark.id
           # console.log "sending offer to", data.sparkId, data.offer
           spark.write action: 'ack', source: 'rtc-offer'
-          sendToOtherSpark spark, data.sparkId, action: "rtc-offer", offer: data.offer
+          sendToOtherSpark spark, data.sparkId, action: "rtc-offer", offer: data.offer, support: spark.support
 
         when "rtc-answer"
           # console.log "i am", spark.id
           # console.log "sending answer to", data.sparkId, data.answer
           spark.write action: 'ack', source: 'rtc-answer'
-          sendToOtherSpark spark, data.sparkId, action: "rtc-answer", answer: data.answer
+          sendToOtherSpark spark, data.sparkId, action: "rtc-answer", answer: data.answer, support: spark.support
         # END PeerConnection events
 
         # BEGIN room events
@@ -192,7 +199,7 @@ module.exports = (server)->
             room = data.room
             return if spark.connectedRooms[room]
             spark.connectedRooms[room] = true
-            sendToOtherSpark spark, data.sparkId, action: "room-announce", room: room
+            sendToOtherSpark spark, data.sparkId, action: "room-announce", room: room, support: spark.support
             spark.write action: 'ack', source: 'room-announce'
 
         when "room-leave"
@@ -208,7 +215,7 @@ module.exports = (server)->
         when "room-goodbye"
           ensureProjectId spark, (err)->
             room = data.room
-            sendToOtherSpark spark, data.sparkId, action: "room-goodbye", room: room
+            sendToOtherSpark spark, data.sparkId, action: "room-goodbye", room: room, support: spark.support
             spark.write action: 'ack', source: 'room-goodbye'
         # END room events
 
@@ -252,7 +259,7 @@ module.exports = (server)->
         when "call-reject"
           ensureProjectId spark, (err)->
             room = data.room
-            primus.room(RoomManager.projectRoomName(spark, room)).except(spark.id).write(action: 'call-reject', room: room, identity: spark.identity, sparkUUID: spark.clientUUID)
+            primus.room(RoomManager.projectRoomName(spark, room)).except(spark.id).write(action: 'call-reject', room: room, identity: spark.identity, sparkUUID: spark.clientUUID, support: spark.support)
             spark.write action: 'ack', source: 'call-reject', room: data.room
 
         when "call-cancel"
@@ -261,6 +268,7 @@ module.exports = (server)->
               action: 'call-cancel'
               room: data.room
               identity: spark.identity
+              support: spark.support
             sendToIdentity spark, data.otheridentity, dataToSend
             spark.write action: 'ack', source: 'call-cancel', room: data.room, otheridentity: data.otheridentity
         # END point-to-point calling

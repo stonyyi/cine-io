@@ -110,6 +110,7 @@ module.exports = class RoomManager
       room: publicRoom
       sparkId: spark.id
       sparkUUID: spark.clientUUID
+      support: spark.support
     data.identity = spark.identity if spark.identity
     @primus.room(room).except(spark.id).write(data)
     callback()

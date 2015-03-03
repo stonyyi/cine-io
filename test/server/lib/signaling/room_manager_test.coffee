@@ -13,6 +13,8 @@ describe 'RoomManager', ->
       signalingClient: "fake-client 0.0.1-#{i}"
       identity: "Thomas-#{i}"
       identityId: "54321-#{i}"
+      support:
+        trickleIce: true
 
 
   UPDATED_AT_REDIS_KEY = "signaling:my-project-id:fun-room:updatedAt"
@@ -82,6 +84,8 @@ describe 'RoomManager', ->
           sparkId: 'the-spark-id-0'
           sparkUUID: 'my-client-uuid-0'
           identity: 'Thomas-0'
+          support:
+            trickleIce: true
         expect(scope.write.firstCall.args).to.deep.equal([expectedWriteArgs])
         @dateStub.restore()
         done()
@@ -185,6 +189,8 @@ describe 'RoomManager', ->
           sparkId: 'the-spark-id-0'
           sparkUUID: 'my-client-uuid-0'
           identity: 'Thomas-0'
+          support:
+            trickleIce: true
         expect(scope.write.firstCall.args).to.deep.equal([expectedWriteArgs])
         done()
 
