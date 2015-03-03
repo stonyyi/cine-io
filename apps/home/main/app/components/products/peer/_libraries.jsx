@@ -21,10 +21,9 @@ module.exports = React.createClass({
                 </a>
               </li>
               <li>
-                <div>
+                <a target="_blank" href='https://github.com/cine-io/cineio-peer-ios'>
                   <img src="//cdn.cine.io/images/code-logos/ios-logo.png" alt="iOS logo" title="The iOS SDK" />
-                  <div><small>*coming soon</small></div>
-                </div>
+                </a>
               </li>
               <li>
                 <a target="_blank" href='https://github.com/cine-io/cineio-peer-android'>
