@@ -1,4 +1,13 @@
 .dashboard-show{
+  dl.inline{
+    dt {
+      float: left;
+      margin-right: 5px;
+    }
+    dd {
+      margin-bottom: 0.35rem;
+    }
+  }
   .panel-heading{
     h3{
       display: inline-block;

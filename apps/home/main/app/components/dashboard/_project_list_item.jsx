@@ -100,7 +100,7 @@ module.exports = React.createClass({
       insideContent = (
         <div>
           <div>{modelName}</div>
-          <dl>
+          <dl className='inline'>
             <dt>Public key</dt>
             <dd>{model.get('publicKey')}</dd>
             <dt>Secret key</dt>
@@ -112,7 +112,17 @@ module.exports = React.createClass({
         </div>
       );
     }else{
-      insideContent = (<div>{model.get('name')}</div>)
+      insideContent = (
+        <div>
+          <div>{model.get('name')}</div>
+          <dl className='inline'>
+            <dt>Public key</dt>
+            <dd>{model.get('publicKey')}</dd>
+            <dt>Secret key</dt>
+            <dd>{model.get('secretKey')}</dd>
+          </dl>
+        </div>
+        )
     }
     return (
       <tr onClick={this.showStreams} className={classes}>
