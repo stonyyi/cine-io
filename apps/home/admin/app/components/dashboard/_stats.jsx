@@ -142,9 +142,10 @@ module.exports = React.createClass({
           <tfoot>
             <tr>
             <td>Total</td>
-            <td colSpan="3">{accounts.length} accounts</td>
+            <td colSpan="4">{accounts.length} accounts</td>
             <td>{humanizeBytes(model.total('bandwidth', selectedMonth))}</td>
             <td>{humanizeBytes(model.total('storage', selectedMonth))}</td>
+            <td>{humanizeTime(model.total('peerMilliseconds', selectedMonth))}</td>
             </tr>
           </tfoot>
         </table>
