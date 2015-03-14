@@ -1,0 +1,20 @@
+{
+  "author": "BML Ventures Team",
+  "name": "cine.io-rtmp_stats",
+  "domains": [
+    ""
+  ],
+  "version": "0.0.1",
+  "description": "cine.io rtmp stats",
+  "scripts": {},
+  "repository": "https://github.com/cine-io/cine",
+  "dependencies": {
+    "xml2js": "^0.4.5"
+  },
+  "devDependencies": {},
+  "license": "Copyrighted / All Rights Reserved",
+  "engines": {
+    "node": "0.10.34"
+  },
+  "private": true
+}
