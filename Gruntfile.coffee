@@ -224,4 +224,6 @@ module.exports = (grunt) ->
     cb = @async()
     npmInstallDirectory 'apps/signaling', (err)->
       return cb(err) if err
-      npmInstallDirectory 'apps/rtc_transmuxer', cb
+      npmInstallDirectory 'apps/rtmp_stats', (err)->
+        return cb(err) if err
+        npmInstallDirectory 'apps/rtc_transmuxer', cb

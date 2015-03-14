@@ -9,7 +9,7 @@
   "scripts": {},
   "repository": "https://github.com/cine-io/cine",
   "dependencies": {
-    "xml2js": "^0.4.5"
+    "xml2js": "git://github.com/Leonidas-from-XIV/node-xml2js.git#208dff5784dfed5951d4bebe9c4071935cfabbdc"
   },
   "devDependencies": {},
   "license": "Copyrighted / All Rights Reserved",
