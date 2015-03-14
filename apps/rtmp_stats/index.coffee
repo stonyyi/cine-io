@@ -19,7 +19,7 @@ RTMP_REPLICATOR = process.env.RTMP_REPLICATOR_SERVER || 'rtmp-replicator'
 RTMP_STYLIST = process.env.RTMP_STYLIST_SERVER || 'rtmp-stylist'
 
 getRTMPServerStats = (server, callback)->
-  request.get "#{server}/stats", (err, response, body)->
+  request.get "http://#{server}/stats", (err, response, body)->
     return callback(err) if err
     return callback(body) if response.statusCode != 200
 
