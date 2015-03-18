@@ -54,12 +54,12 @@ describe 'Server#Nearest', ->
     Nearest params, (err, response, options)->
       expect(err).to.be.null
       expect(response).to.deep.equal
-        server: "rtmp://publish-ams1.cine.io/live"
+        server: "rtmp://publish-lon1.cine.io/live"
         host: "stream.hhp.cine.io"
         rtmpCDNHost: 'stream.hhp.cine.io'
         app: '20C45E/cines'
         rtmpCDNApp: '20C45E/cines'
-        transcode: "rtmp://publish-ams1.cine.io:1936/live"
+        transcode: "rtmp://publish-lon1.cine.io:1936/live"
         rtcPublish: "https://rtc-publish-sfo1.cine.io/"
       done()
 
@@ -69,12 +69,12 @@ describe 'Server#Nearest', ->
     Nearest params, (err, response, options)->
       expect(err).to.be.null
       expect(response).to.deep.equal
-        server: "rtmp://publish-ams1.cine.io/live"
+        server: "rtmp://publish-lon1.cine.io/live"
         host: "stream.fra.cine.io"
         rtmpCDNHost: 'stream.fra.cine.io'
         app: '20C45E/cines'
         rtmpCDNApp: '20C45E/cines'
-        transcode: "rtmp://publish-ams1.cine.io:1936/live"
+        transcode: "rtmp://publish-lon1.cine.io:1936/live"
         rtcPublish: "https://rtc-publish-sfo1.cine.io/"
       done()
 

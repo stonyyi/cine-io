@@ -23,19 +23,19 @@ describe 'nearestEdgecastServer', ->
     parisFrance =
       lat: 48.856600
       lng: 2.353926
-    test(parisFrance, 'ams1', 'ams')
+    test(parisFrance, 'lon1', 'ams')
 
   it 'returns fra for dijon, france', ->
     dijonFrance =
       lat: 47.321525
       lng: 5.041147
-    test(dijonFrance, 'ams1', 'fra')
+    test(dijonFrance, 'lon1', 'fra')
 
   it 'returns arn for moscow, russia', ->
     moscowRussia =
       lat: 55.754429
       lng: 37.625628
-    test(moscowRussia, 'ams1', 'arn')
+    test(moscowRussia, 'lon1', 'arn')
 
   it 'returns syd for aukland, new zealand', ->
     auklandNewZealand =
@@ -47,4 +47,4 @@ describe 'nearestEdgecastServer', ->
     tokyoJapan =
       lat: 35.619218
       lng: 139.590912
-    test(tokyoJapan, 'ams1', 'hhp')
+    test(tokyoJapan, 'lon1', 'hhp')

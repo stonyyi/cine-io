@@ -11,7 +11,7 @@ describe 'convertIpAddressToEdgecastServer', ->
     sfIp = "81.169.145.154"
     edgecastServer = convertIpAddressToEdgecastServer sfIp
     expect(edgecastServer.rtmpCDNCode).to.equal('fra')
-    expect(edgecastServer.cineioEndpointCode).to.equal('ams1')
+    expect(edgecastServer.cineioEndpointCode).to.equal('lon1')
 
   it 'returns null for localhost', ->
     sfIp = "127.0.0.1"

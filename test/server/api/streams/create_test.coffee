@@ -59,7 +59,7 @@ describe 'Streams#Create', ->
         expect(err).to.be.null
         expect(_.keys(response).sort()).to.deep.equal(['assignedAt', 'expiration', 'id', 'name', 'password', 'play', 'publish', 'record', 'streamName'])
         expectedPublishResponse =
-          url: "rtmp://publish-ams1.cine.io/live"
+          url: "rtmp://publish-lon1.cine.io/live"
           stream: "cine1?bass35"
         expect(response.publish).to.deep.equal(expectedPublishResponse)
         expect(options).to.be.undefined

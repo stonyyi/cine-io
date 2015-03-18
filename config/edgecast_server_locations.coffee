@@ -22,7 +22,7 @@ module.exports = [
   {
     name: "Europe - Amsterdam"
     rtmpCDNCode: "ams"
-    cineioEndpointCode: 'ams1'
+    cineioEndpointCode: 'lon1'
     cineioRtcEndpointCode: 'sfo1'
     lat: 52.370524
     lng: 4.894497
@@ -31,7 +31,7 @@ module.exports = [
   {
     name: "Europe - Frankfurt"
     rtmpCDNCode: "fra"
-    cineioEndpointCode: 'ams1'
+    cineioEndpointCode: 'lon1'
     cineioRtcEndpointCode: 'sfo1'
     lat: 50.112846
     lng: 8.683942
@@ -40,7 +40,7 @@ module.exports = [
   {
     name: "Europe - Stockholm"
     rtmpCDNCode: "arn"
-    cineioEndpointCode: 'ams1'
+    cineioEndpointCode: 'lon1'
     cineioRtcEndpointCode: 'sfo1'
     lat: 59.328944
     lng: 18.069256
@@ -49,7 +49,7 @@ module.exports = [
   {
     name: "Asia - Hong Kong"
     rtmpCDNCode: "hhp"
-    cineioEndpointCode: 'ams1'
+    cineioEndpointCode: 'lon1'
     cineioRtcEndpointCode: 'sfo1'
     lat: 22.289391
     lng: 114.163894

@@ -104,7 +104,7 @@ describe 'Streams#Show', ->
       Show params, (err, response, options)->
         expect(err).to.be.null
         expectedPublishResponse =
-          url: "rtmp://publish-ams1.cine.io/live"
+          url: "rtmp://publish-lon1.cine.io/live"
           stream: "cine1?bass35"
         expect(response.publish).to.deep.equal(expectedPublishResponse)
         done()
@@ -115,7 +115,7 @@ describe 'Streams#Show', ->
       Show params, (err, response, options)->
         expect(err).to.be.null
         expectedPublishResponse =
-          url: "rtmp://publish-ams1.cine.io/live"
+          url: "rtmp://publish-lon1.cine.io/live"
           stream: "cine1?bass35"
         expect(response.publish).to.deep.equal(expectedPublishResponse)
         done()
@@ -135,7 +135,7 @@ describe 'Streams#Show', ->
         params = id: @projectStream._id, fmleProfile: 'true', secretKey: @project.secretKey, remoteIpAddress: "93.191.59.34"
         Show params, (err, response, options)->
           expect(err).to.be.null
-          expect(response.content).to.contain('<url>rtmp://publish-ams1.cine.io/live</url>')
+          expect(response.content).to.contain('<url>rtmp://publish-lon1.cine.io/live</url>')
           done()
 
       it 'will return a localized url for parameter ipAddress', (done)->
@@ -143,7 +143,7 @@ describe 'Streams#Show', ->
         params = id: @projectStream._id, fmleProfile: 'true', secretKey: @project.secretKey, ipAddress: "81.169.145.154"
         Show params, (err, response, options)->
           expect(err).to.be.null
-          expect(response.content).to.contain('<url>rtmp://publish-ams1.cine.io/live</url>')
+          expect(response.content).to.contain('<url>rtmp://publish-lon1.cine.io/live</url>')
           done()
 
   describe 'deleted streams', ->
