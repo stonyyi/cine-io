@@ -127,7 +127,7 @@ describe 'socket calls', ->
       @client.write action: 'auth', publicKey: 'this-is-a-real-api-key', uuid: '111'
 
 
-    it "stops all webrtcSessions (well this test really does nothing, I just want to make sure it doesn't crash)", (done)->
+    xit "stops all webrtcSessions (well this test really does nothing, I just want to make sure it doesn't crash)", (done)->
       @client.on 'data', (data)=>
         return unless data.action == 'error'
         @client.end()
