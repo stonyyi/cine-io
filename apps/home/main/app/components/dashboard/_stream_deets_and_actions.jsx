@@ -141,6 +141,7 @@ module.exports = React.createClass({
         <a target="_blank" href={embedUrl} data-pass-thru={true}>Quick embed url</a>
         <hr/>
         <dl>
+          <dt>Play Details</dt>
           <dt>RTMP:</dt>
           <dd>{model.get('play').rtmp}</dd>
           <dt>HLS:</dt>
@@ -148,10 +149,13 @@ module.exports = React.createClass({
         </dl>
         <hr/>
         <dl>
-          <dt>Stream:</dt>
-          <dd>{model.get('publish').stream}</dd>
+          <dt>Publish Details</dt>
+          <dt>Publish url:</dt>
+          <dd>{model.get('publish').url}/{model.get('publish').stream}</dd>
           <dt>FMS url:</dt>
           <dd>{model.get('publish').url}</dd>
+          <dt>Stream:</dt>
+          <dd>{model.get('publish').stream}</dd>
         </dl>
         <DeleteButtonWithInputConfirmation isDeleting={this.state.isDeleting} model={this.props.model} confirmationAttribute={confirmationAttribute} deleteCallback={this.destroyStream} objectName="stream" />
       </div>
