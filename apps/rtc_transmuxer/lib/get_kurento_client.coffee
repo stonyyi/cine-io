@@ -17,7 +17,10 @@ module.exports = (callback) ->
 
 
 module.exports._getClient = (callback)->
-  kurento kurentoWebsocketUri, callback
+  try
+    kurento kurentoWebsocketUri, callback
+  catch error
+    callback(error)
 
 module.exports._clear = ->
   kurentoClient = null
