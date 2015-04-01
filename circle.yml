@@ -3,7 +3,7 @@ machine:
   pre:
     - npm config set ca ""
   node:
-    version: v0.10.34
+    version: v0.10.33
   ruby:
     version: 2.1.3
 
