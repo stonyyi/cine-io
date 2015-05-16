@@ -5,9 +5,12 @@ environment = require('../config/environment')
 Cine.config('connect_to_mongo')
 async = require('async')
 und = require('underscore')
-accessed = []
-errs = []
-saver = (err, thing)->console.log("DONE");errs.push(err);accessed.push(thing)
+
+endFunction = (err, aggregate)->
+  if err
+    console.log("ending err", err)
+    process.exit(1)
+  process.exit(0)
 
 EdgecastStream = Cine.server_model('edgecast_stream')
 deleteStreamRecordingOnS3 = Cine.server_lib('stream_recordings/delete_stream_recording_on_s3')
@@ -50,4 +53,4 @@ deleteProjectStreamRecordings = (project, callback)->
 Account.findOne accountQuery, (err, account)->
   account.projects (err, projects)->
     numbers.projects = projects.length
-    async.each projects, deleteProjectStreamRecordings, saver
+    async.each projects, deleteProjectStreamRecordings, endFunction
