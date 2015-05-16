@@ -108,12 +108,13 @@ var PeerPricing = React.createClass({
           <div className="limits">
             <h4>What if I exceed my usage limits?</h4>
             <p>
-              As long as you&apos;re on one of our paid plans, if you
-              exceed your usage limits, we&apos;ll automatically upgrade
-              you to the next plan and notify you. However, if you exceed
-              the limits while of our free&nbsp;
-              <strong>Developer</strong> plan, you won&apos;t be able to
-              continue to use your account until you enter a credit card.
+              As long as you&apos;re on one of our paid plans, if you exceed
+              your usage limits, we&apos;ll automatically upgrade you to the
+              next plan and notify you. However, if you exceed the limits
+              while of our free&nbsp; <strong>Developer</strong> plan, you
+              won&apos;t be able to continue to use your account until you
+              enter a credit card. <em>We do not prorate plans</em> &mdash;
+              you will be charged based on your highest usage for the month.
             </p>
           </div>
 
@@ -259,12 +260,13 @@ var BroadcastPricing = React.createClass({
           <div className="limits">
             <h4>What if I exceed my usage limits?</h4>
             <p>
-              As long as you&apos;re on one of our paid plans, if you
-              exceed your usage limits, we&apos;ll automatically upgrade
-              you to the next plan and notify you. However, if you exceed
-              the limits while of our free&nbsp;
-              <strong>Developer</strong> plan, you won&apos;t be able to
-              continue to use your account until you enter a credit card.
+              As long as you&apos;re on one of our paid plans, if you exceed
+              your usage limits, we&apos;ll automatically upgrade you to the
+              next plan and notify you. However, if you exceed the limits
+              while of our free&nbsp; <strong>Developer</strong> plan, you
+              won&apos;t be able to continue to use your account until you
+              enter a credit card. <em>We do not prorate plans</em> &mdash;
+              you will be charged based on your highest usage for the month.
             </p>
           </div>
 
