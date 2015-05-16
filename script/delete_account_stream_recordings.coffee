@@ -1,5 +1,5 @@
 # heroku run --app=cine-io coffee script/delete_account_stream_recordings.coffee BILLING_EMAIL
-require('coffee-script/register');
+require('coffee-script/register')
 
 environment = require('../config/environment')
 Cine.config('connect_to_mongo')
