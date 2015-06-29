@@ -173,7 +173,7 @@ var EmailLogin = React.createClass({
           <input name='password' type="password" required placeholder='Your password' value={this.state.myPassword} onChange={this.changeMyPassword}/>
           <input name='broadcast-plan' type="hidden" required value={this.state.broadcastPlan}/>
           <input name='peer-plan' type="hidden" required value={this.state.peerPlan}/>
-          <SubmitButton className="button radius expand bottom-margin-0" text="Sign up or sign in" submittingText="Submitting" submitting={this.state.submitting}/>
+          <SubmitButton className="button radius expand bottom-margin-0" text="Sign in" submittingText="Submitting" submitting={this.state.submitting}/>
           <div className='text-center top-margin-half'>
             <a href='' onClick={this.showForgotPassword}>Forgot password?</a>
           </div>
@@ -195,6 +195,13 @@ LoggedOut = React.createClass({
     this.props.app.trigger('hide-login');
   },
   render: function() {
+    var loginComponents = (
+      <div>
+        <GithubLogin app={this.props.app}/>
+        <EmailLogin app={this.props.app} showing={this.props.showing} />
+      </div>
+    );
+
     return (
       <aside className="left-off-canvas-menu">
         <div className='clearfix'>
@@ -202,8 +209,7 @@ LoggedOut = React.createClass({
             <i className="fa fa-times"></i>
           </a>
         </div>
-        <GithubLogin app={this.props.app}/>
-        <EmailLogin app={this.props.app} showing={this.props.showing} />
+        { loginComponents }
         <div className='legal-waver top-margin-half'>
           By using this site you are agreeing to our <a href='/legal/terms-of-service'>Terms of Service</a>.
         </div>
