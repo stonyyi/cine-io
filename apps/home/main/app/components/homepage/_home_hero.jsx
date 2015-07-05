@@ -23,6 +23,17 @@ module.exports = React.createClass({
         <div className="hero-content row">
           <div className="medium-12 columns top-margin-2">
             <div className="text-center medium-8 medium-offset-2 columns end">
+              <span style={{color: "yellow"}}>
+                NOTE: cine.io is shutting down on August 31st. {"  "}
+                <a style={{color: "white", textDecoration: "underline"}} href="http://blog.cine.io/">Read more</a>.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="hero-content row">
+          <div className="medium-12 columns top-margin-2">
+            <div className="text-center medium-8 medium-offset-2 columns end">
               Live video-streaming. Audio- and video-conferencing. Focus on
               coding your app and let us take care of your video needs.
             </div>
