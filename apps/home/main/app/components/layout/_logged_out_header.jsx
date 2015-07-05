@@ -79,7 +79,7 @@ module.exports = React.createClass({
       <section className="top-bar-section">
         <ul className="right">
           <li className="outlined">
-            <a onClick={this.login}>Sign In or Sign Up</a>
+            <a onClick={this.login}>Sign In</a>
           </li>
         </ul>
         <ul className="right top-links">

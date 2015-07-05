@@ -1,9 +1,6 @@
 /** @jsx React.DOM */
 var React = require('react'),
 PageWrapper = Cine.component('layout/_page_wrapper'),
-NewCreditCard = Cine.component('account/_new_credit_card'),
-ChangePlanForm = Cine.component('account/_change_plan_form'),
-CurrentCreditCard = Cine.component('account/_current_credit_card'),
 NoAccount = Cine.component('shared/_no_account'),
 DeleteAccount = Cine.component('account/_delete_account');
 
@@ -19,9 +16,7 @@ module.exports = React.createClass({
     if (ca == null){
       return (<NoAccount app={this.props.app}/>);
     }
-    var
-      CardModule = ca.get('stripeCard') ? CurrentCreditCard : NewCreditCard,
-      accountActions;
+    var accountActions;
     if (ca.isHeroku()){
       accountActions = (
         <div>
@@ -40,9 +35,6 @@ module.exports = React.createClass({
     }else{
       accountActions = (
         <div>
-          <ChangePlanForm app={this.props.app} />
-          <CardModule app={this.props.app} />
-          <hr/>
           <DeleteAccount app={this.props.app} model={ca} />
         </div>
       );
