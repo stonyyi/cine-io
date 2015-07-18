@@ -47,7 +47,6 @@ addFirstProjectToAccount = (account, projectAttributes, streamAttributes, callba
 
 # callback: err, {account: Account, user: User, project: Project, stream: Stream}
 module.exports = (accountAttributes, userAttributes={}, projectAttributes={}, streamAttributes={}, callback)->
-  return callback('Account creation disabled') if process.env.SHUTTING_DOWN
   if _.isFunction(userAttributes)
     callback = userAttributes
     userAttributes = {}
@@ -61,6 +60,7 @@ module.exports = (accountAttributes, userAttributes={}, projectAttributes={}, st
     callback = streamAttributes
     streamAttributes = {}
 
+  return callback('Account creation disabled') if process.env.SHUTTING_DOWN
   # trim any whitespace
   userAttributes.email = _str.trim(userAttributes.email)
 
