@@ -20,7 +20,6 @@ describe 'doWork', ->
         {
           name: 'once_a_day_worker'
           libs: [
-            'notify_accounts_three_days_after_signing_up'
             'billing/charge_all_accounts_if_on_the_first_of_the_month'
           ]
         }
